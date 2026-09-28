@@ -6,6 +6,12 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "preview", "--", "--port", "4321"],
       "port": 4321
+    },
+    {
+      "name": "consensuslab-app",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["C:/Users/xergi/Desktop/2.0_software_laboratorio/consensuslab-sheets/tools/servidor_local.js"],
+      "port": 8767
     }
   ]
 }
