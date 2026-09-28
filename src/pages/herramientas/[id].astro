@@ -12,6 +12,7 @@ import {
   url,
   urlRecurso,
 } from '../../lib/rutas';
+import { urlModulo } from '../../lib/sitio';
 
 export async function getStaticPaths() {
   const herramientas = await obtenerHerramientas();
@@ -94,6 +95,25 @@ const siglas = { excel: 'XLS', sheets: 'GS', word: 'DOC', pdf: 'PDF', formulario
       </article>
 
       <aside class="ficha-lateral" aria-label="Recursos y datos de la herramienta">
+        {
+          h.app_modulo && (
+            <section class="caja caja-app">
+              <h2>Pruébala</h2>
+              <p>Usa la herramienta en línea con datos de prueba. Ingresas con tu correo (te llega un código) y los datos de prueba se borran al salir.</p>
+              <p>
+                <a class="boton boton-primario boton-ancho" href={urlModulo(h.app_modulo)} target="_blank" rel="noopener">
+                  Probar demo gratis
+                </a>
+              </p>
+              <p class="texto-suave">
+                Con suscripción: registros reales y trazables de tu laboratorio, alertas por correo y planilla mensual.{' '}
+                <a href={url('planes/')}>Ver planes</a>
+              </p>
+            </section>
+          )
+        }
+        {
+          !h.app_modulo && (
         <section class="caja">
           <h2>Descargar</h2>
           {
@@ -131,6 +151,8 @@ const siglas = { excel: 'XLS', sheets: 'GS', word: 'DOC', pdf: 'PDF', formulario
             )
           }
         </section>
+          )
+        }
 
         <section class="caja">
           <h2>Consensus QC</h2>

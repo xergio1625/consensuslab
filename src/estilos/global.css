@@ -345,6 +345,8 @@ img, svg { max-width: 100%; }
 .caja h2 { font-size: 1rem; margin-bottom: 10px; }
 .caja p { font-size: .92rem; }
 .caja p:last-child { margin-bottom: 0; }
+.caja-app { border-color: var(--c-enlace); }
+.boton-ancho { width: 100%; }
 .lista-recursos { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
 .lista-recursos a {
   display: flex; gap: 10px; align-items: center; padding: 10px 12px;

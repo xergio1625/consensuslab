@@ -60,14 +60,16 @@ const herramientas = defineCollection({
       // Descripción del recurso que se prepara (útil mientras la ficha está «en preparación»)
       recurso_previsto: z.string().optional(),
       recursos: z.array(recurso).default([]),
+      // Módulo de la app ConsensusLab que implementa la herramienta (demo gratis + suscripción).
+      app_modulo: z.string().regex(/^[a-z]{3,30}$/).optional(),
       relacionadas: z.array(reference('herramientas')).default([]),
       actualizado: z.coerce.date(),
     })
     .superRefine((h, ctx) => {
-      if (h.estado === 'disponible' && h.recursos.length === 0) {
+      if (h.estado === 'disponible' && h.recursos.length === 0 && !h.app_modulo) {
         ctx.addIssue({
           code: 'custom',
-          message: 'Una herramienta «disponible» debe tener al menos un recurso en «recursos».',
+          message: 'Una herramienta «disponible» debe tener un recurso en «recursos» o un «app_modulo».',
         });
       }
     }),

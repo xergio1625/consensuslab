@@ -6,3 +6,12 @@
  * Cambiar a `true` cuando el sitio esté listo para publicarse en Google.
  */
 export const INDEXAR = false;
+
+/** App ConsensusLab (Google Apps Script). Las fichas con `app_modulo` enlazan aquí. */
+export const URL_APP =
+  'https://script.google.com/macros/s/AKfycbwWAred69irGUQa6kaso6sMGK32cmnKMraR-MMscJ3_moX3XG3nv5RvYU_cKgU7dss5iQ/exec';
+
+/** Enlace que abre la app directamente en un módulo (tras ingresar con el código). */
+export function urlModulo(modulo: string): string {
+  return `${URL_APP}?modulo=${encodeURIComponent(modulo)}`;
+}
