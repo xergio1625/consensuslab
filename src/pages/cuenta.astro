@@ -1,15 +1,44 @@
 ---
-// Área de suscriptores. Más adelante: ingreso contra consensusqc-api y descargas protegidas.
-// Importante: los archivos pagados nunca se guardan en este repositorio (todo lo publicado aquí es público).
+// Entrada a la app ConsensusLab (Google Apps Script). Las cuentas, sesiones y contraseñas
+// viven en la app: este sitio estático no guarda datos de usuarios.
 import Base from '../plantillas/Base.astro';
 import { url } from '../lib/rutas';
+import { URL_APP } from '../lib/sitio';
 ---
 
-<Base titulo="Ingresar" seccion="cuenta" descripcion="Área de suscriptores de ConsensusLab. Próximamente.">
-  <div class="contenedor proximamente">
-    <span class="insignia insignia-en-preparacion">Próximamente</span>
-    <h1>Área de suscriptores</h1>
-    <p>Aquí podrás ingresar con tu cuenta para acceder a las herramientas de suscripción y a Consensus QC.</p>
-    <p><a class="boton boton-secundario" href={url('planes/')}>Ver planes</a></p>
+<Base titulo="Ingresar" seccion="cuenta" descripcion="Ingresa a la app ConsensusLab para usar las herramientas en demo o con tu suscripción.">
+  <div class="contenedor">
+    <article class="prosa">
+      <h1>Ingresa a ConsensusLab</h1>
+      <p>
+        Las herramientas funcionan en la app ConsensusLab. Con una cuenta gratuita las pruebas en modo demo; con
+        suscripción, tu laboratorio guarda sus registros reales.
+      </p>
+      <p><a class="boton boton-primario" href={URL_APP}>Ir a la app</a></p>
+
+      <h2>Cómo se ingresa</h2>
+      <ul>
+        <li>
+          <strong>La primera vez:</strong> escribe tu correo y pide un código. Te llega un código de 6 dígitos; con él
+          creas tu cuenta en un minuto.
+        </li>
+        <li>
+          <strong>Después:</strong> crea una contraseña en «Mi cuenta» y entra con tu correo y contraseña, sin esperar
+          correos. Si la olvidas, vuelve a entrar con un código.
+        </li>
+        <li>
+          <strong>«Recordar este dispositivo»:</strong> la app te mantiene dentro mientras la sigas usando. Desmárcalo en
+          computadores compartidos.
+        </li>
+      </ul>
+
+      <h2>Seguridad</h2>
+      <ul>
+        <li>Tu contraseña se guarda solo como una huella cifrada e irreversible: nadie puede verla.</li>
+        <li>En «Mis dispositivos» ves dónde tienes sesión abierta y puedes cerrarla.</li>
+        <li>ConsensusLab no guarda datos de pacientes.</li>
+      </ul>
+      <p class="texto-suave"><a href={url('planes/')}>Ver planes de suscripción</a></p>
+    </article>
   </div>
 </Base>
