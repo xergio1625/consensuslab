@@ -74,6 +74,11 @@ src/
 .github/workflows/     publicación automática en GitHub Pages
 ```
 
+## Indexación en Google (desactivada por ahora)
+
+Mientras el sitio se arma, todas las páginas llevan `noindex` para que Google no las muestre. Para activarla,
+cambia `INDEXAR` a `true` en `src/lib/sitio.ts`.
+
 ## Dominio propio (más adelante)
 
 En `astro.config.mjs`, cambia `site` por el dominio y `base` por `'/'`. Luego configura el dominio en

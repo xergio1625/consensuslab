@@ -4,6 +4,7 @@ import '../estilos/global.css';
 import Cabecera from '../componentes/Cabecera.astro';
 import Pie from '../componentes/Pie.astro';
 import { url } from '../lib/rutas';
+import { INDEXAR } from '../lib/sitio';
 
 interface Props {
   titulo: string;
@@ -28,6 +29,7 @@ const canonica = new URL(Astro.url.pathname, Astro.site);
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{tituloCompleto}</title>
     <meta name="description" content={descripcion} />
+    {!INDEXAR && <meta name="robots" content="noindex, nofollow" />}
     <link rel="canonical" href={canonica} />
     <meta property="og:title" content={tituloCompleto} />
     <meta property="og:description" content={descripcion} />
