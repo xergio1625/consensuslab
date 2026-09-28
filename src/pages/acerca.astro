@@ -1,0 +1,39 @@
+---
+// Acerca de ConsensusLab.
+import Base from '../plantillas/Base.astro';
+import { url } from '../lib/rutas';
+---
+
+<Base titulo="Acerca" seccion="acerca" descripcion="Quién está detrás de ConsensusLab y con qué criterios se preparan las herramientas.">
+  <div class="contenedor">
+    <article class="prosa">
+      <h1>Acerca de ConsensusLab</h1>
+      <p>
+        ConsensusLab reúne herramientas administrativas y de gestión para tecnólogos médicos que trabajan en
+        laboratorio clínico y quieren mejorar la coordinación, la calidad y la administración de su servicio.
+      </p>
+      <p>
+        Las prepara un tecnólogo médico coordinador de laboratorio, a partir de las necesidades reales del día a día:
+        turnos, registros, auditorías, insumos, informes y personal.
+      </p>
+
+      <h2>Criterios</h2>
+      <ul>
+        <li><strong>Sin datos de pacientes.</strong> Todos los recursos son plantillas en blanco o con datos de ejemplo.</li>
+        <li><strong>Simples.</strong> Se usan con Excel, Google Sheets, Word o un formulario, sin instalar nada.</li>
+        <li><strong>Independientes.</strong> Ninguna herramienta gratuita necesita el software Consensus QC.</li>
+        <li>
+          <strong>De uso libre en laboratorios.</strong> Puedes usarlas y adaptarlas en cualquier laboratorio; revisa la
+          <a href={url('licencia/')}>licencia</a>.
+        </li>
+      </ul>
+
+      <div class="aviso aviso-info">
+        <p>
+          Las herramientas apoyan la gestión, pero no reemplazan la normativa vigente ni los procedimientos de tu
+          institución. Adáptalas a tu realidad antes de usarlas.
+        </p>
+      </div>
+    </article>
+  </div>
+</Base>

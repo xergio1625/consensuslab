@@ -1,0 +1,58 @@
+[
+  {
+    "id": "continuidad",
+    "numero": 1,
+    "nombre": "Continuidad del servicio (operación diaria)",
+    "nombre_corto": "Continuidad",
+    "descripcion": "Seguimiento, control y supervisión para que el laboratorio no se detenga y la coordinación vea en todo momento el estado de la operación.",
+    "jira": "PP-63"
+  },
+  {
+    "id": "insumos",
+    "numero": 2,
+    "nombre": "Insumos y proveedores",
+    "nombre_corto": "Insumos",
+    "descripcion": "Para que nunca falte un reactivo o insumo, controlar vencimientos y evaluar a quienes nos abastecen.",
+    "jira": "PP-64"
+  },
+  {
+    "id": "personal",
+    "numero": 3,
+    "nombre": "Personal",
+    "nombre_corto": "Personal",
+    "descripcion": "Para organizar al equipo humano: turnos, competencias, capacitación y salud ocupacional.",
+    "jira": "PP-65"
+  },
+  {
+    "id": "calidad",
+    "numero": 4,
+    "nombre": "Calidad y cumplimiento normativo",
+    "nombre_corto": "Calidad",
+    "descripcion": "El sistema de gestión de calidad que exigen la acreditación (ISO 15189 / Manual de acreditación) y la autorización sanitaria.",
+    "jira": "PP-66"
+  },
+  {
+    "id": "usuarios",
+    "numero": 5,
+    "nombre": "Atención al usuario y comunicación",
+    "nombre_corto": "Usuarios",
+    "descripcion": "Para escuchar a pacientes y médicos, comunicar lo urgente y mantener informado al equipo.",
+    "jira": "PP-67"
+  },
+  {
+    "id": "administracion",
+    "numero": 6,
+    "nombre": "Administración y automatización de tareas repetitivas",
+    "nombre_corto": "Administración",
+    "descripcion": "Para automatizar lo que se repite: recordatorios, informes, solicitudes, formularios y seguimiento de acuerdos.",
+    "jira": "PP-68"
+  },
+  {
+    "id": "bioseguridad",
+    "numero": 7,
+    "nombre": "Bioseguridad y ambiente",
+    "nombre_corto": "Bioseguridad",
+    "descripcion": "Para registrar y supervisar residuos, accidentes, equipos de emergencia y limpieza.",
+    "jira": "PP-69"
+  }
+]

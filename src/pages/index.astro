@@ -1,0 +1,102 @@
+---
+// Portada de ConsensusLab.
+import Base from '../plantillas/Base.astro';
+import TarjetaHerramienta from '../componentes/TarjetaHerramienta.astro';
+import { obtenerCatalogo, obtenerHerramientas } from '../lib/datos';
+import { url } from '../lib/rutas';
+
+const catalogo = await obtenerCatalogo();
+const nombreGrupo = new Map(catalogo.map(({ grupo }) => [grupo.id, grupo.data.nombre_corto]));
+const prioritarias = (await obtenerHerramientas()).filter((h) => h.data.etiquetas.includes('prioridad-coordinador'));
+---
+
+<Base titulo="ConsensusLab" seccion="inicio">
+  <section class="portada">
+    <div class="contenedor">
+      <p class="antetitulo">Para tecnólogos médicos de laboratorio clínico</p>
+      <h1>Herramientas para coordinar, ordenar y mejorar tu laboratorio</h1>
+      <p class="portada-lema">
+        Planillas, plantillas y guías listas para usar en la operación diaria, la calidad y la administración del
+        servicio. Hechas por un TM coordinador, sin datos de pacientes y gratuitas.
+      </p>
+      <form class="buscador-portada" action={url('herramientas/')} method="get" role="search">
+        <label class="solo-lectores" for="busqueda-portada">Buscar herramientas</label>
+        <input
+          class="campo"
+          id="busqueda-portada"
+          name="q"
+          type="search"
+          placeholder="Temperaturas, turnos, auditoría…"
+          autocomplete="off"
+        />
+        <button class="boton" type="submit">Buscar</button>
+      </form>
+    </div>
+  </section>
+
+  {
+    prioritarias.length > 0 && (
+      <section class="seccion">
+        <div class="contenedor">
+          <div class="seccion-cabeza">
+            <div>
+              <p class="antetitulo">Para empezar</p>
+              <h2>Las prioridades de la coordinación</h2>
+            </div>
+            <a href={url('herramientas/?etiqueta=prioridad-coordinador')}>Ver todas las prioritarias</a>
+          </div>
+          <div class="rejilla">
+            {prioritarias.map((h) => (
+              <TarjetaHerramienta herramienta={h} nombreGrupo={nombreGrupo.get(h.data.grupo.id)} />
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <section class="seccion seccion-alt">
+    <div class="contenedor">
+      <div class="seccion-cabeza">
+        <div>
+          <p class="antetitulo">Catálogo</p>
+          <h2>Siete grupos de herramientas</h2>
+        </div>
+        <a href={url('herramientas/')}>Ver el catálogo completo</a>
+      </div>
+      <div class="rejilla">
+        {
+          catalogo.map(({ grupo, herramientas }) => (
+            <article class="tarjeta tarjeta-grupo">
+              <div class="tarjeta-meta">
+                <span class="numero">{grupo.data.numero}</span>
+                <span class="conteo">
+                  {herramientas.length} {herramientas.length === 1 ? 'herramienta' : 'herramientas'}
+                </span>
+              </div>
+              <h3>
+                <a href={url(`grupos/${grupo.id}/`)}>{grupo.data.nombre}</a>
+              </h3>
+              <p>{grupo.data.descripcion}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="contenedor">
+      <div class="franja-qc">
+        <div>
+          <h2>Consensus QC automatiza parte de estas herramientas</h2>
+          <p>
+            El software de control de calidad para laboratorio clínico: Westgard, Levey-Jennings, sigma, control externo
+            y plan de calidad en una sola plataforma. Las herramientas de este sitio funcionan sin él.
+          </p>
+        </div>
+        <a class="boton" href={url('consensus-qc/')}>Conocer Consensus QC</a>
+      </div>
+    </div>
+  </section>
+</Base>

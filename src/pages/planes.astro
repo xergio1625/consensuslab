@@ -1,0 +1,17 @@
+---
+// Planes de suscripción (pendiente: definir plataforma de pagos).
+import Base from '../plantillas/Base.astro';
+import { url } from '../lib/rutas';
+---
+
+<Base titulo="Planes" seccion="planes" descripcion="Planes de suscripción de ConsensusLab. Próximamente.">
+  <div class="contenedor proximamente">
+    <span class="insignia insignia-en-preparacion">Próximamente</span>
+    <h1>Planes de suscripción</h1>
+    <p>
+      Las herramientas del catálogo gratuito seguirán siendo gratuitas. La suscripción mensual sumará herramientas
+      avanzadas y acceso a Consensus QC.
+    </p>
+    <p><a class="boton boton-primario" href={url('herramientas/')}>Explorar las herramientas gratuitas</a></p>
+  </div>
+</Base>

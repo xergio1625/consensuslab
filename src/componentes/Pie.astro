@@ -1,0 +1,25 @@
+---
+// Pie de página: aviso de datos, licencia y enlaces secundarios.
+import { url } from '../lib/rutas';
+const anio = new Date().getFullYear();
+---
+
+<footer class="pie">
+  <div class="contenedor pie-interior">
+    <div>
+      <p><strong>ConsensusLab</strong> · Herramientas de gestión para el laboratorio clínico.</p>
+      <p>Los recursos son plantillas en blanco o con datos de ejemplo: nunca contienen datos de pacientes.</p>
+      <p>
+        Recursos gratuitos bajo licencia
+        <a href={url('licencia/')}>CC BY-NC-SA 4.0 con permiso de uso en laboratorios</a>. © {anio}
+      </p>
+    </div>
+    <ul>
+      <li><a href={url('herramientas/')}>Herramientas</a></li>
+      <li><a href={url('consensus-qc/')}>Consensus QC</a></li>
+      <li><a href={url('planes/')}>Planes</a></li>
+      <li><a href={url('acerca/')}>Acerca</a></li>
+      <li><a href={url('licencia/')}>Licencia</a></li>
+    </ul>
+  </div>
+</footer>

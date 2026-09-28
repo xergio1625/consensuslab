@@ -1,0 +1,35 @@
+---
+// Tarjeta de una herramienta en listados. Los atributos data-* los usa el filtro del catálogo.
+import type { CollectionEntry } from 'astro:content';
+import { ESTADOS, nombreEtiqueta, normalizar, url } from '../lib/rutas';
+
+interface Props {
+  herramienta: CollectionEntry<'herramientas'>;
+  nombreGrupo?: string;
+}
+const { herramienta, nombreGrupo } = Astro.props;
+const h = herramienta.data;
+const textoBusqueda = normalizar(
+  [h.titulo, h.que_es, h.problema, h.recurso_previsto ?? '', nombreGrupo ?? '', h.etiquetas.join(' ')].join(' '),
+);
+---
+
+<article
+  class="tarjeta"
+  data-herramienta
+  data-grupo={h.grupo.id}
+  data-estado={h.estado}
+  data-acceso={h.acceso}
+  data-consensus-qc={h.consensus_qc}
+  data-etiquetas={h.etiquetas.join(' ')}
+  data-texto={textoBusqueda}
+>
+  {nombreGrupo && <div class="tarjeta-meta">{nombreGrupo}</div>}
+  <h3><a href={url(`herramientas/${herramienta.id}/`)}>{h.titulo}</a></h3>
+  <p>{h.que_es}</p>
+  <div class="tarjeta-pie">
+    <span class={`insignia insignia-${h.estado}`}>{ESTADOS[h.estado]}</span>
+    {h.acceso === 'suscripcion' && <span class="insignia insignia-suscripcion">Suscripción</span>}
+    {h.etiquetas.map((e) => <span class="insignia insignia-etiqueta">{nombreEtiqueta(e)}</span>)}
+  </div>
+</article>

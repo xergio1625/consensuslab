@@ -1,0 +1,15 @@
+---
+// Área de suscriptores. Más adelante: ingreso contra consensusqc-api y descargas protegidas.
+// Importante: los archivos pagados nunca se guardan en este repositorio (todo lo publicado aquí es público).
+import Base from '../plantillas/Base.astro';
+import { url } from '../lib/rutas';
+---
+
+<Base titulo="Ingresar" seccion="cuenta" descripcion="Área de suscriptores de ConsensusLab. Próximamente.">
+  <div class="contenedor proximamente">
+    <span class="insignia insignia-en-preparacion">Próximamente</span>
+    <h1>Área de suscriptores</h1>
+    <p>Aquí podrás ingresar con tu cuenta para acceder a las herramientas de suscripción y a Consensus QC.</p>
+    <p><a class="boton boton-secundario" href={url('planes/')}>Ver planes</a></p>
+  </div>
+</Base>

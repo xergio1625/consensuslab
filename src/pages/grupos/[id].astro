@@ -1,0 +1,44 @@
+---
+// Página de un grupo: se genera una por cada grupo de contenido/grupos.json.
+import Base from '../../plantillas/Base.astro';
+import TarjetaHerramienta from '../../componentes/TarjetaHerramienta.astro';
+import { obtenerCatalogo } from '../../lib/datos';
+import { url } from '../../lib/rutas';
+
+export async function getStaticPaths() {
+  const catalogo = await obtenerCatalogo();
+  return catalogo.map(({ grupo, herramientas }) => ({ params: { id: grupo.id }, props: { grupo, herramientas } }));
+}
+
+const { grupo, herramientas } = Astro.props;
+---
+
+<Base titulo={grupo.data.nombre} seccion="herramientas" descripcion={grupo.data.descripcion}>
+  <div class="contenedor">
+    <nav class="migas" aria-label="Ruta de navegación">
+      <ol>
+        <li><a href={url('herramientas/')}>Herramientas</a></li>
+        <li aria-current="page">{grupo.data.nombre_corto}</li>
+      </ol>
+    </nav>
+    <header class="ficha-cabeza">
+      <p class="antetitulo">Grupo {grupo.data.numero}</p>
+      <h1>{grupo.data.nombre}</h1>
+      <p class="texto-suave">{grupo.data.descripcion}</p>
+    </header>
+
+    <div class="seccion" style="padding-top:0">
+      {
+        herramientas.length > 0 ? (
+          <div class="rejilla">
+            {herramientas.map((h) => (
+              <TarjetaHerramienta herramienta={h} />
+            ))}
+          </div>
+        ) : (
+          <p class="sin-resultados">Las herramientas de este grupo se publicarán pronto.</p>
+        )
+      }
+    </div>
+  </div>
+</Base>

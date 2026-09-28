@@ -1,0 +1,13 @@
+---
+// Página no encontrada.
+import Base from '../plantillas/Base.astro';
+import { url } from '../lib/rutas';
+---
+
+<Base titulo="Página no encontrada">
+  <div class="contenedor proximamente">
+    <h1>No encontramos esta página</h1>
+    <p>Puede que la dirección haya cambiado. Busca la herramienta en el catálogo.</p>
+    <p><a class="boton boton-primario" href={url('herramientas/')}>Ir al catálogo</a></p>
+  </div>
+</Base>

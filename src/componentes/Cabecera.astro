@@ -1,0 +1,73 @@
+---
+// Cabecera con logo, menú principal (plegable en celular) y botón de modo claro/oscuro.
+import Logo from './Logo.astro';
+import { url } from '../lib/rutas';
+
+interface Props {
+  seccion?: string;
+}
+const { seccion } = Astro.props;
+
+const enlaces = [
+  { id: 'herramientas', texto: 'Herramientas', ruta: 'herramientas/' },
+  { id: 'consensus-qc', texto: 'Consensus QC', ruta: 'consensus-qc/' },
+  { id: 'planes', texto: 'Planes', ruta: 'planes/' },
+  { id: 'acerca', texto: 'Acerca', ruta: 'acerca/' },
+  { id: 'cuenta', texto: 'Ingresar', ruta: 'cuenta/' },
+];
+---
+
+<header class="cabecera">
+  <div class="contenedor cabecera-interior">
+    <a class="marca" href={url()} aria-label="ConsensusLab, inicio">
+      <Logo />
+      <span>Consensus<span class="marca-lab">Lab</span></span>
+    </a>
+
+    <nav class="nav-principal" aria-label="Navegación principal">
+      <ul class="nav-lista" id="menu-principal">
+        {
+          enlaces.map((e) => (
+            <li>
+              <a href={url(e.ruta)} aria-current={seccion === e.id ? 'page' : undefined}>
+                {e.texto}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <button class="boton-icono" id="boton-tema" type="button" aria-label="Cambiar entre modo claro y oscuro">
+        <svg class="icono-luna" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg>
+        <svg class="icono-sol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.5"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+      </button>
+      <button class="boton-icono boton-menu" id="boton-menu" type="button" aria-controls="menu-principal" aria-expanded="false" aria-label="Abrir menú">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"></path></svg>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<script>
+  // Botón de tema: alterna claro/oscuro y recuerda la elección en este navegador.
+  const raiz = document.documentElement;
+  document.getElementById('boton-tema')?.addEventListener('click', () => {
+    const actual =
+      raiz.dataset.theme ?? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    const nuevo = actual === 'dark' ? 'light' : 'dark';
+    raiz.dataset.theme = nuevo;
+    try {
+      localStorage.setItem('tema', nuevo);
+    } catch {
+      // Sin almacenamiento disponible: el cambio dura hasta recargar.
+    }
+  });
+
+  // Menú plegable en celular.
+  const botonMenu = document.getElementById('boton-menu');
+  const menu = document.getElementById('menu-principal');
+  botonMenu?.addEventListener('click', () => {
+    const abierto = menu?.classList.toggle('abierta') ?? false;
+    botonMenu.setAttribute('aria-expanded', String(abierto));
+    botonMenu.setAttribute('aria-label', abierto ? 'Cerrar menú' : 'Abrir menú');
+  });
+</script>

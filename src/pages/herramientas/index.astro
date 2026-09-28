@@ -1,0 +1,201 @@
+---
+// Catálogo de herramientas con buscador y filtros.
+// Sin JavaScript se ve el catálogo completo; con JavaScript se puede filtrar.
+// Los filtros se reflejan en la dirección (?q=…&grupo=…&etiqueta=…) para poder compartirlos.
+import Base from '../../plantillas/Base.astro';
+import TarjetaHerramienta from '../../componentes/TarjetaHerramienta.astro';
+import { obtenerCatalogo } from '../../lib/datos';
+import { ESTADOS, RELACION_CONSENSUS_QC, nombreEtiqueta } from '../../lib/rutas';
+
+const catalogo = await obtenerCatalogo();
+const total = catalogo.reduce((n, c) => n + c.herramientas.length, 0);
+const etiquetas = [...new Set(catalogo.flatMap((c) => c.herramientas.flatMap((h) => h.data.etiquetas)))].sort();
+---
+
+<Base
+  titulo="Herramientas"
+  seccion="herramientas"
+  descripcion="Catálogo de herramientas de gestión para laboratorio clínico: continuidad, insumos, personal, calidad, usuarios, administración y bioseguridad."
+>
+  <div class="contenedor seccion">
+    <h1>Herramientas</h1>
+    <p class="texto-suave">
+      {total} herramientas en 7 grupos. Busca por palabra o filtra por grupo, etiqueta o estado.
+    </p>
+
+    <div class="catalogo">
+      <form class="filtros" id="filtros" role="search" aria-label="Filtrar herramientas">
+        <div>
+          <label class="titulo-filtro" for="filtro-q">Buscar</label>
+          <input class="campo" id="filtro-q" name="q" type="search" placeholder="Ej.: temperaturas" autocomplete="off" />
+        </div>
+        <div>
+          <label class="titulo-filtro" for="filtro-grupo">Grupo</label>
+          <select class="campo" id="filtro-grupo" name="grupo">
+            <option value="">Todos los grupos</option>
+            {catalogo.map(({ grupo }) => <option value={grupo.id}>{grupo.data.numero}. {grupo.data.nombre_corto}</option>)}
+          </select>
+        </div>
+        {
+          etiquetas.length > 0 && (
+            <fieldset>
+              <legend>Etiqueta</legend>
+              <div class="opciones-filtro" id="filtro-etiqueta">
+                {etiquetas.map((e) => (
+                  <button type="button" class="chip" data-etiqueta={e} aria-pressed="false">
+                    {nombreEtiqueta(e)}
+                  </button>
+                ))}
+              </div>
+            </fieldset>
+          )
+        }
+        <div>
+          <label class="titulo-filtro" for="filtro-estado">Estado</label>
+          <select class="campo" id="filtro-estado" name="estado">
+            <option value="">Todos</option>
+            {Object.entries(ESTADOS).map(([valor, texto]) => <option value={valor}>{texto}</option>)}
+          </select>
+        </div>
+        <div>
+          <label class="titulo-filtro" for="filtro-acceso">Acceso</label>
+          <select class="campo" id="filtro-acceso" name="acceso">
+            <option value="">Todos</option>
+            <option value="gratuito">Gratuito</option>
+            <option value="suscripcion">Suscripción</option>
+          </select>
+        </div>
+        <div>
+          <label class="titulo-filtro" for="filtro-qc">Consensus QC</label>
+          <select class="campo" id="filtro-qc" name="qc">
+            <option value="">Todas</option>
+            {
+              (['existente', 'parcial', 'previsto'] as const).map((v) => (
+                <option value={v}>{RELACION_CONSENSUS_QC[v]}</option>
+              ))
+            }
+          </select>
+        </div>
+      </form>
+
+      <div>
+        <div class="resultados-cabeza">
+          <p id="conteo" aria-live="polite">{total} herramientas</p>
+          <button type="button" class="enlace-boton" id="limpiar" hidden>Quitar filtros</button>
+        </div>
+
+        {
+          catalogo.map(({ grupo, herramientas }) => (
+            <section class="grupo-bloque" data-bloque-grupo={grupo.id} hidden={herramientas.length === 0}>
+              <h2>
+                {grupo.data.numero}. {grupo.data.nombre} <span>{herramientas.length}</span>
+              </h2>
+              <div class="rejilla">
+                {herramientas.map((h) => (
+                  <TarjetaHerramienta herramienta={h} />
+                ))}
+              </div>
+            </section>
+          ))
+        }
+
+        <p class="sin-resultados" id="sin-resultados" hidden>
+          No hay herramientas con esos filtros. Prueba con otra palabra o quita filtros.
+        </p>
+      </div>
+    </div>
+  </div>
+</Base>
+
+<script>
+  // Filtro del catálogo: oculta o muestra tarjetas según los filtros elegidos.
+  const quitarTildes = (t: string) => t.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
+
+  const formulario = document.getElementById('filtros') as HTMLFormElement;
+  const campoQ = document.getElementById('filtro-q') as HTMLInputElement;
+  const selectores = {
+    grupo: document.getElementById('filtro-grupo') as HTMLSelectElement,
+    estado: document.getElementById('filtro-estado') as HTMLSelectElement,
+    acceso: document.getElementById('filtro-acceso') as HTMLSelectElement,
+    qc: document.getElementById('filtro-qc') as HTMLSelectElement,
+  };
+  const chips = [...document.querySelectorAll<HTMLButtonElement>('[data-etiqueta]')];
+  const tarjetas = [...document.querySelectorAll<HTMLElement>('[data-herramienta]')];
+  const bloques = [...document.querySelectorAll<HTMLElement>('[data-bloque-grupo]')];
+  const conteo = document.getElementById('conteo')!;
+  const sinResultados = document.getElementById('sin-resultados')!;
+  const limpiar = document.getElementById('limpiar')!;
+
+  let etiqueta = '';
+
+  function leerDireccion() {
+    const p = new URLSearchParams(location.search);
+    campoQ.value = p.get('q') ?? '';
+    for (const [clave, select] of Object.entries(selectores)) {
+      const valor = p.get(clave) ?? '';
+      select.value = [...select.options].some((o) => o.value === valor) ? valor : '';
+    }
+    const e = p.get('etiqueta') ?? '';
+    etiqueta = chips.some((c) => c.dataset.etiqueta === e) ? e : '';
+  }
+
+  function escribirDireccion() {
+    const p = new URLSearchParams();
+    if (campoQ.value.trim()) p.set('q', campoQ.value.trim());
+    for (const [clave, select] of Object.entries(selectores)) if (select.value) p.set(clave, select.value);
+    if (etiqueta) p.set('etiqueta', etiqueta);
+    const texto = p.toString();
+    history.replaceState(null, '', texto ? `?${texto}` : location.pathname);
+  }
+
+  function aplicar() {
+    const palabras = quitarTildes(campoQ.value).split(/\s+/).filter(Boolean);
+    const { grupo, estado, acceso, qc } = Object.fromEntries(
+      Object.entries(selectores).map(([k, s]) => [k, s.value]),
+    );
+    let visibles = 0;
+
+    for (const t of tarjetas) {
+      const d = t.dataset;
+      const ok =
+        (!grupo || d.grupo === grupo) &&
+        (!estado || d.estado === estado) &&
+        (!acceso || d.acceso === acceso) &&
+        (!qc || d.consensusQc === qc) &&
+        (!etiqueta || (d.etiquetas ?? '').split(' ').includes(etiqueta)) &&
+        palabras.every((p) => (d.texto ?? '').includes(p));
+      t.hidden = !ok;
+      if (ok) visibles++;
+    }
+    for (const b of bloques) {
+      b.hidden = !b.querySelector('[data-herramienta]:not([hidden])');
+    }
+    for (const c of chips) c.setAttribute('aria-pressed', String(c.dataset.etiqueta === etiqueta));
+
+    conteo.textContent = `${visibles} ${visibles === 1 ? 'herramienta' : 'herramientas'}`;
+    sinResultados.hidden = visibles > 0;
+    limpiar.hidden = !(palabras.length || grupo || estado || acceso || qc || etiqueta);
+    escribirDireccion();
+  }
+
+  formulario.addEventListener('input', aplicar);
+  formulario.addEventListener('submit', (e) => {
+    e.preventDefault();
+    aplicar();
+  });
+  for (const c of chips) {
+    c.addEventListener('click', () => {
+      etiqueta = etiqueta === c.dataset.etiqueta ? '' : (c.dataset.etiqueta ?? '');
+      aplicar();
+    });
+  }
+  limpiar.addEventListener('click', () => {
+    formulario.reset();
+    etiqueta = '';
+    aplicar();
+    campoQ.focus();
+  });
+
+  leerDireccion();
+  aplicar();
+</script>

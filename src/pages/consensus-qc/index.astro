@@ -1,0 +1,91 @@
+---
+// Sección del software Consensus QC (absorbe el sitio consensus-qc-site).
+import Base from '../../plantillas/Base.astro';
+import TarjetaHerramienta from '../../componentes/TarjetaHerramienta.astro';
+import { obtenerHerramientas } from '../../lib/datos';
+import { RELACION_CONSENSUS_QC, url } from '../../lib/rutas';
+
+const relacionadas = (await obtenerHerramientas()).filter((h) => h.data.consensus_qc !== 'no');
+
+const modulos = [
+  ['Planificación de calidad', 'Versiones del plan, objetivos, estrategias, árboles de decisión Westgard y acciones correctivas con responsable.'],
+  ['Visualizador QC', 'Levey-Jennings con reglas Westgard aplicadas automáticamente y apoyo a la validación de corridas.'],
+  ['Registro de resultados', 'Ingreso diario del control interno por área, analizador, control, analito y nivel, con trazabilidad del operador.'],
+  ['Dashboard de calidad', 'Supervisión del plan, alertas Westgard, cumplimiento de objetivos y lotes próximos a vencer.'],
+  ['Desempeño analítico', 'Six Sigma por analito: CV interno + sesgo EQA = error total frente a CLIA, variabilidad biológica o RCPA.'],
+  ['Control externo', 'Encuestas externas, grupo par y comparación por sesgo %, Z-score y CVR.'],
+  ['Verificación analítica', 'Comparación de analizadores, precisión EP-15 CLSI, N20 ampliado y linealidad.'],
+  ['Reportes', 'Informes en PDF y Excel, distribución por correo y reporte de imprecisión para el LIS.'],
+];
+---
+
+<Base
+  titulo="Consensus QC"
+  seccion="consensus-qc"
+  descripcion="Consensus QC: software de control de calidad para laboratorio clínico con Westgard, Levey-Jennings, sigma, control externo y plan de calidad."
+>
+  <section class="portada">
+    <div class="contenedor">
+      <p class="antetitulo">Software de control de calidad</p>
+      <h1>Consensus QC: el plan de calidad en el centro de tu laboratorio</h1>
+      <p class="portada-lema">
+        Integra el plan de calidad con el control QC diario para detectar la causa raíz de cada desviación. Automatiza
+        parte de las herramientas de ConsensusLab, pero ninguna herramienta del sitio depende de él.
+      </p>
+      <a class="boton boton-primario" href="https://xergio1625.github.io/consensus-qc-site/">Ver versión de prueba y licencias</a>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="contenedor">
+      <h2>Módulos disponibles</h2>
+      <ul class="lista-modulos">
+        {
+          modulos.map(([nombre, texto]) => (
+            <li>
+              <strong>{nombre}</strong>
+              <span>{texto}</span>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="texto-suave">
+        En desarrollo: inventario de reactivos, roles y responsabilidades, ciclo de vida de instrumentos y registro de
+        mantenciones.
+      </p>
+    </div>
+  </section>
+
+  {
+    relacionadas.length > 0 && (
+      <section class="seccion seccion-alt">
+        <div class="contenedor">
+          <h2>Herramientas del catálogo que cubre Consensus QC</h2>
+          <p class="texto-suave">
+            {Object.entries(RELACION_CONSENSUS_QC)
+              .filter(([k]) => k !== 'no')
+              .map(([, v]) => v)
+              .join(' · ')}
+          </p>
+          <div class="rejilla">
+            {relacionadas.map((h) => (
+              <TarjetaHerramienta herramienta={h} />
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <section class="seccion">
+    <div class="contenedor">
+      <div class="franja-qc">
+        <div>
+          <h2>Pronto, incluido en la suscripción</h2>
+          <p>Consensus QC formará parte de los planes de suscripción de ConsensusLab.</p>
+        </div>
+        <a class="boton" href={url('planes/')}>Ver planes</a>
+      </div>
+    </div>
+  </section>
+</Base>

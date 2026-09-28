@@ -1,0 +1,148 @@
+---
+// Plantilla de ficha: se genera una página por cada archivo en contenido/herramientas/.
+import { getEntries, getEntry, render } from 'astro:content';
+import Base from '../../plantillas/Base.astro';
+import { obtenerHerramientas } from '../../lib/datos';
+import {
+  ESTADOS,
+  RELACION_CONSENSUS_QC,
+  TIPOS_RECURSO,
+  formatoFecha,
+  nombreEtiqueta,
+  url,
+  urlRecurso,
+} from '../../lib/rutas';
+
+export async function getStaticPaths() {
+  const herramientas = await obtenerHerramientas();
+  return herramientas.map((herramienta) => ({ params: { id: herramienta.id }, props: { herramienta } }));
+}
+
+const { herramienta } = Astro.props;
+const h = herramienta.data;
+const grupo = await getEntry(h.grupo);
+const relacionadas = await getEntries(h.relacionadas);
+const { Content } = await render(herramienta);
+const tienePasos = Boolean(herramienta.body?.trim());
+
+const siglas = { excel: 'XLS', sheets: 'GS', word: 'DOC', pdf: 'PDF', formulario: 'FORM', otro: '↓' } as const;
+---
+
+<Base titulo={h.titulo} seccion="herramientas" descripcion={`${h.que_es} ${h.problema}`}>
+  <div class="contenedor">
+    <nav class="migas" aria-label="Ruta de navegación">
+      <ol>
+        <li><a href={url('herramientas/')}>Herramientas</a></li>
+        <li><a href={url(`grupos/${grupo.id}/`)}>{grupo.data.nombre_corto}</a></li>
+        <li aria-current="page">{h.titulo}</li>
+      </ol>
+    </nav>
+
+    <header class="ficha-cabeza">
+      <h1>{h.titulo}</h1>
+      <div class="ficha-meta">
+        <span class={`insignia insignia-${h.estado}`}>{ESTADOS[h.estado]}</span>
+        {h.acceso === 'suscripcion' && <span class="insignia insignia-suscripcion">Suscripción</span>}
+        {
+          h.etiquetas.map((e) => (
+            <a class="insignia insignia-etiqueta" href={url(`herramientas/?etiqueta=${e}`)}>
+              {nombreEtiqueta(e)}
+            </a>
+          ))
+        }
+        <span>Actualizado el {formatoFecha(h.actualizado)}</span>
+      </div>
+    </header>
+
+    <div class="ficha">
+      <article class="ficha-cuerpo">
+        <h2>Qué es</h2>
+        <p>{h.que_es}</p>
+        <h2>Problema que resuelve</h2>
+        <p>{h.problema}</p>
+
+        {
+          tienePasos ? (
+            <Content />
+          ) : (
+            <>
+              <h2>Cómo usarla</h2>
+              <div class="aviso">
+                <p>
+                  <strong>Paso a paso en preparación.</strong> Estamos preparando la guía de uso y el recurso descargable
+                  de esta herramienta.
+                </p>
+              </div>
+            </>
+          )
+        }
+
+        {
+          relacionadas.length > 0 && (
+            <>
+              <h2>Herramientas relacionadas</h2>
+              <ul>
+                {relacionadas.map((r) => (
+                  <li>
+                    <a href={url(`herramientas/${r.id}/`)}>{r.data.titulo}</a>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )
+        }
+      </article>
+
+      <aside class="ficha-lateral" aria-label="Recursos y datos de la herramienta">
+        <section class="caja">
+          <h2>Descargar</h2>
+          {
+            h.recursos.length > 0 ? (
+              <ul class="lista-recursos">
+                {h.recursos.map((r) => (
+                  <li>
+                    <a
+                      href={r.archivo ? urlRecurso(r.archivo) : r.enlace}
+                      download={r.archivo ? '' : undefined}
+                      target={r.enlace ? '_blank' : undefined}
+                      rel={r.enlace ? 'noopener' : undefined}
+                    >
+                      <span class="icono-recurso" aria-hidden="true">
+                        {siglas[r.tipo]}
+                      </span>
+                      <span>
+                        {r.nombre}
+                        <small>
+                          {TIPOS_RECURSO[r.tipo]}
+                          {r.enlace && ' · se abre en otra pestaña'}
+                        </small>
+                      </span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <>
+                <p>
+                  <span class="insignia insignia-en-preparacion">Recurso en preparación</span>
+                </p>
+                {h.recurso_previsto && <p class="texto-suave">{h.recurso_previsto}</p>}
+              </>
+            )
+          }
+        </section>
+
+        <section class="caja">
+          <h2>Consensus QC</h2>
+          <p>{RELACION_CONSENSUS_QC[h.consensus_qc]}.</p>
+          {h.consensus_qc !== 'no' && <p><a href={url('consensus-qc/')}>Conocer Consensus QC</a></p>}
+        </section>
+
+        <section class="caja">
+          <h2>Grupo</h2>
+          <p><a href={url(`grupos/${grupo.id}/`)}>{grupo.data.numero}. {grupo.data.nombre}</a></p>
+        </section>
+      </aside>
+    </div>
+  </div>
+</Base>
