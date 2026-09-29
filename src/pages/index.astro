@@ -2,11 +2,15 @@
 // Portada de ConsensusLab.
 import Base from '../plantillas/Base.astro';
 import TarjetaHerramienta from '../componentes/TarjetaHerramienta.astro';
-import { obtenerCatalogo, obtenerHerramientas } from '../lib/datos';
+import TarjetaPrompt from '../componentes/TarjetaPrompt.astro';
+import { obtenerCatalogo, obtenerHerramientas, obtenerPrompts } from '../lib/datos';
 import { url } from '../lib/rutas';
 
 const catalogo = await obtenerCatalogo();
 const nombreGrupo = new Map(catalogo.map(({ grupo }) => [grupo.id, grupo.data.nombre_corto]));
+const promptsDestacados = (await obtenerPrompts()).filter((p) =>
+  ['redactar-procedimiento', 'analisis-de-causa', 'alarma-de-control-de-calidad'].includes(p.id),
+);
 const prioritarias = (await obtenerHerramientas()).filter((h) => h.data.etiquetas.includes('prioridad-coordinador'));
 ---
 
@@ -81,6 +85,25 @@ const prioritarias = (await obtenerHerramientas()).filter((h) => h.data.etiqueta
             </article>
           ))
         }
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="contenedor">
+      <div class="seccion-cabeza">
+        <div>
+          <p class="antetitulo">Gratis</p>
+          <h2>Prompts de IA para el laboratorio</h2>
+        </div>
+        <a href={url('prompts/')}>Ver todos los prompts</a>
+      </div>
+      <p class="texto-suave">
+        Instrucciones listas para copiar en tu asistente de IA: procedimientos, análisis de causa, control de calidad,
+        capacitación y comunicación. Sin datos de pacientes.
+      </p>
+      <div class="rejilla">
+        {promptsDestacados.map((p) => <TarjetaPrompt prompt={p} conCategoria />)}
       </div>
     </div>
   </section>

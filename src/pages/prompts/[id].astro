@@ -1,0 +1,133 @@
+---
+// Página de un prompt: se genera una por cada archivo en contenido/prompts/.
+import { getEntries, render } from 'astro:content';
+import Base from '../../plantillas/Base.astro';
+import { obtenerPrompts } from '../../lib/datos';
+import { CATEGORIAS_PROMPT, camposPrompt, formatoFecha, promptResaltado, url } from '../../lib/rutas';
+
+export async function getStaticPaths() {
+  const prompts = await obtenerPrompts();
+  return prompts.map((prompt) => ({ params: { id: prompt.id }, props: { prompt, todos: prompts } }));
+}
+
+const { prompt, todos } = Astro.props;
+const p = prompt.data;
+const herramientas = await getEntries(p.herramientas);
+const { Content } = await render(prompt);
+const campos = camposPrompt(p.prompt);
+const mismaCategoria = todos.filter((o) => o.data.categoria === p.categoria && o.id !== prompt.id);
+const categoria = CATEGORIAS_PROMPT[p.categoria];
+---
+
+<Base titulo={p.titulo} seccion="prompts" descripcion={`Prompt de IA para el laboratorio clínico. ${p.resumen}`}>
+  <div class="contenedor">
+    <nav class="migas" aria-label="Ruta de navegación">
+      <ol>
+        <li><a href={url('prompts/')}>Prompts de IA</a></li>
+        <li><a href={url(`prompts/?categoria=${p.categoria}`)}>{categoria}</a></li>
+        <li aria-current="page">{p.titulo}</li>
+      </ol>
+    </nav>
+
+    <header class="ficha-cabeza">
+      <h1>{p.titulo}</h1>
+      <p>{p.resumen}</p>
+      <div class="ficha-meta">
+        <span class="insignia insignia-etiqueta">{categoria}</span>
+        <span class="insignia insignia-disponible">Gratuito</span>
+        <span>Actualizado el {formatoFecha(p.actualizado)}</span>
+      </div>
+    </header>
+
+    <div class="ficha">
+      <article class="ficha-cuerpo">
+        <div class="aviso">
+          <p>
+            <strong>Antes de pegarlo:</strong> no incluyas datos de pacientes ni datos personales del equipo. Revisa
+            siempre lo que responda la IA antes de usarlo.
+          </p>
+        </div>
+
+        <section class="caja-prompt" aria-labelledby="titulo-prompt">
+          <div class="caja-prompt-cabeza">
+            <span id="titulo-prompt">
+              Prompt · {campos} {campos === 1 ? 'campo' : 'campos'} por completar
+            </span>
+            <span>
+              <span class="estado-copia" id="estado-copia" aria-live="polite"></span>{' '}
+              <button type="button" class="boton boton-primario" id="copiar" data-texto={p.prompt.trimEnd()}>
+                Copiar prompt
+              </button>
+            </span>
+          </div>
+          <pre class="texto-prompt" id="texto-prompt" set:html={promptResaltado(p.prompt)} />
+        </section>
+
+        <Content />
+      </article>
+
+      <aside class="ficha-lateral" aria-label="Relacionado">
+        {
+          herramientas.length > 0 && (
+            <section class="caja">
+              <h2>Herramientas relacionadas</h2>
+              <ul class="lista-simple">
+                {herramientas.map((h) => (
+                  <li>
+                    <a href={url(`herramientas/${h.id}/`)}>{h.data.titulo}</a>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )
+        }
+        {
+          mismaCategoria.length > 0 && (
+            <section class="caja">
+              <h2>Más en {categoria}</h2>
+              <ul class="lista-simple">
+                {mismaCategoria.map((o) => (
+                  <li>
+                    <a href={url(`prompts/${o.id}/`)}>{o.data.titulo}</a>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )
+        }
+        <section class="caja">
+          <h2>Cómo completar los campos</h2>
+          <p>
+            Reemplaza cada <mark class="campo-prompt">[CAMPO]</mark> por tu información, en el asistente o antes de
+            pegar. Mientras más concreto seas, mejor será la respuesta.
+          </p>
+          <p class="texto-suave">
+            Uso libre bajo <a href={url('licencia/')}>licencia CC BY-NC-SA 4.0</a>.
+          </p>
+        </section>
+      </aside>
+    </div>
+  </div>
+</Base>
+
+<script>
+  // Copia el texto del prompt (sin el resaltado) al portapapeles.
+  const boton = document.getElementById('copiar') as HTMLButtonElement | null;
+  const estado = document.getElementById('estado-copia');
+  boton?.addEventListener('click', async () => {
+    const texto = boton.dataset.texto ?? '';
+    let ok = false;
+    try {
+      await navigator.clipboard.writeText(texto);
+      ok = true;
+    } catch {
+      // Sin acceso al portapapeles: se selecciona el texto para copiarlo a mano.
+      const pre = document.getElementById('texto-prompt');
+      if (pre) getSelection()?.selectAllChildren(pre);
+    }
+    if (estado) {
+      estado.textContent = ok ? 'Copiado ✓' : 'Texto seleccionado: cópialo con Ctrl+C';
+      setTimeout(() => (estado.textContent = ''), 4000);
+    }
+  });
+</script>

@@ -50,3 +50,28 @@ export function formatoFecha(fecha: Date): string {
 export function normalizar(texto: string): string {
   return texto.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 }
+
+/** Campo a completar en un prompt: texto en mayúsculas entre corchetes, como [NOMBRE DEL EQUIPO]. */
+export const CAMPO_PROMPT = /\[[^\]a-záéíóúñ\n]{3,}\]/g;
+
+/** HTML del prompt con los campos a completar resaltados (el resto del texto va escapado). */
+export function promptResaltado(texto: string): string {
+  const escapar = (t: string) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  return escapar(texto.trimEnd()).replace(CAMPO_PROMPT, (c) => `<mark class="campo-prompt">${c}</mark>`);
+}
+
+/** Cantidad de campos a completar distintos en un prompt. */
+export function camposPrompt(texto: string): number {
+  return new Set(texto.match(CAMPO_PROMPT) ?? []).size;
+}
+
+/** Categorías de los prompts de IA (el orden es el de la página de prompts). */
+export const CATEGORIAS_PROMPT = {
+  documentos: 'Documentos y procedimientos',
+  calidad: 'Calidad y mejora',
+  'control-de-calidad': 'Control de calidad analítico',
+  equipo: 'Equipo y capacitación',
+  comunicacion: 'Comunicación',
+  coordinacion: 'Coordinación y reuniones',
+  planillas: 'Planillas y datos',
+} as const;

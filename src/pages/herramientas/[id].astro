@@ -2,7 +2,7 @@
 // Plantilla de ficha: se genera una página por cada archivo en contenido/herramientas/.
 import { getEntries, getEntry, render } from 'astro:content';
 import Base from '../../plantillas/Base.astro';
-import { obtenerHerramientas } from '../../lib/datos';
+import { obtenerHerramientas, obtenerPrompts } from '../../lib/datos';
 import {
   ESTADOS,
   RELACION_CONSENSUS_QC,
@@ -25,6 +25,7 @@ const grupo = await getEntry(h.grupo);
 const relacionadas = await getEntries(h.relacionadas);
 const { Content } = await render(herramienta);
 const tienePasos = Boolean(herramienta.body?.trim());
+const prompts = (await obtenerPrompts()).filter((p) => p.data.herramientas.some((r) => r.id === herramienta.id));
 
 const siglas = { excel: 'XLS', sheets: 'GS', word: 'DOC', pdf: 'PDF', formulario: 'FORM', otro: '↓' } as const;
 ---
@@ -151,6 +152,21 @@ const siglas = { excel: 'XLS', sheets: 'GS', word: 'DOC', pdf: 'PDF', formulario
             )
           }
         </section>
+          )
+        }
+
+        {
+          prompts.length > 0 && (
+            <section class="caja">
+              <h2>Prompts de IA</h2>
+              <ul class="lista-simple">
+                {prompts.map((p) => (
+                  <li>
+                    <a href={url(`prompts/${p.id}/`)}>{p.data.titulo}</a>
+                  </li>
+                ))}
+              </ul>
+            </section>
           )
         }
 

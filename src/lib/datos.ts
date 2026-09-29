@@ -1,5 +1,6 @@
 // Lectura del contenido, ya ordenado, para usar en las páginas.
 import { getCollection } from 'astro:content';
+import { CATEGORIAS_PROMPT } from './rutas';
 
 export async function obtenerGrupos() {
   const grupos = await getCollection('grupos');
@@ -18,4 +19,15 @@ export async function obtenerCatalogo() {
     grupo,
     herramientas: herramientas.filter((h) => h.data.grupo.id === grupo.id),
   }));
+}
+
+/** Prompts de IA ordenados por categoría (en el orden de CATEGORIAS_PROMPT) y título. */
+export async function obtenerPrompts() {
+  const orden = Object.keys(CATEGORIAS_PROMPT);
+  const prompts = await getCollection('prompts');
+  return prompts.sort(
+    (a, b) =>
+      orden.indexOf(a.data.categoria) - orden.indexOf(b.data.categoria) ||
+      a.data.titulo.localeCompare(b.data.titulo, 'es'),
+  );
 }

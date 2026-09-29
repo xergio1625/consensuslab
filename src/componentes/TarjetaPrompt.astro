@@ -1,0 +1,19 @@
+---
+// Tarjeta de un prompt de IA en listados. Los atributos data-* los usa el filtro de la página de prompts.
+import type { CollectionEntry } from 'astro:content';
+import { CATEGORIAS_PROMPT, normalizar, url } from '../lib/rutas';
+
+interface Props {
+  prompt: CollectionEntry<'prompts'>;
+  conCategoria?: boolean;
+}
+const { prompt, conCategoria = false } = Astro.props;
+const p = prompt.data;
+const textoBusqueda = normalizar([p.titulo, p.resumen, CATEGORIAS_PROMPT[p.categoria], p.prompt].join(' '));
+---
+
+<article class="tarjeta" data-prompt data-categoria={p.categoria} data-texto={textoBusqueda}>
+  {conCategoria && <div class="tarjeta-meta">{CATEGORIAS_PROMPT[p.categoria]}</div>}
+  <h3><a href={url(`prompts/${prompt.id}/`)}>{p.titulo}</a></h3>
+  <p>{p.resumen}</p>
+</article>

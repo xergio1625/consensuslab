@@ -410,3 +410,17 @@ img, svg { max-width: 100%; }
 /* Botón principal sobre fondos burdeo (portadas) */
 .portada .boton-primario { background: var(--marca-dorado); color: #2A0510; }
 .portada .boton-primario:hover { background: #D9BC85; color: #2A0510; }
+
+/* Prompts de IA */
+.intro-prompts { max-width: 70ch; font-size: 1.05rem; }
+.reglas-ia { max-width: 80ch; }
+.reglas-ia ol { margin: 0; padding-left: 1.3em; }
+.reglas-ia li { margin-bottom: .35em; }
+.filtros-prompts { margin: 24px 0 16px; }
+@media (min-width: 900px) { .filtros-prompts { position: static; grid-template-columns: minmax(220px, 300px) 1fr; } }
+.campo-prompt { background: var(--c-prep-fondo); color: var(--c-prep); border-radius: 4px; padding: 0 3px; font-weight: 600; }
+.caja-prompt { border: 1px solid var(--c-borde); border-radius: var(--radio); background: var(--c-panel); margin: 0 0 24px; }
+.caja-prompt-cabeza { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid var(--c-borde); background: var(--c-panel-alt); border-radius: var(--radio) var(--radio) 0 0; font-size: .9rem; color: var(--c-texto-suave); }
+.texto-prompt { margin: 0; padding: 16px; white-space: pre-wrap; overflow-wrap: anywhere; font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: .88rem; line-height: 1.6; color: var(--c-texto); }
+.estado-copia { font-size: .85rem; color: var(--c-ok); }
+.lista-simple { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; font-size: .92rem; }

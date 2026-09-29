@@ -1,0 +1,153 @@
+---
+// Prompts de IA para el laboratorio, agrupados por categoría, con buscador.
+// Sin JavaScript se ve la lista completa; con JavaScript se puede filtrar (?q=…&categoria=…).
+import Base from '../../plantillas/Base.astro';
+import TarjetaPrompt from '../../componentes/TarjetaPrompt.astro';
+import { obtenerPrompts } from '../../lib/datos';
+import { CATEGORIAS_PROMPT } from '../../lib/rutas';
+
+const prompts = await obtenerPrompts();
+const categorias = (Object.keys(CATEGORIAS_PROMPT) as (keyof typeof CATEGORIAS_PROMPT)[])
+  .map((id) => ({ id, nombre: CATEGORIAS_PROMPT[id], prompts: prompts.filter((p) => p.data.categoria === id) }))
+  .filter((c) => c.prompts.length > 0);
+---
+
+<Base
+  titulo="Prompts de IA"
+  seccion="prompts"
+  descripcion="Prompts de IA listos para copiar, pensados para la gestión del laboratorio clínico: procedimientos, calidad, control de calidad, equipo y comunicación."
+>
+  <div class="contenedor seccion">
+    <h1>Prompts de IA para el laboratorio</h1>
+    <p class="texto-suave intro-prompts">
+      Instrucciones listas para copiar en ChatGPT, Claude, Gemini, Copilot u otro asistente. Completa los campos
+      <mark class="campo-prompt">[EN MAYÚSCULAS]</mark> y obtén un borrador de procedimiento, un análisis de causa o
+      un plan de acción en minutos.
+    </p>
+
+    <div class="aviso reglas-ia">
+      <p><strong>Tres reglas antes de usar IA en el laboratorio</strong></p>
+      <ol>
+        <li>
+          <strong>Nunca pegues datos de pacientes</strong> (nombres, RUT, fichas, resultados) ni datos personales del
+          equipo. Los asistentes de IA son servicios externos.
+        </li>
+        <li>
+          <strong>La IA entrega borradores, no decisiones.</strong> Revisa cifras, normas y valores técnicos: a veces los
+          inventa con total seguridad.
+        </li>
+        <li>
+          <strong>Lo que se aprueba lo firma una persona.</strong> Un documento, un plan o una liberación de resultados
+          sigue siendo responsabilidad del profesional.
+        </li>
+      </ol>
+    </div>
+
+    <form class="filtros filtros-prompts" id="filtros" role="search" aria-label="Filtrar prompts">
+      <div>
+        <label class="titulo-filtro" for="filtro-q">Buscar</label>
+        <input class="campo" id="filtro-q" name="q" type="search" placeholder="Ej.: procedimiento, Westgard" autocomplete="off" />
+      </div>
+      <fieldset>
+        <legend>Categoría</legend>
+        <div class="opciones-filtro">
+          {
+            categorias.map((c) => (
+              <button type="button" class="chip" data-filtro-categoria={c.id} aria-pressed="false">
+                {c.nombre}
+              </button>
+            ))
+          }
+        </div>
+      </fieldset>
+    </form>
+
+    <div class="resultados-cabeza">
+      <p id="conteo" aria-live="polite">{prompts.length} prompts</p>
+      <button type="button" class="enlace-boton" id="limpiar" hidden>Quitar filtros</button>
+    </div>
+
+    {
+      categorias.map((c) => (
+        <section class="grupo-bloque" data-bloque-categoria={c.id}>
+          <h2>
+            {c.nombre} <span>{c.prompts.length}</span>
+          </h2>
+          <div class="rejilla">
+            {c.prompts.map((p) => (
+              <TarjetaPrompt prompt={p} />
+            ))}
+          </div>
+        </section>
+      ))
+    }
+
+    <p class="sin-resultados" id="sin-resultados" hidden>
+      No hay prompts con esos filtros. Prueba con otra palabra o quita filtros.
+    </p>
+  </div>
+</Base>
+
+<script>
+  // Filtro de prompts por palabra y categoría; el estado se refleja en la dirección.
+  const quitarTildes = (t: string) => t.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
+
+  const formulario = document.getElementById('filtros') as HTMLFormElement;
+  const campoQ = document.getElementById('filtro-q') as HTMLInputElement;
+  const chips = [...document.querySelectorAll<HTMLButtonElement>('[data-filtro-categoria]')];
+  const tarjetas = [...document.querySelectorAll<HTMLElement>('[data-prompt]')];
+  const bloques = [...document.querySelectorAll<HTMLElement>('[data-bloque-categoria]')];
+  const conteo = document.getElementById('conteo')!;
+  const sinResultados = document.getElementById('sin-resultados')!;
+  const limpiar = document.getElementById('limpiar')!;
+
+  let categoria = '';
+
+  function aplicar() {
+    const palabras = quitarTildes(campoQ.value).split(/\s+/).filter(Boolean);
+    let visibles = 0;
+    for (const t of tarjetas) {
+      const ok =
+        (!categoria || t.dataset.categoria === categoria) &&
+        palabras.every((p) => (t.dataset.texto ?? '').includes(p));
+      t.hidden = !ok;
+      if (ok) visibles++;
+    }
+    for (const b of bloques) b.hidden = !b.querySelector('[data-prompt]:not([hidden])');
+    for (const c of chips) c.setAttribute('aria-pressed', String(c.dataset.filtroCategoria === categoria));
+    conteo.textContent = `${visibles} ${visibles === 1 ? 'prompt' : 'prompts'}`;
+    sinResultados.hidden = visibles > 0;
+    limpiar.hidden = !(palabras.length || categoria);
+
+    const p = new URLSearchParams();
+    if (campoQ.value.trim()) p.set('q', campoQ.value.trim());
+    if (categoria) p.set('categoria', categoria);
+    const texto = p.toString();
+    history.replaceState(null, '', texto ? `?${texto}` : location.pathname);
+  }
+
+  const inicial = new URLSearchParams(location.search);
+  campoQ.value = inicial.get('q') ?? '';
+  const c0 = inicial.get('categoria') ?? '';
+  categoria = chips.some((c) => c.dataset.filtroCategoria === c0) ? c0 : '';
+
+  formulario.addEventListener('input', aplicar);
+  formulario.addEventListener('submit', (e) => {
+    e.preventDefault();
+    aplicar();
+  });
+  for (const c of chips) {
+    c.addEventListener('click', () => {
+      categoria = categoria === c.dataset.filtroCategoria ? '' : (c.dataset.filtroCategoria ?? '');
+      aplicar();
+    });
+  }
+  limpiar.addEventListener('click', () => {
+    formulario.reset();
+    categoria = '';
+    aplicar();
+    campoQ.focus();
+  });
+
+  aplicar();
+</script>

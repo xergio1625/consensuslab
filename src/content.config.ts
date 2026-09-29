@@ -75,4 +75,38 @@ const herramientas = defineCollection({
     }),
 });
 
-export const collections = { grupos, herramientas };
+// Prompts de IA: un archivo por prompt en contenido/prompts/. El texto del prompt va en el campo
+// «prompt»; lo que el usuario debe completar se escribe [EN MAYÚSCULAS ENTRE CORCHETES].
+// Mismas claves que CATEGORIAS_PROMPT en src/lib/rutas.ts (allí están los nombres visibles).
+const CATEGORIAS = [
+  'documentos',
+  'calidad',
+  'control-de-calidad',
+  'equipo',
+  'comunicacion',
+  'coordinacion',
+  'planillas',
+] as const;
+
+// Campo a completar: texto en mayúsculas entre corchetes (misma regla que CAMPO_PROMPT en src/lib/rutas.ts).
+const CAMPO_PROMPT = /\[[^\]a-záéíóúñ\n]{3,}\]/;
+
+const prompts = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './contenido/prompts' }),
+  schema: z
+    .object({
+      titulo: z.string(),
+      categoria: z.enum(CATEGORIAS),
+      resumen: z.string(),
+      prompt: z.string().min(80),
+      herramientas: z.array(reference('herramientas')).default([]),
+      actualizado: z.coerce.date(),
+    })
+    .superRefine((p, ctx) => {
+      if (!CAMPO_PROMPT.test(p.prompt)) {
+        ctx.addIssue({ code: 'custom', message: 'El prompt debe tener al menos un campo a completar [EN MAYÚSCULAS].' });
+      }
+    }),
+});
+
+export const collections = { grupos, herramientas, prompts };

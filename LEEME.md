@@ -43,6 +43,16 @@ recurso), la publicación se detiene y GitHub muestra el motivo en la pestaña *
 Tipos de recurso: `excel`, `sheets`, `word`, `pdf`, `formulario`, `otro`. En enlaces de Google Sheets, usa la
 dirección terminada en `/copy` para que cada persona haga su propia copia.
 
+## Agregar un prompt de IA
+
+1. Copia `contenido/_plantilla-prompt.md` en `contenido/prompts/` con un nombre en minúsculas y guiones
+   (será la dirección: `/prompts/nombre-del-prompt/`).
+2. Escribe el prompt en el campo `prompt`. Lo que la persona debe completar va **[EN MAYÚSCULAS ENTRE CORCHETES]**:
+   la página lo resalta y cuenta los campos. Cada prompt debe tener al menos uno.
+3. Elige la `categoria`: `documentos`, `calidad`, `control-de-calidad`, `equipo`, `comunicacion`, `coordinacion`
+   o `planillas`. En `herramientas` pon las fichas relacionadas: el prompt aparecerá también en esas fichas.
+4. Debajo, escribe «Cómo usarlo» y «Revisa siempre». Todo prompt debe pedir que no se ingresen datos de pacientes.
+
 ---
 
 ## Trabajar en el computador
@@ -60,8 +70,10 @@ npm run build      # compila y valida todas las fichas (lo mismo que hace GitHub
 ```
 contenido/
   herramientas/        una ficha .md por herramienta
+  prompts/             un prompt de IA .md por archivo
   grupos.json          los 7 grupos
   _plantilla-ficha.md  plantilla para copiar
+  _plantilla-prompt.md plantilla de prompt para copiar
 public/
   recursos/            archivos descargables (se publican tal cual)
 src/
