@@ -4,14 +4,37 @@
     {
       "name": "consensuslab",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "preview", "--", "--port", "4321"],
+      "runtimeArgs": [
+        "run",
+        "preview",
+        "--",
+        "--port",
+        "4321"
+      ],
       "port": 4321
     },
     {
       "name": "consensuslab-app",
       "runtimeExecutable": "node",
-      "runtimeArgs": ["C:/Users/xergi/Desktop/2.0_software_laboratorio/consensuslab-sheets/tools/servidor_local.js"],
-      "port": 8767
+      "runtimeArgs": [
+        "C:/Users/xergi/Desktop/2.0_software_laboratorio/consensuslab-sheets/tools/servidor_local.js"
+      ],
+      "port": 8767,
+      "env": {
+        "CLAVE_PASE_QC": "abababababababababababababababababababababababababababababababab",
+        "URL_DEMO_QC": "http://localhost:8766/"
+      }
+    },
+    {
+      "name": "consensusqc-demo",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "C:/Users/xergi/Desktop/2.0_software_laboratorio/cclab-sheets/tools/servidor_local.js"
+      ],
+      "env": {
+        "CLAVE_PASE": "abababababababababababababababababababababababababababababababab"
+      },
+      "port": 8766
     }
   ]
 }
