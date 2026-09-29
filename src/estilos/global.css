@@ -228,6 +228,12 @@ img, svg { max-width: 100%; }
 .buscador-portada input { flex: 1; min-width: 0; }
 .buscador-portada .boton { flex: none; background: var(--marca-dorado); color: #2A0510; }
 .buscador-portada .boton:hover { background: #D9BC85; color: #2A0510; }
+.boton-dorado { background: var(--marca-dorado); color: #2A0510; }
+.boton-dorado:hover { background: #D9BC85; color: #2A0510; }
+.acciones-portada { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; }
+.enlace-portada { color: #F1E3E9; font-weight: 600; }
+.enlace-portada:hover { color: #fff; }
+.nota-portada { margin: 14px 0 0; max-width: 58ch; color: #D8C3CB; font-size: .9rem; }
 
 .campo {
   min-height: 46px; padding: 10px 14px; font: inherit; color: var(--c-texto);

@@ -4,6 +4,7 @@ import Base from '../../plantillas/Base.astro';
 import TarjetaHerramienta from '../../componentes/TarjetaHerramienta.astro';
 import { obtenerHerramientas } from '../../lib/datos';
 import { RELACION_CONSENSUS_QC, url } from '../../lib/rutas';
+import { urlModulo } from '../../lib/sitio';
 
 const relacionadas = (await obtenerHerramientas()).filter((h) => h.data.consensus_qc !== 'no');
 
@@ -32,7 +33,14 @@ const modulos = [
         Integra el plan de calidad con el control QC diario para detectar la causa raíz de cada desviación. Automatiza
         parte de las herramientas de ConsensusLab, pero ninguna herramienta del sitio depende de él.
       </p>
-      <a class="boton boton-primario" href="https://xergio1625.github.io/consensus-qc-site/">Ver versión de prueba y licencias</a>
+      <div class="acciones-portada">
+        <a class="boton boton-dorado" href={urlModulo('consensusqc')} target="_blank" rel="noopener">Probar la demo en línea</a>
+        <a class="enlace-portada" href="https://xergio1625.github.io/consensus-qc-site/">Versión de escritorio y licencias</a>
+      </div>
+      <p class="nota-portada">
+        Gratis, con tu cuenta de ConsensusLab (te llega un código al correo). La demo es compartida, usa datos ficticios
+        y se restablece cada noche.
+      </p>
     </div>
   </section>
 
