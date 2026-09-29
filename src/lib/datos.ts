@@ -21,6 +21,12 @@ export async function obtenerCatalogo() {
   }));
 }
 
+/** Artículos de opinión, del más reciente al más antiguo. */
+export async function obtenerOpinion() {
+  const articulos = await getCollection('opinion');
+  return articulos.sort((a, b) => b.data.fecha.getTime() - a.data.fecha.getTime());
+}
+
 /** Prompts de IA ordenados por categoría (en el orden de CATEGORIAS_PROMPT) y título. */
 export async function obtenerPrompts() {
   const orden = Object.keys(CATEGORIAS_PROMPT);

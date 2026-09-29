@@ -202,7 +202,7 @@ img, svg { max-width: 100%; }
   :root:not([data-theme="light"]) .icono-luna { display: none; }
 }
 
-@media (max-width: 760px) {
+@media (max-width: 960px) {
   .boton-menu { display: inline-flex; }
   .nav-lista {
     display: none; position: absolute; left: 0; right: 0; top: 60px;
@@ -424,3 +424,10 @@ img, svg { max-width: 100%; }
 .texto-prompt { margin: 0; padding: 16px; white-space: pre-wrap; overflow-wrap: anywhere; font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: .88rem; line-height: 1.6; color: var(--c-texto); }
 .estado-copia { font-size: .85rem; color: var(--c-ok); }
 .lista-simple { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; font-size: .92rem; }
+
+/* Opinión */
+.lista-articulos { list-style: none; padding: 0; margin: 0; display: grid; gap: 16px; max-width: 80ch; }
+.lista-articulos h2 { font-size: 1.15rem; margin: 0; }
+.lista-articulos h2 a { color: var(--c-texto); text-decoration: none; }
+.lista-articulos h2 a::after { content: ""; position: absolute; inset: 0; border-radius: var(--radio); }
+.nota-opinion { margin-top: 32px; font-size: .88rem; }

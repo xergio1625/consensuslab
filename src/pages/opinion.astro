@@ -1,0 +1,66 @@
+---
+// Sección Opinión: enlaces a los artículos publicados en Medium (contenido/opinion/).
+import Base from '../plantillas/Base.astro';
+import { obtenerOpinion } from '../lib/datos';
+import { formatoFecha } from '../lib/rutas';
+import { MEDIUM_PERFIL } from '../lib/sitio';
+
+const articulos = await obtenerOpinion();
+---
+
+<Base
+  titulo="Opinión"
+  seccion="opinion"
+  descripcion="Artículos de opinión sobre gestión del laboratorio clínico, calidad y la profesión del tecnólogo médico."
+>
+  <div class="contenedor seccion">
+    <div class="seccion-cabeza">
+      <div>
+        <h1>Opinión</h1>
+        <p class="texto-suave intro-prompts">
+          Artículos sobre la gestión del laboratorio clínico, la calidad y la profesión del tecnólogo médico. Se leen
+          en Medium.
+        </p>
+      </div>
+      {
+        MEDIUM_PERFIL && (
+          <a class="boton boton-secundario" href={MEDIUM_PERFIL} target="_blank" rel="noopener me">
+            Seguir en Medium
+          </a>
+        )
+      }
+    </div>
+
+    {
+      articulos.length > 0 ? (
+        <ol class="lista-articulos">
+          {articulos.map((a) => (
+            <li>
+              <article class="tarjeta">
+                <div class="tarjeta-meta">
+                  <time datetime={a.data.fecha.toISOString().slice(0, 10)}>{formatoFecha(a.data.fecha)}</time>
+                  {a.data.temas.length > 0 && <span>· {a.data.temas.join(' · ')}</span>}
+                </div>
+                <h2>
+                  <a href={a.data.enlace} target="_blank" rel="noopener">
+                    {a.data.titulo}
+                  </a>
+                </h2>
+                <p>{a.data.resumen}</p>
+                <div class="tarjeta-pie">
+                  <span class="texto-suave">Leer en Medium ↗</span>
+                </div>
+              </article>
+            </li>
+          ))}
+        </ol>
+      ) : (
+        <p class="aviso aviso-info">Pronto publicaremos aquí los primeros artículos.</p>
+      )
+    }
+
+    <p class="texto-suave nota-opinion">
+      Las opiniones de estos artículos son personales y no representan a ninguna institución.
+    </p>
+  </div>
+</Base>

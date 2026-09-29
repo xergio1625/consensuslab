@@ -109,4 +109,16 @@ const prompts = defineCollection({
     }),
 });
 
-export const collections = { grupos, herramientas, prompts };
+// Artículos de opinión: solo enlaces a Medium (el texto completo vive allá).
+const opinion = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './contenido/opinion' }),
+  schema: z.object({
+    titulo: z.string(),
+    enlace: z.url(),
+    fecha: z.coerce.date(),
+    resumen: z.string().max(320),
+    temas: z.array(z.string()).default([]),
+  }),
+});
+
+export const collections = { grupos, herramientas, prompts, opinion };

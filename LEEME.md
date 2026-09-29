@@ -53,6 +53,25 @@ dirección terminada en `/copy` para que cada persona haga su propia copia.
    o `planillas`. En `herramientas` pon las fichas relacionadas: el prompt aparecerá también en esas fichas.
 4. Debajo, escribe «Cómo usarlo» y «Revisa siempre». Todo prompt debe pedir que no se ingresen datos de pacientes.
 
+## Artículos de opinión (Medium)
+
+La sección `/opinion/` solo enlaza a Medium; el texto completo vive allá. «Opinión» aparece en el menú cuando hay al
+menos un artículo.
+
+- **Automático:** con `MEDIUM_PERFIL` completo en `src/lib/sitio.ts`, ejecuta `npm run medium`. Crea un archivo en
+  `contenido/opinion/` por cada artículo nuevo (Medium entrega los 10 más recientes). Revisa el resumen y publica.
+- **A mano:** crea `contenido/opinion/nombre.md` con este contenido:
+
+  ```yaml
+  ---
+  titulo: "Título del artículo"
+  enlace: "https://medium.com/@usuario/titulo-del-articulo-abc123"
+  fecha: 2026-09-28
+  resumen: "Una o dos frases (máximo 320 caracteres)."
+  temas: ["calidad", "gestión"]
+  ---
+  ```
+
 ---
 
 ## Trabajar en el computador
@@ -71,6 +90,7 @@ npm run build      # compila y valida todas las fichas (lo mismo que hace GitHub
 contenido/
   herramientas/        una ficha .md por herramienta
   prompts/             un prompt de IA .md por archivo
+  opinion/             un enlace a un artículo de Medium por archivo
   grupos.json          los 7 grupos
   _plantilla-ficha.md  plantilla para copiar
   _plantilla-prompt.md plantilla de prompt para copiar
@@ -83,6 +103,7 @@ src/
   componentes/         piezas reutilizables (tarjeta, cabecera, logo)
   estilos/global.css   colores (claro y oscuro) y estilos
   lib/                 utilidades (rutas, textos, lectura del contenido)
+tools/importar-medium.mjs  importa artículos nuevos de Medium (npm run medium)
 .github/workflows/     publicación automática en GitHub Pages
 ```
 

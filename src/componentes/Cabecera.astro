@@ -1,6 +1,7 @@
 ---
 // Cabecera con logo, menú principal (plegable en celular) y botón de modo claro/oscuro.
 import Logo from './Logo.astro';
+import { getCollection } from 'astro:content';
 import { url } from '../lib/rutas';
 
 interface Props {
@@ -8,9 +9,12 @@ interface Props {
 }
 const { seccion } = Astro.props;
 
+// «Opinión» aparece en el menú solo cuando hay al menos un artículo.
+const hayOpinion = (await getCollection('opinion')).length > 0;
 const enlaces = [
   { id: 'herramientas', texto: 'Herramientas', ruta: 'herramientas/' },
   { id: 'prompts', texto: 'Prompts IA', ruta: 'prompts/' },
+  ...(hayOpinion ? [{ id: 'opinion', texto: 'Opinión', ruta: 'opinion/' }] : []),
   { id: 'consensus-qc', texto: 'Consensus QC', ruta: 'consensus-qc/' },
   { id: 'planes', texto: 'Planes', ruta: 'planes/' },
   { id: 'acerca', texto: 'Acerca', ruta: 'acerca/' },
