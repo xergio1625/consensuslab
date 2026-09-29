@@ -1,0 +1,167 @@
+---
+// Política de privacidad del sitio y de la app ConsensusLab (Ley 19.628 y Ley 21.719, Chile).
+import Base from '../plantillas/Base.astro';
+import { url } from '../lib/rutas';
+import { CORREO_CONTACTO, VIGENCIA_LEGAL } from '../lib/sitio';
+const correo = `mailto:${CORREO_CONTACTO}`;
+---
+
+<Base
+  titulo="Política de privacidad"
+  descripcion="Qué datos personales trata ConsensusLab, para qué, dónde se guardan, por cuánto tiempo y cómo ejercer tus derechos."
+>
+  <div class="contenedor">
+    <article class="prosa">
+      <h1>Política de privacidad</h1>
+      <p class="texto-suave">Versión vigente desde el {VIGENCIA_LEGAL}.</p>
+
+      <div class="aviso aviso-info">
+        <p>
+          <strong>En breve:</strong> pedimos solo lo necesario para darte acceso (tu correo y tu nombre). Tu contraseña
+          se guarda como una huella irreversible que nadie puede leer, ni siquiera nosotros. No vendemos datos, no
+          mostramos publicidad y los correos informativos solo llegan si los aceptas. La app <strong>no admite datos
+          de pacientes</strong>.
+        </p>
+      </div>
+
+      <h2>1. Quién es responsable</h2>
+      <p>
+        El responsable del tratamiento de los datos de las cuentas es ConsensusLab. Para cualquier consulta o para
+        ejercer tus derechos escribe a <a href={correo}>{CORREO_CONTACTO}</a>.
+      </p>
+      <p>
+        Los registros que un laboratorio suscrito ingresa en la app (temperaturas, libro de turno, documentos,
+        vencimientos) pertenecen a ese laboratorio. Respecto de ellos, ConsensusLab actúa como <strong>encargado</strong>:
+        los trata solo para prestar el servicio y siguiendo las instrucciones del laboratorio.
+      </p>
+
+      <h2>2. Qué datos tratamos</h2>
+      <h3>En este sitio</h3>
+      <ul>
+        <li>
+          El sitio no usa cookies, ni herramientas de analítica o de publicidad, ni formularios. Solo guarda en tu propio
+          navegador tu preferencia de tema claro u oscuro.
+        </li>
+        <li>
+          El sitio se aloja en GitHub Pages. Como cualquier servidor web, GitHub puede registrar datos técnicos de la
+          visita, como la dirección IP, según su propia política de privacidad.
+        </li>
+        <li>
+          Si más adelante incorporamos analítica o herramientas de marketing, actualizaremos esta política y te pediremos
+          el consentimiento antes de activarlas.
+        </li>
+      </ul>
+
+      <h3>En la app (demo y suscripción)</h3>
+      <table>
+        <thead>
+          <tr><th>Dato</th><th>Para qué</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Correo electrónico</td><td>Identificarte, enviarte los códigos de acceso y los avisos del servicio.</td></tr>
+          <tr><td>Nombre</td><td>Mostrar quién hizo cada registro, un requisito de trazabilidad del laboratorio.</td></tr>
+          <tr><td>Institución y cargo (opcionales)</td><td>Conocer el perfil de quienes usan la app.</td></tr>
+          <tr><td>Laboratorio y rol</td><td>Dar acceso a los datos de tu laboratorio con los permisos que corresponden.</td></tr>
+          <tr>
+            <td>Contraseña (si la creas)</td>
+            <td>
+              Ingresar sin código. Se guarda solo como huella irreversible (PBKDF2-SHA256 con sal y clave secreta); la
+              contraseña original no se almacena en ninguna parte.
+            </td>
+          </tr>
+          <tr>
+            <td>Sesiones</td>
+            <td>
+              Recordar tus dispositivos. Guardamos el tipo de navegador y sistema (por ejemplo, «Chrome en Windows») y
+              las fechas de uso. No registramos tu dirección IP. Puedes cerrarlas desde «Mis dispositivos».
+            </td>
+          </tr>
+          <tr><td>Bitácora de seguridad</td><td>Registrar ingresos, intentos fallidos y cambios de cuenta para detectar abusos.</td></tr>
+          <tr>
+            <td>Aceptación de términos y de correos informativos</td>
+            <td>Dejar constancia de la fecha en que aceptaste los términos y, si lo hiciste, los correos informativos.</td>
+          </tr>
+          <tr><td>Registros del laboratorio</td><td>Prestar el servicio contratado. Cada registro guarda quién lo hizo y cuándo.</td></tr>
+          <tr>
+            <td>Datos de facturación (suscripción)</td>
+            <td>Razón social, RUT de la institución y correo de facturación, para cobrar y emitir documentos tributarios.</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        Los códigos de acceso de 6 dígitos también se guardan como huella y dejan de servir a los 10 minutos.
+      </p>
+
+      <h2>3. Datos que no debes ingresar</h2>
+      <p>
+        La app está hecha para la <strong>gestión</strong> del laboratorio, no para datos clínicos. No ingreses nombres,
+        RUT, fichas ni resultados de pacientes, ni datos de salud del personal. La app rechaza los textos que contienen
+        un RUT. Si detectamos datos de pacientes, podemos eliminarlos y avisaremos al laboratorio.
+      </p>
+
+      <h2>4. Por qué podemos tratar tus datos</h2>
+      <ul>
+        <li><strong>Para prestar el servicio</strong> que solicitaste (cuenta, acceso, demo, suscripción).</li>
+        <li><strong>Con tu consentimiento</strong>, para enviarte correos informativos. Puedes retirarlo cuando quieras en «Mi cuenta».</li>
+        <li><strong>Por interés legítimo</strong>, para la seguridad de la app y la prevención de abusos.</li>
+        <li><strong>Por obligación legal</strong>, para cumplir obligaciones tributarias y contables.</li>
+      </ul>
+
+      <h2>5. Dónde se guardan y quién más interviene</h2>
+      <p>
+        La app funciona sobre Google Apps Script y Google Sheets. Los correos se envían con Gmail. Por eso, los datos
+        se almacenan en servidores de Google LLC, que pueden estar fuera de Chile, incluso en Estados Unidos. Google
+        actúa como proveedor de infraestructura y aplica sus propias medidas de seguridad. No compartimos tus datos con
+        nadie más, salvo que la ley o una autoridad competente lo exija.
+      </p>
+
+      <h2>6. Cuánto tiempo los conservamos</h2>
+      <ul>
+        <li><strong>Demo:</strong> tus registros de prueba se borran al terminar la demo, al salir de la app o tras 60 minutos sin actividad.</li>
+        <li><strong>Sesiones:</strong> una sesión recordada vence tras 180 días sin uso; una no recordada, a las 12 horas.</li>
+        <li><strong>Cuenta:</strong> mientras la uses. Puedes pedir su eliminación en cualquier momento.</li>
+        <li>
+          <strong>Registros del laboratorio:</strong> mientras dure la suscripción y hasta 90 días después, para que el
+          laboratorio pueda pedir una copia. Luego se eliminan.
+        </li>
+        <li><strong>Bitácora de seguridad:</strong> hasta 24 meses.</li>
+        <li><strong>Datos de facturación:</strong> el plazo que exija la ley tributaria.</li>
+      </ul>
+
+      <h2>7. Cómo protegemos los datos</h2>
+      <ul>
+        <li>Las contraseñas y los códigos se guardan como huellas irreversibles.</li>
+        <li>El ingreso tiene límites de intentos y bloqueos temporales.</li>
+        <li>Cada laboratorio ve solo sus propios registros; la separación la aplica el servidor.</li>
+        <li>La app nunca borra registros de un laboratorio: las correcciones quedan como anulaciones con motivo.</li>
+        <li>Las planillas de datos no son públicas y solo el responsable del servicio tiene acceso a ellas.</li>
+      </ul>
+
+      <h2>8. Tus derechos</h2>
+      <p>
+        Puedes pedir <strong>acceso</strong> a tus datos, su <strong>rectificación</strong>, su <strong>supresión</strong>,{' '}
+        <strong>oponerte</strong> a un tratamiento, pedir su <strong>portabilidad</strong> o el{' '}
+        <strong>bloqueo</strong> temporal. Escribe a <a href={correo}>{CORREO_CONTACTO}</a> desde el correo de tu
+        cuenta. Responderemos dentro de 30 días corridos. Los correos informativos
+        puedes activarlos o desactivarlos directamente en «Mi cuenta».
+      </p>
+      <p>
+        Si eres usuario de un laboratorio suscrito y tu pedido se refiere a los registros del laboratorio, lo
+        coordinaremos con su administrador.
+      </p>
+      <p>
+        Si no quedas conforme con la respuesta, puedes reclamar ante la Agencia de Protección de Datos Personales
+        (desde que entre en funciones) o ante los tribunales, conforme a la ley.
+      </p>
+
+      <h2>9. Menores de edad</h2>
+      <p>La app está dirigida a profesionales. No aceptamos cuentas de menores de 18 años.</p>
+
+      <h2>10. Cambios a esta política</h2>
+      <p>
+        Si hacemos un cambio relevante, lo avisaremos por correo y en la app antes de que empiece a regir. La fecha de la
+        versión vigente aparece al inicio de esta página. Consulta también los <a href={url('terminos/')}>términos de uso</a>.
+      </p>
+    </article>
+  </div>
+</Base>

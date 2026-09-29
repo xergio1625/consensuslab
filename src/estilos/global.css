@@ -375,6 +375,11 @@ img, svg { max-width: 100%; }
 .prosa { max-width: 72ch; padding: 32px 0 56px; }
 .prosa h2 { margin-top: 1.5em; }
 .prosa ul { padding-left: 1.3em; }
+.prosa h3 { margin-top: 1.2em; font-size: 1.05rem; }
+.prosa table { width: 100%; border-collapse: collapse; margin: 1em 0; font-size: 0.95rem; }
+.prosa th, .prosa td { text-align: left; vertical-align: top; padding: 8px 10px; border-bottom: 1px solid var(--c-borde); }
+.prosa th { font-weight: 600; }
+@media (max-width: 560px) { .prosa table, .prosa tbody, .prosa tr, .prosa td { display: block; } .prosa thead { display: none; } .prosa td:first-child { font-weight: 600; border-bottom: 0; padding-bottom: 0; } }
 
 .lista-modulos { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); list-style: none; padding: 0; margin: 0 0 1.5em; }
 .lista-modulos li { background: var(--c-panel); border: 1px solid var(--c-borde); border-radius: var(--radio); padding: 14px 16px; }

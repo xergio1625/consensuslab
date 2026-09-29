@@ -1,0 +1,165 @@
+---
+// Términos de uso del sitio y de la app ConsensusLab (demo y suscripción).
+import Base from '../plantillas/Base.astro';
+import { url } from '../lib/rutas';
+import { CORREO_CONTACTO, VIGENCIA_LEGAL } from '../lib/sitio';
+const correo = `mailto:${CORREO_CONTACTO}`;
+---
+
+<Base
+  titulo="Términos de uso"
+  descripcion="Condiciones para usar el sitio y la app ConsensusLab: cuentas, demo, suscripción, datos permitidos y responsabilidades."
+>
+  <div class="contenedor">
+    <article class="prosa">
+      <h1>Términos de uso</h1>
+      <p class="texto-suave">Versión vigente desde el {VIGENCIA_LEGAL}.</p>
+
+      <div class="aviso aviso-info">
+        <p>
+          <strong>En breve:</strong> ConsensusLab ofrece herramientas de apoyo a la gestión del laboratorio. Tú (o tu
+          laboratorio) eres dueño de tus registros y responsable de lo que ingresas. <strong>Nunca ingreses datos de
+          pacientes.</strong> La demo es gratuita y se borra sola; la suscripción es mensual.
+        </p>
+      </div>
+
+      <h2>1. Qué es ConsensusLab</h2>
+      <p>ConsensusLab tiene dos partes:</p>
+      <ul>
+        <li>
+          <strong>Este sitio</strong>, con fichas, guías y recursos gratuitos, publicados bajo la{' '}
+          <a href={url('licencia/')}>licencia CC BY-NC-SA 4.0 con permiso de uso en laboratorios</a>.
+        </li>
+        <li>
+          <strong>La app</strong>, una aplicación web con herramientas de registro y seguimiento. Se usa como demo
+          gratuita o con suscripción mensual.
+        </li>
+      </ul>
+      <p>
+        Al crear una cuenta o usar la app aceptas estos términos y la{' '}
+        <a href={url('privacidad/')}>política de privacidad</a>.
+      </p>
+
+      <h2>2. Tu cuenta</h2>
+      <ul>
+        <li>La app es para profesionales mayores de 18 años. Cada cuenta es personal: no la compartas.</li>
+        <li>Debes usar un correo al que tengas acceso y un nombre real, porque tu nombre firma tus registros.</li>
+        <li>
+          Cuida tu correo y tu contraseña. Si sospechas un acceso indebido, cambia la contraseña y cierra las demás
+          sesiones desde «Mi cuenta», y avísanos.
+        </li>
+        <li>
+          En un laboratorio suscrito, el administrador del laboratorio decide quiénes tienen acceso y con qué rol.
+        </li>
+      </ul>
+
+      <h2>3. Uso permitido</h2>
+      <p>Te comprometes a no:</p>
+      <ul>
+        <li>
+          ingresar <strong>datos de pacientes</strong> (nombres, RUT, fichas o resultados) ni datos de salud del
+          personal;
+        </li>
+        <li>intentar acceder a datos de otros laboratorios o a partes de la app que no te corresponden;</li>
+        <li>automatizar solicitudes masivas, sobrecargar el servicio o eludir sus límites de uso;</li>
+        <li>copiar, revender o redistribuir la app, o usarla para ofrecer un servicio a terceros.</li>
+      </ul>
+      <p>Si no cumples estas reglas, podemos suspender la cuenta. Te avisaremos cuando sea posible.</p>
+
+      <h2>4. Demo gratuita</h2>
+      <ul>
+        <li>Requiere una cuenta. Está pensada para conocer las herramientas, no para uso real.</li>
+        <li>
+          Los registros de prueba se borran al terminar la demo, al salir de la app, al cerrar sesión o tras 60 minutos sin actividad.
+          Cada tabla admite un máximo de registros.
+        </li>
+        <li>Podemos cambiar o retirar la demo en cualquier momento.</li>
+      </ul>
+
+      <h2>5. Suscripción</h2>
+      <ul>
+        <li>
+          La suscripción es mensual y se contrata por laboratorio. Las condiciones de cada plan se publican en{' '}
+          <a href={url('planes/')}>Planes</a> o se acuerdan por escrito con la institución.
+        </li>
+        <li>El pago es anticipado. Tras el vencimiento hay 3 días de gracia antes de que el acceso real se suspenda.</li>
+        <li>
+          Si la suscripción termina, los registros del laboratorio se conservan 90 días. En ese plazo el laboratorio
+          puede renovar o pedir una copia de sus registros. Después se eliminan.
+        </li>
+        <li>Los cambios de precio se avisan con al menos 30 días de anticipación y rigen desde el periodo siguiente.</li>
+        <li>
+          Si contratas como persona natural, conservas los derechos que te da la Ley 19.496 de protección de los
+          derechos de los consumidores.
+        </li>
+      </ul>
+
+      <h2>6. Tus registros</h2>
+      <p>
+        Los registros que ingresa el laboratorio le pertenecen. Nos das permiso para guardarlos y procesarlos solo para
+        prestarte el servicio: mostrarlos, calcular indicadores, generar informes y enviar los avisos por correo. No los
+        usamos para otros fines ni los compartimos.
+      </p>
+      <p>
+        Para proteger la trazabilidad, la app no borra registros: las correcciones se hacen con anulaciones que indican
+        el motivo.
+      </p>
+
+      <h2>7. Responsabilidad profesional</h2>
+      <ul>
+        <li>
+          Las herramientas apoyan la gestión, pero <strong>no reemplazan el criterio profesional</strong>, los
+          procedimientos del laboratorio ni la normativa vigente.
+        </li>
+        <li>
+          Las metas, alertas y plantillas son referencias sugeridas. Cada laboratorio debe validar que se ajusten a su
+          sistema de calidad y a los requisitos que le aplican.
+        </li>
+        <li>
+          Los avisos por correo son una ayuda. No reemplazan el control del laboratorio sobre sus propios plazos.
+        </li>
+      </ul>
+
+      <h2>8. Disponibilidad</h2>
+      <p>
+        Trabajamos para que la app esté disponible y funcione bien. Aun así, depende de servicios de Google y puede
+        tener interrupciones, mantenciones o límites diarios de envío de correos. Avisaremos con anticipación las
+        mantenciones programadas cuando sea posible.
+      </p>
+
+      <h2>9. Propiedad intelectual</h2>
+      <p>
+        El software, el diseño y la marca ConsensusLab, incluido Consensus QC, pertenecen a sus autores. La suscripción
+        te da derecho a usar la app, no a copiarla ni a modificarla. Los recursos gratuitos del sitio se rigen por
+        su <a href={url('licencia/')}>licencia</a>.
+      </p>
+
+      <h2>10. Límite de responsabilidad</h2>
+      <p>
+        En la medida que la ley lo permita, ConsensusLab no responde por daños indirectos derivados del uso de la app
+        ni por decisiones tomadas a partir de su información. En el caso de la suscripción, nuestra responsabilidad
+        total se limita a lo pagado en los últimos 3 meses. Este límite no se aplica a los derechos irrenunciables de
+        los consumidores ni a los casos de dolo o culpa grave.
+      </p>
+
+      <h2>11. Término</h2>
+      <p>
+        Puedes dejar de usar la app y pedir la eliminación de tu cuenta cuando quieras. Podemos terminar una cuenta que
+        incumpla estos términos, o dejar de ofrecer el servicio avisando con al menos 30 días de anticipación, para que
+        los laboratorios puedan pedir una copia de sus registros.
+      </p>
+
+      <h2>12. Cambios a estos términos</h2>
+      <p>
+        Si hacemos un cambio relevante, lo avisaremos por correo y en la app al menos 30 días antes de que rija. Si no
+        estás de acuerdo, puedes dejar de usar el servicio antes de esa fecha.
+      </p>
+
+      <h2>13. Ley aplicable y contacto</h2>
+      <p>
+        Estos términos se rigen por las leyes de Chile. Cualquier consulta o reclamo, escríbenos a{' '}
+        <a href={correo}>{CORREO_CONTACTO}</a>.
+      </p>
+    </article>
+  </div>
+</Base>

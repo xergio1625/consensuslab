@@ -15,3 +15,9 @@ export const URL_APP =
 export function urlModulo(modulo: string): string {
   return `${URL_APP}?modulo=${encodeURIComponent(modulo)}`;
 }
+
+/** Correo de contacto para privacidad, términos y soporte (el mismo que envía los correos de la app). */
+export const CORREO_CONTACTO = 'xergio.1625@gmail.com';
+
+/** Fecha de la versión vigente de la política de privacidad y los términos de uso. */
+export const VIGENCIA_LEGAL = '28 de septiembre de 2026';
