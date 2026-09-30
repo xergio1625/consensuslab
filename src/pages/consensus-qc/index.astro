@@ -8,15 +8,19 @@ import { urlModulo } from '../../lib/sitio';
 
 const relacionadas = (await obtenerHerramientas()).filter((h) => h.data.consensus_qc !== 'no');
 
+// Módulos de la versión web (la oficial desde octubre de 2026). Todos se pueden probar en la demo.
+// Mantener alineado con los módulos reales de cclab-sheets: no anunciar lo que la demo no tiene.
 const modulos = [
-  ['Planificación de calidad', 'Versiones del plan, objetivos, estrategias, árboles de decisión Westgard y acciones correctivas con responsable.'],
-  ['Visualizador QC', 'Levey-Jennings con reglas Westgard aplicadas automáticamente y apoyo a la validación de corridas.'],
-  ['Registro de resultados', 'Ingreso diario del control interno por área, analizador, control, analito y nivel, con trazabilidad del operador.'],
-  ['Dashboard de calidad', 'Supervisión del plan, alertas Westgard, cumplimiento de objetivos y lotes próximos a vencer.'],
-  ['Desempeño analítico', 'Six Sigma por analito: CV interno + sesgo EQA = error total frente a CLIA, variabilidad biológica o RCPA.'],
-  ['Control externo', 'Encuestas externas, grupo par y comparación por sesgo %, Z-score y CVR.'],
-  ['Verificación analítica', 'Comparación de analizadores, precisión EP-15 CLSI, N20 ampliado y linealidad.'],
-  ['Reportes', 'Informes en PDF y Excel, distribución por correo y reporte de imprecisión para el LIS.'],
+  ['Configuración', 'Analizadores con su ciclo de vida (instalado, operativo, detenido, en mantención, retirado), analitos, materiales de control y lotes con las metas del fabricante.'],
+  ['Plan de calidad', 'Un plan por analito con su requisito de calidad (error total permitido de CLIA 2024 o variabilidad biológica), una táctica de control por analizador y versiones con aprobación e historial.'],
+  ['Funciones de poder', 'Probabilidad de detectar un error (Ped) y de falso rechazo (Pfr) de cada táctica, para elegir las reglas de Westgard y el número de controles con fundamento.'],
+  ['Registro N20', 'Estudio de 20 mediciones por nivel para establecer la media y la DE propias de cada lote antes de usarlo.'],
+  ['Controles diarios', 'Ingreso de los controles por corrida con las reglas de Westgard evaluadas al instante y los controles que exige la táctica vigente.'],
+  ['Cumplimiento diario', 'Para cada día, qué analizador y analito cumplió con las corridas y controles que exige su táctica.'],
+  ['Levey-Jennings', 'Un gráfico por nivel con ±1, 2 y 3 DE, puntos coloreados según la regla de Westgard y la marca de cada no conformidad.'],
+  ['Control externo', 'Programas, rondas y resultados por analizador con SDI y porcentaje de desviación, e historial por analito.'],
+  ['Desempeño', 'Mes a mes por analizador y analito: CV, sesgo, error total frente al permitido, sigma y cartas de decisión.'],
+  ['No conformidades', 'Desde un control rechazado: análisis de causa, impacto en pacientes, acciones con responsable y plazo, y cierre con verificación de eficacia.'],
 ];
 ---
 
@@ -30,8 +34,9 @@ const modulos = [
       <p class="antetitulo">Software de control de calidad</p>
       <h1>Consensus QC: el plan de calidad en el centro de tu laboratorio</h1>
       <p class="portada-lema">
-        Integra el plan de calidad con el control QC diario para detectar la causa raíz de cada desviación. Automatiza
-        parte de las herramientas de ConsensusLab, pero ninguna herramienta del sitio depende de él.
+        Integra el plan de calidad con el control QC diario para detectar la causa raíz de cada desviación. Funciona en
+        el navegador, sin instalar nada. Automatiza parte de las herramientas de ConsensusLab, pero ninguna herramienta
+        del sitio depende de él.
       </p>
       <div class="acciones-portada">
         <a class="boton boton-dorado" href={urlModulo('consensusqc')} target="_blank" rel="noopener">Probar la demo en línea</a>
@@ -45,7 +50,8 @@ const modulos = [
 
   <section class="seccion">
     <div class="contenedor">
-      <h2>Módulos disponibles</h2>
+      <h2>Qué incluye</h2>
+      <p class="texto-suave">Estos son los módulos de la versión web. Todos se pueden probar en la demo en línea.</p>
       <ul class="lista-modulos">
         {
           modulos.map(([nombre, texto]) => (
@@ -56,9 +62,24 @@ const modulos = [
           ))
         }
       </ul>
+      <h2>Cómo funciona</h2>
+      <ul class="lista-simple lista-como">
+        <li>
+          <strong>En el navegador.</strong> Se usa desde el computador del laboratorio o la oficina, sin instalar programas
+          ni depender de un equipo en particular. La versión web es la versión oficial de Consensus QC.
+        </li>
+        <li>
+          <strong>El plan manda.</strong> El requisito de calidad y la táctica de cada analizador definen qué reglas y
+          cuántos controles se exigen en cada corrida; el resto de los módulos se ordena alrededor de eso.
+        </li>
+        <li>
+          <strong>Trazable.</strong> Las no conformidades nacen del control que las originó y guardan su bitácora hasta el
+          cierre; los registros no se borran.
+        </li>
+      </ul>
       <p class="texto-suave">
-        En desarrollo: inventario de reactivos, roles y responsabilidades, ciclo de vida de instrumentos y registro de
-        mantenciones.
+        En desarrollo: suscripción por laboratorio con datos propios (hoy la demo es compartida), registro de
+        calibraciones, monitor por analizador, inventario de reactivos y registro de mantenciones.
       </p>
     </div>
   </section>

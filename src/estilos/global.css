@@ -437,3 +437,4 @@ img, svg { max-width: 100%; }
 .lista-articulos h2 a { color: var(--c-texto); text-decoration: none; }
 .lista-articulos h2 a::after { content: ""; position: absolute; inset: 0; border-radius: var(--radio); }
 .nota-opinion { margin-top: 32px; font-size: .88rem; }
+.lista-como { gap: 12px; font-size: 1rem; max-width: 80ch; margin-bottom: 1.2em; }
