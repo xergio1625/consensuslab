@@ -20,7 +20,7 @@ export function urlModulo(modulo: string): string {
  * Perfil de Medium con los artículos de opinión, por ejemplo 'https://medium.com/@usuario'.
  * Se usa en la sección Opinión y en `npm run medium` (importa los artículos nuevos).
  */
-export const MEDIUM_PERFIL = '';
+export const MEDIUM_PERFIL = 'https://medium.com/@xergio.1625';
 
 /** Correo de contacto para privacidad, términos y soporte (el mismo que envía los correos de la app). */
 export const CORREO_CONTACTO = 'xergio.1625@gmail.com';

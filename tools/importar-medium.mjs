@@ -77,15 +77,17 @@ function leerFeed(xml) {
   });
 }
 
+/** Enlaces que no se importan: los que ya tienen archivo y los de contenido/opinion/_excluidos.txt. */
 function enlacesExistentes() {
   if (!existsSync(CARPETA)) return new Set();
-  return new Set(
-    readdirSync(CARPETA)
-      .filter((f) => f.endsWith('.md'))
-      .map((f) => readFileSync(join(CARPETA, f), 'utf8').match(/^enlace:\s*"?([^"\n]+)"?/m)?.[1])
-      .filter(Boolean)
-      .map(enlaceLimpio),
-  );
+  const conArchivo = readdirSync(CARPETA)
+    .filter((f) => f.endsWith('.md'))
+    .map((f) => readFileSync(join(CARPETA, f), 'utf8').match(/^enlace:\s*"?([^"\n]+)"?/m)?.[1]);
+  const archivoExcluidos = join(CARPETA, '_excluidos.txt');
+  const excluidos = existsSync(archivoExcluidos)
+    ? readFileSync(archivoExcluidos, 'utf8').split(/\r?\n/).map((l) => l.trim()).filter((l) => l && !l.startsWith('#'))
+    : [];
+  return new Set(conArchivo.concat(excluidos).filter(Boolean).map(enlaceLimpio));
 }
 
 function ficha(a) {
