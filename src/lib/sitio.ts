@@ -26,4 +26,4 @@ export const MEDIUM_PERFIL = '';
 export const CORREO_CONTACTO = 'xergio.1625@gmail.com';
 
 /** Fecha de la versión vigente de la política de privacidad y los términos de uso. */
-export const VIGENCIA_LEGAL = '28 de septiembre de 2026';
+export const VIGENCIA_LEGAL = '30 de septiembre de 2026';
