@@ -22,7 +22,8 @@
       "port": 8767,
       "env": {
         "CLAVE_PASE_QC": "abababababababababababababababababababababababababababababababab",
-        "URL_DEMO_QC": "http://localhost:8766/"
+        "URL_DEMO_QC": "http://localhost:8766/",
+        "HUBSPOT_SIMULADO": "1"
       }
     },
     {
