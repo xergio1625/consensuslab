@@ -18,7 +18,7 @@ actualizado: 2026-10-03
 
 1. **Registra el día a día en las demás herramientas.** El informe no pide datos nuevos: se arma con lo que el
    equipo ya registró en temperaturas, equipos, mantención, contingencia, derivaciones, tiempos de respuesta,
-   inventario, compras, recepción, proveedores, libro de turno, control documental y vencimientos.
+   inventario, compras, recepción, proveedores, contratos, libro de turno, control documental y vencimientos.
 2. **Abre el informe del mes.** Elige el mes (los últimos 12 están disponibles). El mes en curso muestra los datos a
    la fecha; los meses cerrados, el periodo completo.
 3. **Mira primero el semáforo.** Cada indicador aparece en verde (cumple), amarillo (atención) o rojo (crítico)
@@ -36,6 +36,8 @@ actualizado: 2026-10-03
    - compras con entrega atrasada al cierre (meta: 0) y recibidas a tiempo (meta: 90 % o más);
    - recepciones sin no conformidades (meta: 95 % o más) y reclamos a proveedores abiertos al cierre (meta: 0);
    - proveedores críticos sin evaluación vigente al cierre (meta: 0);
+   - contratos vencidos sin renovación ni término registrados al cierre y consumos comprometidos no cumplidos en los
+     periodos cerrados en el mes (meta: 0);
    - entregas de turno recibidas por otra persona (meta: 95 % o más);
    - pendientes abiertos al cierre (ninguno de alta prioridad);
    - documentos con revisión vencida (meta: 0);

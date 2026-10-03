@@ -24,8 +24,9 @@ actualizado: 2026-09-28
 3. **Indica si se repite.** Si la calibración es anual o la mantención es semestral, al renovar la app te sugiere la
    próxima fecha.
 4. **Revisa la agenda.** Todo aparece ordenado por fecha, en tres grupos: vencidos, por vencer y al día. Las
-   revisiones de documentos del Control documental y los planes de Mantención y calibraciones por vencer
-   aparecen solos, sin registrarlos dos veces.
+   revisiones de documentos del Control documental, los planes de Mantención y calibraciones y los plazos de
+   Contratos y comodatos (último día para avisar la no renovación y términos) aparecen solos, sin registrarlos dos
+   veces.
 5. **Renueva, no edites.** Cuando llega el certificado o se firma el contrato, usa «Renovar»: queda el historial de
    fechas anteriores, quién renovó y una observación (por ejemplo, el número de certificado).
 6. **Cierra lo que ya no aplica.** Un equipo dado de baja o un contrato terminado se cierra con el motivo y deja de
