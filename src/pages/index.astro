@@ -5,6 +5,7 @@ import TarjetaHerramienta from '../componentes/TarjetaHerramienta.astro';
 import TarjetaPrompt from '../componentes/TarjetaPrompt.astro';
 import { obtenerCatalogo, obtenerHerramientas, obtenerPrompts } from '../lib/datos';
 import { url } from '../lib/rutas';
+import { CALCULADORAS } from '../lib/calculadoras';
 
 const catalogo = await obtenerCatalogo();
 const nombreGrupo = new Map(catalogo.map(({ grupo }) => [grupo.id, grupo.data.nombre_corto]));
@@ -90,6 +91,30 @@ const prioritarias = (await obtenerHerramientas()).filter((h) => h.data.etiqueta
   </section>
 
   <section class="seccion">
+    <div class="contenedor">
+      <div class="seccion-cabeza">
+        <div>
+          <p class="antetitulo">Gratis</p>
+          <h2>Calculadoras de calidad</h2>
+        </div>
+        <a href={url('calculadoras/')}>Ver todas las calculadoras</a>
+      </div>
+      <div class="rejilla">
+        {
+          CALCULADORAS.map((c) => (
+            <article class="tarjeta">
+              <h3>
+                <a href={url(`calculadoras/${c.id}/`)}>{c.titulo}</a>
+              </h3>
+              <p>{c.resumen}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion seccion-alt">
     <div class="contenedor">
       <div class="seccion-cabeza">
         <div>

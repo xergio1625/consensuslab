@@ -1,0 +1,124 @@
+---
+import PaginaCalculadora from '../../componentes/PaginaCalculadora.astro';
+---
+
+<PaginaCalculadora id="tea-variabilidad-biologica">
+  <form class="calc" id="calc" novalidate>
+    <div class="calc-campos">
+      <label class="calc-campo">
+        <span>CVi (intraindividual)</span>
+        <span class="calc-entrada"><input class="campo" name="cvi" inputmode="decimal" placeholder="5" /><em>%</em></span>
+      </label>
+      <label class="calc-campo">
+        <span>CVg (interindividual)</span>
+        <span class="calc-entrada"><input class="campo" name="cvg" inputmode="decimal" placeholder="7" /><em>%</em></span>
+      </label>
+      <label class="calc-campo">
+        <span>Tu CV <em class="opcional">(opcional)</em></span>
+        <span class="calc-entrada"><input class="campo" name="cv" inputmode="decimal" placeholder="2" /><em>%</em></span>
+      </label>
+      <label class="calc-campo">
+        <span>Tu sesgo <em class="opcional">(opcional)</em></span>
+        <span class="calc-entrada"><input class="campo" name="sesgo" inputmode="decimal" placeholder="1,5" /><em>%</em></span>
+      </label>
+    </div>
+    <p class="calc-ayuda">
+      Los valores de CVi y CVg por analito están en la base de datos de variabilidad biológica de la EFLM
+      (<a href="https://biologicalvariation.eu/" target="_blank" rel="noopener">biologicalvariation.eu</a>).
+    </p>
+  </form>
+
+  <section class="calc-resultado" aria-live="polite">
+    <p class="calc-mensaje" data-mensaje>Ingresa el CVi y el CVg.</p>
+    <div data-resultado hidden>
+      <table class="calc-tabla">
+        <thead>
+          <tr><th>Especificación</th><th>CV máximo</th><th>Sesgo máximo</th><th>TEa</th><th data-col-tuyo hidden>Tu método</th></tr>
+        </thead>
+        <tbody>
+          <tr data-fila="optimo"><td>Óptima</td><td data-cv></td><td data-sesgo></td><td data-tea></td><td data-tuyo hidden></td></tr>
+          <tr data-fila="deseable"><td>Deseable</td><td data-cv></td><td data-sesgo></td><td data-tea></td><td data-tuyo hidden></td></tr>
+          <tr data-fila="minimo"><td>Mínima</td><td data-cv></td><td data-sesgo></td><td data-tea></td><td data-tuyo hidden></td></tr>
+        </tbody>
+      </table>
+      <p class="calc-nota" data-resumen hidden></p>
+    </div>
+  </section>
+
+  <div slot="explicacion">
+    <h2>Cómo se calcula</h2>
+    <p>Modelo de Fraser para especificaciones de calidad basadas en la variabilidad biológica:</p>
+    <ul>
+      <li><strong>CV máximo</strong> = k × CVi, con k = 0,25 (óptima), 0,50 (deseable) o 0,75 (mínima).</li>
+      <li>
+        <strong>Sesgo máximo</strong> = m × √(CVi² + CVg²), con m = 0,125 (óptima), 0,25 (deseable) o 0,375 (mínima).
+      </li>
+      <li><strong>TEa</strong> = 1,65 × CV máximo + sesgo máximo.</li>
+    </ul>
+    <h2>Para usarla bien</h2>
+    <ul>
+      <li>
+        La especificación <strong>deseable</strong> es la más usada como requisito de calidad. La mínima sirve para
+        métodos que aún no alcanzan la deseable, con un plan para mejorar.
+      </li>
+      <li>Anota en el plan de calidad la fuente y la fecha de los valores de CVi y CVg que usaste.</li>
+      <li>
+        Para algunos analitos (por ejemplo, el sodio) la especificación biológica es muy exigente; en esos casos suelen
+        usarse criterios regulatorios como CLIA.
+      </li>
+    </ul>
+  </div>
+</PaginaCalculadora>
+
+<script>
+  import { especificacionesBiologicas, formato, numero } from '../../lib/calidad.js';
+
+  const form = document.getElementById('calc') as HTMLFormElement;
+  const $ = (s: string) => document.querySelector(`[data-${s}]`) as HTMLElement;
+  const NOMBRES = { optimo: 'óptima', deseable: 'deseable', minimo: 'mínima' } as const;
+
+  function calcular() {
+    const cvi = numero(form.cvi.value);
+    const cvg = numero(form.cvg.value);
+    const cv = numero(form.cv.value);
+    const sg = numero(form.sesgo.value);
+    if (Number.isNaN(cvi) || Number.isNaN(cvg) || cvi <= 0 || cvg < 0) {
+      $('mensaje').textContent = 'Ingresa el CVi y el CVg (mayores que cero).';
+      $('mensaje').hidden = false;
+      $('resultado').hidden = true;
+      return;
+    }
+    $('mensaje').hidden = true;
+    $('resultado').hidden = false;
+    const r = especificacionesBiologicas(cvi, cvg);
+    const conMetodo = !Number.isNaN(cv) && cv > 0 && !Number.isNaN(sg);
+    $('col-tuyo').hidden = !conMetodo;
+    let mejor: string | null = null;
+    for (const nivel of ['optimo', 'deseable', 'minimo'] as const) {
+      const fila = document.querySelector(`[data-fila="${nivel}"]`) as HTMLElement;
+      const e = r[nivel];
+      (fila.querySelector('[data-cv]') as HTMLElement).textContent = formato(e.cv, 2) + ' %';
+      (fila.querySelector('[data-sesgo]') as HTMLElement).textContent = formato(e.sesgo, 2) + ' %';
+      (fila.querySelector('[data-tea]') as HTMLElement).textContent = formato(e.tea, 2) + ' %';
+      const celda = fila.querySelector('[data-tuyo]') as HTMLElement;
+      celda.hidden = !conMetodo;
+      if (conMetodo) {
+        const cumple = cv <= e.cv && Math.abs(sg) <= e.sesgo;
+        celda.textContent = cumple ? 'Cumple' : 'No cumple';
+        celda.dataset.nivel = cumple ? 'ok' : 'error';
+        if (cumple && !mejor) mejor = NOMBRES[nivel];
+      }
+    }
+    const resumen = $('resumen');
+    resumen.hidden = !conMetodo;
+    if (conMetodo) {
+      resumen.textContent = mejor
+        ? `Tu método cumple la especificación ${mejor} de CV y de sesgo.`
+        : 'Tu método no cumple ni la especificación mínima de CV y sesgo: considera un requisito de otra fuente o mejorar el método.';
+    }
+  }
+
+  form.addEventListener('input', calcular);
+  form.addEventListener('submit', (e) => e.preventDefault());
+  calcular();
+</script>

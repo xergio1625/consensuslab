@@ -1,0 +1,113 @@
+---
+import PaginaCalculadora from '../../componentes/PaginaCalculadora.astro';
+import { url } from '../../lib/rutas';
+---
+
+<PaginaCalculadora id="error-total-y-sigma">
+  <form class="calc" id="calc" novalidate>
+    <div class="calc-campos">
+      <label class="calc-campo">
+        <span>Error total permitido (TEa)</span>
+        <span class="calc-entrada"><input class="campo" name="tea" inputmode="decimal" placeholder="10" /><em>%</em></span>
+        <small>Del plan de calidad: CLIA, variabilidad biológica u otra fuente.</small>
+      </label>
+      <label class="calc-campo">
+        <span>Sesgo</span>
+        <span class="calc-entrada"><input class="campo" name="sesgo" inputmode="decimal" placeholder="2" /><em>%</em></span>
+        <small>Del control externo o de una comparación con un método de referencia.</small>
+      </label>
+      <label class="calc-campo">
+        <span>CV</span>
+        <span class="calc-entrada"><input class="campo" name="cv" inputmode="decimal" placeholder="2" /><em>%</em></span>
+        <small>Del control interno, idealmente de un mes o más.</small>
+      </label>
+    </div>
+  </form>
+
+  <section class="calc-resultado" aria-live="polite">
+    <p class="calc-mensaje" data-mensaje>Ingresa el TEa, el sesgo y el CV.</p>
+    <div data-resultado hidden>
+      <div class="calc-cifras">
+        <div><span>Error total</span><strong data-et></strong><small data-et-vs></small></div>
+        <div><span>Sigma</span><strong data-sigma></strong><small data-categoria></small></div>
+        <div><span>ΔSEcrit</span><strong data-dse></strong><small>error sistemático crítico</small></div>
+      </div>
+      <div class="calc-recomendacion" data-reco>
+        <p><strong>Reglas de Westgard sugeridas:</strong> <span data-reglas></span></p>
+        <p><strong>Controles:</strong> <span data-controles></span></p>
+        <p class="calc-nota" data-nota hidden></p>
+      </div>
+    </div>
+  </section>
+
+  <div slot="explicacion">
+    <h2>Cómo se calcula</h2>
+    <ul>
+      <li><strong>Error total</strong> = |sesgo| + 1,65 × CV (modelo de Westgard, 95 % a una cola).</li>
+      <li><strong>Sigma</strong> = (TEa − |sesgo|) / CV.</li>
+      <li><strong>ΔSEcrit</strong> = sigma − 1,65: el error sistemático que el control debe detectar.</li>
+    </ul>
+    <h2>Cómo leer la sigma</h2>
+    <ul>
+      <li><strong>6 o más</strong>: clase mundial. Basta una regla simple con pocos controles.</li>
+      <li><strong>4 a 6</strong>: bueno a excelente. Multirregla con 2 a 4 controles por corrida.</li>
+      <li><strong>3 a 4</strong>: marginal. Multirregla completa y más controles.</li>
+      <li>
+        <strong>Menos de 3</strong>: el control estadístico no alcanza. Conviene mejorar el método o revisar el
+        requisito.
+      </li>
+    </ul>
+    <p>
+      Las reglas sugeridas siguen las «Westgard Sigma Rules» y son un punto de partida. La táctica definitiva se
+      fundamenta con la probabilidad de detección de error (Ped) y de falso rechazo (Pfr), que Consensus QC calcula con
+      sus <a href={url('consensus-qc/')}>funciones de poder</a>.
+    </p>
+  </div>
+</PaginaCalculadora>
+
+<script>
+  import { categoriaSigma, errorSistematicoCritico, errorTotal, formato, numero, sigma } from '../../lib/calidad.js';
+
+  const form = document.getElementById('calc') as HTMLFormElement;
+  const $ = (s: string) => document.querySelector(`[data-${s}]`) as HTMLElement;
+
+  function mostrarMensaje(texto: string) {
+    $('mensaje').textContent = texto;
+    $('mensaje').hidden = false;
+    $('resultado').hidden = true;
+  }
+
+  function calcular() {
+    const tea = numero(form.tea.value);
+    const s = numero(form.sesgo.value);
+    const cv = numero(form.cv.value);
+    if ([tea, s, cv].some(Number.isNaN)) return mostrarMensaje('Ingresa el TEa, el sesgo y el CV.');
+    if (tea <= 0 || cv <= 0) return mostrarMensaje('El TEa y el CV deben ser mayores que cero.');
+
+    $('mensaje').hidden = true;
+    $('resultado').hidden = false;
+    const et = errorTotal(s, cv);
+    $('et').textContent = formato(et, 2) + ' %';
+    $('et-vs').textContent = et <= tea ? `Cumple: menor o igual al TEa (${formato(tea, 2)} %)` : `No cumple: supera el TEa (${formato(tea, 2)} %)`;
+    $('et-vs').dataset.nivel = et <= tea ? 'ok' : 'error';
+
+    const sg = sigma(tea, s, cv);
+    const cat = categoriaSigma(sg);
+    $('sigma').textContent = formato(sg, 1);
+    $('categoria').textContent = cat.texto;
+    $('categoria').dataset.nivel = cat.nivel;
+    $('dse').textContent = formato(errorSistematicoCritico(tea, s, cv), 2);
+    $('reglas').textContent = cat.reglas;
+    $('controles').textContent = cat.controles;
+    $('nota').hidden = !cat.nota;
+    $('nota').textContent = cat.nota ?? '';
+    if (Math.abs(s) >= tea) {
+      $('nota').hidden = false;
+      $('nota').textContent = 'El sesgo ya iguala o supera el TEa: ningún esquema de control puede compensarlo. Corrige el sesgo (calibración, reactivo, método) antes de diseñar el control.';
+    }
+  }
+
+  form.addEventListener('input', calcular);
+  form.addEventListener('submit', (e) => e.preventDefault());
+  calcular();
+</script>

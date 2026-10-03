@@ -1,0 +1,113 @@
+---
+import PaginaCalculadora from '../../componentes/PaginaCalculadora.astro';
+---
+
+<PaginaCalculadora id="estadistica-del-control">
+  <form class="calc" id="calc" novalidate>
+    <div class="calc-campos">
+      <label class="calc-campo calc-ancho">
+        <span>Resultados del control (uno por línea)</span>
+        <textarea class="campo" name="valores" rows="8" inputmode="decimal" placeholder={'98,5\n101,2\n99,8\n…'}></textarea>
+        <small>Puedes pegar una columna desde una planilla. La coma o el punto sirven como decimal.</small>
+      </label>
+      <label class="calc-campo">
+        <span>Decimales</span>
+        <select class="campo" name="decimales">
+          <option value="1">1</option>
+          <option value="2" selected>2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+        </select>
+      </label>
+    </div>
+  </form>
+
+  <section class="calc-resultado" aria-live="polite">
+    <p class="calc-mensaje" data-mensaje>Ingresa al menos 2 resultados.</p>
+    <div data-resultado hidden>
+      <div class="calc-cifras">
+        <div><span>n</span><strong data-n></strong></div>
+        <div><span>Media</span><strong data-media></strong></div>
+        <div><span>DE</span><strong data-de></strong></div>
+        <div><span>CV</span><strong data-cv></strong></div>
+      </div>
+      <table class="calc-tabla">
+        <thead><tr><th>Límite</th><th>Inferior</th><th>Superior</th></tr></thead>
+        <tbody>
+          <tr><td>±1 DE</td><td data-l1b></td><td data-l1a></td></tr>
+          <tr><td>±2 DE (advertencia)</td><td data-l2b></td><td data-l2a></td></tr>
+          <tr><td>±3 DE (rechazo)</td><td data-l3b></td><td data-l3a></td></tr>
+        </tbody>
+      </table>
+      <p class="calc-nota" data-rango></p>
+      <p class="calc-nota calc-nota-aviso" data-pocos hidden>
+        Con menos de 20 resultados la media y la DE son poco estables. Para fijar los límites de un lote nuevo se
+        recomiendan al menos 20 (estudio N20).
+      </p>
+    </div>
+  </section>
+
+  <div slot="explicacion">
+    <h2>Cómo se calcula</h2>
+    <ul>
+      <li><strong>Media</strong>: suma de los resultados dividida por n.</li>
+      <li><strong>DE</strong>: desviación estándar muestral, con n − 1 en el denominador.</li>
+      <li><strong>CV</strong>: DE / media × 100.</li>
+      <li><strong>Límites</strong>: media ± 1, 2 y 3 DE, los mismos del gráfico de Levey-Jennings.</li>
+    </ul>
+    <h2>Para usarla bien</h2>
+    <ul>
+      <li>Usa resultados de un solo nivel, un solo lote de control y un solo analizador.</li>
+      <li>Excluye los resultados de corridas rechazadas por una causa ya corregida, y deja constancia del motivo.</li>
+      <li>
+        Compara tu media y tu DE con el inserto del control: el rango del fabricante suele ser más amplio que el de un
+        laboratorio en particular.
+      </li>
+    </ul>
+  </div>
+</PaginaCalculadora>
+
+<script>
+  import { estadistica, formato, valores } from '../../lib/calidad.js';
+
+  const form = document.getElementById('calc') as HTMLFormElement;
+  const $ = (s: string) => document.querySelector(`[data-${s}]`) as HTMLElement;
+
+  function calcular() {
+    const lista = valores(form.valores.value);
+    const d = Number(form.decimales.value);
+    const malos = lista.filter((x) => Number.isNaN(x)).length;
+    const buenos = lista.filter((x) => !Number.isNaN(x));
+    const mensaje = $('mensaje');
+    const resultado = $('resultado');
+    if (malos) {
+      mensaje.textContent = `Hay ${malos} ${malos === 1 ? 'valor que no es un número' : 'valores que no son números'}. Revisa la lista.`;
+      mensaje.hidden = false;
+      resultado.hidden = true;
+      return;
+    }
+    if (buenos.length < 2) {
+      mensaje.textContent = 'Ingresa al menos 2 resultados.';
+      mensaje.hidden = false;
+      resultado.hidden = true;
+      return;
+    }
+    const r = estadistica(buenos);
+    mensaje.hidden = true;
+    resultado.hidden = false;
+    $('n').textContent = String(r.n);
+    $('media').textContent = formato(r.media, d);
+    $('de').textContent = formato(r.de, d + 1);
+    $('cv').textContent = formato(r.cv, 2) + ' %';
+    for (const k of [1, 2, 3] as const) {
+      $(`l${k}b`).textContent = formato(r.limites[k].bajo, d);
+      $(`l${k}a`).textContent = formato(r.limites[k].alto, d);
+    }
+    $('rango').textContent = `Mínimo ${formato(r.min, d)} · máximo ${formato(r.max, d)}.`;
+    $('pocos').hidden = r.n >= 20;
+  }
+
+  form.addEventListener('input', calcular);
+  form.addEventListener('submit', (e) => e.preventDefault());
+  calcular();
+</script>

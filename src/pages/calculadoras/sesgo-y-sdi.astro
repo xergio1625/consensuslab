@@ -1,0 +1,106 @@
+---
+import PaginaCalculadora from '../../componentes/PaginaCalculadora.astro';
+import { url } from '../../lib/rutas';
+---
+
+<PaginaCalculadora id="sesgo-y-sdi">
+  <form class="calc" id="calc" novalidate>
+    <div class="calc-campos">
+      <label class="calc-campo">
+        <span>Tu resultado</span>
+        <input class="campo" name="resultado" inputmode="decimal" placeholder="105" />
+        <small>Lo que informaste al programa de control externo.</small>
+      </label>
+      <label class="calc-campo">
+        <span>Valor asignado</span>
+        <input class="campo" name="objetivo" inputmode="decimal" placeholder="100" />
+        <small>Media del grupo par o valor de referencia del informe.</small>
+      </label>
+      <label class="calc-campo">
+        <span>DE del grupo <em class="opcional">(opcional, para el SDI)</em></span>
+        <input class="campo" name="de" inputmode="decimal" placeholder="2" />
+      </label>
+      <label class="calc-campo">
+        <span>TEa <em class="opcional">(opcional)</em></span>
+        <span class="calc-entrada"><input class="campo" name="tea" inputmode="decimal" placeholder="10" /><em>%</em></span>
+      </label>
+    </div>
+  </form>
+
+  <section class="calc-resultado" aria-live="polite">
+    <p class="calc-mensaje" data-mensaje>Ingresa tu resultado y el valor asignado.</p>
+    <div data-resultado hidden>
+      <div class="calc-cifras">
+        <div><span>Diferencia</span><strong data-dif></strong></div>
+        <div><span>Sesgo</span><strong data-sesgo></strong><small data-sesgo-tea></small></div>
+        <div data-caja-sdi><span>SDI</span><strong data-sdi></strong><small data-sdi-cat></small></div>
+      </div>
+    </div>
+  </section>
+
+  <div slot="explicacion">
+    <h2>Cómo se calcula</h2>
+    <ul>
+      <li><strong>Sesgo %</strong> = (tu resultado − valor asignado) / valor asignado × 100.</li>
+      <li><strong>SDI</strong> = (tu resultado − media del grupo) / DE del grupo.</li>
+    </ul>
+    <h2>Cómo leer el SDI</h2>
+    <ul>
+      <li><strong>Hasta ±2</strong>: aceptable.</li>
+      <li><strong>Entre ±2 y ±3</strong>: advertencia. Revisa la tendencia de las últimas rondas y las causas posibles.</li>
+      <li><strong>Más de ±3</strong>: inaceptable. Corresponde investigar y registrar una acción correctiva.</li>
+    </ul>
+    <p>
+      Cada programa define sus propios criterios: usa los del informe de tu proveedor cuando difieran. Un sesgo que se
+      repite en varias rondas, aunque sea aceptable, es una señal de error sistemático. Para estimar el error total y
+      la sigma con este sesgo, usa la calculadora <a href={url('calculadoras/error-total-y-sigma/')}>Error total y
+      sigma</a>.
+    </p>
+  </div>
+</PaginaCalculadora>
+
+<script>
+  import { categoriaSdi, formato, numero, sdi, sesgo } from '../../lib/calidad.js';
+
+  const form = document.getElementById('calc') as HTMLFormElement;
+  const $ = (s: string) => document.querySelector(`[data-${s}]`) as HTMLElement;
+
+  function calcular() {
+    const r = numero(form.resultado.value);
+    const obj = numero(form.objetivo.value);
+    const de = numero(form.de.value);
+    const tea = numero(form.tea.value);
+    const mensaje = $('mensaje');
+    if (Number.isNaN(r) || Number.isNaN(obj) || obj === 0) {
+      mensaje.textContent = obj === 0 ? 'El valor asignado no puede ser cero.' : 'Ingresa tu resultado y el valor asignado.';
+      mensaje.hidden = false;
+      $('resultado').hidden = true;
+      return;
+    }
+    mensaje.hidden = true;
+    $('resultado').hidden = false;
+    const sg = sesgo(r, obj);
+    $('dif').textContent = formato(r - obj, 2);
+    $('sesgo').textContent = formato(sg, 2) + ' %';
+    if (!Number.isNaN(tea) && tea > 0) {
+      const uso = (Math.abs(sg) / tea) * 100;
+      $('sesgo-tea').textContent = `Usa el ${formato(uso, 0)} % del TEa`;
+      $('sesgo-tea').dataset.nivel = uso <= 50 ? 'ok' : uso < 100 ? 'advertencia' : 'error';
+    } else {
+      $('sesgo-tea').textContent = '';
+    }
+    const conSdi = !Number.isNaN(de) && de > 0;
+    $('caja-sdi').hidden = !conSdi;
+    if (conSdi) {
+      const v = sdi(r, obj, de);
+      const cat = categoriaSdi(v);
+      $('sdi').textContent = formato(v, 2);
+      $('sdi-cat').textContent = cat.texto;
+      $('sdi-cat').dataset.nivel = cat.nivel;
+    }
+  }
+
+  form.addEventListener('input', calcular);
+  form.addEventListener('submit', (e) => e.preventDefault());
+  calcular();
+</script>

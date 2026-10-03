@@ -53,6 +53,12 @@ dirección terminada en `/copy` para que cada persona haga su propia copia.
    o `planillas`. En `herramientas` pon las fichas relacionadas: el prompt aparecerá también en esas fichas.
 4. Debajo, escribe «Cómo usarlo» y «Revisa siempre». Todo prompt debe pedir que no se ingresen datos de pacientes.
 
+## Calculadoras de calidad
+
+Las fórmulas están en `src/lib/calidad.js` (funciones puras, probadas con `npm test`); cada calculadora tiene su
+página en `src/pages/calculadoras/` y su entrada en `src/lib/calculadoras.ts` (título, resumen y fichas donde se
+recomienda). El cálculo ocurre en el navegador: no se envía ni se guarda nada.
+
 ## Artículos de opinión (Medium)
 
 La sección `/opinion/` solo enlaza a Medium; el texto completo vive allá. «Opinión» aparece en el menú cuando hay al

@@ -13,6 +13,7 @@ const { seccion } = Astro.props;
 const hayOpinion = (await getCollection('opinion')).length > 0;
 const enlaces = [
   { id: 'herramientas', texto: 'Herramientas', ruta: 'herramientas/' },
+  { id: 'calculadoras', texto: 'Calculadoras', ruta: 'calculadoras/' },
   { id: 'prompts', texto: 'Prompts IA', ruta: 'prompts/' },
   ...(hayOpinion ? [{ id: 'opinion', texto: 'Opinión', ruta: 'opinion/' }] : []),
   { id: 'consensus-qc', texto: 'Consensus QC', ruta: 'consensus-qc/' },

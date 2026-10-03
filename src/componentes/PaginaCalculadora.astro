@@ -1,0 +1,59 @@
+---
+// Estructura común de una calculadora: migas, encabezado, aviso de privacidad, el formulario
+// (slot por defecto), la explicación (slot «explicacion») y el lateral con otras calculadoras.
+import Base from '../plantillas/Base.astro';
+import { CALCULADORAS, calculadora, type IdCalculadora } from '../lib/calculadoras';
+import { url } from '../lib/rutas';
+
+interface Props {
+  id: IdCalculadora;
+}
+const c = calculadora(Astro.props.id);
+const otras = CALCULADORAS.filter((o) => o.id !== c.id);
+---
+
+<Base titulo={c.titulo} seccion="calculadoras" descripcion={`Calculadora gratuita para laboratorio clínico. ${c.resumen}`}>
+  <div class="contenedor">
+    <nav class="migas" aria-label="Ruta de navegación">
+      <ol>
+        <li><a href={url('calculadoras/')}>Calculadoras</a></li>
+        <li aria-current="page">{c.titulo}</li>
+      </ol>
+    </nav>
+
+    <header class="ficha-cabeza">
+      <h1>{c.titulo}</h1>
+      <p>{c.resumen}</p>
+    </header>
+
+    <div class="ficha">
+      <article class="ficha-cuerpo">
+        <div class="aviso aviso-info">
+          <p>
+            El cálculo se hace en tu navegador: no se envía ni se guarda nada. Usa resultados de control o de control
+            externo, nunca datos de pacientes.
+          </p>
+        </div>
+        <slot />
+        <slot name="explicacion" />
+      </article>
+
+      <aside class="ficha-lateral" aria-label="Más calculadoras">
+        <section class="caja caja-app">
+          <h2>Automático en Consensus QC</h2>
+          <p>
+            Consensus QC calcula cada mes el CV, el sesgo, el error total y la sigma de cada analizador con tus controles
+            y tu control externo, y los compara con el plan de calidad.
+          </p>
+          <p><a class="boton boton-primario boton-ancho" href={url('consensus-qc/')}>Conocer Consensus QC</a></p>
+        </section>
+        <section class="caja">
+          <h2>Otras calculadoras</h2>
+          <ul class="lista-simple">
+            {otras.map((o) => <li><a href={url(`calculadoras/${o.id}/`)}>{o.titulo}</a></li>)}
+          </ul>
+        </section>
+      </aside>
+    </div>
+  </div>
+</Base>
