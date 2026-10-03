@@ -23,7 +23,8 @@
       "env": {
         "CLAVE_PASE_QC": "abababababababababababababababababababababababababababababababab",
         "URL_DEMO_QC": "http://localhost:8766/",
-        "HUBSPOT_SIMULADO": "1"
+        "HUBSPOT_SIMULADO": "1",
+        "SUSCRIPCION_LOCAL": "admin@lab.test"
       }
     },
     {
