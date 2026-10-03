@@ -148,12 +148,20 @@ const correo = `mailto:${CORREO_CONTACTO}`;
       <ul>
         <li><strong>Demo:</strong> tus registros de prueba se borran al terminar la demo, al salir de la app o tras 60 minutos sin actividad.</li>
         <li><strong>Sesiones:</strong> una sesión recordada vence tras 180 días sin uso; una no recordada, a las 12 horas.</li>
-        <li><strong>Cuenta:</strong> mientras la uses. Puedes pedir su eliminación en cualquier momento.</li>
+        <li>
+          <strong>Cuenta:</strong> mientras la uses. Puedes eliminarla tú mismo en cualquier momento desde «Mi cuenta», o
+          pedírnoslo por correo. Al eliminarla borramos tus datos de prueba y tu contraseña, cerramos tus sesiones,
+          reemplazamos tu nombre y tu correo (también en la bitácora) y quitamos tus datos de ConsensusLab en HubSpot.
+          Si perteneces a un laboratorio suscrito, tus registros siguen siendo del laboratorio y conservan su
+          trazabilidad, pero aparecen a nombre de «Cuenta eliminada». El administrador de un laboratorio con
+          suscripción vigente debe traspasar antes la administración.
+        </li>
         <li>
           <strong>Registros del laboratorio:</strong> mientras dure la suscripción y hasta 90 días después, para que el
-          laboratorio pueda pedir una copia. Luego se eliminan.
+          laboratorio pueda renovar o pedir una copia. Avisamos a sus administradores 30 y 7 días antes; luego se
+          eliminan de forma automática y definitiva.
         </li>
-        <li><strong>Bitácora de seguridad:</strong> hasta 24 meses.</li>
+        <li><strong>Bitácora de seguridad:</strong> 24 meses; los eventos más antiguos se eliminan automáticamente.</li>
         <li><strong>Datos de facturación:</strong> el plazo que exija la ley tributaria.</li>
       </ul>
 
@@ -162,7 +170,10 @@ const correo = `mailto:${CORREO_CONTACTO}`;
         <li>Las contraseñas y los códigos se guardan como huellas irreversibles.</li>
         <li>El ingreso tiene límites de intentos y bloqueos temporales.</li>
         <li>Cada laboratorio ve solo sus propios registros; la separación la aplica el servidor.</li>
-        <li>La app nunca borra registros de un laboratorio: las correcciones quedan como anulaciones con motivo.</li>
+        <li>
+          Mientras la suscripción está vigente, la app no borra registros de un laboratorio: las correcciones quedan
+          como anulaciones con motivo.
+        </li>
         <li>Las planillas de datos no son públicas y solo el responsable del servicio tiene acceso a ellas.</li>
       </ul>
 
@@ -171,8 +182,8 @@ const correo = `mailto:${CORREO_CONTACTO}`;
         Puedes pedir <strong>acceso</strong> a tus datos, su <strong>rectificación</strong>, su <strong>supresión</strong>,{' '}
         <strong>oponerte</strong> a un tratamiento, pedir su <strong>portabilidad</strong> o el{' '}
         <strong>bloqueo</strong> temporal. Escribe a <a href={correo}>{CORREO_CONTACTO}</a> desde el correo de tu
-        cuenta. Responderemos dentro de 30 días corridos. Los correos informativos
-        puedes activarlos o desactivarlos directamente en «Mi cuenta».
+        cuenta. Responderemos dentro de 30 días corridos. Los correos informativos puedes activarlos o
+        desactivarlos directamente en «Mi cuenta», y desde ahí también puedes eliminar tu cuenta.
       </p>
       <p>
         Si eres usuario de un laboratorio suscrito y tu pedido se refiere a los registros del laboratorio, lo
