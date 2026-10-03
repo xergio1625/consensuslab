@@ -31,7 +31,8 @@ actualizado: 2026-10-03
    rotura. Así sabrás cuánto pierdes y por qué.
 6. **Cuenta el inventario cada mes.** Imprime la planilla de conteo, cuenta en cada ubicación y registra las
    diferencias como «ajuste por conteo», con su explicación.
-7. **Revisa las alertas y el pedido sugerido.** Las alertas también aparecen en el panel del día, y los
+7. **Revisa las alertas y el pedido sugerido.** Desde el pedido sugerido creas una solicitud de compra con un
+   clic, y al recibirla el stock entra solo. Las alertas también aparecen en el panel del día, y los
    indicadores en el informe mensual.
 
 ## Qué te avisa
@@ -49,7 +50,7 @@ actualizado: 2026-10-03
 - **Stock utilizable**: solo lotes disponibles y sin vencer.
 - **Consumo mensual**: promedio de las salidas a uso de los últimos 90 días.
 - **Pedido sugerido** = mínimo + consumo mensual × meses de cobertura − stock utilizable (descontando lo
-  que vencerá sin usarse).
+  que vencerá sin usarse, lo que está en cuarentena y lo que ya está en camino por solicitudes de compra).
 - **¿Qué lote estaba en uso?** Eliges un día y ves los lotes de reactivos, controles y calibradores abiertos
   en cada área o equipo: útil para investigar un control fuera de rango o un reclamo.
 
