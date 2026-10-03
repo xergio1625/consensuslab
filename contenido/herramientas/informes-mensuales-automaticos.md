@@ -17,8 +17,8 @@ actualizado: 2026-09-28
 ## Cómo usarla
 
 1. **Registra el día a día en las demás herramientas.** El informe no pide datos nuevos: se arma con lo que el
-   equipo ya registró en temperaturas, equipos, mantención, contingencia, libro de turno, control documental y
-   vencimientos.
+   equipo ya registró en temperaturas, equipos, mantención, contingencia, derivaciones, libro de turno, control
+   documental y vencimientos.
 2. **Abre el informe del mes.** Elige el mes (los últimos 12 están disponibles). El mes en curso muestra los datos a
    la fecha; los meses cerrados, el periodo completo.
 3. **Mira primero el semáforo.** Cada indicador aparece en verde (cumple), amarillo (atención) o rojo (crítico)
@@ -29,13 +29,14 @@ actualizado: 2026-09-28
    - fallas de equipos abiertas al cierre (meta: 0);
    - mantenciones y calibraciones vencidas al cierre (meta: 0) y hechas a tiempo (meta: 90 % o más);
    - planes de contingencia con la revisión anual vencida (meta: 0);
+   - derivaciones con resultados atrasados al cierre (meta: 0) y con resultado a tiempo (meta: 90 % o más);
    - entregas de turno recibidas por otra persona (meta: 95 % o más);
    - pendientes abiertos al cierre (ninguno de alta prioridad);
    - documentos con revisión vencida (meta: 0);
    - lectura de documentos vigentes por el equipo (meta: 90 % o más);
    - vencimientos vencidos al cierre (meta: 0).
 4. **Revisa el detalle de cada sección.** Temperaturas por equipo, fallas y disponibilidad de los equipos,
-   mantenciones realizadas, activaciones de contingencia, ítems del libro de turno por tipo, estado del control documental y vencimientos
+   mantenciones realizadas, activaciones de contingencia, derivaciones, ítems del libro de turno por tipo, estado del control documental y vencimientos
    renovados.
 5. **Escribe el comentario de la coordinación.** Qué pasó, qué se hizo y qué se acordó. Es la parte que ningún
    sistema puede escribir por ti, y la que más valora la dirección.

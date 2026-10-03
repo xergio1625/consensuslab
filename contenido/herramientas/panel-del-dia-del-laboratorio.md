@@ -17,7 +17,8 @@ actualizado: 2026-10-03
 ## Cómo usarla
 
 1. **Usa las demás herramientas en el día a día.** El panel no pide datos nuevos: se arma solo con lo que el equipo
-   registra en temperaturas, equipos, contingencia, mantención, libro de turno, documentos y vencimientos.
+   registra en temperaturas, equipos, contingencia, derivaciones, mantención, libro de turno, documentos y
+   vencimientos.
 2. **Ábrelo al empezar la jornada.** Arriba verás el estado general del laboratorio y, debajo, una tarjeta por área
    con su semáforo: rojo (requiere acción), amarillo (atención) o verde (todo bien). Las áreas en rojo aparecen
    primero.
@@ -34,6 +35,8 @@ actualizado: 2026-10-03
 - **Equipos:** rojo si hay equipos detenidos; amarillo si alguno funciona con limitaciones.
 - **Plan de contingencia:** rojo si hay un plan activado; amarillo si hay un simulacro en curso o una revisión
   anual vencida.
+- **Derivaciones:** rojo si hay resultados atrasados; amarillo si un plazo vence hoy o un convenio está por vencer
+  o vencido.
 - **Mantención y calibraciones:** rojo si hay planes vencidos; amarillo si alguno vence dentro de sus días de aviso.
 - **Libro de turno:** rojo si hay pendientes de alta prioridad; amarillo si hay pendientes o entregas sin recibir.
 - **Documentos:** rojo si hay revisiones vencidas; amarillo si hay revisiones próximas o documentos que debes leer.
