@@ -40,6 +40,42 @@ import { url } from '../../lib/rutas';
     </div>
   </section>
 
+  <section class="calc-diseno" data-diseno hidden>
+    <h2>Diseña tu control: Ped y Pfr</h2>
+    <p class="calc-ayuda">
+      Mueve las metas y mira qué procedimientos de control las cumplen con tu ΔSEcrit
+      (<strong data-dse-diseno></strong>).
+    </p>
+    <form class="calc-campos calc-metas" id="metas" novalidate>
+      <label class="calc-campo">
+        <span>Probabilidad de detección de error (Ped) mínima: <output data-ped-valor></output></span>
+        <input type="range" name="ped" min="50" max="99" step="1" value="90" />
+        <small>Qué tan seguido quieres detectar el error crítico en la primera corrida.</small>
+      </label>
+      <label class="calc-campo">
+        <span>Probabilidad de falso rechazo (Pfr) máxima: <output data-pfr-valor></output></span>
+        <input type="range" name="pfr" min="0" max="10" step="0.5" value="5" />
+        <small>Qué tan seguido aceptas rechazar una corrida que estaba bien.</small>
+      </label>
+    </form>
+
+    <div class="calc-resultado" aria-live="polite">
+      <p class="calc-recomendado" data-recomendado></p>
+      <div class="calc-tabla-envoltura">
+        <table class="calc-tabla calc-tabla-poder">
+          <thead>
+            <tr><th>Procedimiento</th><th>Pfr</th><th>Ped</th><th>Cumple</th></tr>
+          </thead>
+          <tbody data-filas></tbody>
+        </table>
+      </div>
+      <p class="calc-nota">
+        Pfr y Ped calculadas para un error sistemático constante en todas las corridas evaluadas. Las reglas simples se
+        calculan exactas y las multirreglas por simulación, así que pueden variar en ±0,5 %.
+      </p>
+    </div>
+  </section>
+
   <div slot="explicacion">
     <h2>Cómo se calcula</h2>
     <ul>
@@ -58,23 +94,98 @@ import { url } from '../../lib/rutas';
       </li>
     </ul>
     <p>
-      Las reglas sugeridas siguen las «Westgard Sigma Rules» y son un punto de partida. La táctica definitiva se
-      fundamenta con la probabilidad de detección de error (Ped) y de falso rechazo (Pfr), que Consensus QC calcula con
-      sus <a href={url('consensus-qc/')}>funciones de poder</a>.
+      Las reglas sugeridas siguen las «Westgard Sigma Rules» y son un punto de partida. Con «Diseña tu control» puedes
+      fundamentar la elección con las funciones de poder.
     </p>
+    <h2>Ped y Pfr</h2>
+    <ul>
+      <li>
+        <strong>Ped</strong>: probabilidad de que el procedimiento rechace la corrida cuando hay un error sistemático
+        igual a ΔSEcrit. Lo habitual es pedir 90 % o más.
+      </li>
+      <li>
+        <strong>Pfr</strong>: probabilidad de rechazar una corrida sin error. Cada falso rechazo cuesta repeticiones,
+        reactivos y tiempo. Lo habitual es pedir 5 % o menos.
+      </li>
+      <li>
+        Subir la Ped exige más controles o límites más estrechos, y eso sube la Pfr. Con sigma alta ambas metas se
+        cumplen con poco; con sigma baja hay que elegir cuál ceder.
+      </li>
+      <li>
+        La calculadora recomienda el procedimiento más simple que cumple ambas metas. Consensus QC hace este mismo
+        análisis con tus datos reales y sus <a href={url('consensus-qc/')}>funciones de poder</a>.
+      </li>
+    </ul>
   </div>
 </PaginaCalculadora>
 
 <script>
-  import { categoriaSigma, errorSistematicoCritico, errorTotal, formato, numero, sigma } from '../../lib/calidad.js';
+  import { categoriaSigma, disenoControl, errorSistematicoCritico, errorTotal, formato, numero, sigma } from '../../lib/calidad.js';
 
   const form = document.getElementById('calc') as HTMLFormElement;
+  const metas = document.getElementById('metas') as HTMLFormElement;
   const $ = (s: string) => document.querySelector(`[data-${s}]`) as HTMLElement;
+  let dseActual = NaN;
 
   function mostrarMensaje(texto: string) {
     $('mensaje').textContent = texto;
     $('mensaje').hidden = false;
     $('resultado').hidden = true;
+    $('diseno').hidden = true;
+  }
+
+  // Un decimal, para que 69,7 % no se lea como 70 % y parezca cumplir una meta de 70 %.
+  const pct = (p: number) => (p >= 0.9995 && p < 1 ? '> 99,9' : formato(p * 100, 1)) + ' %';
+
+  function disenar() {
+    const pedMin = Number(metas.ped.value) / 100;
+    const pfrMax = Number(metas.pfr.value) / 100;
+    $('ped-valor').textContent = formato(pedMin * 100, 0) + ' %';
+    $('pfr-valor').textContent = formato(pfrMax * 100, 1) + ' %';
+    if (!Number.isFinite(dseActual)) return;
+    $('dse-diseno').textContent = formato(dseActual, 2);
+
+    const tbody = $('filas');
+    if (dseActual <= 0) {
+      $('recomendado').textContent = 'Con ΔSEcrit cero o negativo el error crítico ya ocurre sin ningún cambio en el método: ningún procedimiento de control puede detectarlo a tiempo. Mejora el sesgo o el CV primero.';
+      $('recomendado').dataset.nivel = 'error';
+      tbody.replaceChildren();
+      return;
+    }
+    const d = disenoControl(dseActual, pedMin, pfrMax);
+    if (d.recomendado) {
+      $('recomendado').innerHTML = '';
+      $('recomendado').append('Recomendado: ', Object.assign(document.createElement('strong'), { textContent: d.recomendado.nombre }),
+        ` (Ped ${pct(d.recomendado.ped)}, Pfr ${pct(d.recomendado.pfr)}). Es el más simple que cumple ambas metas.`);
+      $('recomendado').dataset.nivel = 'ok';
+    } else if (d.mejor) {
+      $('recomendado').innerHTML = '';
+      $('recomendado').append('Ningún procedimiento cumple ambas metas. Respetando la Pfr, el que más detecta es ',
+        Object.assign(document.createElement('strong'), { textContent: d.mejor.nombre }),
+        ` (Ped ${pct(d.mejor.ped)}). Baja la Ped exigida, acepta más Pfr o mejora el método.`);
+      $('recomendado').dataset.nivel = 'advertencia';
+    } else {
+      $('recomendado').textContent = 'Ningún procedimiento tiene una Pfr tan baja. Acepta un poco más de falso rechazo.';
+      $('recomendado').dataset.nivel = 'advertencia';
+    }
+
+    tbody.replaceChildren(...d.filas.map((f) => {
+      const tr = document.createElement('tr');
+      if (f === d.recomendado || (!d.recomendado && f === d.mejor)) tr.className = 'calc-fila-elegida';
+      const celda = (texto: string, nivel?: string) => {
+        const td = document.createElement('td');
+        td.textContent = texto;
+        if (nivel) td.dataset.nivel = nivel;
+        return td;
+      };
+      tr.append(
+        celda(f.nombre),
+        celda(pct(f.pfr), f.cumplePfr ? 'ok' : 'error'),
+        celda(pct(f.ped), f.cumplePed ? 'ok' : 'error'),
+        celda(f.cumple ? 'Sí' : 'No', f.cumple ? 'ok' : 'error'),
+      );
+      return tr;
+    }));
   }
 
   function calcular() {
@@ -96,7 +207,8 @@ import { url } from '../../lib/rutas';
     $('sigma').textContent = formato(sg, 1);
     $('categoria').textContent = cat.texto;
     $('categoria').dataset.nivel = cat.nivel;
-    $('dse').textContent = formato(errorSistematicoCritico(tea, s, cv), 2);
+    dseActual = errorSistematicoCritico(tea, s, cv);
+    $('dse').textContent = formato(dseActual, 2);
     $('reglas').textContent = cat.reglas;
     $('controles').textContent = cat.controles;
     $('nota').hidden = !cat.nota;
@@ -105,9 +217,14 @@ import { url } from '../../lib/rutas';
       $('nota').hidden = false;
       $('nota').textContent = 'El sesgo ya iguala o supera el TEa: ningún esquema de control puede compensarlo. Corrige el sesgo (calibración, reactivo, método) antes de diseñar el control.';
     }
+    $('diseno').hidden = false;
+    disenar();
   }
 
   form.addEventListener('input', calcular);
   form.addEventListener('submit', (e) => e.preventDefault());
+  metas.addEventListener('input', disenar);
+  metas.addEventListener('submit', (e) => e.preventDefault());
   calcular();
+  disenar();
 </script>

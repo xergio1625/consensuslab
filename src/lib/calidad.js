@@ -87,6 +87,120 @@ export function categoriaSigma(s) {
   };
 }
 
+// --- Funciones de poder: probabilidad de detección de error (Ped) y de falso rechazo (Pfr) ---
+
+/** Distribución normal estándar acumulada (Abramowitz y Stegun 7.1.26, error < 1,5·10⁻⁷). */
+export function normalAcumulada(x) {
+  const t = 1 / (1 + 0.3275911 * (Math.abs(x) / Math.SQRT2));
+  const p = t * (0.254829592 + t * (-0.284496736 + t * (1.421413741 + t * (-1.453152027 + t * 1.061405429))));
+  const erf = 1 - p * Math.exp(-(x * x) / 2);
+  return x >= 0 ? (1 + erf) / 2 : (1 - erf) / 2;
+}
+
+/**
+ * Procedimientos de control candidatos, de más simple a más exigente.
+ * N = controles por corrida; R = corridas en que se aplican las reglas.
+ */
+export const PROCEDIMIENTOS_QC = [
+  { id: '13.5s-n2', reglas: ['1-3.5s'], n: 2, r: 1 },
+  { id: '13s-n2', reglas: ['1-3s'], n: 2, r: 1 },
+  { id: '12.5s-n2', reglas: ['1-2.5s'], n: 2, r: 1 },
+  { id: '12s-n2', reglas: ['1-2s'], n: 2, r: 1 },
+  { id: 'multi-n2', reglas: ['1-3s', '2-2s', 'R-4s'], n: 2, r: 1 },
+  { id: '13s-n4', reglas: ['1-3s'], n: 4, r: 1 },
+  { id: '12.5s-n4', reglas: ['1-2.5s'], n: 4, r: 1 },
+  { id: 'multi-n4', reglas: ['1-3s', '2-2s', 'R-4s', '4-1s'], n: 4, r: 1 },
+  { id: 'multi-n4r2', reglas: ['1-3s', '2-2s', 'R-4s', '4-1s', '8-x'], n: 4, r: 2 },
+];
+
+/** Nombre legible: «1-3s / 2-2s / R-4s, N = 2, R = 1» (con coma decimal). */
+export function nombreProcedimiento(p) {
+  return `${p.reglas.join(' / ').replace(/\./g, ',')} · N = ${p.n}${p.r > 1 ? `, R = ${p.r}` : ''}`;
+}
+
+/** Generador pseudoaleatorio con semilla (mulberry32): resultados reproducibles. */
+function aleatorio(semilla) {
+  let a = semilla >>> 0;
+  return () => {
+    a = (a + 0x6d2b79f5) >>> 0;
+    let t = a;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+/** ¿Alguna regla rechaza? `corridas`: arreglo de R corridas, cada una con N valores en unidades de DE. */
+function rechaza(reglas, corridas) {
+  const todos = corridas.flat();
+  for (const regla of reglas) {
+    if (regla === 'R-4s') {
+      if (corridas.some((c) => Math.max(...c) - Math.min(...c) > 4)) return true;
+      continue;
+    }
+    if (regla === '8-x') {
+      if (consecutivos(todos, 8, (x) => x > 0) || consecutivos(todos, 8, (x) => x < 0)) return true;
+      continue;
+    }
+    const [m, k] = regla.replace('s', '').split('-').map(Number);
+    if (consecutivos(todos, m, (x) => x > k) || consecutivos(todos, m, (x) => x < -k)) return true;
+  }
+  return false;
+}
+
+function consecutivos(lista, cuantos, cumple) {
+  let seguidos = 0;
+  for (const x of lista) {
+    seguidos = cumple(x) ? seguidos + 1 : 0;
+    if (seguidos >= cuantos) return true;
+  }
+  return false;
+}
+
+/**
+ * Probabilidad de que el procedimiento rechace la corrida cuando hay un error sistemático de `dse`
+ * desviaciones estándar en todas las corridas evaluadas. Con dse = 0 es la Pfr; con dse = ΔSEcrit, la Ped.
+ * Una sola regla 1-ks se calcula exacta; las multirreglas se simulan (Monte Carlo con semilla fija).
+ */
+export function probabilidadRechazo(p, dse, simulaciones = 20000, semilla = 1625) {
+  if (p.reglas.length === 1 && p.reglas[0].startsWith('1-')) {
+    const k = Number(p.reglas[0].slice(2, -1));
+    const dentro = normalAcumulada(k - dse) - normalAcumulada(-k - dse);
+    return 1 - dentro ** (p.n * p.r);
+  }
+  const azar = aleatorio(semilla);
+  const normal = () => Math.sqrt(-2 * Math.log(1 - azar())) * Math.cos(2 * Math.PI * azar());
+  let rechazos = 0;
+  for (let i = 0; i < simulaciones; i++) {
+    const corridas = Array.from({ length: p.r }, () => Array.from({ length: p.n }, () => normal() + dse));
+    if (rechaza(p.reglas, corridas)) rechazos++;
+  }
+  return rechazos / simulaciones;
+}
+
+/**
+ * Diseño del control: Ped (a ΔSEcrit) y Pfr de cada procedimiento candidato, si cumple las metas
+ * (Ped ≥ pedMin y Pfr ≤ pfrMax, ambas entre 0 y 1) y el recomendado: el primero (más simple) que cumple.
+ * Si ninguno cumple, `recomendado` es null y `mejor` es el de mayor Ped entre los que respetan la Pfr.
+ */
+const pfrCalculadas = new Map();
+
+export function disenoControl(dseCrit, pedMin, pfrMax, simulaciones = 20000) {
+  const filas = PROCEDIMIENTOS_QC.map((p) => {
+    const ped = probabilidadRechazo(p, dseCrit, simulaciones);
+    // La Pfr no depende de los datos del usuario: se calcula una vez (con más simulaciones, porque es pequeña).
+    const clave = `${p.id}:${simulaciones}`;
+    if (!pfrCalculadas.has(clave)) pfrCalculadas.set(clave, probabilidadRechazo(p, 0, simulaciones * 5));
+    const pfr = pfrCalculadas.get(clave);
+    return { ...p, nombre: nombreProcedimiento(p), ped, pfr, cumplePed: ped >= pedMin, cumplePfr: pfr <= pfrMax };
+  });
+  filas.forEach((f) => { f.cumple = f.cumplePed && f.cumplePfr; });
+  const recomendado = filas.find((f) => f.cumple) ?? null;
+  const conPfr = filas.filter((f) => f.cumplePfr);
+  const mejor = recomendado ?? (conPfr.length ? conPfr.reduce((a, b) => (b.ped > a.ped ? b : a)) : null);
+  return { filas, recomendado, mejor };
+}
+
 /**
  * Especificaciones desde la variabilidad biológica (modelo de Fraser):
  * CV ≤ k · CVi; sesgo ≤ m · √(CVi² + CVg²); TEa = 1,65 · CV + sesgo.

@@ -472,4 +472,16 @@ img, svg { max-width: 100%; }
 [data-nivel="ok"] { color: var(--c-ok); font-weight: 600; }
 [data-nivel="advertencia"] { color: var(--c-prep); font-weight: 600; }
 [data-nivel="error"] { color: var(--c-error); font-weight: 600; }
+.calc-diseno h2 { margin-top: 0; }
+.calc-metas { margin: 14px 0 18px; }
+.calc-metas input[type="range"] { width: 100%; accent-color: var(--c-boton); }
+.calc-metas output { font-variant-numeric: tabular-nums; }
+.calc-recomendado { margin: 0 0 14px; padding: 10px 14px; border-radius: var(--radio-s); border-left: 4px solid; color: var(--c-texto); font-weight: 400; }
+.calc-recomendado[data-nivel="ok"] { background: var(--c-ok-fondo); border-color: var(--c-ok); color: var(--c-texto); font-weight: 400; }
+.calc-recomendado[data-nivel="advertencia"] { background: var(--c-prep-fondo); border-color: var(--c-prep); color: var(--c-texto); font-weight: 400; }
+.calc-recomendado[data-nivel="error"] { background: var(--c-error-fondo); border-color: var(--c-error); color: var(--c-texto); font-weight: 400; }
+.calc-tabla-envoltura { overflow-x: auto; }
+.calc-tabla-poder td:not(:first-child), .calc-tabla-poder th:not(:first-child) { text-align: right; white-space: nowrap; }
+.calc-fila-elegida td { background: var(--c-panel-alt); }
+.calc-fila-elegida td:first-child { font-weight: 650; }
 @media (max-width: 560px) { .calc-tabla th, .calc-tabla td { padding: 6px; font-size: .88rem; } }

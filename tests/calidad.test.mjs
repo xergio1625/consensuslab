@@ -53,6 +53,43 @@ test('categoría sigma y reglas sugeridas (Westgard Sigma Rules)', () => {
   assert.ok(C.categoriaSigma(1).nota);
 });
 
+test('funciones de poder: Pfr y Ped de reglas simples (exactas)', () => {
+  cerca(C.normalAcumulada(0), 0.5, 1e-7);
+  cerca(C.normalAcumulada(1.96), 0.975, 1e-4);
+  cerca(C.normalAcumulada(-3), 0.00135, 1e-5);
+  const p = (id) => C.PROCEDIMIENTOS_QC.find((x) => x.id === id);
+  cerca(C.probabilidadRechazo(p('13s-n2'), 0), 1 - (1 - 0.0027) ** 2, 2e-5); // ≈ 0,5 %
+  cerca(C.probabilidadRechazo(p('12s-n2'), 0), 1 - (1 - 0.0455) ** 2, 2e-4); // ≈ 9 %
+  // Con un error de 3 DE, cada control cae fuera de 3 DE la mitad de las veces: 1 − 0,5² ≈ 0,75.
+  cerca(C.probabilidadRechazo(p('13s-n2'), 3), 0.75, 2e-3);
+  assert.equal(C.nombreProcedimiento(p('12.5s-n2')), '1-2,5s · N = 2');
+  assert.equal(C.nombreProcedimiento(p('multi-n4r2')), '1-3s / 2-2s / R-4s / 4-1s / 8-x · N = 4, R = 2');
+});
+
+test('funciones de poder: multirreglas simuladas y reproducibles', () => {
+  const multi = C.PROCEDIMIENTOS_QC.find((x) => x.id === 'multi-n2');
+  const pfr = C.probabilidadRechazo(multi, 0, 100000);
+  assert.ok(pfr > 0.007 && pfr < 0.014, `Pfr multirregla N = 2 ≈ 1 %: ${pfr}`);
+  assert.equal(C.probabilidadRechazo(multi, 2, 5000), C.probabilidadRechazo(multi, 2, 5000), 'misma semilla, mismo resultado');
+  assert.ok(C.probabilidadRechazo(multi, 3, 5000) > C.probabilidadRechazo(multi, 2, 5000), 'más error, más detección');
+});
+
+test('diseño del control según la Ped mínima y la Pfr máxima', () => {
+  // Sigma 6 (ΔSEcrit 4,35): basta la regla más simple.
+  let d = C.disenoControl(4.35, 0.9, 0.05, 5000);
+  assert.equal(d.recomendado.id, '13.5s-n2');
+  // Sigma 4 (ΔSEcrit 2,35) con metas habituales: hace falta más que 1-3s N = 2.
+  d = C.disenoControl(2.35, 0.9, 0.05, 5000);
+  assert.ok(d.recomendado && !['13.5s-n2', '13s-n2'].includes(d.recomendado.id));
+  // Si se acepta más falso rechazo, aparece la 1-2s.
+  d = C.disenoControl(2.35, 0.5, 0.1, 5000);
+  assert.equal(d.filas.find((f) => f.id === '12s-n2').cumplePfr, true);
+  // Sigma 3 (ΔSEcrit 1,35) exigiendo Ped 90 % y Pfr 1 %: ninguno cumple; se informa el mejor posible.
+  d = C.disenoControl(1.35, 0.9, 0.01, 5000);
+  assert.equal(d.recomendado, null);
+  assert.ok(d.mejor && d.mejor.cumplePfr && !d.mejor.cumplePed);
+});
+
 test('especificaciones desde la variabilidad biológica (modelo de Fraser)', () => {
   // CVi 5 %, CVg 7 %: √(25 + 49) = 8,602…
   const r = C.especificacionesBiologicas(5, 7);
