@@ -17,7 +17,7 @@ actualizado: 2026-10-03
 ## Cómo usarla
 
 1. **Usa las demás herramientas en el día a día.** El panel no pide datos nuevos: se arma solo con lo que el equipo
-   registra en temperaturas, equipos, contingencia, derivaciones, mantención, inventario, compras, libro de turno,
+   registra en temperaturas, equipos, contingencia, derivaciones, mantención, inventario, compras, recepción, libro de turno,
    documentos y vencimientos.
 2. **Ábrelo al empezar la jornada.** Arriba verás el estado general del laboratorio y, debajo, una tarjeta por área
    con su semáforo: rojo (requiere acción), amarillo (atención) o verde (todo bien). Las áreas en rojo aparecen

@@ -25,7 +25,8 @@ actualizado: 2026-10-03
    pidió recibe la decisión.
 3. **Registra la orden de compra.** Número, proveedor, entrega comprometida y monto. La app verifica que la
    OC incluya todo lo aprobado: si falta algo, pide explicarlo.
-4. **Registra lo que llega.** Las recepciones pueden ser parciales. Lo que es del inventario entra
+4. **Registra lo que llega.** Las recepciones pueden ser parciales. Si usas también la recepción de insumos,
+   el botón «Recibir con lista de chequeo» lleva a ella con la solicitud cargada. Lo que es del inventario entra
    directamente con su lote y vencimiento, y puedes dejarlo en cuarentena para verificarlo antes de usarlo.
 5. **Cierra lo que no llegará.** Si el proveedor no entregará el saldo, cierra la solicitud con el motivo.
 6. **Sigue las alertas.** Solicitudes por aprobar hace más de 2 días, aprobadas sin orden de compra hace más
