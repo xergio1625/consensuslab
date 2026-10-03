@@ -17,13 +17,13 @@ actualizado: 2026-10-03
 ## Cómo usarla
 
 1. **Usa las demás herramientas en el día a día.** El panel no pide datos nuevos: se arma solo con lo que el equipo
-   registra en temperaturas, equipos, contingencia, derivaciones, mantención, libro de turno, documentos y
-   vencimientos.
+   registra en temperaturas, equipos, contingencia, derivaciones, mantención, inventario, libro de turno,
+   documentos y vencimientos.
 2. **Ábrelo al empezar la jornada.** Arriba verás el estado general del laboratorio y, debajo, una tarjeta por área
    con su semáforo: rojo (requiere acción), amarillo (atención) o verde (todo bien). Las áreas en rojo aparecen
    primero.
 3. **Lee el detalle de cada tarjeta.** Por ejemplo: qué refrigerador está fuera de rango, qué equipo está detenido
-   y desde cuándo, qué mantención venció, qué pendientes de turno siguen abiertos o qué documento te toca leer.
+   y desde cuándo, qué mantención venció, qué reactivo está sin stock o vencido, qué pendientes de turno siguen abiertos o qué documento te toca leer.
 4. **Actúa desde el mismo panel.** El botón de cada tarjeta abre la herramienta correspondiente para registrar la
    acción. Al volver, usa «Actualizar»; si lo dejas abierto, se actualiza solo cada 5 minutos.
 5. **Úsalo en la reunión breve de inicio de turno.** Es una buena pauta para repartir tareas: lo rojo primero.

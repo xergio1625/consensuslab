@@ -11,14 +11,14 @@ que_es: "Informes de producción, consumo, costos, indicadores y cumplimiento, g
 problema: "Elimina las horas de fin de mes armando informes a mano."
 recurso_previsto: "Plantilla de informe mensual en planilla que se llena desde los registros."
 relacionadas: [indicadores-de-calidad, produccion-y-estadistica-de-examenes]
-actualizado: 2026-09-28
+actualizado: 2026-10-03
 ---
 
 ## Cómo usarla
 
 1. **Registra el día a día en las demás herramientas.** El informe no pide datos nuevos: se arma con lo que el
-   equipo ya registró en temperaturas, equipos, mantención, contingencia, derivaciones, tiempos de respuesta, libro
-   de turno, control documental y vencimientos.
+   equipo ya registró en temperaturas, equipos, mantención, contingencia, derivaciones, tiempos de respuesta,
+   inventario, libro de turno, control documental y vencimientos.
 2. **Abre el informe del mes.** Elige el mes (los últimos 12 están disponibles). El mes en curso muestra los datos a
    la fecha; los meses cerrados, el periodo completo.
 3. **Mira primero el semáforo.** Cada indicador aparece en verde (cumple), amarillo (atención) o rojo (crítico)
@@ -31,6 +31,8 @@ actualizado: 2026-09-28
    - planes de contingencia con la revisión anual vencida (meta: 0);
    - derivaciones con resultados atrasados al cierre (meta: 0) y con resultado a tiempo (meta: 90 % o más);
    - urgencias y rutina informadas dentro de la meta de TAT (meta: 90 % o más), según las cargas del LIS del mes;
+   - insumos sin stock o bajo el mínimo y lotes vencidos con stock al cierre, y pérdidas por vencimiento en el mes
+     (meta: 0);
    - entregas de turno recibidas por otra persona (meta: 95 % o más);
    - pendientes abiertos al cierre (ninguno de alta prioridad);
    - documentos con revisión vencida (meta: 0);
