@@ -1,0 +1,110 @@
+---
+// Google Analytics 4 con consentimiento previo (modo básico de Consent Mode v2):
+// la etiqueta de Google NO se carga hasta que la persona acepta. Si rechaza, no se carga nada.
+// La decisión se guarda en este navegador por 12 meses y se puede cambiar desde el pie («Preferencias de cookies»).
+// Sin GA_ID (src/lib/sitio.ts) este componente no agrega nada a la página.
+import { url } from '../lib/rutas';
+import { GA_ID, URL_APP } from '../lib/sitio';
+---
+
+{GA_ID && (
+  <>
+    <div class="aviso-cookies" id="aviso-cookies" role="region" aria-label="Preferencias de cookies" hidden>
+      <div class="contenedor aviso-cookies-interior">
+        <p>
+          Usamos <strong>Google Analytics</strong> para saber qué páginas y herramientas se usan y así mejorar el sitio.
+          Solo se activa si lo aceptas. No hay publicidad ni datos de pacientes.{' '}
+          <a href={url('privacidad/') + '#analitica'}>Más información</a>
+        </p>
+        <div class="aviso-cookies-acciones">
+          <button type="button" class="boton boton-secundario" data-cookies="no">Rechazar</button>
+          <button type="button" class="boton boton-primario" data-cookies="si">Aceptar</button>
+        </div>
+      </div>
+    </div>
+    <script is:inline define:vars={{ GA_ID, URL_APP }}>
+      (function () {
+        var CLAVE = 'consentimiento-analitica';
+        var VIGENCIA_MS = 365 * 24 * 60 * 60 * 1000;
+        var aviso = document.getElementById('aviso-cookies');
+        var cargada = false;
+
+        function leer() {
+          try {
+            var d = JSON.parse(localStorage.getItem(CLAVE) || 'null');
+            if (d && (d.valor === 'si' || d.valor === 'no') && Date.now() - d.fecha < VIGENCIA_MS) return d.valor;
+          } catch (e) {}
+          return null;
+        }
+
+        function guardar(valor) {
+          try { localStorage.setItem(CLAVE, JSON.stringify({ valor: valor, fecha: Date.now() })); } catch (e) {}
+        }
+
+        function cargar() {
+          if (cargada) return;
+          cargada = true;
+          window['ga-disable-' + GA_ID] = false;
+          window.dataLayer = window.dataLayer || [];
+          window.gtag = function () { window.dataLayer.push(arguments); };
+          window.gtag('consent', 'default', {
+            analytics_storage: 'granted', ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied',
+          });
+          window.gtag('js', new Date());
+          window.gtag('config', GA_ID, { allow_google_signals: false, allow_ad_personalization_signals: false });
+          var s = document.createElement('script');
+          s.async = true;
+          s.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(GA_ID);
+          document.head.appendChild(s);
+        }
+
+        /** Al retirar el consentimiento: detiene la medición y borra las cookies de Analytics. */
+        function apagar() {
+          window['ga-disable-' + GA_ID] = true;
+          var partes = location.hostname.split('.');
+          var dominios = ['', location.hostname];
+          for (var i = 1; i < partes.length - 1; i++) dominios.push('.' + partes.slice(i).join('.'));
+          document.cookie.split(';').forEach(function (c) {
+            var nombre = c.split('=')[0].trim();
+            if (!/^_ga($|_)|^_gid$|^_gat/.test(nombre)) return;
+            dominios.forEach(function (d) {
+              document.cookie = nombre + '=; Max-Age=0; path=/' + (d ? '; domain=' + d : '');
+            });
+          });
+        }
+
+        function mostrarAviso(mostrar) { aviso.hidden = !mostrar; }
+
+        function decidir(valor) {
+          var antes = leer();
+          guardar(valor);
+          mostrarAviso(false);
+          if (valor === 'si') cargar();
+          else if (antes === 'si' || cargada) { apagar(); location.reload(); }
+        }
+
+        aviso.addEventListener('click', function (e) {
+          var b = e.target.closest('[data-cookies]');
+          if (b) decidir(b.getAttribute('data-cookies'));
+        });
+        document.addEventListener('click', function (e) {
+          if (e.target.closest('[data-preferencias-cookies]')) { mostrarAviso(true); aviso.querySelector('[data-cookies="si"]').focus(); return; }
+          if (typeof window.gtag !== 'function' || !cargada) return;
+          // Eventos sin datos personales: qué herramienta se abre en la app y qué prompt se copia.
+          var a = e.target.closest('a[href]');
+          if (a && a.href.indexOf(URL_APP) === 0) {
+            var m = /[?&]modulo=([^&#]+)/.exec(a.href);
+            window.gtag('event', 'abrir_app', { modulo: m ? decodeURIComponent(m[1]) : 'inicio' });
+          }
+          if (e.target.closest('#copiar')) {
+            window.gtag('event', 'copiar_prompt', { prompt: location.pathname.replace(/\/$/, '').split('/').pop() });
+          }
+        });
+
+        var valor = leer();
+        if (valor === 'si') cargar();
+        else if (valor === null) mostrarAviso(true);
+      })();
+    </script>
+  </>
+)}

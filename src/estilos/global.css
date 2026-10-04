@@ -485,3 +485,18 @@ img, svg { max-width: 100%; }
 .calc-fila-elegida td { background: var(--c-panel-alt); }
 .calc-fila-elegida td:first-child { font-weight: 650; }
 @media (max-width: 560px) { .calc-tabla th, .calc-tabla td { padding: 6px; font-size: .88rem; } }
+
+/* ─── Aviso de cookies (Google Analytics solo con consentimiento) ─── */
+.aviso-cookies {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
+  background: var(--c-panel); color: var(--c-texto);
+  border-top: 1px solid var(--c-borde); box-shadow: 0 -4px 20px rgba(0, 0, 0, .15);
+  padding: 14px 0;
+}
+.aviso-cookies[hidden] { display: none; }
+.aviso-cookies-interior { display: flex; gap: 16px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+.aviso-cookies p { margin: 0; flex: 1 1 420px; font-size: .95rem; }
+.aviso-cookies-acciones { display: flex; gap: 10px; flex-wrap: wrap; }
+.enlace-pie { background: none; border: 0; padding: 0; font: inherit; color: inherit; text-decoration: underline; cursor: pointer; }
+.enlace-pie:hover { color: var(--c-enlace-h); }
+@media print { .aviso-cookies { display: none !important; } }

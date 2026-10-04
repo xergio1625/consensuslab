@@ -22,6 +22,13 @@ export function urlModulo(modulo: string): string {
  */
 export const MEDIUM_PERFIL = 'https://medium.com/@xergio.1625';
 
+/**
+ * ID de medición de Google Analytics 4 (formato 'G-XXXXXXXXXX'; es público, aparece en el código de cada página).
+ * Vacío = sin analítica: no se carga nada ni se muestra el aviso de cookies.
+ * Con ID: aviso de cookies y Google Analytics solo si la persona acepta (ver src/componentes/Analitica.astro).
+ */
+export const GA_ID = '';
+
 /** Correo de contacto para privacidad, términos y soporte (el mismo que envía los correos de la app). */
 export const CORREO_CONTACTO = 'xergio.1625@gmail.com';
 

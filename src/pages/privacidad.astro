@@ -2,7 +2,7 @@
 // Política de privacidad del sitio y de la app ConsensusLab (Ley 19.628 y Ley 21.719, Chile).
 import Base from '../plantillas/Base.astro';
 import { url } from '../lib/rutas';
-import { CORREO_CONTACTO, VIGENCIA_LEGAL } from '../lib/sitio';
+import { CORREO_CONTACTO, GA_ID, VIGENCIA_LEGAL } from '../lib/sitio';
 const correo = `mailto:${CORREO_CONTACTO}`;
 ---
 
@@ -37,20 +37,47 @@ const correo = `mailto:${CORREO_CONTACTO}`;
 
       <h2>2. Qué datos tratamos</h2>
       <h3>En este sitio</h3>
-      <ul>
-        <li>
-          El sitio no usa cookies, ni herramientas de analítica o de publicidad, ni formularios. Solo guarda en tu propio
-          navegador tu preferencia de tema claro u oscuro.
-        </li>
-        <li>
-          El sitio se aloja en GitHub Pages. Como cualquier servidor web, GitHub puede registrar datos técnicos de la
-          visita, como la dirección IP, según su propia política de privacidad.
-        </li>
-        <li>
-          Si más adelante incorporamos analítica o herramientas de marketing, actualizaremos esta política y te pediremos
-          el consentimiento antes de activarlas.
-        </li>
-      </ul>
+      {GA_ID ? (
+        <ul id="analitica">
+          <li>
+            <strong>Analítica, solo con tu consentimiento.</strong> Si aceptas en el aviso de cookies, usamos Google Analytics
+            4 (Google LLC, con servidores que pueden estar fuera de Chile, incluso en Estados Unidos) para contar visitas y
+            saber qué páginas, herramientas y prompts se usan. Google guarda cookies propias (<code>_ga</code>,{' '}
+            <code>_ga_*</code>) por hasta 2 años y recibe datos técnicos de la visita: páginas vistas, de dónde llegaste,
+            tipo de dispositivo y navegador, y una ubicación aproximada (ciudad o país) obtenida de la dirección IP, que
+            Google Analytics 4 no guarda. No enviamos tu nombre, tu correo ni datos de la app, y desactivamos las señales
+            de Google y la personalización de anuncios. Los datos se conservan 14 meses en Google Analytics.
+          </li>
+          <li>
+            Si rechazas, no se carga Google Analytics. Puedes cambiar tu decisión cuando quieras con «Preferencias de
+            cookies», al pie de cada página; si retiras el consentimiento, borramos las cookies de Analytics de tu
+            navegador. Tu decisión se guarda en tu navegador por 12 meses.
+          </li>
+          <li>
+            Además, el sitio guarda en tu propio navegador tu preferencia de tema claro u oscuro. No usamos publicidad ni
+            formularios en el sitio.
+          </li>
+          <li>
+            El sitio se aloja en GitHub Pages. Como cualquier servidor web, GitHub puede registrar datos técnicos de la
+            visita, como la dirección IP, según su propia política de privacidad.
+          </li>
+        </ul>
+      ) : (
+        <ul>
+          <li>
+            El sitio no usa cookies, ni herramientas de analítica o de publicidad, ni formularios. Solo guarda en tu propio
+            navegador tu preferencia de tema claro u oscuro.
+          </li>
+          <li>
+            El sitio se aloja en GitHub Pages. Como cualquier servidor web, GitHub puede registrar datos técnicos de la
+            visita, como la dirección IP, según su propia política de privacidad.
+          </li>
+          <li>
+            Si más adelante incorporamos analítica o herramientas de marketing, actualizaremos esta política y te pediremos
+            el consentimiento antes de activarlas.
+          </li>
+        </ul>
+      )}
 
       <h3>En la app (demo y suscripción)</h3>
       <table>
@@ -115,6 +142,7 @@ const correo = `mailto:${CORREO_CONTACTO}`;
           unos días después de probar una demo, con las guías de las herramientas que usaste. Puedes retirarlo cuando
           quieras en «Mi cuenta» o con el enlace «No quiero recibir más correos» que va al pie de cada uno.
         </li>
+        {GA_ID && <li><strong>Con tu consentimiento</strong>, para medir el uso del sitio con Google Analytics.</li>}
         <li><strong>Por interés legítimo</strong>, para la seguridad de la app y la prevención de abusos.</li>
         <li><strong>Por obligación legal</strong>, para cumplir obligaciones tributarias y contables.</li>
       </ul>

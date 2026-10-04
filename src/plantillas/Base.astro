@@ -3,6 +3,7 @@
 import '../estilos/global.css';
 import Cabecera from '../componentes/Cabecera.astro';
 import Pie from '../componentes/Pie.astro';
+import Analitica from '../componentes/Analitica.astro';
 import { url } from '../lib/rutas';
 import { INDEXAR } from '../lib/sitio';
 
@@ -52,5 +53,6 @@ const canonica = new URL(Astro.url.pathname, Astro.site);
       <slot />
     </main>
     <Pie />
+    <Analitica />
   </body>
 </html>
