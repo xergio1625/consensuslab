@@ -8,7 +8,7 @@ prompt: |
   Actúa como coordinador técnico de un laboratorio clínico a cargo de la evaluación de competencias del personal.
 
   Crea una pauta de evaluación de competencias para la tarea: [TAREA O PUESTO, POR EJEMPLO OPERACIÓN DEL ANALIZADOR DE HEMATOLOGÍA].
-  Cargo evaluado: [TM, TÉCNICO PARAMÉDICO, AUXILIAR].
+  Cargo evaluado: [PROFESIONAL DE LABORATORIO, TÉCNICO DE LABORATORIO, AUXILIAR].
   Procedimiento de referencia: [CÓDIGO Y NOMBRE DEL PROCEDIMIENTO, O PEGA SUS PASOS PRINCIPALES].
 
   La pauta debe incluir:

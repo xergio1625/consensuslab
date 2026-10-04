@@ -5,7 +5,7 @@ resumen: "Arma el plan para verificar un método o equipo nuevo antes de usarlo 
 herramientas: [control-de-calidad-interno-y-externo, mantencion-preventiva-y-calibraciones]
 actualizado: 2026-09-28
 prompt: |
-  Actúa como tecnólogo médico experto en verificación y validación de métodos analíticos (documentos CLSI como EP15 y EP09, e ISO 15189).
+  Actúa como profesional de laboratorio clínico experto en verificación y validación de métodos analíticos (documentos CLSI como EP15 y EP09, e ISO 15189).
 
   Voy a implementar: [ANALITO Y MÉTODO] en [EQUIPO NUEVO O EXISTENTE].
   Motivo: [EQUIPO NUEVO, CAMBIO DE MÉTODO, CAMBIO DE REACTIVO, TRASLADO DEL EQUIPO].

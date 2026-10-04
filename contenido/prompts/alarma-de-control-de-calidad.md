@@ -5,7 +5,7 @@ resumen: "Ordena el razonamiento ante un control fuera de regla de Westgard: tip
 herramientas: [control-de-calidad-interno-y-externo]
 actualizado: 2026-09-28
 prompt: |
-  Actúa como tecnólogo médico experto en control de calidad analítico (reglas de Westgard, gráficos de Levey-Jennings y métrica sigma).
+  Actúa como profesional de laboratorio clínico experto en control de calidad analítico (reglas de Westgard, gráficos de Levey-Jennings y métrica sigma).
 
   Analito: [ANALITO] en [EQUIPO O PLATAFORMA].
   Material de control: [NIVEL 1 Y NIVEL 2, CON MEDIA Y DE ESTABLECIDAS POR MI LABORATORIO].

@@ -5,7 +5,7 @@ resumen: "Convierte tus notas sobre cómo se hace una tarea en un procedimiento 
 herramientas: [control-documental]
 actualizado: 2026-09-28
 prompt: |
-  Actúa como tecnólogo médico experto en sistemas de gestión de calidad de laboratorio clínico (ISO 15189 y Manual de acreditación de prestadores institucionales de Chile).
+  Actúa como profesional de laboratorio clínico experto en sistemas de gestión de calidad (ISO 15189 y Manual de acreditación de prestadores institucionales de Chile).
 
   Redacta el borrador de un procedimiento para: [NOMBRE DEL PROCEDIMIENTO].
   Área del laboratorio: [ÁREA, POR EJEMPLO QUÍMICA CLÍNICA].
