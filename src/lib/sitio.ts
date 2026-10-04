@@ -27,10 +27,13 @@ export const MEDIUM_PERFIL = 'https://medium.com/@xergio.1625';
  * Vacío = sin analítica: no se carga nada ni se muestra el aviso de cookies.
  * Con ID: aviso de cookies y Google Analytics solo si la persona acepta (ver src/componentes/Analitica.astro).
  */
-export const GA_ID = '';
+export const GA_ID = 'G-PBCF6HZRHZ';
 
 /** Correo de contacto para privacidad, términos y soporte (el mismo que envía los correos de la app). */
 export const CORREO_CONTACTO = 'xergio.1625@gmail.com';
 
-/** Fecha de la versión vigente de la política de privacidad y los términos de uso. */
+/** Fecha de la versión vigente de los términos de uso. */
 export const VIGENCIA_LEGAL = '2 de octubre de 2026';
+
+/** Fecha de la versión vigente de la política de privacidad (cambió al agregar Google Analytics con consentimiento). */
+export const VIGENCIA_PRIVACIDAD = '3 de octubre de 2026';

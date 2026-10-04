@@ -2,7 +2,7 @@
 // Política de privacidad del sitio y de la app ConsensusLab (Ley 19.628 y Ley 21.719, Chile).
 import Base from '../plantillas/Base.astro';
 import { url } from '../lib/rutas';
-import { CORREO_CONTACTO, GA_ID, VIGENCIA_LEGAL } from '../lib/sitio';
+import { CORREO_CONTACTO, GA_ID, VIGENCIA_PRIVACIDAD } from '../lib/sitio';
 const correo = `mailto:${CORREO_CONTACTO}`;
 ---
 
@@ -13,7 +13,7 @@ const correo = `mailto:${CORREO_CONTACTO}`;
   <div class="contenedor">
     <article class="prosa">
       <h1>Política de privacidad</h1>
-      <p class="texto-suave">Versión vigente desde el {VIGENCIA_LEGAL}.</p>
+      <p class="texto-suave">Versión vigente desde el {VIGENCIA_PRIVACIDAD}.</p>
 
       <div class="aviso aviso-info">
         <p>
