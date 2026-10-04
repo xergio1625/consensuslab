@@ -1,0 +1,43 @@
+---
+// Franja de la preventa fundadores con los días que quedan. Los días se calculan en el navegador
+// (el sitio es estático) y la franja desaparece sola desde FIN_PREVENTA. No se muestra en /planes/.
+import { url } from '../lib/rutas';
+import { FIN_PREVENTA } from '../lib/sitio';
+
+const hoy = new Date().toISOString().slice(0, 10);
+const activa = hoy < FIN_PREVENTA && Astro.url.pathname !== url('planes/');
+---
+
+{activa && (
+  <div class="franja-preventa" id="franja-preventa" data-fin={FIN_PREVENTA} hidden>
+    <div class="contenedor franja-preventa-interior">
+      <p>
+        <strong>Preventa fundadores:</strong> 40 % de descuento pagando antes del 1 de diciembre
+        <span class="franja-dias" id="franja-dias"></span>
+      </p>
+      <span class="franja-acciones">
+        <a class="franja-enlace" href={url('planes/')}>Ver planes</a>
+        <button type="button" class="franja-cerrar" aria-label="Cerrar el aviso de preventa">×</button>
+      </span>
+    </div>
+  </div>
+)}
+
+<script>
+  const franja = document.getElementById('franja-preventa');
+  if (franja) {
+    const fin = Date.parse(franja.dataset.fin + 'T00:00:00-03:00');
+    const dias = Math.ceil((fin - Date.now()) / 86400000);
+    let cerrada = false;
+    try { cerrada = sessionStorage.getItem('franja-preventa') === 'cerrada'; } catch {}
+    if (dias > 0 && !cerrada) {
+      const d = document.getElementById('franja-dias');
+      if (d) d.textContent = ' · ' + (dias === 1 ? 'queda 1 día' : 'quedan ' + dias + ' días');
+      franja.hidden = false;
+    }
+    franja.querySelector('.franja-cerrar')?.addEventListener('click', () => {
+      franja.hidden = true;
+      try { sessionStorage.setItem('franja-preventa', 'cerrada'); } catch {}
+    });
+  }
+</script>

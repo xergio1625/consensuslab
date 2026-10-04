@@ -528,3 +528,15 @@ img, svg { max-width: 100%; }
 .form-cotizacion button[type="submit"] { justify-self: start; }
 .estado-cotizacion { margin: 0; padding: 12px 14px; border-radius: var(--radio-s); background: var(--c-ok-fondo); color: var(--c-ok); }
 .estado-cotizacion.estado-error { background: var(--c-error-fondo); color: var(--c-error); }
+
+/* ─── Franja de la preventa ─── */
+.franja-preventa { background: var(--marca-dorado); color: #2A0510; font-size: .92rem; }
+.franja-preventa[hidden] { display: none; }
+.franja-preventa-interior { display: flex; align-items: center; gap: 12px 16px; padding-top: 8px; padding-bottom: 8px; flex-wrap: wrap; }
+.franja-preventa p { margin: 0; flex: 1 1 260px; }
+.franja-acciones { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+.franja-enlace { color: #2A0510; font-weight: 700; white-space: nowrap; }
+.franja-enlace:hover { color: #4B0B1E; }
+.franja-cerrar { background: none; border: 0; font-size: 1.4rem; line-height: 1; color: #2A0510; cursor: pointer; padding: 2px 6px; border-radius: 4px; }
+.franja-cerrar:hover { background: rgba(0, 0, 0, .08); }
+@media print { .franja-preventa { display: none !important; } }

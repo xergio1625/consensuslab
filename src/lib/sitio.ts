@@ -29,6 +29,9 @@ export const MEDIUM_PERFIL = 'https://medium.com/@xergio.1625';
  */
 export const GA_ID = 'G-PBCF6HZRHZ';
 
+/** Fin de la preventa fundadores (desde este día rige el precio normal). Hasta entonces se ven la franja y la imagen de preventa. */
+export const FIN_PREVENTA = '2026-12-01';
+
 /** Correo de contacto para privacidad, términos y soporte (el mismo que envía los correos de la app). */
 export const CORREO_CONTACTO = 'xergio.1625@gmail.com';
 
