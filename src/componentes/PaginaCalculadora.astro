@@ -3,7 +3,7 @@
 // (slot por defecto), la explicación (slot «explicacion») y el lateral con otras calculadoras.
 import Base from '../plantillas/Base.astro';
 import { CALCULADORAS, calculadora, type IdCalculadora } from '../lib/calculadoras';
-import { url } from '../lib/rutas';
+import { migasLd, url } from '../lib/rutas';
 
 interface Props {
   id: IdCalculadora;
@@ -12,7 +12,26 @@ const c = calculadora(Astro.props.id);
 const otras = CALCULADORAS.filter((o) => o.id !== c.id);
 ---
 
-<Base titulo={c.titulo} seccion="calculadoras" descripcion={`Calculadora gratuita para laboratorio clínico. ${c.resumen}`}>
+<Base
+  titulo={`${c.titulo}: calculadora para laboratorio clínico`}
+  seccion="calculadoras"
+  descripcion={`Calculadora gratuita para laboratorio clínico. ${c.resumen}`}
+  datos={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebApplication',
+      name: c.titulo,
+      description: c.resumen,
+      url: new URL(Astro.url.pathname, Astro.site).href,
+      applicationCategory: 'UtilitiesApplication',
+      operatingSystem: 'Web',
+      inLanguage: 'es',
+      isAccessibleForFree: true,
+      offers: { '@type': 'Offer', price: 0, priceCurrency: 'CLP' },
+    },
+    migasLd(Astro.site, [['Calculadoras', 'calculadoras/'], [c.titulo, Astro.url.pathname.replace(/^\//, '')]]),
+  ]}
+>
   <div class="contenedor">
     <nav class="migas" aria-label="Ruta de navegación">
       <ol>

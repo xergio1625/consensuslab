@@ -25,8 +25,19 @@ const modulos = [
 ---
 
 <Base
-  titulo="Consensus QC"
+  titulo="Consensus QC: software de control de calidad para laboratorio clínico"
   seccion="consensus-qc"
+  datos={{
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: 'Consensus QC',
+    description: 'Software web de control de calidad analítico para laboratorio clínico: reglas de Westgard, Levey-Jennings, sigma, plan de calidad, estudios N20, control externo y no conformidades.',
+    url: new URL(Astro.url.pathname, Astro.site).href,
+    applicationCategory: 'HealthApplication',
+    operatingSystem: 'Web',
+    inLanguage: 'es',
+    publisher: { '@type': 'Organization', name: 'ConsensusLab', url: Astro.site?.href },
+  }}
   descripcion="Consensus QC: software de control de calidad para laboratorio clínico con Westgard, Levey-Jennings, sigma, control externo y plan de calidad."
 >
   <section class="portada">

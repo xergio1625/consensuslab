@@ -35,6 +35,22 @@ export const RELACION_CONSENSUS_QC = {
   no: 'No depende de Consensus QC',
 } as const;
 
+/** Título para buscadores: agrega «en el laboratorio clínico» a los títulos cortos que no lo dicen. */
+export function tituloSeo(titulo: string): string {
+  return /laborator/i.test(titulo) || titulo.length > 38 ? titulo : `${titulo} en el laboratorio clínico`;
+}
+
+/** Ruta de navegación como datos estructurados (BreadcrumbList); `pasos` = [nombre, ruta interna]. */
+export function migasLd(sitio: URL | undefined, pasos: [string, string][]) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: pasos.map(([nombre, ruta], i) => ({
+      '@type': 'ListItem', position: i + 1, name: nombre, item: new URL(url(ruta), sitio).href,
+    })),
+  };
+}
+
 /** Nombre legible de una etiqueta: «prioridad-coordinador» → «Prioridad coordinador» */
 export function nombreEtiqueta(etiqueta: string): string {
   const texto = etiqueta.replace(/-/g, ' ');

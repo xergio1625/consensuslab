@@ -19,7 +19,7 @@ const mismaCategoria = todos.filter((o) => o.data.categoria === p.categoria && o
 const categoria = CATEGORIAS_PROMPT[p.categoria];
 ---
 
-<Base titulo={p.titulo} seccion="prompts" descripcion={`Prompt de IA para el laboratorio clínico. ${p.resumen}`}>
+<Base titulo={`${p.titulo}: prompt de IA para laboratorio clínico`} seccion="prompts" descripcion={`Prompt de IA para el laboratorio clínico. ${p.resumen}`}>
   <div class="contenedor">
     <nav class="migas" aria-label="Ruta de navegación">
       <ol>

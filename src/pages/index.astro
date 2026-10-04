@@ -6,6 +6,7 @@ import TarjetaPrompt from '../componentes/TarjetaPrompt.astro';
 import { obtenerCatalogo, obtenerHerramientas, obtenerPrompts } from '../lib/datos';
 import { url } from '../lib/rutas';
 import { CALCULADORAS } from '../lib/calculadoras';
+import { CORREO_CONTACTO } from '../lib/sitio';
 
 const catalogo = await obtenerCatalogo();
 const nombreGrupo = new Map(catalogo.map(({ grupo }) => [grupo.id, grupo.data.nombre_corto]));
@@ -15,7 +16,34 @@ const promptsDestacados = (await obtenerPrompts()).filter((p) =>
 const prioritarias = (await obtenerHerramientas()).filter((h) => h.data.etiquetas.includes('prioridad-coordinador'));
 ---
 
-<Base titulo="ConsensusLab" seccion="inicio">
+<Base
+  titulo="ConsensusLab: herramientas de gestión para el laboratorio clínico"
+  seccion="inicio"
+  datos={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'Organization',
+      name: 'ConsensusLab',
+      url: Astro.site?.href,
+      logo: new URL('logo.png', Astro.site).href,
+      email: CORREO_CONTACTO,
+      areaServed: 'CL',
+      description: 'Herramientas de gestión, calidad y coordinación para profesionales de laboratorio clínico.',
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: 'ConsensusLab',
+      url: Astro.site?.href,
+      inLanguage: 'es-CL',
+      potentialAction: {
+        '@type': 'SearchAction',
+        target: { '@type': 'EntryPoint', urlTemplate: new URL('herramientas/?q={search_term_string}', Astro.site).href },
+        'query-input': 'required name=search_term_string',
+      },
+    },
+  ]}
+>
   <section class="portada">
     <div class="contenedor">
       <p class="antetitulo">Para profesionales de laboratorio clínico</p>

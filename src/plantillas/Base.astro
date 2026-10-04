@@ -11,6 +11,10 @@ import { FIN_PREVENTA, INDEXAR } from '../lib/sitio';
 interface Props {
   titulo: string;
   descripcion?: string;
+  /** false = la página no se indexa (y queda fuera del sitemap si también se filtra allí). */
+  indexar?: boolean;
+  /** Datos estructurados (schema.org, JSON-LD) de la página. */
+  datos?: Record<string, unknown> | Record<string, unknown>[];
   /** Imagen al compartir (en public/). Por defecto: la de preventa en inicio y planes mientras dure; si no, la del sitio. */
   imagen?: string;
   seccion?: 'inicio' | 'herramientas' | 'calculadoras' | 'prompts' | 'opinion' | 'consensus-qc' | 'planes' | 'acerca' | 'cuenta';
@@ -22,7 +26,10 @@ const {
   seccion,
 } = Astro.props;
 
-const tituloCompleto = titulo === 'ConsensusLab' ? titulo : `${titulo} · ConsensusLab`;
+const tituloCompleto = titulo.startsWith('ConsensusLab') ? titulo : `${titulo} · ConsensusLab`;
+const indexable = INDEXAR && Astro.props.indexar !== false;
+const datos = Astro.props.datos ? [].concat(Astro.props.datos as never) : [];
+const jsonLd = (d: unknown) => JSON.stringify(d).replace(/</g, '\\u003c');
 const canonica = new URL(Astro.url.pathname, Astro.site);
 const enPreventa = new Date().toISOString().slice(0, 10) < FIN_PREVENTA;
 const paginaPreventa = Astro.url.pathname === url('') || Astro.url.pathname === url('planes/');
@@ -36,7 +43,7 @@ const imagen = new URL(url(Astro.props.imagen ?? (enPreventa && paginaPreventa ?
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{tituloCompleto}</title>
     <meta name="description" content={descripcion} />
-    {!INDEXAR && <meta name="robots" content="noindex, nofollow" />}
+    {!indexable && <meta name="robots" content={INDEXAR ? 'noindex, follow' : 'noindex, nofollow'} />}
     <link rel="canonical" href={canonica} />
     <meta property="og:title" content={tituloCompleto} />
     <meta property="og:description" content={descripcion} />
@@ -51,6 +58,8 @@ const imagen = new URL(url(Astro.props.imagen ?? (enPreventa && paginaPreventa ?
     <meta property="og:locale" content="es_CL" />
     <meta name="theme-color" content="#4B0B1E" />
     <link rel="icon" type="image/svg+xml" href={url('favicon.svg')} />
+    <link rel="sitemap" href={url('sitemap-index.xml')} />
+    {datos.map((d) => <script type="application/ld+json" set:html={jsonLd(d)} />)}
     <script is:inline>
       // Canal por el que llegó la visita (enlaces con utm_source), para saber de dónde vienen las cotizaciones.
       try {

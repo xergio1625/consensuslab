@@ -13,7 +13,7 @@ export async function getStaticPaths() {
 const { grupo, herramientas } = Astro.props;
 ---
 
-<Base titulo={grupo.data.nombre} seccion="herramientas" descripcion={grupo.data.descripcion}>
+<Base titulo={`${grupo.data.nombre}: herramientas para el laboratorio clínico`} seccion="herramientas" descripcion={grupo.data.descripcion}>
   <div class="contenedor">
     <nav class="migas" aria-label="Ruta de navegación">
       <ol>

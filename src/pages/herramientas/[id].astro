@@ -8,7 +8,9 @@ import {
   RELACION_CONSENSUS_QC,
   TIPOS_RECURSO,
   formatoFecha,
+  migasLd,
   nombreEtiqueta,
+  tituloSeo,
   url,
   urlRecurso,
 } from '../../lib/rutas';
@@ -32,7 +34,13 @@ const prompts = (await obtenerPrompts()).filter((p) => p.data.herramientas.some(
 const siglas = { excel: 'XLS', sheets: 'GS', word: 'DOC', pdf: 'PDF', formulario: 'FORM', otro: '↓' } as const;
 ---
 
-<Base titulo={h.titulo} seccion="herramientas" descripcion={`${h.que_es} ${h.problema}`}>
+<Base
+  titulo={tituloSeo(h.titulo)}
+  seccion="herramientas"
+  descripcion={`${h.que_es} ${h.problema}`}
+  indexar={h.estado === 'disponible'}
+  datos={migasLd(Astro.site, [['Herramientas', 'herramientas/'], [grupo.data.nombre_corto, `grupos/${grupo.id}/`], [h.titulo, `herramientas/${herramienta.id}/`]])}
+>
   <div class="contenedor">
     <nav class="migas" aria-label="Ruta de navegación">
       <ol>

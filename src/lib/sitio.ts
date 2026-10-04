@@ -1,11 +1,11 @@
 // Ajustes generales del sitio.
 
 /**
- * Indexación en buscadores. Mientras sea `false`, cada página lleva
+ * Indexación en buscadores (activa desde el 4 de octubre de 2026). Con `false`, cada página lleva
  * <meta name="robots" content="noindex, nofollow"> y Google no la muestra en sus resultados.
- * Cambiar a `true` cuando el sitio esté listo para publicarse en Google.
+ * Las páginas que no deben aparecer (p. ej. fichas en preparación) usan la prop `indexar={false}` de Base.
  */
-export const INDEXAR = false;
+export const INDEXAR = true;
 
 /** App ConsensusLab (Google Apps Script). Las fichas con `app_modulo` enlazan aquí. */
 export const URL_APP =
