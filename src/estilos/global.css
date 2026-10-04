@@ -540,3 +540,9 @@ img, svg { max-width: 100%; }
 .franja-cerrar { background: none; border: 0; font-size: 1.4rem; line-height: 1; color: #2A0510; cursor: pointer; padding: 2px 6px; border-radius: 4px; }
 .franja-cerrar:hover { background: rgba(0, 0, 0, .08); }
 @media print { .franja-preventa { display: none !important; } }
+
+/* ─── Artículos de opinión ─── */
+.caja-articulo { margin: 28px 0 8px; padding: 18px; border: 1px solid var(--c-borde); border-radius: var(--radio); background: var(--c-panel-alt); }
+.caja-articulo p { margin: 0 0 12px; }
+.caja-articulo p:last-child { margin-bottom: 0; }
+.acciones-articulo { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; }

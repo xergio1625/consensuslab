@@ -1,9 +1,10 @@
 ---
-// Sección Opinión: enlaces a los artículos publicados en Medium (contenido/opinion/).
-import Base from '../plantillas/Base.astro';
-import { obtenerOpinion } from '../lib/datos';
-import { formatoFecha } from '../lib/rutas';
-import { MEDIUM_PERFIL } from '../lib/sitio';
+// Sección Opinión: cada artículo tiene su página con un resumen; el texto completo se lee en Medium
+// (los suscriptores lo leen sin costo con el enlace de amigo, desde la app).
+import Base from '../../plantillas/Base.astro';
+import { obtenerOpinion } from '../../lib/datos';
+import { formatoFecha, url } from '../../lib/rutas';
+import { MEDIUM_PERFIL } from '../../lib/sitio';
 
 const articulos = await obtenerOpinion();
 ---
@@ -18,8 +19,8 @@ const articulos = await obtenerOpinion();
       <div>
         <h1>Opinión</h1>
         <p class="texto-suave intro-prompts">
-          Artículos sobre la gestión del laboratorio clínico, la calidad y la profesión del tecnólogo médico. Se leen
-          en Medium.
+          Artículos sobre la gestión del laboratorio clínico, la calidad y la profesión del tecnólogo médico. Aquí
+          encuentras de qué trata cada uno; el texto completo se lee en Medium, y con suscripción lo lees sin costo.
         </p>
       </div>
       {
@@ -42,13 +43,11 @@ const articulos = await obtenerOpinion();
                   {a.data.temas.length > 0 && <span>· {a.data.temas.join(' · ')}</span>}
                 </div>
                 <h2>
-                  <a href={a.data.enlace} target="_blank" rel="noopener">
-                    {a.data.titulo}
-                  </a>
+                  <a href={url(`opinion/${a.id}/`)}>{a.data.titulo}</a>
                 </h2>
                 <p>{a.data.resumen}</p>
                 <div class="tarjeta-pie">
-                  <span class="texto-suave">Leer en Medium ↗</span>
+                  <span class="texto-suave">Leer el resumen →</span>
                 </div>
               </article>
             </li>
