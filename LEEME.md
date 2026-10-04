@@ -1,6 +1,6 @@
 # ConsensusLab
 
-Sitio de herramientas de gestión, calidad y coordinación para tecnólogos médicos (TM) de laboratorio clínico.
+Sitio de herramientas de gestión, calidad y coordinación para profesionales de laboratorio clínico.
 
 - **Sitio publicado:** https://consensuslab.cl/
 - **Tecnología:** [Astro](https://astro.build) (sitio estático) + GitHub Pages.

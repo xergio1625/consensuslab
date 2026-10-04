@@ -2,7 +2,7 @@
   "name": "consensuslab",
   "version": "0.2.0",
   "private": true,
-  "description": "ConsensusLab: herramientas de gestión para tecnólogos médicos de laboratorio clínico.",
+  "description": "ConsensusLab: herramientas de gestión para profesionales de laboratorio clínico.",
   "type": "module",
   "scripts": {
     "dev": "astro dev",
