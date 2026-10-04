@@ -2,7 +2,7 @@
 
 Sitio de herramientas de gestión, calidad y coordinación para tecnólogos médicos (TM) de laboratorio clínico.
 
-- **Sitio publicado:** https://xergio1625.github.io/consensuslab/
+- **Sitio publicado:** https://consensuslab.cl/
 - **Tecnología:** [Astro](https://astro.build) (sitio estático) + GitHub Pages.
 - **Catálogo de trabajo:** Jira `sergio-personal`, proyecto PP (flujos PP-63 a PP-69, herramientas PP-70 a PP-111).
 
@@ -86,7 +86,7 @@ Requisitos: Node.js 22.12 o superior.
 
 ```bash
 npm install        # una vez
-npm run dev        # vista previa con recarga automática: http://localhost:4321/consensuslab/
+npm run dev        # vista previa con recarga automática: http://localhost:4321/
 npm run build      # compila y valida todas las fichas (lo mismo que hace GitHub)
 ```
 

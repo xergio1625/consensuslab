@@ -1,10 +1,10 @@
 // Utilidades para construir enlaces internos y textos comunes.
 // Todas las rutas pasan por `url()` para respetar la base del sitio
-// (/consensuslab/ en GitHub Pages, / cuando haya dominio propio).
+// (hoy «/», con el dominio consensuslab.cl).
 
 const BASE = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 
-/** Construye una ruta interna: url('herramientas/') → /consensuslab/herramientas/ */
+/** Construye una ruta interna: url('herramientas/') → /herramientas/ */
 export function url(ruta = ''): string {
   return BASE + ruta.replace(/^\//, '');
 }
