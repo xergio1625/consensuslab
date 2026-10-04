@@ -241,6 +241,7 @@ const planes = [
       datos.piloto = piloto.checked;
       datos.marketing = (form.elements.namedItem('marketing') as HTMLInputElement).checked;
       datos.t = Date.now() - abierto;
+      try { datos.origen = sessionStorage.getItem('origen') || (document.referrer ? 'referido/' + new URL(document.referrer).hostname : 'directo/'); } catch { datos.origen = ''; }
       if (!String(datos.nombre).trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(datos.correo).trim()) || !String(datos.laboratorio).trim()) {
         mostrar('Completa tu nombre, un correo válido y el laboratorio.', true);
         return;

@@ -52,6 +52,13 @@ const imagen = new URL(url(Astro.props.imagen ?? (enPreventa && paginaPreventa ?
     <meta name="theme-color" content="#4B0B1E" />
     <link rel="icon" type="image/svg+xml" href={url('favicon.svg')} />
     <script is:inline>
+      // Canal por el que llegó la visita (enlaces con utm_source), para saber de dónde vienen las cotizaciones.
+      try {
+        var q = new URLSearchParams(location.search);
+        if (q.get('utm_source')) {
+          sessionStorage.setItem('origen', (q.get('utm_source') + '/' + (q.get('utm_medium') || '')).replace(/[^a-z0-9_\/-]/gi, '').slice(0, 60));
+        }
+      } catch (e) {}
       // Aplica el tema guardado antes de pintar la página, para evitar parpadeos.
       try {
         var tema = localStorage.getItem('tema');
