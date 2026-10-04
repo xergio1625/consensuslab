@@ -35,5 +35,5 @@ export const CORREO_CONTACTO = 'xergio.1625@gmail.com';
 /** Fecha de la versión vigente de los términos de uso. */
 export const VIGENCIA_LEGAL = '2 de octubre de 2026';
 
-/** Fecha de la versión vigente de la política de privacidad (cambió al agregar Google Analytics con consentimiento). */
-export const VIGENCIA_PRIVACIDAD = '3 de octubre de 2026';
+/** Fecha de la versión vigente de la política de privacidad (Google Analytics con consentimiento y formulario de cotización). */
+export const VIGENCIA_PRIVACIDAD = '4 de octubre de 2026';

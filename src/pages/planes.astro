@@ -1,17 +1,261 @@
 ---
-// Planes de suscripción (pendiente: definir plataforma de pagos).
+// Planes de suscripción. Sin montos públicos: la persona pide una cotización (llega a la app por doPost)
+// y la lista de precios vive solo en el repositorio privado de la app.
 import Base from '../plantillas/Base.astro';
+import { obtenerHerramientas } from '../lib/datos';
 import { url } from '../lib/rutas';
+import { CORREO_CONTACTO, URL_APP } from '../lib/sitio';
+
+const herramientas = await obtenerHerramientas();
+const enApp = herramientas.filter((h) => h.data.estado === 'disponible' && h.data.app_modulo);
+const ESENCIAL = ['panel', 'temperaturas', 'turno', 'documentos', 'vencimientos', 'informes'];
+const esencial = ESENCIAL.map((m) => enApp.find((h) => h.data.app_modulo === m)).filter(Boolean);
+
+const planes = [
+  {
+    id: 'esencial',
+    nombre: 'Esencial',
+    para: 'Laboratorios pequeños que quieren ordenar lo básico.',
+    usuarios: 'Hasta 5 usuarios',
+    incluye: esencial.map((h) => h!.data.titulo),
+  },
+  {
+    id: 'gestion',
+    nombre: 'Gestión',
+    para: 'La gestión completa del laboratorio en un solo lugar.',
+    usuarios: 'Hasta 15 usuarios',
+    incluye: [
+      `Las ${enApp.length} herramientas disponibles en la app`,
+      'Equipos, mantención, contingencia y derivaciones',
+      'Inventario, compras, recepción, proveedores y contratos',
+      'Las nuevas herramientas que se publiquen',
+    ],
+  },
+  {
+    id: 'gestion_qc',
+    nombre: 'Gestión + Consensus QC',
+    destacado: 'El más completo',
+    para: 'Gestión y control de calidad analítico, con mejor precio que por separado.',
+    usuarios: 'Hasta 15 usuarios',
+    incluye: [
+      'Todo lo del plan Gestión',
+      'Consensus QC: Westgard, Levey-Jennings y sigma',
+      'Plan de calidad, estudios N20 y control externo',
+      'No conformidades con análisis de causa',
+    ],
+  },
+  {
+    id: 'qc',
+    nombre: 'Consensus QC',
+    para: 'Solo el control de calidad analítico.',
+    usuarios: 'Hasta 15 usuarios',
+    incluye: ['Controles diarios con reglas de Westgard', 'Gráficos de Levey-Jennings', 'Desempeño, sigma y control externo', 'Plan de calidad por analito'],
+  },
+  {
+    id: 'institucional',
+    nombre: 'Institucional',
+    para: 'Redes de salud, varias sedes o más usuarios.',
+    usuarios: 'Usuarios y sedes a convenir',
+    incluye: ['Todos los módulos y Consensus QC', 'Una licencia por sede', 'Condiciones y forma de compra a convenir'],
+  },
+];
 ---
 
-<Base titulo="Planes" seccion="planes" descripcion="Planes de suscripción de ConsensusLab. Próximamente.">
-  <div class="contenedor proximamente">
-    <span class="insignia insignia-en-preparacion">Próximamente</span>
-    <h1>Planes de suscripción</h1>
-    <p>
-      Las herramientas del catálogo gratuito seguirán siendo gratuitas. La suscripción mensual sumará herramientas
-      avanzadas y acceso a Consensus QC.
-    </p>
-    <p><a class="boton boton-primario" href={url('herramientas/')}>Explorar las herramientas gratuitas</a></p>
-  </div>
+<Base
+  titulo="Planes"
+  seccion="planes"
+  descripcion="Planes de ConsensusLab para laboratorios clínicos: Esencial, Gestión, Gestión + Consensus QC e Institucional. Preventa fundadores con 40 % de descuento y piloto gratis de 30 días."
+>
+  <section class="portada">
+    <div class="contenedor">
+      <p class="antetitulo">Preventa fundadores</p>
+      <h1>Ordena tu laboratorio con registros trazables</h1>
+      <p class="portada-lema">
+        <strong>40 % de descuento en el primer año</strong> para los laboratorios que paguen por adelantado antes del
+        <strong>1 de diciembre de 2026</strong>, fecha en que comienza el servicio. Pide tu cotización: la respondemos en un
+        día hábil.
+      </p>
+      <div class="acciones-portada">
+        <a class="boton boton-dorado" href="#cotizar" data-plan="gestion_qc">Pedir cotización</a>
+        <a class="boton boton-secundario boton-claro" href="#cotizar" data-piloto>Probar gratis 30 días</a>
+      </div>
+      <p class="nota-portada">Precios por laboratorio, anuales, más IVA. Factura electrónica.</p>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="contenedor">
+      <h2>Planes</h2>
+      <div class="planes">
+        {
+          planes.map((p) => (
+            <article class={'plan' + (p.destacado ? ' plan-destacado' : '')}>
+              {p.destacado && <span class="plan-cinta">{p.destacado}</span>}
+              <h3>{p.nombre}</h3>
+              <p class="plan-para">{p.para}</p>
+              <p class="plan-usuarios">{p.usuarios}</p>
+              <ul class="plan-incluye">
+                {p.incluye.map((x) => <li>{x}</li>)}
+              </ul>
+              <a class={'boton ' + (p.destacado ? 'boton-primario' : 'boton-secundario') + ' boton-ancho'} href="#cotizar" data-plan={p.id}>
+                Cotizar
+              </a>
+            </article>
+          ))
+        }
+      </div>
+      <p class="texto-suave">
+        Todos los planes incluyen registros trazables (nada se borra: las correcciones quedan con nombre y motivo),
+        actualizaciones, soporte por correo y una copia de tus registros cuando la pidas. La app no admite datos de
+        pacientes. Prueba cualquier herramienta gratis en la <a href={url('herramientas/')}>demo de cada ficha</a>.
+      </p>
+    </div>
+  </section>
+
+  <section class="seccion seccion-alt">
+    <div class="contenedor">
+      <h2>Cómo funciona la preventa</h2>
+      <ol class="pasos-preventa">
+        <li><strong>Pide tu cotización</strong> con el formulario. Te la enviamos por correo en un día hábil.</li>
+        <li>
+          <strong>Prueba gratis 30 días</strong> con los datos reales de tu laboratorio, sin compromiso. Si contratas, tus
+          registros se mantienen.
+        </li>
+        <li>
+          <strong>Paga el año por adelantado antes del 1 de diciembre de 2026</strong> y obtienes el 40 % de descuento en el
+          primer año. Usas la app desde el pago y el año pagado corre desde el 1 de diciembre.
+        </li>
+        <li><strong>Pago contra factura electrónica</strong>, por transferencia o con orden de compra.</li>
+      </ol>
+      <p class="texto-suave">
+        Desde el 1 de diciembre de 2026 rigen los precios normales. También puedes pagar mes a mes, sin el descuento de
+        fundador.
+      </p>
+    </div>
+  </section>
+
+  <section class="seccion" id="cotizar">
+    <div class="contenedor">
+      <h2>Pide tu cotización</h2>
+      <p class="texto-suave">Solo datos de contacto del laboratorio: nunca datos de pacientes.</p>
+      <form class="form-cotizacion" id="form-cotizacion" novalidate data-url={URL_APP} data-correo={CORREO_CONTACTO}>
+        <div class="calc-campos">
+          <label class="calc-campo"><span>Nombre y apellido</span><input class="campo" name="nombre" required maxlength="120" autocomplete="name" /></label>
+          <label class="calc-campo"><span>Correo</span><input class="campo" name="correo" type="email" required maxlength="254" autocomplete="email" /></label>
+          <label class="calc-campo"><span>Laboratorio o institución</span><input class="campo" name="laboratorio" required maxlength="200" autocomplete="organization" /></label>
+          <label class="calc-campo"><span>Cargo <span class="opcional">(opcional)</span></span><input class="campo" name="cargo" maxlength="100" autocomplete="organization-title" /></label>
+          <label class="calc-campo"><span>Teléfono <span class="opcional">(opcional)</span></span><input class="campo" name="telefono" type="tel" maxlength="30" autocomplete="tel" /></label>
+          <label class="calc-campo"><span>Ciudad <span class="opcional">(opcional)</span></span><input class="campo" name="ciudad" maxlength="80" autocomplete="address-level2" /></label>
+          <label class="calc-campo">
+            <span>Sector</span>
+            <select class="campo" name="sector">
+              <option value="privado">Privado (clínica, centro médico, laboratorio)</option>
+              <option value="publico">Público (hospital, CESFAM, servicio de salud)</option>
+              <option value="otro">Otro</option>
+            </select>
+          </label>
+          <label class="calc-campo">
+            <span>Plan de interés</span>
+            <select class="campo" name="plan" id="cotizar-plan">
+              {planes.map((p) => <option value={p.id} selected={p.id === 'gestion_qc'}>{p.nombre}</option>)}
+              <option value="no_se">Aún no lo sé</option>
+            </select>
+          </label>
+          <label class="calc-campo"><span>Usuarios <span class="opcional">(aprox.)</span></span><input class="campo" name="usuarios" type="number" min="1" max="1000" inputmode="numeric" /></label>
+          <label class="calc-campo"><span>Sedes</span><input class="campo" name="sedes" type="number" min="1" max="50" value="1" inputmode="numeric" /></label>
+          <label class="calc-campo calc-ancho"><span>Mensaje <span class="opcional">(opcional)</span></span><textarea class="campo" name="mensaje" maxlength="1500" rows="3" placeholder="Por ejemplo: qué necesitas ordenar, si te preparas para la acreditación o cómo compra tu institución"></textarea></label>
+        </div>
+        <label class="casilla-sitio"><input type="checkbox" name="piloto" id="cotizar-piloto" /> <span>Quiero el piloto gratis de 30 días con los datos de mi laboratorio.</span></label>
+        <label class="casilla-sitio"><input type="checkbox" name="marketing" /> <span>Acepto recibir novedades y guías de ConsensusLab por correo (opcional; puedes darte de baja cuando quieras).</span></label>
+        <div class="campo-trampa" aria-hidden="true">
+          <label>Sitio web <input name="sitio_web" tabindex="-1" autocomplete="off" /></label>
+        </div>
+        <p class="texto-suave">
+          Usaremos estos datos solo para responder tu solicitud, como explica la <a href={url('privacidad/')}>política de privacidad</a>.
+        </p>
+        <button type="submit" class="boton boton-primario">Pedir cotización</button>
+        <p class="estado-cotizacion" id="estado-cotizacion" role="status" hidden></p>
+      </form>
+    </div>
+  </section>
+
+  <section class="seccion seccion-alt">
+    <div class="contenedor prosa">
+      <h2>Preguntas frecuentes</h2>
+      <h3>¿El precio es por usuario?</h3>
+      <p>
+        No: es por laboratorio, con un tope de usuarios según el plan, para que todo el equipo registre. Cada sede es un
+        laboratorio con su propia licencia.
+      </p>
+      <h3>¿Qué pasa después del 1 de diciembre de 2026?</h3>
+      <p>Se cobra el precio normal. El descuento de fundador aplica solo al primer año pagado por adelantado antes de esa fecha.</p>
+      <h3>¿Sirve para hospitales y servicios públicos?</h3>
+      <p>Sí. Cotizamos con los datos de la institución y aceptamos orden de compra. Indícalo en el mensaje.</p>
+      <h3>¿Puedo seguir usando lo gratuito?</h3>
+      <p>
+        Sí. Las fichas, guías, prompts y calculadoras siguen siendo gratuitas, y la demo de cada herramienta también.
+      </p>
+    </div>
+  </section>
+
+  <script>
+    const form = document.getElementById('form-cotizacion') as HTMLFormElement;
+    const estado = document.getElementById('estado-cotizacion') as HTMLElement;
+    const selectPlan = document.getElementById('cotizar-plan') as HTMLSelectElement;
+    const piloto = document.getElementById('cotizar-piloto') as HTMLInputElement;
+    const abierto = Date.now();
+
+    // Los botones «Cotizar» de cada plan dejan elegido ese plan (y el de piloto marca la casilla).
+    document.querySelectorAll<HTMLElement>('[data-plan], [data-piloto]').forEach((a) => {
+      a.addEventListener('click', () => {
+        if (a.dataset.plan) selectPlan.value = a.dataset.plan;
+        if (a.hasAttribute('data-piloto')) piloto.checked = true;
+      });
+    });
+
+    function mostrar(texto: string, error: boolean) {
+      estado.hidden = false;
+      estado.textContent = texto;
+      estado.classList.toggle('estado-error', error);
+    }
+
+    const ETIQUETAS: Record<string, string> = { nombre: 'nombre', correo: 'correo', laboratorio: 'laboratorio', usuarios: 'usuarios', sedes: 'sedes', mensaje: 'mensaje' };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const f = new FormData(form);
+      const datos: Record<string, unknown> = {};
+      f.forEach((v, k) => { datos[k] = String(v); });
+      datos.piloto = piloto.checked;
+      datos.marketing = (form.elements.namedItem('marketing') as HTMLInputElement).checked;
+      datos.t = Date.now() - abierto;
+      if (!String(datos.nombre).trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(datos.correo).trim()) || !String(datos.laboratorio).trim()) {
+        mostrar('Completa tu nombre, un correo válido y el laboratorio.', true);
+        return;
+      }
+      const boton = form.querySelector('button[type=submit]') as HTMLButtonElement;
+      boton.disabled = true;
+      mostrar('Enviando…', false);
+      try {
+        // text/plain evita la consulta previa de CORS; la app responde JSON.
+        const r = await fetch(form.dataset.url!, { method: 'POST', body: JSON.stringify({ accion: 'cotizacion', datos }) });
+        const j = await r.json();
+        if (j.ok) {
+          form.reset();
+          mostrar('¡Listo! Recibimos tu solicitud' + (j.numero ? ' (N° ' + j.numero + ')' : '') + '. Te llegará un correo de confirmación y la cotización dentro de un día hábil.', false);
+          const w = window as unknown as { gtag?: (...a: unknown[]) => void };
+          if (typeof w.gtag === 'function') w.gtag('event', 'generate_lead', { plan: String(datos.plan) });
+        } else if (j.error === 'validacion' && j.detalle) {
+          const campos = Object.keys(j.detalle).map((k) => (ETIQUETAS[k] || k) + ': ' + j.detalle[k]).join('; ');
+          mostrar('Revisa los datos: ' + (campos || 'hay un dato no válido') + '.', true);
+        } else {
+          mostrar('No pudimos recibir la solicitud. Inténtalo de nuevo en unos minutos o escríbenos a ' + form.dataset.correo + '.', true);
+        }
+      } catch {
+        mostrar('No pudimos conectar. Revisa tu conexión e inténtalo de nuevo, o escríbenos a ' + form.dataset.correo + '.', true);
+      } finally {
+        boton.disabled = false;
+      }
+    });
+  </script>
 </Base>

@@ -500,3 +500,31 @@ img, svg { max-width: 100%; }
 .enlace-pie { background: none; border: 0; padding: 0; font: inherit; color: inherit; text-decoration: underline; cursor: pointer; }
 .enlace-pie:hover { color: var(--c-enlace-h); }
 @media print { .aviso-cookies { display: none !important; } }
+
+/* ─── Planes y cotización ─── */
+.boton-claro { color: #fff; border-color: rgba(255, 255, 255, .45); }
+.boton-claro:hover { color: #fff; border-color: var(--marca-dorado); }
+.planes { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); margin-bottom: 20px; }
+.plan {
+  position: relative; display: flex; flex-direction: column; gap: 10px;
+  background: var(--c-panel); border: 1px solid var(--c-borde); border-radius: var(--radio);
+  padding: 22px 18px 18px; box-shadow: var(--sombra);
+}
+.plan h3 { margin: 0; font-size: 1.15rem; }
+.plan-destacado { border: 2px solid var(--marca-dorado); }
+.plan-cinta {
+  position: absolute; top: -12px; left: 16px; padding: 2px 10px; border-radius: 999px;
+  background: var(--marca-dorado); color: #2A0510; font-size: .78rem; font-weight: 700;
+}
+.plan-para { margin: 0; color: var(--c-texto-suave); font-size: .95rem; }
+.plan-usuarios { margin: 0; font-weight: 650; font-size: .92rem; }
+.plan-incluye { margin: 0 0 6px; padding-left: 18px; display: grid; gap: 4px; font-size: .92rem; flex: 1; }
+.pasos-preventa { display: grid; gap: 10px; max-width: 80ch; padding-left: 22px; }
+.form-cotizacion { max-width: 820px; display: grid; gap: 14px; }
+.form-cotizacion textarea.campo { min-height: 90px; resize: vertical; }
+.casilla-sitio { display: flex; gap: 10px; align-items: flex-start; font-size: .95rem; }
+.casilla-sitio input { width: 18px; height: 18px; margin-top: 3px; flex: none; accent-color: var(--marca-burdeo); }
+.campo-trampa { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+.form-cotizacion button[type="submit"] { justify-self: start; }
+.estado-cotizacion { margin: 0; padding: 12px 14px; border-radius: var(--radio-s); background: var(--c-ok-fondo); color: var(--c-ok); }
+.estado-cotizacion.estado-error { background: var(--c-error-fondo); color: var(--c-error); }
