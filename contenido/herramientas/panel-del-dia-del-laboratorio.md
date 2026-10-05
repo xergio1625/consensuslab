@@ -17,7 +17,7 @@ actualizado: 2026-10-05
 ## Cómo usarla
 
 1. **Usa las demás herramientas en el día a día.** El panel no pide datos nuevos: se arma solo con lo que el equipo
-   registra en temperaturas, equipos, contingencia, derivaciones, mantención, inventario, compras, recepción, proveedores, contratos, turnos, libro de turno,
+   registra en temperaturas, equipos, contingencia, derivaciones, mantención, inventario, compras, recepción, proveedores, contratos, turnos, competencias, libro de turno,
    documentos y vencimientos.
 2. **Ábrelo al empezar la jornada.** Arriba verás el estado general del laboratorio y, debajo, una tarjeta por área
    con su semáforo: rojo (requiere acción), amarillo (atención) o verde (todo bien). Las áreas en rojo aparecen
@@ -41,6 +41,8 @@ actualizado: 2026-10-05
 - **Turnos:** rojo si hoy o mañana un turno queda bajo la dotación mínima o una ausencia no tiene reemplazo;
   amarillo si hay alertas en los próximos 7 días o el cuadrante del mes (o del próximo, a una semana) no está
   publicado. Muestra la dotación de cada turno de hoy.
+- **Competencias:** rojo si una competencia exigida no tiene a nadie habilitado; amarillo si hay reevaluaciones
+  vencidas o próximas, competencias sin respaldo, certificados por renovar o capacitaciones del plan atrasadas.
 - **Libro de turno:** rojo si hay pendientes de alta prioridad; amarillo si hay pendientes o entregas sin recibir.
 - **Documentos:** rojo si hay revisiones vencidas; amarillo si hay revisiones próximas o documentos que debes leer.
 - **Vencimientos:** rojo si hay contratos, licencias u otros elementos vencidos; amarillo si alguno está por vencer.

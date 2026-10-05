@@ -30,7 +30,8 @@ actualizado: 2026-10-05
    - Bajo la grilla, la fila de **dotación** muestra en cada día y turno cuántas personas hay frente al mínimo, en
      rojo si falta alguien. Los fines de semana y los feriados nacionales aparecen sombreados.
 4. **Guarda y revisa las alertas** antes de publicar: dotación bajo el mínimo, falta de profesionales, descanso menor
-   a 12 horas entre turnos y turnos que se superponen.
+   a 12 horas entre turnos y turnos que se superponen. Si usas Competencias y capacitación, también avisa cuando un
+   turno queda sin nadie habilitado en una competencia que se exige en cada turno (por ejemplo, validar resultados).
 5. **Publica el cuadrante.** Queda una versión fija con fecha y autor. Desde ese momento, cada modificación se
    registra con su motivo:
    - **reemplazo**: alguien cubre a quien falta;

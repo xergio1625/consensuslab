@@ -11,7 +11,7 @@ que_es: "Avisos automáticos por correo de vencimientos de documentos, capacitac
 problema: "El coordinador deja de depender de su memoria o de calendarios sueltos; nada vence sin que alguien lo sepa."
 recurso_previsto: "Planilla de Google Sheets con script que envía correos de aviso a 30, 15 y 7 días."
 relacionadas: [control-documental, mantencion-preventiva-y-calibraciones, contratos-y-comodatos]
-actualizado: 2026-09-28
+actualizado: 2026-10-05
 ---
 
 ## Cómo usarla
@@ -25,8 +25,8 @@ actualizado: 2026-09-28
    próxima fecha.
 4. **Revisa la agenda.** Todo aparece ordenado por fecha, en tres grupos: vencidos, por vencer y al día. Las
    revisiones de documentos del Control documental, los planes de Mantención y calibraciones y los plazos de
-   Contratos y comodatos (último día para avisar la no renovación y términos) aparecen solos, sin registrarlos dos
-   veces.
+   Contratos y comodatos (último día para avisar la no renovación y términos) y las reevaluaciones y certificados
+   de Competencias y capacitación aparecen solos, sin registrarlos dos veces.
 5. **Renueva, no edites.** Cuando llega el certificado o se firma el contrato, usa «Renovar»: queda el historial de
    fechas anteriores, quién renovó y una observación (por ejemplo, el número de certificado).
 6. **Cierra lo que ya no aplica.** Un equipo dado de baja o un contrato terminado se cierra con el motivo y deja de
