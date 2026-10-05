@@ -18,7 +18,7 @@ actualizado: 2026-10-05
 
 1. **Registra el día a día en las demás herramientas.** El informe no pide datos nuevos: se arma con lo que el
    equipo ya registró en temperaturas, equipos, mantención, contingencia, derivaciones, tiempos de respuesta,
-   inventario, compras, recepción, proveedores, contratos, programación de turnos, competencias, inducciones, libro de turno, control documental y vencimientos.
+   inventario, compras, recepción, proveedores, contratos, programación de turnos, competencias, inducciones, responsabilidades, libro de turno, control documental y vencimientos.
 2. **Abre el informe del mes.** Elige el mes (los últimos 12 están disponibles). El mes en curso muestra los datos a
    la fecha; los meses cerrados, el periodo completo.
 3. **Mira primero el semáforo.** Cada indicador aparece en verde (cumple), amarillo (atención) o rojo (crítico)
@@ -43,6 +43,7 @@ actualizado: 2026-10-05
    - habilitaciones con evaluación vigente (meta: 95 % o más), competencias sin el mínimo de personas habilitadas
      (meta: 0) y cumplimiento del plan de capacitación del año (meta: 90 % o más);
    - inducciones completadas dentro del plazo (meta: 90 % o más) y atrasadas al cierre (meta: 0);
+   - funciones sin suplente (meta: 0) y matriz de responsabilidades aprobada en los últimos 12 meses;
    - entregas de turno recibidas por otra persona (meta: 95 % o más);
    - pendientes abiertos al cierre (ninguno de alta prioridad);
    - documentos con revisión vencida (meta: 0);
