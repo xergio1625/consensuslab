@@ -542,7 +542,13 @@ img, svg { max-width: 100%; }
 @media print { .franja-preventa { display: none !important; } }
 
 /* ─── Artículos de opinión ─── */
-.caja-articulo { margin: 28px 0 8px; padding: 18px; border: 1px solid var(--c-borde); border-radius: var(--radio); background: var(--c-panel-alt); }
-.caja-articulo p { margin: 0 0 12px; }
-.caja-articulo p:last-child { margin-bottom: 0; }
-.acciones-articulo { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; }
+.acciones-opinion { display: flex; flex-wrap: wrap; gap: 8px; }
+.articulo { font-size: 1.06rem; line-height: 1.75; }
+.articulo h2 { margin-top: 1.8em; }
+.articulo img { max-width: 100%; height: auto; border-radius: var(--radio-s); }
+.articulo figure { margin: 1.4em 0; }
+.articulo figcaption { font-size: .88rem; color: var(--c-texto-suave); text-align: center; margin-top: 6px; }
+.articulo blockquote { margin: 1.2em 0; padding: 4px 0 4px 16px; border-left: 3px solid var(--marca-dorado); color: var(--c-texto-suave); }
+.caja-autor { margin: 32px 0 8px; padding: 16px 18px; border: 1px solid var(--c-borde); border-radius: var(--radio); background: var(--c-panel-alt); font-size: .95rem; line-height: 1.6; }
+.caja-autor p { margin: 0 0 8px; }
+.caja-autor p:last-child { margin-bottom: 0; }

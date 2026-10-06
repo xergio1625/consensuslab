@@ -1,42 +1,45 @@
 ---
-// Página de un artículo de opinión: resumen propio (cuerpo del .md) y enlace al texto completo en Medium.
-// Los suscriptores lo leen completo sin costo desde la app (enlace de amigo, que nunca va en este sitio).
+// Artículo publicado en el sitio (el .md tiene cuerpo). Esta página es el original: la copia en Medium se
+// importa desde aquí (medium.com/p/import) y queda con «Originally published at…» y enlace canónico a esta URL.
 import { render } from 'astro:content';
 import Base from '../../plantillas/Base.astro';
-import { obtenerOpinion } from '../../lib/datos';
+import { enSitio, obtenerOpinion } from '../../lib/datos';
 import { formatoFecha, migasLd, url } from '../../lib/rutas';
-import { URL_APP } from '../../lib/sitio';
 
 export async function getStaticPaths() {
-  const articulos = await obtenerOpinion();
+  const articulos = (await obtenerOpinion()).filter(enSitio);
   return articulos.map((articulo) => ({ params: { id: articulo.id }, props: { articulo } }));
 }
 
 const { articulo } = Astro.props;
 const a = articulo.data;
 const { Content } = await render(articulo);
-const tieneResumen = Boolean(articulo.body?.trim());
 const direccion = new URL(Astro.url.pathname, Astro.site).href;
-const otros = (await obtenerOpinion()).filter((x) => x.id !== articulo.id).slice(0, 3);
+const otros = (await obtenerOpinion()).filter((x) => x.id !== articulo.id).slice(0, 4);
+const palabras = (articulo.body ?? '').split(/\s+/).filter(Boolean).length;
+const minutos = Math.max(1, Math.round(palabras / 220));
 ---
 
 <Base
   titulo={a.titulo}
   seccion="opinion"
   descripcion={a.resumen}
-  indexar={tieneResumen}
+  imagen={a.imagen}
   datos={[
     {
       '@context': 'https://schema.org',
-      '@type': 'Article',
+      '@type': 'BlogPosting',
       headline: a.titulo,
       description: a.resumen,
       datePublished: a.fecha.toISOString().slice(0, 10),
-      author: { '@type': 'Person', name: 'Sergio Inostroza' },
-      publisher: { '@type': 'Organization', name: 'ConsensusLab', url: Astro.site?.href },
+      ...(a.actualizado ? { dateModified: a.actualizado.toISOString().slice(0, 10) } : {}),
+      author: { '@type': 'Person', name: 'Sergio Inostroza', url: new URL(url('acerca/'), Astro.site).href },
+      publisher: { '@type': 'Organization', name: 'ConsensusLab', url: Astro.site?.href, logo: new URL(url('logo.png'), Astro.site).href },
       mainEntityOfPage: direccion,
       inLanguage: 'es',
+      wordCount: palabras,
       keywords: a.temas.join(', '),
+      ...(a.imagen ? { image: new URL(url(a.imagen), Astro.site).href } : {}),
     },
     migasLd(Astro.site, [['Opinión', 'opinion/'], [a.titulo, `opinion/${articulo.id}/`]]),
   ]}
@@ -52,28 +55,28 @@ const otros = (await obtenerOpinion()).filter((x) => x.id !== articulo.id).slice
     <header class="ficha-cabeza">
       <h1>{a.titulo}</h1>
       <div class="ficha-meta">
-        <time datetime={a.fecha.toISOString().slice(0, 10)}>{formatoFecha(a.fecha)}</time>
-        <span>· Sergio Inostroza</span>
+        <span>Sergio Inostroza</span>
+        <time datetime={a.fecha.toISOString().slice(0, 10)}>· {formatoFecha(a.fecha)}</time>
+        <span>· {minutos} min de lectura</span>
         {a.temas.length > 0 && <span>· {a.temas.join(' · ')}</span>}
       </div>
     </header>
 
     <div class="ficha">
-      <article class="ficha-cuerpo prosa">
-        {tieneResumen ? <Content /> : <p>{a.resumen}</p>}
-        <div class="caja-articulo">
-          <p><strong>Este es un resumen.</strong> El artículo completo está publicado en Medium.</p>
-          <div class="acciones-articulo">
-            <a class="boton boton-primario" href={a.enlace} target="_blank" rel="noopener">Leer el artículo completo en Medium</a>
-            <a class="boton boton-secundario" href={`${URL_APP}?articulo=${articulo.id}`} target="_blank" rel="noopener">
-              Tengo suscripción: leerlo sin costo
-            </a>
-          </div>
-          <p class="texto-suave">
-            Con una suscripción a ConsensusLab lees los artículos completos sin pagar Medium, desde la app.{' '}
-            <a href={url('planes/')}>Ver planes</a>.
+      <article class="ficha-cuerpo prosa articulo">
+        <Content />
+        <aside class="caja-autor">
+          <p>
+            <strong>Sergio Inostroza</strong> es tecnólogo médico y coordinador de laboratorio clínico. Escribe sobre
+            gestión, calidad y la profesión, y desarrolla las herramientas de ConsensusLab.{' '}
+            <a href={url('acerca/')}>Más sobre el autor</a>.
           </p>
-        </div>
+          {a.enlace && (
+            <p class="texto-suave">
+              También publicado en <a href={a.enlace} target="_blank" rel="noopener">Medium</a>.
+            </p>
+          )}
+        </aside>
         <p class="texto-suave nota-opinion">Las opiniones de este artículo son personales y no representan a ninguna institución.</p>
       </article>
 
@@ -85,10 +88,19 @@ const otros = (await obtenerOpinion()).filter((x) => x.id !== articulo.id).slice
               <ul class="lista-simple">
                 {otros.map((o) => (
                   <li>
-                    <a href={url(`opinion/${o.id}/`)}>{o.data.titulo}</a>
+                    {enSitio(o) ? (
+                      <a href={url(`opinion/${o.id}/`)}>{o.data.titulo}</a>
+                    ) : (
+                      <a href={o.data.enlace} target="_blank" rel="noopener">{o.data.titulo} ↗</a>
+                    )}
                   </li>
                 ))}
               </ul>
+            </div>
+            <div class="caja">
+              <h2>Herramientas gratuitas</h2>
+              <p>Guías, demos y calculadoras para la gestión del laboratorio clínico.</p>
+              <p><a class="boton boton-secundario boton-ancho" href={url('herramientas/')}>Ver herramientas</a></p>
             </div>
           </aside>
         )

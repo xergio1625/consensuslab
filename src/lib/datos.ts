@@ -21,9 +21,16 @@ export async function obtenerCatalogo() {
   }));
 }
 
+/** ¿El artículo se publica completo en el sitio? (tiene texto en el .md; si no, vive solo en Medium) */
+export function enSitio(articulo: { body?: string }) {
+  return Boolean(articulo.body?.trim());
+}
+
 /** Artículos de opinión, del más reciente al más antiguo. */
 export async function obtenerOpinion() {
   const articulos = await getCollection('opinion');
+  const sinDestino = articulos.filter((a) => !enSitio(a) && !a.data.enlace).map((a) => a.id);
+  if (sinDestino.length) throw new Error('Artículos sin texto ni enlace a Medium: ' + sinDestino.join(', '));
   return articulos.sort((a, b) => b.data.fecha.getTime() - a.data.fecha.getTime());
 }
 

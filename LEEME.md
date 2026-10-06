@@ -59,24 +59,44 @@ Las fórmulas están en `src/lib/calidad.js` (funciones puras, probadas con `npm
 página en `src/pages/calculadoras/` y su entrada en `src/lib/calculadoras.ts` (título, resumen y fichas donde se
 recomienda). El cálculo ocurre en el navegador: no se envía ni se guarda nada.
 
-## Artículos de opinión (Medium)
+## Artículos de opinión
 
-La sección `/opinion/` solo enlaza a Medium; el texto completo vive allá. «Opinión» aparece en el menú cuando hay al
-menos un artículo.
+El sitio es el lugar oficial de los artículos: `/opinion/` reúne todo lo escrito. Hay dos tipos de archivo en
+`contenido/opinion/`:
 
-- **Automático:** con `MEDIUM_PERFIL` completo en `src/lib/sitio.ts`, ejecuta `npm run medium`. Crea un archivo en
-  `contenido/opinion/` por cada artículo nuevo (Medium entrega los 10 más recientes). Revisa el resumen y publica.
-- **A mano:** crea `contenido/opinion/nombre.md` con este contenido:
+- **Artículo del sitio (con texto):** el .md tiene el artículo completo debajo del encabezado. Se publica en
+  `consensuslab.cl/opinion/<nombre-del-archivo>/`, entra a Google y al feed RSS (`/opinion/rss.xml`).
+- **Artículo solo de Medium (sin texto):** el .md tiene solo el encabezado con `enlace`. La tarjeta lleva a Medium.
+  `npm run medium` crea estos archivos a partir del feed de Medium (los 10 más recientes).
 
-  ```yaml
-  ---
-  titulo: "Título del artículo"
-  enlace: "https://medium.com/@usuario/titulo-del-articulo-abc123"
-  fecha: 2026-09-28
-  resumen: "Una o dos frases (máximo 320 caracteres)."
-  temas: ["calidad", "gestión"]
-  ---
-  ```
+### Publicar un artículo nuevo en el sitio y copiarlo a Medium
+
+1. Crea `contenido/opinion/titulo-corto-sin-tildes.md`:
+
+   ```markdown
+   ---
+   titulo: "Título del artículo"
+   fecha: 2026-10-06
+   resumen: "Una o dos frases para Google y las redes (máximo 320 caracteres)."
+   temas: ["Calidad", "Laboratorio clínico"]
+   imagen: "opinion/titulo-corto.jpg"   # opcional: imagen en public/opinion/
+   ---
+
+   Texto del artículo en Markdown: párrafos separados por una línea en blanco, ## para subtítulos,
+   **negrita**, [enlaces](https://…), > citas y listas con guiones.
+   ```
+
+2. Publica (commit y push) y espera a que el sitio se actualice.
+3. En Medium, entra a `https://medium.com/p/import`, pega la dirección del artículo en el sitio y revisa el
+   borrador (imágenes, subtítulos) antes de publicar. Medium lo marca como «Originally published at
+   consensuslab.cl» y apunta a tu sitio como original (enlace canónico).
+4. Agrega al .md la línea `enlace: "https://medium.com/@xergio.1625/…"` con la dirección de la copia en Medium.
+   El artículo mostrará «También publicado en Medium».
+
+Para un artículo que ya estaba en Medium y pasa al sitio: copia el texto al .md (paso 1) y, en Medium, abre la
+historia › Configuración › Configuración avanzada › «Personalizar enlace canónico» y pon la dirección del sitio.
+
+Un artículo que escribes solo para Medium (otro tema) no necesita nada más: `npm run medium` lo agrega a la lista.
 
 ---
 
@@ -96,7 +116,7 @@ npm run build      # compila y valida todas las fichas (lo mismo que hace GitHub
 contenido/
   herramientas/        una ficha .md por herramienta
   prompts/             un prompt de IA .md por archivo
-  opinion/             un enlace a un artículo de Medium por archivo
+  opinion/             un artículo por archivo (texto completo, o solo el enlace si vive en Medium)
   grupos.json          los 7 grupos
   _plantilla-ficha.md  plantilla para copiar
   _plantilla-prompt.md plantilla de prompt para copiar
@@ -113,15 +133,14 @@ tools/importar-medium.mjs  importa artículos nuevos de Medium (npm run medium)
 .github/workflows/     publicación automática en GitHub Pages
 ```
 
-## Indexación en Google (desactivada por ahora)
+## Indexación en Google
 
-Mientras el sitio se arma, todas las páginas llevan `noindex` para que Google no las muestre. Para activarla,
-cambia `INDEXAR` a `true` en `src/lib/sitio.ts`.
+Activa desde el 4 de octubre de 2026 (`INDEXAR` en `src/lib/sitio.ts`). Sitemap en `/sitemap-index.xml`. Las fichas
+en preparación llevan `noindex` y quedan fuera del sitemap hasta que tengan su guía.
 
-## Dominio propio (más adelante)
+## Dominio
 
-En `astro.config.mjs`, cambia `site` por el dominio y `base` por `'/'`. Luego configura el dominio en
-GitHub → Settings → Pages.
+https://consensuslab.cl/ (NIC Chile → DNS en Cloudflare, sin proxy → GitHub Pages con HTTPS).
 
 ## Licencia
 

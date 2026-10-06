@@ -109,15 +109,19 @@ const prompts = defineCollection({
     }),
 });
 
-// Artículos de opinión: solo enlaces a Medium (el texto completo vive allá).
+// Artículos de opinión. Con cuerpo (texto en el .md): el original vive en el sitio y `enlace` es la copia
+// importada en Medium (opcional). Sin cuerpo: artículo escrito solo en Medium; `enlace` es obligatorio.
 const opinion = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './contenido/opinion' }),
   schema: z.object({
     titulo: z.string(),
-    enlace: z.url(),
+    enlace: z.url().optional(),
     fecha: z.coerce.date(),
+    actualizado: z.coerce.date().optional(),
     resumen: z.string().max(320),
     temas: z.array(z.string()).default([]),
+    /** Imagen para compartir y de portada, dentro de public/ (p. ej. 'opinion/mi-articulo.jpg'). */
+    imagen: z.string().optional(),
   }),
 });
 

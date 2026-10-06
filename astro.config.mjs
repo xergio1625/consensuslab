@@ -9,11 +9,7 @@ import fs from 'node:fs';
 const enPreparacion = fs.readdirSync('contenido/herramientas')
   .filter((f) => f.endsWith('.md') && /^estado:\s*en-preparacion\s*$/m.test(fs.readFileSync('contenido/herramientas/' + f, 'utf8')))
   .map((f) => '/herramientas/' + f.replace(/\.md$/, '') + '/');
-// Artículos de opinión sin resumen propio (cuerpo vacío): no se indexan ni van al sitemap.
-const sinResumen = fs.readdirSync('contenido/opinion')
-  .filter((f) => f.endsWith('.md') && !fs.readFileSync('contenido/opinion/' + f, 'utf8').replace(/^---[\s\S]*?---/, '').trim())
-  .map((f) => '/opinion/' + f.replace(/\.md$/, '') + '/');
-const fueraDelSitemap = ['/cuenta/', '/404/'].concat(enPreparacion, sinResumen);
+const fueraDelSitemap = ['/cuenta/', '/404/'].concat(enPreparacion);
 
 export default defineConfig({
   site: 'https://consensuslab.cl',

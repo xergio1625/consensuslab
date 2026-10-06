@@ -1,8 +1,10 @@
 ---
-// Sección Opinión: cada artículo tiene su página con un resumen; el texto completo se lee en Medium
-// (los suscriptores lo leen sin costo con el enlace de amigo, desde la app).
+// Sección Opinión: el sitio reúne todo lo que escribe el autor.
+//   · Artículos del sitio (con cuerpo en el .md): se leen completos aquí; Medium tiene una copia importada
+//     que apunta a esta página como original.
+//   · Artículos solo de Medium (sin cuerpo): la tarjeta lleva directo a Medium.
 import Base from '../../plantillas/Base.astro';
-import { obtenerOpinion } from '../../lib/datos';
+import { enSitio, obtenerOpinion } from '../../lib/datos';
 import { formatoFecha, url } from '../../lib/rutas';
 import { MEDIUM_PERFIL } from '../../lib/sitio';
 
@@ -12,46 +14,58 @@ const articulos = await obtenerOpinion();
 <Base
   titulo="Opinión sobre gestión del laboratorio clínico"
   seccion="opinion"
-  descripcion="Artículos de opinión sobre gestión del laboratorio clínico, calidad y la profesión del tecnólogo médico."
+  descripcion="Artículos de Sergio Inostroza sobre gestión del laboratorio clínico, calidad y la profesión del tecnólogo médico."
 >
   <div class="contenedor seccion">
     <div class="seccion-cabeza">
       <div>
         <h1>Opinión</h1>
         <p class="texto-suave intro-prompts">
-          Artículos sobre la gestión del laboratorio clínico, la calidad y la profesión del tecnólogo médico. Aquí
-          encuentras de qué trata cada uno; el texto completo se lee en Medium, y con suscripción lo lees sin costo.
+          Todo lo que escribo sobre la gestión del laboratorio clínico, la calidad y la profesión, reunido en un solo
+          lugar. Algunos artículos se publicaron solo en Medium: esos te llevan allá.
         </p>
       </div>
-      {
-        MEDIUM_PERFIL && (
-          <a class="boton boton-secundario" href={MEDIUM_PERFIL} target="_blank" rel="noopener me">
-            Seguir en Medium
-          </a>
-        )
-      }
+      <div class="acciones-opinion">
+        <a class="boton boton-secundario" href={url('opinion/rss.xml')}>Suscribirse (RSS)</a>
+        {
+          MEDIUM_PERFIL && (
+            <a class="boton boton-secundario" href={MEDIUM_PERFIL} target="_blank" rel="noopener me">
+              Seguir en Medium
+            </a>
+          )
+        }
+      </div>
     </div>
 
     {
       articulos.length > 0 ? (
         <ol class="lista-articulos">
-          {articulos.map((a) => (
-            <li>
-              <article class="tarjeta">
-                <div class="tarjeta-meta">
-                  <time datetime={a.data.fecha.toISOString().slice(0, 10)}>{formatoFecha(a.data.fecha)}</time>
-                  {a.data.temas.length > 0 && <span>· {a.data.temas.join(' · ')}</span>}
-                </div>
-                <h2>
-                  <a href={url(`opinion/${a.id}/`)}>{a.data.titulo}</a>
-                </h2>
-                <p>{a.data.resumen}</p>
-                <div class="tarjeta-pie">
-                  <span class="texto-suave">Leer el resumen →</span>
-                </div>
-              </article>
-            </li>
-          ))}
+          {articulos.map((a) => {
+            const propio = enSitio(a);
+            return (
+              <li>
+                <article class="tarjeta">
+                  <div class="tarjeta-meta">
+                    <time datetime={a.data.fecha.toISOString().slice(0, 10)}>{formatoFecha(a.data.fecha)}</time>
+                    {a.data.temas.length > 0 && <span>· {a.data.temas.join(' · ')}</span>}
+                  </div>
+                  <h2>
+                    {propio ? (
+                      <a href={url(`opinion/${a.id}/`)}>{a.data.titulo}</a>
+                    ) : (
+                      <a href={a.data.enlace} target="_blank" rel="noopener">
+                        {a.data.titulo}
+                      </a>
+                    )}
+                  </h2>
+                  <p>{a.data.resumen}</p>
+                  <div class="tarjeta-pie">
+                    <span class="texto-suave">{propio ? 'Leer el artículo →' : 'Leer en Medium ↗'}</span>
+                  </div>
+                </article>
+              </li>
+            );
+          })}
         </ol>
       ) : (
         <p class="aviso aviso-info">Pronto publicaremos aquí los primeros artículos.</p>

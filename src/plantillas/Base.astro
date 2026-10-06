@@ -59,6 +59,7 @@ const imagen = new URL(url(Astro.props.imagen ?? (enPreventa && paginaPreventa ?
     <meta name="theme-color" content="#4B0B1E" />
     <link rel="icon" type="image/svg+xml" href={url('favicon.svg')} />
     <link rel="sitemap" href={url('sitemap-index.xml')} />
+    <link rel="alternate" type="application/rss+xml" title="Opinión · ConsensusLab" href={url('opinion/rss.xml')} />
     {datos.map((d) => <script type="application/ld+json" set:html={jsonLd(d)} />)}
     <script is:inline>
       // Canal por el que llegó la visita (enlaces con utm_source), para saber de dónde vienen las cotizaciones.
