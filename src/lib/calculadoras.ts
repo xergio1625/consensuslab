@@ -1,5 +1,5 @@
 // Catálogo de calculadoras. Cada una tiene su página en src/pages/calculadoras/<id>.astro y sus fórmulas
-// en src/lib/calidad.js (calidad), src/lib/costos.js (costos) o src/lib/soluciones.js (soluciones) o src/lib/stock.js (insumos). `familia`: grupo del índice.
+// en src/lib/calidad.js y levey.js (calidad), src/lib/costos.js (costos) o src/lib/soluciones.js (soluciones) o src/lib/stock.js (insumos). `familia`: grupo del índice.
 // `herramientas`: fichas del catálogo donde se recomienda.
 
 export const FAMILIAS = [
@@ -62,6 +62,13 @@ export const CALCULADORAS = [
     titulo: 'Diluciones y preparación de soluciones',
     resumen: 'C1·V1 = C2·V2, diluciones seriadas y cuánto pesar o medir para preparar una solución (molar, % p/v, % v/v, mg/mL).',
     herramientas: ['limpieza-y-desinfeccion-de-areas-y-equipos'],
+  },
+  {
+    id: 'levey-jennings',
+    familia: 'calidad',
+    titulo: 'Gráfico de Levey-Jennings',
+    resumen: 'Pega los resultados de tu control y obtén el gráfico con los límites de ±1, 2 y 3 DE y las violaciones de las reglas de Westgard marcadas.',
+    herramientas: ['control-de-calidad-interno-y-externo'],
   },
   {
     id: 'estadistica-del-control',

@@ -1,0 +1,258 @@
+---
+import PaginaCalculadora from '../../componentes/PaginaCalculadora.astro';
+import { REGLAS_LJ } from '../../lib/levey.js';
+import { url } from '../../lib/rutas';
+---
+
+<PaginaCalculadora id="levey-jennings">
+  <form class="calc" id="calc" novalidate>
+    <div class="calc-campos">
+      <label class="calc-campo calc-ancho">
+        <span>Resultados del control, en orden (uno por línea)</span>
+        <textarea class="campo" name="valores" rows="8" inputmode="decimal" placeholder={'98,5\n101,2\n99,8\n…'}></textarea>
+        <small>
+          Del más antiguo al más reciente, de un solo nivel, lote y analizador. Puedes pegar una columna desde una planilla.
+          <button type="button" class="boton boton-secundario calc-ejemplo" data-ejemplo>Cargar un ejemplo</button>
+        </small>
+      </label>
+      <label class="calc-campo">
+        <span>Media establecida <em class="opcional">(opcional)</em></span>
+        <input class="campo" name="media" inputmode="decimal" placeholder="100" />
+        <small>Si la dejas vacía se calcula con tus resultados.</small>
+      </label>
+      <label class="calc-campo">
+        <span>DE establecida <em class="opcional">(opcional)</em></span>
+        <input class="campo" name="de" inputmode="decimal" placeholder="2" />
+        <small>Escribe ambas o ninguna.</small>
+      </label>
+    </div>
+    <fieldset class="calc-grupo">
+      <legend>Reglas de Westgard a evaluar</legend>
+      <div class="lj-reglas">
+        {
+          REGLAS_LJ.map((r) => (
+            <label>
+              <input type="checkbox" name="regla" value={r.id} checked />
+              <span><strong>{r.id}</strong>: {r.texto}.</span>
+            </label>
+          ))
+        }
+      </div>
+    </fieldset>
+  </form>
+
+  <section class="calc-resultado" aria-live="polite">
+    <p class="calc-mensaje" data-mensaje>Ingresa al menos 2 resultados.</p>
+    <div data-resultado hidden>
+      <div class="calc-cifras">
+        <div><span>Resultados</span><strong data-n></strong></div>
+        <div><span>Media</span><strong data-media></strong><small data-origen></small></div>
+        <div><span>DE</span><strong data-de></strong><small data-cv></small></div>
+        <div><span>Rechazos</span><strong data-rechazos></strong><small data-adv></small></div>
+      </div>
+      <p class="calc-lectura" data-lectura></p>
+
+      <div class="lj-envoltura" data-grafico></div>
+      <p class="lj-leyenda">
+        <span>
+          <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="4.5" class="lj-ok"></circle></svg>
+          Dentro de lo esperado
+        </span>
+        <span>
+          <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M7 1.5 12.5 7 7 12.5 1.5 7Z" class="lj-adv"></path></svg>
+          Advertencia
+        </span>
+        <span>
+          <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><rect x="2.5" y="2.5" width="9" height="9" class="lj-rech"></rect></svg>
+          Rechazo
+        </span>
+      </p>
+
+      <div data-alertas hidden>
+        <h2 class="calc-subtitulo">Resultados con violaciones</h2>
+        <div class="calc-tabla-envoltura">
+          <table class="calc-tabla">
+            <thead>
+              <tr><th>N.º</th><th>Resultado</th><th>z</th><th>Reglas</th><th>Nivel</th></tr>
+            </thead>
+            <tbody data-filas></tbody>
+          </table>
+        </div>
+      </div>
+      <p class="calc-nota calc-nota-aviso" data-aviso hidden></p>
+    </div>
+  </section>
+
+  <div slot="explicacion">
+    <h2>Cómo se lee el gráfico</h2>
+    <ul>
+      <li>La línea central es la media; las líneas punteadas, ±1, ±2 y ±3 DE. Cada punto es un resultado del control, en orden.</li>
+      <li>La zona verde llega hasta ±2 DE, la amarilla hasta ±3 DE y la roja está más allá.</li>
+      <li>
+        Una violación se marca en el resultado que completa la regla: por ejemplo, 2-2s se marca en el segundo de los
+        dos resultados seguidos.
+      </li>
+    </ul>
+    <h2>Qué sugiere cada regla</h2>
+    <ul>
+      {REGLAS_LJ.map((r) => <li><strong>{r.id}</strong> ({r.nivel}): {r.corta}.</li>)}
+    </ul>
+    <h2>Para usarla bien</h2>
+    <ul>
+      <li>
+        <strong>Usa la media y la DE establecidas</strong> (por ejemplo, de un estudio de 20 resultados o del acumulado
+        de lotes anteriores). Si las calculas con la misma serie, un desvío ya incluido ensancha la DE y se esconde.
+      </li>
+      <li>
+        Esta calculadora evalúa un solo nivel a la vez: las reglas que cruzan niveles (2-2s o R-4s entre dos controles de
+        la misma corrida) necesitan los dos niveles juntos.
+      </li>
+      <li>
+        Los resultados rechazados no se «borran»: se investigan, se corrige la causa y se deja constancia según tu plan
+        de calidad.
+      </li>
+    </ul>
+    <p>
+      Para fijar la media y la DE de un lote nuevo usa{' '}
+      <a href={url('calculadoras/estadistica-del-control/')}>Estadística del control</a>, y para decidir qué reglas
+      conviene aplicar según el desempeño del método, <a href={url('calculadoras/error-total-y-sigma/')}>Error total y
+      sigma</a>.
+    </p>
+  </div>
+</PaginaCalculadora>
+
+<script>
+  import { estadistica, formato, numero, valores } from '../../lib/calidad.js';
+  import { evaluarLevey } from '../../lib/levey.js';
+
+  const form = document.getElementById('calc') as HTMLFormElement;
+  const $ = (s: string) => document.querySelector(`[data-${s}]`) as HTMLElement;
+  const NS = 'http://www.w3.org/2000/svg';
+  const ejemplo = [
+    100.5, 99.2, 101.1, 98.7, 100.3, 102.0, 99.8, 100.9, 106.4, 100.2, 101.4, 99.0, 104.5, 100.1, 98.9, 101.8, 102.6,
+    103.2, 102.9, 103.5, 104.1, 99.5, 100.7, 95.2, 100.0,
+  ];
+  const textoNivel = { ok: 'Dentro de lo esperado', advertencia: 'Advertencia', rechazo: 'Rechazo' } as const;
+
+  function svg(nombre: string, atributos: Record<string, string | number> = {}, texto?: string) {
+    const el = document.createElementNS(NS, nombre);
+    for (const [k, v] of Object.entries(atributos)) el.setAttribute(k, String(v));
+    if (texto !== undefined) el.textContent = texto;
+    return el;
+  }
+
+  function mostrarMensaje(texto: string) {
+    $('mensaje').textContent = texto;
+    $('mensaje').hidden = false;
+    $('resultado').hidden = true;
+  }
+
+  function dibujar(puntos: ReturnType<typeof evaluarLevey>, media: number, de: number) {
+    const W = 640, H = 320, ml = 54, mr = 44, mt = 12, mb = 34;
+    const zs = puntos.map((p) => p.z);
+    const zmax = Math.max(4, Math.ceil(Math.max(...zs.map(Math.abs)) + 0.25));
+    const y = (z: number) => mt + ((zmax - z) / (2 * zmax)) * (H - mt - mb);
+    const x = (i: number) => ml + (puntos.length === 1 ? (W - ml - mr) / 2 : (i / (puntos.length - 1)) * (W - ml - mr));
+    const s = svg('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img' });
+    const resumen = puntos.filter((p) => p.nivel !== 'ok').length;
+    s.setAttribute('aria-label', `Gráfico de Levey-Jennings con ${puntos.length} resultados, ${resumen} con violaciones. El detalle está en la tabla.`);
+
+    const fondos: [number, string][] = [[zmax, 'lj-fondo-rechazo'], [3, 'lj-fondo-adv'], [2, 'lj-fondo-ok']];
+    for (const [z, clase] of fondos) s.append(svg('rect', { x: ml, y: y(z), width: W - ml - mr, height: y(-z) - y(z), class: clase }));
+    for (const k of [-3, -2, -1, 1, 2, 3]) {
+      s.append(svg('line', { x1: ml, x2: W - mr, y1: y(k), y2: y(k), class: 'lj-grilla' }));
+    }
+    s.append(svg('line', { x1: ml, x2: W - mr, y1: y(0), y2: y(0), class: 'lj-media' }));
+    for (const k of [-3, -2, -1, 0, 1, 2, 3]) {
+      s.append(svg('text', { x: ml - 6, y: y(k) + 4, 'text-anchor': 'end', class: 'lj-texto' }, formato(media + k * de, 2)));
+      s.append(svg('text', { x: W - mr + 6, y: y(k) + 4, class: 'lj-texto' }, k === 0 ? 'Media' : `${k > 0 ? '+' : '−'}${Math.abs(k)} DE`));
+    }
+    const paso = Math.ceil(puntos.length / 15);
+    puntos.forEach((p, i) => {
+      if (i % paso === 0 || i === puntos.length - 1) {
+        s.append(svg('text', { x: x(i), y: H - 12, 'text-anchor': 'middle', class: 'lj-texto' }, p.indice));
+      }
+    });
+    s.append(svg('text', { x: (ml + W - mr) / 2, y: H - 0.5, 'text-anchor': 'middle', class: 'lj-texto' }, 'Número de resultado'));
+    const cl = (z: number) => Math.max(-zmax, Math.min(zmax, z));
+    s.append(svg('polyline', { points: puntos.map((p, i) => `${x(i)},${y(cl(p.z))}`).join(' '), class: 'lj-linea' }));
+    puntos.forEach((p, i) => {
+      const cx = x(i), cy = y(cl(p.z));
+      const marca =
+        p.nivel === 'rechazo' ? svg('rect', { x: cx - 5.5, y: cy - 5.5, width: 11, height: 11, class: 'lj-rech' })
+        : p.nivel === 'advertencia' ? svg('path', { d: `M${cx} ${cy - 6.5}L${cx + 6.5} ${cy}L${cx} ${cy + 6.5}L${cx - 6.5} ${cy}Z`, class: 'lj-adv' })
+        : svg('circle', { cx, cy, r: 3.5, class: 'lj-ok' });
+      marca.append(svg('title', {}, `N.º ${p.indice}: ${formato(p.valor, 2)} (z = ${formato(p.z, 2)})${p.reglas.length ? ' · ' + p.reglas.join(', ') : ''}`));
+      s.append(marca);
+    });
+    $('grafico').replaceChildren(s);
+  }
+
+  function calcular() {
+    const lista = valores(form.valores.value);
+    const malos = lista.filter((v) => Number.isNaN(v)).length;
+    if (malos) return mostrarMensaje(`Hay ${malos} ${malos === 1 ? 'valor que no es un número' : 'valores que no son números'}. Revisa la lista.`);
+    if (lista.length < 2) return mostrarMensaje('Ingresa al menos 2 resultados.');
+    const mediaTexto = (form.elements.namedItem('media') as HTMLInputElement).value.trim();
+    const deTexto = (form.elements.namedItem('de') as HTMLInputElement).value.trim();
+    if ((mediaTexto === '') !== (deTexto === '')) return mostrarMensaje('Escribe la media y la DE establecidas, o deja ambas vacías.');
+    const est = estadistica(lista);
+    const establecida = mediaTexto !== '';
+    const media = establecida ? numero(mediaTexto) : est.media;
+    const de = establecida ? numero(deTexto) : est.de;
+    if (Number.isNaN(media) || Number.isNaN(de)) return mostrarMensaje('La media o la DE no es un número.');
+    if (!(de > 0)) return mostrarMensaje('La DE debe ser mayor que cero (los resultados no pueden ser todos iguales).');
+    const activas = [...form.querySelectorAll<HTMLInputElement>('input[name="regla"]:checked')].map((c) => c.value);
+    const puntos = evaluarLevey(lista, media, de, activas);
+    const rechazos = puntos.filter((p) => p.nivel === 'rechazo');
+    const advertencias = puntos.filter((p) => p.nivel === 'advertencia');
+
+    $('mensaje').hidden = true;
+    $('resultado').hidden = false;
+    $('n').textContent = String(lista.length);
+    $('media').textContent = formato(media, 2);
+    $('origen').textContent = establecida ? 'establecida' : 'calculada con tus datos';
+    $('de').textContent = formato(de, 3);
+    $('cv').textContent = `CV ${formato((de / Math.abs(media)) * 100, 2)} %`;
+    $('rechazos').textContent = String(rechazos.length);
+    $('adv').textContent = `${advertencias.length} ${advertencias.length === 1 ? 'advertencia' : 'advertencias'}`;
+    const lectura = $('lectura');
+    lectura.dataset.nivel = rechazos.length ? 'error' : advertencias.length ? 'advertencia' : 'ok';
+    lectura.textContent = rechazos.length
+      ? `Hay ${rechazos.length} ${rechazos.length === 1 ? 'resultado que rechaza' : 'resultados que rechazan'} la corrida: investiga la causa antes de informar y registra la acción correctiva.`
+      : advertencias.length
+        ? `Sin rechazos, pero ${advertencias.length} ${advertencias.length === 1 ? 'resultado pasa' : 'resultados pasan'} ±2 DE: revisa si hay una tendencia.`
+        : 'Sin violaciones de las reglas elegidas.';
+    const aviso = $('aviso');
+    aviso.hidden = establecida;
+    aviso.textContent =
+      lista.length < 20
+        ? 'Con menos de 20 resultados la media y la DE calculadas son poco estables: mejor usa valores establecidos.'
+        : 'Los límites se calcularon con estos mismos resultados: un desvío ya incluido ensancha la DE y puede esconderse. Para vigilar, usa la media y la DE establecidas.';
+
+    dibujar(puntos, media, de);
+    const marcados = puntos.filter((p) => p.nivel !== 'ok');
+    $('alertas').hidden = marcados.length === 0;
+    const cuerpo = $('filas');
+    cuerpo.replaceChildren();
+    for (const p of marcados) {
+      const tr = document.createElement('tr');
+      for (const t of [String(p.indice), formato(p.valor, 2), formato(p.z, 2), p.reglas.join(', '), textoNivel[p.nivel]]) {
+        const td = document.createElement('td');
+        td.textContent = t;
+        tr.append(td);
+      }
+      cuerpo.append(tr);
+    }
+  }
+
+  form.addEventListener('input', calcular);
+  form.addEventListener('submit', (e) => e.preventDefault());
+  $('ejemplo').addEventListener('click', () => {
+    form.valores.value = ejemplo.map((v) => String(v).replace('.', ',')).join('\n');
+    (form.elements.namedItem('media') as HTMLInputElement).value = '100';
+    (form.elements.namedItem('de') as HTMLInputElement).value = '2';
+    calcular();
+  });
+  calcular();
+</script>

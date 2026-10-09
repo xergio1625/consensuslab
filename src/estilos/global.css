@@ -581,3 +581,22 @@ img, svg { max-width: 100%; }
 .calc-bloque { margin-top: 28px; scroll-margin-top: 80px; }
 .calc-bloque > h2 { font-size: 1.2rem; margin-bottom: 10px; }
 .calc-lectura:empty { display: none; }
+
+/* Gráfico de Levey-Jennings */
+.lj-envoltura { overflow-x: auto; margin: 0 0 14px; border: 1px solid var(--c-borde); border-radius: var(--radio-s); background: var(--c-panel); }
+.lj-envoltura svg { display: block; width: 100%; min-width: 520px; height: auto; font-family: inherit; }
+.lj-fondo-rechazo { fill: var(--c-error-fondo); }
+.lj-fondo-adv { fill: var(--c-prep-fondo); }
+.lj-fondo-ok { fill: var(--c-ok-fondo); }
+.lj-grilla { stroke: var(--c-borde); stroke-dasharray: 4 4; }
+.lj-media { stroke: var(--c-texto-suave); stroke-width: 1.5; }
+.lj-linea { fill: none; stroke: var(--c-boton); stroke-width: 1.5; opacity: .7; }
+.lj-texto { fill: var(--c-texto-suave); font-size: 12px; }
+.lj-ok { fill: var(--c-boton); }
+.lj-adv { fill: var(--c-prep); stroke: var(--c-texto); stroke-width: 1; }
+.lj-rech { fill: var(--c-error); stroke: var(--c-texto); stroke-width: 1.5; }
+.lj-leyenda { display: flex; flex-wrap: wrap; gap: 6px 18px; margin: 0 0 14px; font-size: .88rem; color: var(--c-texto-suave); }
+.lj-leyenda svg { vertical-align: -3px; margin-right: 4px; }
+.lj-reglas { display: grid; gap: 6px 18px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.lj-reglas label { display: flex; align-items: flex-start; gap: 8px; font-size: .92rem; }
+.lj-reglas input { margin-top: 4px; accent-color: var(--c-boton); }
