@@ -1,5 +1,5 @@
 // Catálogo de calculadoras. Cada una tiene su página en src/pages/calculadoras/<id>.astro y sus fórmulas
-// en src/lib/calidad.js (calidad), src/lib/costos.js (costos) o src/lib/soluciones.js (soluciones). `familia`: grupo del índice.
+// en src/lib/calidad.js (calidad), src/lib/costos.js (costos) o src/lib/soluciones.js (soluciones) o src/lib/stock.js (insumos). `familia`: grupo del índice.
 // `herramientas`: fichas del catálogo donde se recomienda.
 
 export const FAMILIAS = [
@@ -7,6 +7,11 @@ export const FAMILIAS = [
     id: 'costos',
     titulo: 'Costos y rendimiento',
     descripcion: 'Cuánto cuesta cada examen, cuánto rinde un reactivo y si el arancel alcanza.',
+  },
+  {
+    id: 'insumos',
+    titulo: 'Insumos y stock',
+    descripcion: 'Cuándo pedir, cuánto pedir y cuánto stock de seguridad conviene tener.',
   },
   {
     id: 'soluciones',
@@ -36,6 +41,13 @@ export const CALCULADORAS = [
     titulo: 'Rendimiento de reactivos',
     resumen: 'Cuántos resultados entrega de verdad un kit una vez descontados controles, calibraciones, repeticiones y pérdidas.',
     herramientas: ['costeo-por-examen', 'inventario-y-lotes-de-reactivos'],
+  },
+  {
+    id: 'stock-y-punto-de-pedido',
+    familia: 'insumos',
+    titulo: 'Stock y punto de pedido',
+    resumen: 'Con tu consumo y el plazo del proveedor: stock de seguridad, punto de pedido, cantidad a pedir y si te conviene pedir ya.',
+    herramientas: ['inventario-y-lotes-de-reactivos', 'solicitudes-de-compra'],
   },
   {
     id: 'diluciones-y-soluciones',

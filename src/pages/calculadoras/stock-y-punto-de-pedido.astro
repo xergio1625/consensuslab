@@ -1,0 +1,199 @@
+---
+import PaginaCalculadora from '../../componentes/PaginaCalculadora.astro';
+import { url } from '../../lib/rutas';
+---
+
+<PaginaCalculadora id="stock-y-punto-de-pedido">
+  <form class="calc" id="calc" novalidate>
+    <p class="calc-ayuda">
+      Cuenta el insumo en la unidad en que lo pides (kits, cajas, unidades). Calcula un insumo a la vez.
+      <button type="button" class="boton boton-secundario calc-ejemplo" data-ejemplo>Cargar un ejemplo</button>
+    </p>
+
+    <fieldset class="calc-grupo">
+      <legend>Consumo y proveedor</legend>
+      <div class="calc-campos">
+        <label class="calc-campo">
+          <span>Consumo al mes</span>
+          <input class="campo" name="consumoMes" inputmode="decimal" placeholder="60" />
+          <small>Promedio de los últimos meses, incluidos controles y repeticiones.</small>
+        </label>
+        <label class="calc-campo">
+          <span>Días de operación al mes</span>
+          <input class="campo" name="diasMes" inputmode="decimal" placeholder="30" />
+          <small>30 si el laboratorio atiende todos los días; menos si cierra.</small>
+        </label>
+        <label class="calc-campo">
+          <span>Plazo de entrega (días)</span>
+          <input class="campo" name="plazoDias" inputmode="decimal" placeholder="10" />
+          <small>Desde que haces el pedido hasta que lo recibes.</small>
+        </label>
+      </div>
+    </fieldset>
+
+    <fieldset class="calc-grupo">
+      <legend>Margen de seguridad <em class="opcional">(opcional)</em></legend>
+      <div class="calc-campos">
+        <label class="calc-campo">
+          <span>Retraso posible del proveedor (días)</span>
+          <input class="campo" name="margenDias" inputmode="decimal" placeholder="5" />
+        </label>
+        <label class="calc-campo">
+          <span>Aumento posible del consumo</span>
+          <span class="calc-entrada"><input class="campo" name="picoPct" inputmode="decimal" placeholder="20" /><em>%</em></span>
+          <small>Por ejemplo, en una campaña o con más repeticiones.</small>
+        </label>
+      </div>
+    </fieldset>
+
+    <fieldset class="calc-grupo">
+      <legend>Cuánto pedir <em class="opcional">(opcional)</em></legend>
+      <div class="calc-campos">
+        <label class="calc-campo">
+          <span>Cada cuántos días compras</span>
+          <input class="campo" name="cicloDias" inputmode="decimal" placeholder="30" />
+        </label>
+        <label class="calc-campo">
+          <span>Unidades por envase</span>
+          <input class="campo" name="unidadesEnvase" inputmode="decimal" placeholder="1" />
+          <small>Si el proveedor vende en cajas de 12, escribe 12.</small>
+        </label>
+        <label class="calc-campo">
+          <span>Vida útil del producto (días)</span>
+          <input class="campo" name="vidaUtilDias" inputmode="decimal" placeholder="90" />
+          <small>Desde que lo recibes hasta su vencimiento.</small>
+        </label>
+        <label class="calc-campo">
+          <span>Stock actual</span>
+          <input class="campo" name="stockActual" inputmode="decimal" placeholder="25" />
+          <small>Para saber si debes pedir ya.</small>
+        </label>
+      </div>
+    </fieldset>
+  </form>
+
+  <section class="calc-resultado" aria-live="polite">
+    <p class="calc-mensaje" data-mensaje>Ingresa el consumo mensual y el plazo de entrega.</p>
+    <div data-resultado hidden>
+      <div class="calc-cifras">
+        <div><span>Punto de pedido</span><strong data-pp></strong><small data-pp-nota></small></div>
+        <div><span>Stock de seguridad</span><strong data-ss></strong><small data-ss-nota></small></div>
+        <div data-caja-cantidad><span>Cantidad por pedido</span><strong data-cantidad></strong><small data-cantidad-nota></small></div>
+        <div data-caja-maximo><span>Stock máximo</span><strong data-max></strong><small data-max-nota></small></div>
+      </div>
+      <p class="calc-lectura" data-lectura></p>
+      <p class="calc-lectura" data-vencimiento hidden></p>
+    </div>
+  </section>
+
+  <div slot="explicacion">
+    <h2>Cómo se calcula</h2>
+    <ul>
+      <li><strong>Consumo diario</strong> = consumo al mes / días de operación.</li>
+      <li>
+        <strong>Stock de seguridad</strong> = lo que consumirías en el plazo más el retraso posible, con el aumento de
+        consumo previsto, menos el consumo normal del plazo.
+      </li>
+      <li><strong>Punto de pedido</strong> = consumo durante el plazo de entrega + stock de seguridad.</li>
+      <li>
+        <strong>Cantidad por pedido</strong> = consumo del ciclo de compra, redondeado hacia arriba al envase que vende
+        el proveedor.
+      </li>
+      <li><strong>Stock máximo</strong> = stock de seguridad + cantidad por pedido: lo más que debieras tener justo al recibir.</li>
+    </ul>
+    <h2>Cómo usarlo</h2>
+    <ul>
+      <li>Cuando el stock baja del punto de pedido, es el momento de pedir: el pedido llega justo cuando entras al stock de seguridad.</li>
+      <li>
+        Si el stock actual es menor que el consumo del plazo, el pedido normal llegará tarde: pide con urgencia o
+        busca una compra de emergencia.
+      </li>
+      <li>
+        En reactivos con vencimiento corto, un stock máximo que tarda más en consumirse que su vida útil pierde producto:
+        pide menos cantidad más seguido, o negocia entregas parciales.
+      </li>
+    </ul>
+    <p>
+      Cuenta el consumo de un mes típico y revisa el cálculo cuando cambie tu volumen, el proveedor o el plazo. Para el
+      costo de cada resultado de ese reactivo, usa
+      <a href={url('calculadoras/rendimiento-de-reactivos/')}>Rendimiento de reactivos</a>.
+    </p>
+  </div>
+</PaginaCalculadora>
+
+<script>
+  import { formato, numero } from '../../lib/calidad.js';
+  import { puntoDePedido } from '../../lib/stock.js';
+
+  const form = document.getElementById('calc') as HTMLFormElement;
+  const $ = (s: string) => document.querySelector(`[data-${s}]`) as HTMLElement;
+  const campo = (n: string) => (form.elements.namedItem(n) as HTMLInputElement).value;
+  const leer = (n: string, porDefecto: number) => (campo(n).trim() === '' ? porDefecto : numero(campo(n)));
+  const ejemplo = {
+    consumoMes: '60', diasMes: '30', plazoDias: '10', margenDias: '5', picoPct: '20',
+    cicloDias: '30', unidadesEnvase: '1', vidaUtilDias: '90', stockActual: '25',
+  };
+  const n = (v: number, d = 1) => (Number.isFinite(v) ? v.toLocaleString('es-CL', { maximumFractionDigits: d }) : '—');
+  const mostrarMensaje = (t: string) => {
+    $('mensaje').textContent = t;
+    $('mensaje').hidden = false;
+    $('resultado').hidden = true;
+  };
+
+  function calcular() {
+    const consumoMes = numero(campo('consumoMes'));
+    const plazoDias = numero(campo('plazoDias'));
+    if ([consumoMes, plazoDias].some(Number.isNaN)) return mostrarMensaje('Ingresa el consumo mensual y el plazo de entrega.');
+    const opc = {
+      diasMes: leer('diasMes', 30), margenDias: leer('margenDias', 0), picoPct: leer('picoPct', 0),
+      cicloDias: leer('cicloDias', NaN), unidadesEnvase: leer('unidadesEnvase', 1),
+      vidaUtilDias: leer('vidaUtilDias', NaN), stockActual: leer('stockActual', NaN),
+    };
+    const escritoMal = (['cicloDias', 'vidaUtilDias', 'stockActual'] as const).some((k) => campo(k).trim() !== '' && Number.isNaN(opc[k]));
+    if (escritoMal || [opc.diasMes, opc.margenDias, opc.picoPct, opc.unidadesEnvase].some(Number.isNaN)) {
+      return mostrarMensaje('Revisa los campos opcionales: hay algún valor que no es un número.');
+    }
+    const r = puntoDePedido({ consumoMes, plazoDias, ...opc });
+    if (!r) return mostrarMensaje('El consumo debe ser mayor que cero y el plazo no puede ser negativo.');
+
+    $('mensaje').hidden = true;
+    $('resultado').hidden = false;
+    $('pp').textContent = n(Math.ceil(r.puntoPedido - 1e-9), 0);
+    $('pp-nota').textContent = `${n(r.puntoPedido / r.consumoDia, 0)} días de consumo`;
+    $('ss').textContent = n(Math.ceil(r.seguridad - 1e-9), 0);
+    $('ss-nota').textContent = `${n(r.seguridad / r.consumoDia, 0)} días de consumo`;
+    $('caja-cantidad').hidden = $('caja-maximo').hidden = Number.isNaN(r.cantidad);
+    if (!Number.isNaN(r.cantidad)) {
+      $('cantidad').textContent = n(r.cantidad, 0);
+      $('cantidad-nota').textContent = opc.unidadesEnvase > 1 ? `${n(r.envases, 0)} envases de ${n(opc.unidadesEnvase, 0)}` : `cada ${n(opc.cicloDias, 0)} días`;
+      $('max').textContent = n(Math.ceil(r.stockMaximo - 1e-9), 0);
+      $('max-nota').textContent = `${n(r.coberturaMaxDias, 0)} días de consumo`;
+    }
+
+    const lectura = $('lectura');
+    const venc = $('vencimiento');
+    lectura.hidden = r.estado === null;
+    if (r.estado) {
+      lectura.dataset.nivel = r.estado === 'ok' ? 'ok' : r.estado === 'pedir' ? 'advertencia' : 'error';
+      lectura.textContent =
+        r.estado === 'ok'
+          ? `Con ${n(opc.stockActual, 0)} de stock tienes ${n(r.coberturaDias, 0)} días de cobertura. Pide en unos ${n(Math.floor(r.diasHastaPedir), 0)} días, cuando bajes de ${n(Math.ceil(r.puntoPedido - 1e-9), 0)}.`
+          : r.estado === 'pedir'
+            ? `Ya estás en el punto de pedido: con ${n(opc.stockActual, 0)} de stock, haz el pedido hoy.`
+            : `Con ${n(opc.stockActual, 0)} de stock te quedas sin producto en ${n(r.coberturaDias, 0)} días, antes de que llegue un pedido normal (${n(plazoDias, 0)} días): pide con urgencia.`;
+    }
+    venc.hidden = !r.riesgoVencimiento;
+    if (r.riesgoVencimiento) {
+      venc.dataset.nivel = 'advertencia';
+      venc.textContent = `Ojo con el vencimiento: el stock máximo dura ${n(r.coberturaMaxDias, 0)} días y el producto dura ${n(opc.vidaUtilDias, 0)}. Pide menos cantidad más seguido.`;
+    }
+  }
+
+  form.addEventListener('input', calcular);
+  form.addEventListener('submit', (e) => e.preventDefault());
+  $('ejemplo').addEventListener('click', () => {
+    for (const [k, v] of Object.entries(ejemplo)) (form.elements.namedItem(k) as HTMLInputElement).value = v;
+    calcular();
+  });
+  calcular();
+</script>

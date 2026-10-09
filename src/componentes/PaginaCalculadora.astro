@@ -70,6 +70,15 @@ const otras = CALCULADORAS.filter((o) => o.id !== c.id).sort(
               </p>
               <p><a class="boton boton-primario boton-ancho" href={url('herramientas/costeo-por-examen/')}>Ver la ficha</a></p>
             </section>
+          ) : c.familia === 'insumos' ? (
+            <section class="caja caja-app">
+              <h2>Pedido sugerido automático</h2>
+              <p>
+                Inventario y lotes de reactivos lleva el stock por lote con su mínimo, avisa los vencimientos y las
+                alertas de quiebre, y arma el pedido sugerido para la solicitud de compra.
+              </p>
+              <p><a class="boton boton-primario boton-ancho" href={url('herramientas/inventario-y-lotes-de-reactivos/')}>Ver la ficha</a></p>
+            </section>
           ) : c.familia === 'calidad' ? (
             <section class="caja caja-app">
               <h2>Automático en Consensus QC</h2>
