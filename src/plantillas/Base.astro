@@ -74,6 +74,10 @@ const imagen = new URL(url(Astro.props.imagen ?? (enPreventa && paginaPreventa ?
         var tema = localStorage.getItem('tema');
         if (tema === 'light' || tema === 'dark') document.documentElement.dataset.theme = tema;
       } catch (e) {}
+      // Preferencia propia de «reducir animaciones» (además de la del sistema), también antes de pintar.
+      try {
+        if (localStorage.getItem('movimiento') === 'reducido') document.documentElement.dataset.movimiento = 'reducido';
+      } catch (e) {}
     </script>
   </head>
   <body>

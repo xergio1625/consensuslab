@@ -2,6 +2,7 @@
 // Plantilla de ficha: se genera una página por cada archivo en contenido/herramientas/.
 import { getEntries, getEntry, render } from 'astro:content';
 import Base from '../../plantillas/Base.astro';
+import EspacioVideo from '../../componentes/EspacioVideo.astro';
 import { obtenerHerramientas, obtenerPrompts } from '../../lib/datos';
 import {
   ESTADOS,
@@ -68,6 +69,7 @@ const siglas = { excel: 'XLS', sheets: 'GS', word: 'DOC', pdf: 'PDF', formulario
 
     <div class="ficha">
       <article class="ficha-cuerpo">
+        {h.video && <EspacioVideo titulo={`Video: ${h.titulo}`} youtube={h.video} />}
         <h2>Qué es</h2>
         <p>{h.que_es}</p>
         <h2>Problema que resuelve</h2>

@@ -62,6 +62,8 @@ const herramientas = defineCollection({
       recursos: z.array(recurso).default([]),
       // Módulo de la app ConsensusLab que implementa la herramienta (demo gratis + suscripción).
       app_modulo: z.string().regex(/^[a-z]{3,30}$/).optional(),
+      // Video de la herramienta (opcional): ID de YouTube. Si falta, la ficha no muestra espacio de video.
+      video: z.string().regex(/^[\w-]{6,20}$/).optional(),
       relacionadas: z.array(reference('herramientas')).default([]),
       actualizado: z.coerce.date(),
     })

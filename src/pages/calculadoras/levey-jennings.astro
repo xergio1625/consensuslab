@@ -175,7 +175,7 @@ import { url } from '../../lib/rutas';
     });
     s.append(svg('text', { x: (ml + W - mr) / 2, y: H - 0.5, 'text-anchor': 'middle', class: 'lj-texto' }, 'Número de resultado'));
     const cl = (z: number) => Math.max(-zmax, Math.min(zmax, z));
-    s.append(svg('polyline', { points: puntos.map((p, i) => `${x(i)},${y(cl(p.z))}`).join(' '), class: 'lj-linea' }));
+    s.append(svg('polyline', { points: puntos.map((p, i) => `${x(i)},${y(cl(p.z))}`).join(' '), class: 'lj-linea', pathLength: 1 }));
     puntos.forEach((p, i) => {
       const cx = x(i), cy = y(cl(p.z));
       const marca =

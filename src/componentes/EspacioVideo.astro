@@ -1,0 +1,98 @@
+---
+// Espacio para un video con proporción fija (16:9), así que agregar el video después no mueve el contenido.
+// Sin `youtube` ni `src` muestra un marco «Video próximamente» (o nada, con `ocultarVacio`).
+// YouTube: patrón «facade»: no se carga nada de YouTube hasta que la persona hace clic.
+// `src` con `bucle`: clip mudo que se repite al entrar en pantalla, con botón de pausa; no se reproduce solo
+// si la persona pidió menos movimiento o ahorro de datos.
+import type { VideoSitio } from '../lib/videos';
+
+interface Props extends VideoSitio {
+  titulo: string;
+  texto?: string;
+  ocultarVacio?: boolean;
+}
+const { titulo, texto, youtube, src, poster, bucle, ocultarVacio } = Astro.props;
+const hayVideo = Boolean(youtube || src);
+---
+
+{
+  hayVideo ? (
+    <figure class="video" data-video>
+      {youtube && (
+        <button type="button" class="video-play" data-youtube={youtube} data-titulo={titulo} aria-label={`Reproducir video: ${titulo}`}>
+          {poster && <img src={poster} alt="" loading="lazy" decoding="async" />}
+          <span class="video-icono" aria-hidden="true"></span>
+        </button>
+      )}
+      {src && bucle && (
+        <>
+          <video data-bucle muted loop playsinline preload="none" poster={poster} aria-label={titulo}>
+            <source src={src} />
+          </video>
+          <button type="button" class="video-pausa" data-pausa aria-label="Pausar video" aria-pressed="false">
+            Pausar
+          </button>
+        </>
+      )}
+      {src && !bucle && (
+        <video controls preload="none" poster={poster} aria-label={titulo}>
+          <source src={src} />
+        </video>
+      )}
+      {texto && <figcaption>{texto}</figcaption>}
+    </figure>
+  ) : (
+    !ocultarVacio && (
+      <figure class="video video-vacio">
+        <div class="video-marco" role="img" aria-label={`${titulo}: video próximamente`}>
+          <span class="video-icono" aria-hidden="true"></span>
+          <p><strong>{titulo}</strong></p>
+          <p>Video próximamente</p>
+        </div>
+      </figure>
+    )
+  )
+}
+
+<script>
+  const reducir = matchMedia('(prefers-reduced-motion: reduce)').matches || document.documentElement.dataset.movimiento === 'reducido';
+  const ahorro = (navigator as any).connection?.saveData === true;
+
+  // YouTube bajo demanda
+  document.querySelectorAll<HTMLButtonElement>('[data-youtube]').forEach((b) => {
+    b.addEventListener('click', () => {
+      const f = document.createElement('iframe');
+      f.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(b.dataset.youtube!)}?autoplay=1&rel=0`;
+      f.title = b.dataset.titulo ?? 'Video';
+      f.allow = 'accelerometer; autoplay; encrypted-media; picture-in-picture; fullscreen';
+      f.allowFullscreen = true;
+      f.referrerPolicy = 'strict-origin-when-cross-origin';
+      b.replaceWith(f);
+    });
+  });
+
+  // Clips en bucle: se reproducen al entrar en pantalla, con pausa manual
+  document.querySelectorAll<HTMLVideoElement>('video[data-bucle]').forEach((v) => {
+    const pausa = v.parentElement!.querySelector<HTMLButtonElement>('[data-pausa]')!;
+    let manual = reducir || ahorro; // sin movimiento automático: queda el póster y el usuario decide
+    const poner = (pausado: boolean) => {
+      pausa.textContent = pausado ? 'Reproducir' : 'Pausar';
+      pausa.setAttribute('aria-label', pausado ? 'Reproducir video' : 'Pausar video');
+      pausa.setAttribute('aria-pressed', String(pausado));
+    };
+    poner(manual);
+    pausa.addEventListener('click', () => {
+      manual = !manual;
+      poner(manual);
+      if (manual) v.pause();
+      else v.play().catch(() => {});
+    });
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(([e]) => {
+        if (manual) return;
+        if (e.isIntersecting) v.play().catch(() => {});
+        else v.pause();
+      }, { threshold: 0.4 }).observe(v);
+    }
+  });
+</script>

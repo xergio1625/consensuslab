@@ -1,0 +1,44 @@
+---
+// Icono de línea de cada familia de calculadoras (decorativo; el texto acompaña siempre).
+import type { IdFamilia } from '../lib/calculadoras';
+
+interface Props {
+  familia: IdFamilia;
+}
+const { familia } = Astro.props;
+---
+
+<svg class="icono-familia" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+  {
+    familia === 'costos' && (
+      <>
+        <circle cx="12" cy="12" r="9" />
+        <path d="M14.5 9.2c-.5-.8-1.4-1.2-2.5-1.2-1.4 0-2.4.7-2.4 1.8 0 2.4 5 1.2 5 3.9 0 1.1-1.1 1.9-2.6 1.9-1.1 0-2.1-.5-2.6-1.4M12 6.5V8m0 8v1.5" />
+      </>
+    )
+  }
+  {
+    familia === 'insumos' && (
+      <>
+        <path d="M3.5 7.5 12 3l8.5 4.5v9L12 21l-8.5-4.5z" />
+        <path d="M3.5 7.5 12 12l8.5-4.5M12 12v9" />
+      </>
+    )
+  }
+  {
+    familia === 'soluciones' && (
+      <>
+        <path d="M9.5 3h5M10.5 3v6L5 19a1.6 1.6 0 0 0 1.4 2.4h11.2A1.6 1.6 0 0 0 19 19l-5.5-10V3" />
+        <path d="M7.5 15h9" />
+      </>
+    )
+  }
+  {
+    familia === 'calidad' && (
+      <>
+        <path d="M3 4v16h18" />
+        <path d="m6.5 14 3.5-4 3 2.5 4.5-6" />
+      </>
+    )
+  }
+</svg>

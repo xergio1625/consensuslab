@@ -43,6 +43,13 @@
   --ancho: 1120px;
   --transicion: .18s ease;
 
+  /* Movimiento: curvas y duraciones compartidas */
+  --ease-out: cubic-bezier(.22, 1, .36, 1);
+  --ease-in-out: cubic-bezier(.65, 0, .35, 1);
+  --dur-1: .15s;
+  --dur-2: .3s;
+  --dur-3: .6s;
+
   color-scheme: light;
 }
 
@@ -415,8 +422,176 @@ img, svg { max-width: 100%; }
 .pie a { color: var(--c-texto-suave); }
 .pie a:hover { color: var(--c-enlace); }
 
+/* Transición suave entre páginas (navegadores sin soporte la ignoran) */
+@view-transition { navigation: auto; }
+::view-transition-old(root), ::view-transition-new(root) {
+  animation-duration: var(--dur-2);
+  animation-timing-function: var(--ease-out);
+}
+
+/* ─── Fase 3: portada ──────────────────────────────────────────── */
+.portada { position: relative; overflow: hidden; isolation: isolate; }
+.portada-fondo { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
+.portada-fondo::before, .portada-fondo::after {
+  content: ""; position: absolute; width: 60vmax; height: 60vmax; border-radius: 50%; filter: blur(70px); opacity: .55;
+}
+.portada-fondo::before {
+  top: -30vmax; right: -12vmax;
+  background: radial-gradient(circle, rgba(201, 169, 110, .55), transparent 65%);
+  animation: deriva 18s var(--ease-in-out) infinite alternate;
+}
+.portada-fondo::after {
+  bottom: -34vmax; left: -16vmax;
+  background: radial-gradient(circle, rgba(138, 26, 60, .9), transparent 65%);
+  animation: deriva 22s var(--ease-in-out) infinite alternate-reverse;
+}
+@keyframes deriva { from { transform: translate3d(0, 0, 0) scale(1); } to { transform: translate3d(-6vmax, 5vmax, 0) scale(1.15); } }
+
+.portada-rejilla { display: grid; gap: 36px; align-items: center; }
+@media (min-width: 940px) { .portada-rejilla { grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); } }
+@keyframes entrada { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
+.portada-texto > * { animation: entrada var(--dur-3) var(--ease-out) backwards; }
+.portada-texto > :nth-child(2) { animation-delay: .08s; }
+.portada-texto > :nth-child(3) { animation-delay: .16s; }
+.portada-texto > :nth-child(4) { animation-delay: .24s; }
+
+.portada-visual { margin: 0; display: none; }
+.portada-visual-video { display: block; }
+.portada-visual-video .video { margin: 0; }
+@media (min-width: 940px) { .portada-visual { display: block; } }
+@supports (animation-timeline: scroll()) {
+  .portada-visual { animation: paralaje linear both; animation-timeline: scroll(root); animation-range: 0 600px; }
+}
+@keyframes paralaje { to { transform: translateY(-36px); } }
+.maqueta {
+  background: rgba(255, 255, 255, .96); color: #2A0510; border-radius: 14px; padding: 0 0 8px; overflow: hidden;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, .4); animation: flota 7s var(--ease-in-out) infinite alternate;
+}
+@keyframes flota { from { transform: translateY(-6px) rotate(-.4deg); } to { transform: translateY(6px) rotate(.4deg); } }
+.maqueta-barra { display: flex; align-items: center; gap: 6px; padding: 10px 14px; background: #F2E9EC; font-size: .8rem; }
+.maqueta-barra span { width: 9px; height: 9px; border-radius: 50%; background: #CDB4BC; }
+.maqueta-barra b { margin-left: 8px; font-weight: 650; }
+.maqueta svg { display: block; width: 100%; height: auto; }
+.maqueta-pie { margin: 2px 14px 0; font-size: .72rem; color: #6B5159; text-align: right; }
+.m-rech { fill: #F6D5DA; } .m-adv { fill: #FBEBC8; }
+.m-media { stroke: #8A1A3C; stroke-width: 1; stroke-dasharray: 4 4; }
+.m-linea { fill: none; stroke: #6D0F2B; stroke-width: 2; stroke-dasharray: 1; animation: dibujar 2.2s var(--ease-in-out) .5s backwards; }
+.m-ok { fill: #6D0F2B; } .m-adv-p { fill: #C9A96E; stroke: #2A0510; } .m-rech-p { fill: #B3261E; stroke: #2A0510; }
+.m-ok, .m-adv-p, .m-rech-p { animation: aparecer var(--dur-3) 1.8s backwards; }
+
+.cifras { background: var(--c-panel-alt); border-bottom: 1px solid var(--c-borde); }
+.cifras-fila { display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px 20px; padding-top: 16px; padding-bottom: 16px; }
+@media (min-width: 760px) { .cifras-fila { grid-template-columns: repeat(4, 1fr); } }
+.cifras p { margin: 0; color: var(--c-texto-suave); font-size: .92rem; }
+.cifras strong { font-size: 1.5rem; color: var(--c-acento-texto); font-variant-numeric: tabular-nums; margin-right: 4px; }
+
+/* «Cómo funciona»: la línea se llena al avanzar el scroll */
+.pasos { list-style: none; margin: 0; padding: 0; display: grid; gap: 22px; position: relative; counter-reset: paso; }
+.pasos::before, .pasos::after { content: ""; position: absolute; left: 19px; top: 8px; bottom: 8px; width: 2px; background: var(--c-borde); }
+.pasos::after { background: var(--c-boton); transform-origin: top; transform: scaleY(1); }
+@supports (animation-timeline: view()) {
+  .pasos::after { transform: scaleY(0); animation: llenar linear both; animation-timeline: view(); animation-range: entry 25% cover 70%; }
+}
+@keyframes llenar { to { transform: scaleY(1); } }
+.paso { position: relative; padding-left: 58px; }
+.paso h3 { margin: 0 0 4px; }
+.paso p { margin: 0; color: var(--c-texto-suave); max-width: 60ch; }
+.paso-num {
+  position: absolute; left: 0; top: 0; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--c-boton); color: var(--c-boton-texto); font-weight: 700; box-shadow: 0 0 0 5px var(--c-fondo);
+}
+@media (min-width: 900px) {
+  .pasos { grid-template-columns: repeat(4, 1fr); gap: 20px; }
+  .pasos::before, .pasos::after { left: 20px; right: 20px; top: 19px; bottom: auto; width: auto; height: 2px; transform-origin: left; }
+  .paso { padding: 52px 0 0; }
+  @supports (animation-timeline: view()) {
+    .pasos::after { transform: scaleX(0); animation-name: llenar-x; }
+  }
+}
+@keyframes llenar-x { to { transform: scaleX(1); } }
+@supports (animation-timeline: view()) {
+  .paso { animation: revelar linear backwards; animation-timeline: view(); animation-range: entry 0% entry 55%; }
+}
+
+/* ─── Fase 4: espacios de video e iconos de familia ────────────── */
+.video { margin: 0 0 24px; }
+.video video, .video iframe, .video-play, .video-marco {
+  display: block; width: 100%; aspect-ratio: 16 / 9; border: 0; border-radius: var(--radio); background: #2A0510;
+}
+.video video { object-fit: cover; }
+.video-play { position: relative; padding: 0; cursor: pointer; overflow: hidden; }
+.video-play img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.video figcaption { margin-top: 8px; font-size: .9rem; color: var(--c-texto-suave); }
+.video-icono {
+  position: relative; display: inline-block; width: 64px; height: 64px; border-radius: 50%;
+  background: var(--marca-dorado); box-shadow: 0 6px 24px rgba(0, 0, 0, .35); transition: transform var(--dur-2) var(--ease-out);
+}
+.video-icono::after {
+  content: ""; position: absolute; left: 26px; top: 20px; border-style: solid; border-width: 12px 0 12px 19px;
+  border-color: transparent transparent transparent #2A0510;
+}
+.video-play .video-icono { position: absolute; left: calc(50% - 32px); top: calc(50% - 32px); }
+.video-play:hover .video-icono, .video-play:focus-visible .video-icono { transform: scale(1.1); }
+.video-pausa {
+  position: relative; margin-top: -44px; margin-left: 12px; padding: 6px 12px; border-radius: 999px; border: 0;
+  background: rgba(42, 5, 16, .8); color: #fff; font: inherit; font-size: .85rem; cursor: pointer;
+}
+.video-vacio { max-width: 640px; }
+.video-vacio .video-marco {
+  display: grid; place-content: center; justify-items: center; gap: 2px; text-align: center; padding: 16px;
+  color: #E3D2D8; border: 1px dashed rgba(201, 169, 110, .6);
+  background: linear-gradient(150deg, var(--marca-burdeo-o), #2A0510);
+}
+.video-vacio .video-icono { opacity: .7; margin-bottom: 10px; }
+.video-vacio p { margin: 0; }
+.video-vacio p:last-child { font-size: .9rem; color: var(--marca-dorado); }
+
+.icono-familia { width: 1.25em; height: 1.25em; vertical-align: -.2em; margin-right: 8px; color: var(--c-acento-texto); }
+.icono-familia * { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.calc-familia h2:hover .icono-familia, .calc-familias a:hover .icono-familia { animation: rebote var(--dur-3) var(--ease-out); }
+@keyframes rebote { 40% { transform: translateY(-3px) rotate(-6deg); } }
+
+/* ─── Fase 2: microinteracciones y revelado al scroll ─────────── */
+.tarjeta:hover, .tarjeta:focus-within { transform: translateY(-3px); }
+.boton { transition: background var(--transicion), border-color var(--transicion), transform var(--dur-1) var(--ease-out); }
+.boton:active { transform: scale(.97); }
+
+/* Revelado al entrar en pantalla (solo CSS; sin soporte, todo queda visible) */
+@keyframes revelar { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+@supports (animation-timeline: view()) {
+  .seccion-cabeza, .rejilla > *, .franja-qc > * {
+    animation: revelar linear backwards; /* «backwards»: al terminar no retiene transform y el hover sigue funcionando */
+    animation-timeline: view();
+    animation-range: entry 0% entry 45%;
+  }
+}
+
+/* Resultados de calculadoras: destello al actualizarse (lo activa PaginaCalculadora) */
+@keyframes destello { from { background: var(--c-info-fondo); transform: scale(1.03); } to { transform: none; } }
+.calc-cifras > div { transition: background var(--dur-3) var(--ease-out); }
+.calc-cifras > div.calc-actualizado { animation: destello var(--dur-3) var(--ease-out); }
+[data-nivel] { transition: color var(--dur-2) var(--ease-out); }
+.calc-recomendado { transition: background var(--dur-2), border-color var(--dur-2); }
+
+/* Gráfico Levey-Jennings: la línea se dibuja y los puntos aparecen */
+@keyframes dibujar { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes aparecer { from { opacity: 0; } to { opacity: 1; } }
+.lj-linea { stroke-dasharray: 1; animation: dibujar 1.1s var(--ease-in-out) both; }
+.lj-ok, .lj-adv, .lj-rech { animation: aparecer var(--dur-3) 1.0s both; }
+
 @media (prefers-reduced-motion: reduce) {
-  * { transition: none !important; scroll-behavior: auto !important; }
+  *, *::before, *::after {
+    transition: none !important;
+    animation: none !important;
+    scroll-behavior: auto !important;
+  }
+  @view-transition { navigation: none; }
+}
+/* Mismo efecto con el interruptor del pie («Reducir animaciones») */
+:root[data-movimiento="reducido"] *, :root[data-movimiento="reducido"] *::before, :root[data-movimiento="reducido"] *::after {
+  transition: none !important;
+  animation: none !important;
+  scroll-behavior: auto !important;
 }
 
 /* Botón principal sobre fondos burdeo (portadas) */

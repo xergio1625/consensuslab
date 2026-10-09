@@ -2,6 +2,8 @@
 // Planes de suscripción. Sin montos públicos: la persona pide una cotización (llega a la app por doPost)
 // y la lista de precios vive solo en el repositorio privado de la app.
 import Base from '../plantillas/Base.astro';
+import EspacioVideo from '../componentes/EspacioVideo.astro';
+import { VIDEOS } from '../lib/videos';
 import { obtenerHerramientas } from '../lib/datos';
 import { url } from '../lib/rutas';
 import { CORREO_CONTACTO, URL_APP } from '../lib/sitio';
@@ -86,6 +88,9 @@ const planes = [
   <section class="seccion">
     <div class="contenedor">
       <h2>Planes</h2>
+      <div class="video-planes">
+        <EspacioVideo titulo="Cómo funcionan los planes" texto="Presentación breve de los planes y de la preventa." {...VIDEOS.planes} />
+      </div>
       <div class="planes">
         {
           planes.map((p) => (

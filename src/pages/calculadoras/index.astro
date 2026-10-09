@@ -1,6 +1,7 @@
 ---
 // Índice de calculadoras de calidad.
 import Base from '../../plantillas/Base.astro';
+import IconoFamilia from '../../componentes/IconoFamilia.astro';
 import { CALCULADORAS, FAMILIAS } from '../../lib/calculadoras';
 import { url } from '../../lib/rutas';
 ---
@@ -17,12 +18,12 @@ import { url } from '../../lib/rutas';
       cuánto error total tiene un método. Gratuitas, sin registrarte, y el cálculo ocurre en tu navegador.
     </p>
     <nav class="calc-familias" aria-label="Familias de calculadoras">
-      {FAMILIAS.map((f) => <a href={`#${f.id}`}>{f.titulo}</a>)}
+      {FAMILIAS.map((f) => <a href={`#${f.id}`}><IconoFamilia familia={f.id} />{f.titulo}</a>)}
     </nav>
     {
       FAMILIAS.map((f) => (
         <section class="calc-familia" id={f.id}>
-          <h2>{f.titulo}</h2>
+          <h2><IconoFamilia familia={f.id} />{f.titulo}</h2>
           <p class="texto-suave">{f.descripcion}</p>
           <div class="rejilla">
             {CALCULADORAS.filter((c) => c.familia === f.id).map((c) => (

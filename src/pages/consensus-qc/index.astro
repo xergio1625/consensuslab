@@ -2,6 +2,8 @@
 // Sección del software Consensus QC (absorbe el sitio consensus-qc-site).
 import Base from '../../plantillas/Base.astro';
 import TarjetaHerramienta from '../../componentes/TarjetaHerramienta.astro';
+import EspacioVideo from '../../componentes/EspacioVideo.astro';
+import { VIDEOS } from '../../lib/videos';
 import { obtenerHerramientas } from '../../lib/datos';
 import { RELACION_CONSENSUS_QC, url } from '../../lib/rutas';
 import { urlModulo } from '../../lib/sitio';
@@ -61,6 +63,7 @@ const modulos = [
 
   <section class="seccion">
     <div class="contenedor">
+      <EspacioVideo titulo="Consensus QC en funcionamiento" texto="Recorrido por la versión web de Consensus QC." {...VIDEOS['consensus-qc']} />
       <h2>Qué incluye</h2>
       <p class="texto-suave">Estos son los módulos de la versión web. Todos se pueden probar en la demo en línea.</p>
       <ul class="lista-modulos">

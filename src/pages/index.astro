@@ -3,6 +3,8 @@
 import Base from '../plantillas/Base.astro';
 import TarjetaHerramienta from '../componentes/TarjetaHerramienta.astro';
 import TarjetaPrompt from '../componentes/TarjetaPrompt.astro';
+import EspacioVideo from '../componentes/EspacioVideo.astro';
+import { VIDEOS } from '../lib/videos';
 import { obtenerCatalogo, obtenerHerramientas, obtenerPrompts } from '../lib/datos';
 import { url } from '../lib/rutas';
 import { CALCULADORAS } from '../lib/calculadoras';
@@ -13,7 +15,18 @@ const nombreGrupo = new Map(catalogo.map(({ grupo }) => [grupo.id, grupo.data.no
 const promptsDestacados = (await obtenerPrompts()).filter((p) =>
   ['redactar-procedimiento', 'analisis-de-causa', 'alarma-de-control-de-calidad'].includes(p.id),
 );
-const prioritarias = (await obtenerHerramientas()).filter((h) => h.data.etiquetas.includes('prioridad-coordinador'));
+const todas = await obtenerHerramientas();
+const prioritarias = todas.filter((h) => h.data.etiquetas.includes('prioridad-coordinador'));
+const totalHerramientas = catalogo.reduce((n, { herramientas }) => n + herramientas.length, 0);
+const totalPrompts = (await obtenerPrompts()).length;
+
+// Pasos de «cómo funciona» Consensus QC (portada)
+const pasos = [
+  ['Registra tus controles', 'Ingresa los resultados de control interno y de control externo de cada analizador.'],
+  ['Se evalúan las reglas', 'Westgard y Levey-Jennings revisan cada resultado frente a la media y la desviación estándar.'],
+  ['Mide el desempeño', 'CV, sesgo, error total y sigma, comparados con el plan de calidad de tu laboratorio.'],
+  ['Decide con respaldo', 'Queda el registro de cada control para la revisión mensual y las auditorías.'],
+];
 ---
 
 <Base
@@ -45,25 +58,64 @@ const prioritarias = (await obtenerHerramientas()).filter((h) => h.data.etiqueta
   ]}
 >
   <section class="portada">
-    <div class="contenedor">
-      <p class="antetitulo">Para profesionales de laboratorio clínico</p>
-      <h1>Herramientas para coordinar, ordenar y mejorar tu laboratorio</h1>
-      <p class="portada-lema">
-        Planillas, plantillas y guías listas para usar en la operación diaria, la calidad y la administración del
-        servicio. Hechas por un tecnólogo médico de laboratorio clínico, sin datos de pacientes y gratuitas.
-      </p>
-      <form class="buscador-portada" action={url('herramientas/')} method="get" role="search">
-        <label class="solo-lectores" for="busqueda-portada">Buscar herramientas</label>
-        <input
-          class="campo"
-          id="busqueda-portada"
-          name="q"
-          type="search"
-          placeholder="Temperaturas, turnos, auditoría…"
-          autocomplete="off"
-        />
-        <button class="boton" type="submit">Buscar</button>
-      </form>
+    <div class="portada-fondo" aria-hidden="true"></div>
+    <div class="contenedor portada-rejilla">
+      <div class="portada-texto">
+        <p class="antetitulo">Para profesionales de laboratorio clínico</p>
+        <h1>Herramientas para coordinar, ordenar y mejorar tu laboratorio</h1>
+        <p class="portada-lema">
+          Planillas, plantillas y guías listas para usar en la operación diaria, la calidad y la administración del
+          servicio. Hechas por un tecnólogo médico de laboratorio clínico, sin datos de pacientes y gratuitas.
+        </p>
+        <form class="buscador-portada" action={url('herramientas/')} method="get" role="search">
+          <label class="solo-lectores" for="busqueda-portada">Buscar herramientas</label>
+          <input
+            class="campo"
+            id="busqueda-portada"
+            name="q"
+            type="search"
+            placeholder="Temperaturas, turnos, auditoría…"
+            autocomplete="off"
+          />
+          <button class="boton" type="submit">Buscar</button>
+        </form>
+      </div>
+      {VIDEOS.portada ? (
+        <div class="portada-visual portada-visual-video">
+          <EspacioVideo titulo="Consensus QC en acción" {...VIDEOS.portada} />
+        </div>
+      ) : (
+      <figure class="portada-visual" aria-hidden="true">
+        <!-- Ilustración del tipo de gráfico que genera Consensus QC (datos de ejemplo). Se reemplaza por un video al llenar VIDEOS.portada (src/lib/videos.ts). -->
+        <div class="maqueta">
+          <div class="maqueta-barra"><span></span><span></span><span></span><b>Levey-Jennings · Control nivel 1</b></div>
+          <svg viewBox="0 0 360 200" role="presentation">
+            <rect x="0" y="0" width="360" height="30" class="m-rech" />
+            <rect x="0" y="170" width="360" height="30" class="m-rech" />
+            <rect x="0" y="30" width="360" height="26" class="m-adv" />
+            <rect x="0" y="144" width="360" height="26" class="m-adv" />
+            <line x1="0" x2="360" y1="100" y2="100" class="m-media" />
+            <polyline pathLength="1" class="m-linea" points="14,104 44,92 74,110 104,98 134,86 164,108 194,96 224,118 254,126 284,72 314,60 346,34" />
+            <circle cx="14" cy="104" r="4" class="m-ok" /><circle cx="44" cy="92" r="4" class="m-ok" />
+            <circle cx="74" cy="110" r="4" class="m-ok" /><circle cx="104" cy="98" r="4" class="m-ok" />
+            <circle cx="134" cy="86" r="4" class="m-ok" /><circle cx="164" cy="108" r="4" class="m-ok" />
+            <circle cx="194" cy="96" r="4" class="m-ok" /><circle cx="224" cy="118" r="4" class="m-ok" />
+            <circle cx="254" cy="126" r="4" class="m-ok" /><path d="M284 64l8 8-8 8-8-8z" class="m-adv-p" />
+            <path d="M314 52l8 8-8 8-8-8z" class="m-adv-p" /><rect x="340" y="28" width="12" height="12" class="m-rech-p" />
+          </svg>
+          <p class="maqueta-pie">Ejemplo ilustrativo</p>
+        </div>
+      </figure>
+      )}
+    </div>
+  </section>
+
+  <section class="cifras" aria-label="El sitio en cifras">
+    <div class="contenedor cifras-fila">
+      <p><strong data-contar={totalHerramientas}>{totalHerramientas}</strong> herramientas en {catalogo.length} grupos</p>
+      <p><strong data-contar={CALCULADORAS.length}>{CALCULADORAS.length}</strong> calculadoras gratuitas</p>
+      <p><strong data-contar={totalPrompts}>{totalPrompts}</strong> prompts de IA</p>
+      <p><strong>0</strong> datos de pacientes</p>
     </div>
   </section>
 
@@ -104,7 +156,8 @@ const prioritarias = (await obtenerHerramientas()).filter((h) => h.data.etiqueta
               <div class="tarjeta-meta">
                 <span class="numero">{grupo.data.numero}</span>
                 <span class="conteo">
-                  {herramientas.length} {herramientas.length === 1 ? 'herramienta' : 'herramientas'}
+                  <span data-contar={herramientas.length}>{herramientas.length}</span>{' '}
+                  {herramientas.length === 1 ? 'herramienta' : 'herramientas'}
                 </span>
               </div>
               <h3>
@@ -163,6 +216,29 @@ const prioritarias = (await obtenerHerramientas()).filter((h) => h.data.etiqueta
 
   <section class="seccion">
     <div class="contenedor">
+      <div class="seccion-cabeza">
+        <div>
+          <p class="antetitulo">Consensus QC</p>
+          <h2>Del resultado de control a la decisión</h2>
+        </div>
+        <a href={url('consensus-qc/')}>Ver cómo funciona</a>
+      </div>
+      <ol class="pasos">
+        {
+          pasos.map(([titulo, texto], i) => (
+            <li class="paso">
+              <span class="paso-num">{i + 1}</span>
+              <h3>{titulo}</h3>
+              <p>{texto}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="contenedor">
       <div class="franja-qc">
         <div>
           <h2>Consensus QC automatiza parte de estas herramientas</h2>
@@ -176,3 +252,27 @@ const prioritarias = (await obtenerHerramientas()).filter((h) => h.data.etiqueta
     </div>
   </section>
 </Base>
+
+<script>
+  // Cuenta hasta el total cuando el número entra en pantalla (el HTML ya trae el valor final).
+  const reducir = matchMedia('(prefers-reduced-motion: reduce)').matches || document.documentElement.dataset.movimiento === 'reducido';
+  const nums = document.querySelectorAll<HTMLElement>('[data-contar]');
+  if (!reducir && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entradas) => {
+      for (const e of entradas) {
+        if (!e.isIntersecting) continue;
+        io.unobserve(e.target);
+        const el = e.target as HTMLElement;
+        const fin = Number(el.dataset.contar);
+        const t0 = performance.now();
+        const paso = (t: number) => {
+          const p = Math.min(1, (t - t0) / 700);
+          el.textContent = String(Math.round(fin * (1 - Math.pow(1 - p, 3))));
+          if (p < 1) requestAnimationFrame(paso);
+        };
+        requestAnimationFrame(paso);
+      }
+    });
+    nums.forEach((n) => io.observe(n));
+  }
+</script>

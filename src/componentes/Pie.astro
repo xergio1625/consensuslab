@@ -29,6 +29,28 @@ const anio = new Date().getFullYear();
       <li><a href={url('privacidad/')}>Privacidad</a></li>
       <li><a href={url('terminos/')}>Términos</a></li>
       {GA_ID && <li><button type="button" class="enlace-pie" data-preferencias-cookies>Preferencias de cookies</button></li>}
+      <li><button type="button" class="enlace-pie" data-reducir-movimiento aria-pressed="false">Reducir animaciones</button></li>
     </ul>
   </div>
 </footer>
+
+<script>
+  // Interruptor de animaciones (WCAG 2.2.2): complementa la preferencia del sistema y se recuerda en este navegador.
+  const raiz = document.documentElement;
+  const boton = document.querySelector<HTMLButtonElement>('[data-reducir-movimiento]');
+  const sistema = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const reflejar = () => {
+    const activo = raiz.dataset.movimiento === 'reducido' || sistema;
+    boton?.setAttribute('aria-pressed', String(activo));
+    if (boton) boton.textContent = activo ? 'Animaciones reducidas' : 'Reducir animaciones';
+    if (boton && sistema) boton.disabled = true; // el sistema ya lo pide: no hay nada que cambiar aquí
+  };
+  reflejar();
+  boton?.addEventListener('click', () => {
+    const reducir = raiz.dataset.movimiento !== 'reducido';
+    if (reducir) raiz.dataset.movimiento = 'reducido';
+    else delete raiz.dataset.movimiento;
+    try { localStorage.setItem('movimiento', reducir ? 'reducido' : 'normal'); } catch {}
+    reflejar();
+  });
+</script>

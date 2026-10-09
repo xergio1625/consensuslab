@@ -59,6 +59,37 @@ Las fórmulas están en `src/lib/calidad.js` (funciones puras, probadas con `npm
 página en `src/pages/calculadoras/` y su entrada en `src/lib/calculadoras.ts` (título, resumen y fichas donde se
 recomienda). El cálculo ocurre en el navegador: no se envía ni se guarda nada.
 
+## Videos
+
+Hay espacios reservados con proporción 16:9 (componente `src/componentes/EspacioVideo.astro`), así que agregar un
+video no mueve el contenido. No hace falta tocar páginas:
+
+- **Portada, Consensus QC y Planes:** llena la entrada correspondiente en `src/lib/videos.ts` (`youtube` con el ID del
+  video, o `src` con un archivo de `public/`, más `poster`). Mientras estén en `null`, Consensus QC y Planes muestran
+  «Video próximamente» y la portada muestra la maqueta ilustrada.
+- **Fichas de herramientas:** agrega `video: <ID de YouTube>` en el encabezado de la ficha. Sin ese campo no se muestra nada.
+- **Largos (más de ~30 s):** súbelos a YouTube. Se cargan solo al hacer clic (`youtube-nocookie`), sin cookies antes.
+- **Clips cortos en bucle (8–15 s, menos de 1,5 MB, WebM o MP4 sin audio):** van en `public/` con `bucle: true`. Se pausan
+  solos fuera de pantalla, traen botón de pausa y no se reproducen si la persona pidió menos movimiento o ahorro de datos.
+
+## Animaciones: cómo mantener el estilo
+
+Todo el movimiento está en `src/estilos/global.css` (bloques «Fase 2», «Fase 3» y «Fase 4») y es CSS puro, con
+muy poco JavaScript (contadores de la portada, destello de resultados, video). Reglas para sumar más:
+
+- **Usa los tokens:** `--ease-out`, `--ease-in-out`, `--dur-1` (.15 s), `--dur-2` (.3 s), `--dur-3` (.6 s).
+- **Revelado al scroll:** una tarjeta o sección nueva dentro de `.rejilla` o `.seccion-cabeza` ya aparece sola.
+  Para otro elemento, copia la regla `animation: revelar … backwards` con `animation-timeline: view()` (usa
+  `backwards`, no `both`, o el `transform` queda fijo y el hover deja de funcionar).
+- **Calculadoras:** cualquier bloque `.calc-cifras > div` destella al cambiar; no hay que tocar el script de la calculadora.
+- **Nada puede ser lo único que transmite información:** el movimiento acompaña, el texto manda.
+- **Sin parpadeos** (más de 3 destellos por segundo) y sin animaciones infinitas que no se puedan detener.
+- **Reducir animaciones:** el sistema (`prefers-reduced-motion`) y el interruptor «Reducir animaciones» del pie anulan
+  *todas* las animaciones y transiciones con una sola regla. Si un script anima algo, debe revisar
+  `matchMedia('(prefers-reduced-motion: reduce)')` y `document.documentElement.dataset.movimiento === 'reducido'`.
+- **Presupuesto:** sin librerías de animación; la portada pesa hoy ~32 KB de HTML con ~7 KB de JavaScript en línea
+  y desplazamiento de diseño (CLS) igual a 0. Si una mejora lo empeora, no entra.
+
 ## Artículos de opinión
 
 El sitio es el lugar oficial de los artículos: `/opinion/` reúne todo lo escrito. Hay dos tipos de archivo en

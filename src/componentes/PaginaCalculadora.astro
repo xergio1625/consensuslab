@@ -100,3 +100,25 @@ const otras = CALCULADORAS.filter((o) => o.id !== c.id).sort(
     </div>
   </div>
 </Base>
+
+<script>
+  // Destello en las cifras de resultado cuando cambian (sin tocar el script de cada calculadora).
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches && document.documentElement.dataset.movimiento !== 'reducido') {
+    const previo = new WeakMap<Element, string>();
+    const marcar = (caja: Element) => {
+      caja.querySelectorAll('.calc-cifras > div').forEach((c) => {
+        const txt = c.textContent ?? '';
+        if (previo.has(c) && previo.get(c) !== txt) {
+          c.classList.remove('calc-actualizado');
+          void (c as HTMLElement).offsetWidth;
+          c.classList.add('calc-actualizado');
+        }
+        previo.set(c, txt);
+      });
+    };
+    document.querySelectorAll('.calc-resultado').forEach((caja) => {
+      marcar(caja);
+      new MutationObserver(() => marcar(caja)).observe(caja, { childList: true, characterData: true, subtree: true });
+    });
+  }
+</script>
