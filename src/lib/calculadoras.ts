@@ -1,5 +1,6 @@
 // Catálogo de calculadoras. Cada una tiene su página en src/pages/calculadoras/<id>.astro y sus fórmulas
 // en src/lib/calidad.js y levey.js (calidad), src/lib/costos.js (costos) o src/lib/soluciones.js (soluciones) o src/lib/stock.js (insumos). `familia`: grupo del índice.
+// `destacada`: aparece en la portada.
 // `herramientas`: fichas del catálogo donde se recomienda.
 
 export const FAMILIAS = [
@@ -31,6 +32,7 @@ export const CALCULADORAS = [
   {
     id: 'costo-por-determinacion',
     familia: 'costos',
+    destacada: true,
     titulo: 'Costo por determinación',
     resumen: 'Reactivo, control, calibrador, insumos, personal y costo fijo: lo que cuesta cada resultado y cuánto margen deja el arancel.',
     herramientas: ['costeo-por-examen', 'control-de-presupuesto'],
@@ -45,6 +47,7 @@ export const CALCULADORAS = [
   {
     id: 'rendimiento-de-reactivos',
     familia: 'costos',
+    destacada: true,
     titulo: 'Rendimiento de reactivos',
     resumen: 'Cuántos resultados entrega de verdad un kit una vez descontados controles, calibraciones, repeticiones y pérdidas.',
     herramientas: ['costeo-por-examen', 'inventario-y-lotes-de-reactivos'],
@@ -52,6 +55,7 @@ export const CALCULADORAS = [
   {
     id: 'stock-y-punto-de-pedido',
     familia: 'insumos',
+    destacada: true,
     titulo: 'Stock y punto de pedido',
     resumen: 'Con tu consumo y el plazo del proveedor: stock de seguridad, punto de pedido, cantidad a pedir y si te conviene pedir ya.',
     herramientas: ['inventario-y-lotes-de-reactivos', 'solicitudes-de-compra'],
@@ -59,6 +63,7 @@ export const CALCULADORAS = [
   {
     id: 'diluciones-y-soluciones',
     familia: 'soluciones',
+    destacada: true,
     titulo: 'Diluciones y preparación de soluciones',
     resumen: 'C1·V1 = C2·V2, diluciones seriadas y cuánto pesar o medir para preparar una solución (molar, % p/v, % v/v, mg/mL).',
     herramientas: ['limpieza-y-desinfeccion-de-areas-y-equipos'],
@@ -66,6 +71,7 @@ export const CALCULADORAS = [
   {
     id: 'levey-jennings',
     familia: 'calidad',
+    destacada: true,
     titulo: 'Gráfico de Levey-Jennings',
     resumen: 'Pega los resultados de tu control y obtén el gráfico con los límites de ±1, 2 y 3 DE y las violaciones de las reglas de Westgard marcadas.',
     herramientas: ['control-de-calidad-interno-y-externo'],
@@ -80,6 +86,7 @@ export const CALCULADORAS = [
   {
     id: 'error-total-y-sigma',
     familia: 'calidad',
+    destacada: true,
     titulo: 'Error total y sigma',
     resumen: 'Con el error total permitido, el sesgo y el CV: error total, métrica sigma y las reglas de Westgard sugeridas.',
     herramientas: ['control-de-calidad-interno-y-externo', 'indicadores-de-calidad'],

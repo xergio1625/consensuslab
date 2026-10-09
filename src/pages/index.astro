@@ -125,11 +125,11 @@ const prioritarias = (await obtenerHerramientas()).filter((h) => h.data.etiqueta
           <p class="antetitulo">Gratis</p>
           <h2>Calculadoras para el laboratorio</h2>
         </div>
-        <a href={url('calculadoras/')}>Ver todas las calculadoras</a>
+        <a href={url('calculadoras/')}>Ver las {CALCULADORAS.length} calculadoras</a>
       </div>
       <div class="rejilla">
         {
-          CALCULADORAS.map((c) => (
+          CALCULADORAS.filter((c) => 'destacada' in c).map((c) => (
             <article class="tarjeta">
               <h3>
                 <a href={url(`calculadoras/${c.id}/`)}>{c.titulo}</a>
