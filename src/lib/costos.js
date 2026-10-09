@@ -94,3 +94,39 @@ export function costoDeterminacion({
     equilibrio: conArancel && arancel > variable ? mensual.fijo / (arancel - variable) : NaN,
   };
 }
+
+/**
+ * Comprar vs. derivar: costo mensual de hacer un examen en el laboratorio frente a enviarlo a un laboratorio externo.
+ * Interno = costo fijo + costo variable × volumen. Externo = (tarifa + logística) × volumen + costo fijo del envío.
+ * `equilibrio` es el volumen mensual donde ambos cuestan lo mismo (NaN si no existe o no es positivo); con
+ * `sentido` 'sobre' el laboratorio propio conviene por encima de ese volumen y con 'bajo', por debajo.
+ */
+export function comprarVsDerivar({
+  volumen,
+  varInterno,
+  fijoInterno = 0,
+  tarifaExterna,
+  logisticaPorMuestra = 0,
+  fijoExterno = 0,
+}) {
+  if (![volumen, varInterno, tarifaExterna].every(Number.isFinite) || !(volumen > 0)) return null;
+  if ([varInterno, fijoInterno, tarifaExterna, logisticaPorMuestra, fijoExterno].some((x) => !(x >= 0))) return null;
+  const unitarioExterno = tarifaExterna + logisticaPorMuestra;
+  const costos = (v) => {
+    const interno = fijoInterno + varInterno * v;
+    const externo = fijoExterno + unitarioExterno * v;
+    return { volumen: v, interno, externo, internoPorDet: interno / v, externoPorDet: externo / v, diferencia: externo - interno };
+  };
+  const actual = costos(volumen);
+  const d = unitarioExterno - varInterno; // lo que ahorra cada determinación propia sobre la externa
+  const deltaFijo = fijoInterno - fijoExterno;
+  const equilibrio = d !== 0 && deltaFijo / d > 0 ? deltaFijo / d : NaN;
+  return {
+    ...actual,
+    mejor: Math.abs(actual.diferencia) < 1e-9 ? 'igual' : actual.diferencia > 0 ? 'interno' : 'externo',
+    ahorroMes: Math.abs(actual.diferencia),
+    equilibrio,
+    sentido: Number.isNaN(equilibrio) ? null : d > 0 ? 'sobre' : 'bajo',
+    escenarios: [0.5, 1, 1.5, 2].map((k) => costos(volumen * k)),
+  };
+}

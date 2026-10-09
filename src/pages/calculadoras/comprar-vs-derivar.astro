@@ -1,0 +1,200 @@
+---
+import PaginaCalculadora from '../../componentes/PaginaCalculadora.astro';
+import { url } from '../../lib/rutas';
+---
+
+<PaginaCalculadora id="comprar-vs-derivar">
+  <form class="calc" id="calc" novalidate>
+    <p class="calc-ayuda">
+      Usa la misma moneda en todos los campos. Calcula un examen a la vez.
+      <button type="button" class="boton boton-secundario calc-ejemplo" data-ejemplo>Cargar un ejemplo</button>
+    </p>
+
+    <fieldset class="calc-grupo">
+      <legend>Volumen</legend>
+      <div class="calc-campos">
+        <label class="calc-campo">
+          <span>Muestras al mes</span>
+          <input class="campo" name="volumen" inputmode="decimal" placeholder="400" />
+          <small>Las que procesarías o derivarías en un mes típico.</small>
+        </label>
+      </div>
+    </fieldset>
+
+    <fieldset class="calc-grupo">
+      <legend>Hacerlo en tu laboratorio</legend>
+      <div class="calc-campos">
+        <label class="calc-campo">
+          <span>Costo variable por determinación</span>
+          <input class="campo" name="varInterno" inputmode="decimal" placeholder="900" />
+          <small>Reactivo, control, insumos y personal por muestra. Sácalo de la calculadora Costo por determinación.</small>
+        </label>
+        <label class="calc-campo">
+          <span>Costo fijo mensual <em class="opcional">(opcional)</em></span>
+          <input class="campo" name="fijoInterno" inputmode="decimal" placeholder="200000" />
+          <small>Comodato, mantención, arriendo del equipo.</small>
+        </label>
+      </div>
+    </fieldset>
+
+    <fieldset class="calc-grupo">
+      <legend>Derivarlo a un laboratorio externo</legend>
+      <div class="calc-campos">
+        <label class="calc-campo">
+          <span>Tarifa por muestra</span>
+          <input class="campo" name="tarifaExterna" inputmode="decimal" placeholder="1400" />
+          <small>Lo que cobra el laboratorio externo por el examen.</small>
+        </label>
+        <label class="calc-campo">
+          <span>Logística por muestra <em class="opcional">(opcional)</em></span>
+          <input class="campo" name="logisticaPorMuestra" inputmode="decimal" placeholder="100" />
+          <small>Transporte, embalaje y tubos de envío.</small>
+        </label>
+        <label class="calc-campo">
+          <span>Costo fijo mensual del envío <em class="opcional">(opcional)</em></span>
+          <input class="campo" name="fijoExterno" inputmode="decimal" placeholder="0" />
+          <small>Courier o retiro con tarifa mensual, tiempo de personal para gestionar envíos.</small>
+        </label>
+      </div>
+    </fieldset>
+  </form>
+
+  <section class="calc-resultado" aria-live="polite">
+    <p class="calc-mensaje" data-mensaje>Ingresa el volumen, el costo variable propio y la tarifa externa.</p>
+    <div data-resultado hidden>
+      <div class="calc-cifras">
+        <div><span>En tu laboratorio</span><strong data-int></strong><small data-int-nota></small></div>
+        <div><span>Derivado</span><strong data-ext></strong><small data-ext-nota></small></div>
+        <div><span>Diferencia al mes</span><strong data-dif></strong><small data-dif-nota></small></div>
+      </div>
+      <p class="calc-lectura" data-lectura></p>
+      <p class="calc-nota" data-equilibrio hidden></p>
+
+      <h2 class="calc-subtitulo">Si cambia el volumen</h2>
+      <div class="calc-tabla-envoltura">
+        <table class="calc-tabla">
+          <thead>
+            <tr><th>Muestras al mes</th><th>Propio por det.</th><th>Derivado por det.</th><th>Conviene</th></tr>
+          </thead>
+          <tbody data-filas></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <div slot="explicacion">
+    <h2>Cómo se calcula</h2>
+    <ul>
+      <li><strong>En tu laboratorio</strong> = costo fijo mensual + costo variable × muestras.</li>
+      <li><strong>Derivado</strong> = (tarifa + logística) × muestras + costo fijo del envío.</li>
+      <li>
+        <strong>Volumen de equilibrio</strong>: las muestras al mes donde ambos cuestan lo mismo. Por encima de ese
+        volumen, el costo fijo propio se reparte entre más muestras y suele convenir procesar en casa.
+      </li>
+    </ul>
+    <h2>Lo que el costo no muestra</h2>
+    <ul>
+      <li>
+        <strong>Tiempo de respuesta</strong>: un examen derivado tarda más, y eso importa si el resultado cambia una
+        decisión clínica urgente.
+      </li>
+      <li>
+        <strong>Calidad y requisitos</strong>: procesar en casa exige controles, calibraciones, personal competente y
+        participación en control externo; derivar exige que el laboratorio externo cumpla los requisitos de tu plan de
+        calidad y que el seguimiento de las muestras sea trazable.
+      </li>
+      <li>
+        <strong>Capacidad</strong>: ¿el equipo y el personal alcanzan para el volumen sin afectar el resto del trabajo?
+      </li>
+    </ul>
+    <p>
+      Para obtener el costo variable propio usa
+      <a href={url('calculadoras/costo-por-determinacion/')}>Costo por determinación</a>: toma el costo por determinación
+      sin el costo fijo (aparece como «Variable» bajo el resultado). Si tu volumen es muy bajo, revisa también cuántos
+      kits alcanzas a usar antes de que venzan, con
+      <a href={url('calculadoras/rendimiento-de-reactivos/')}>Rendimiento de reactivos</a>.
+    </p>
+  </div>
+</PaginaCalculadora>
+
+<script>
+  import { formato, numero } from '../../lib/calidad.js';
+  import { comprarVsDerivar } from '../../lib/costos.js';
+
+  const form = document.getElementById('calc') as HTMLFormElement;
+  const $ = (s: string) => document.querySelector(`[data-${s}]`) as HTMLElement;
+  const campo = (n: string) => (form.elements.namedItem(n) as HTMLInputElement).value;
+  const leer = (n: string) => (campo(n).trim() === '' ? 0 : numero(campo(n)));
+  const ejemplo = {
+    volumen: '400', varInterno: '900', fijoInterno: '200000', tarifaExterna: '1400',
+    logisticaPorMuestra: '100', fijoExterno: '0',
+  };
+  const dinero = (v: number, d = 0) => '$' + formato(v, d);
+  const mostrarMensaje = (t: string) => {
+    $('mensaje').textContent = t;
+    $('mensaje').hidden = false;
+    $('resultado').hidden = true;
+  };
+
+  function calcular() {
+    const volumen = numero(campo('volumen'));
+    const varInterno = numero(campo('varInterno'));
+    const tarifaExterna = numero(campo('tarifaExterna'));
+    if ([volumen, varInterno, tarifaExterna].some(Number.isNaN)) {
+      return mostrarMensaje('Ingresa el volumen, el costo variable propio y la tarifa externa.');
+    }
+    const opc = { fijoInterno: leer('fijoInterno'), logisticaPorMuestra: leer('logisticaPorMuestra'), fijoExterno: leer('fijoExterno') };
+    if (Object.values(opc).some(Number.isNaN)) return mostrarMensaje('Revisa los campos opcionales: hay algún valor que no es un número.');
+    const r = comprarVsDerivar({ volumen, varInterno, tarifaExterna, ...opc });
+    if (!r) return mostrarMensaje('Los valores deben ser positivos (el volumen mayor que cero).');
+
+    $('mensaje').hidden = true;
+    $('resultado').hidden = false;
+    $('int').textContent = dinero(r.interno);
+    $('int-nota').textContent = `${dinero(r.internoPorDet)} por determinación`;
+    $('ext').textContent = dinero(r.externo);
+    $('ext-nota').textContent = `${dinero(r.externoPorDet)} por determinación`;
+    $('dif').textContent = dinero(r.ahorroMes);
+    $('dif-nota').textContent = r.mejor === 'igual' ? 'cuestan lo mismo' : r.mejor === 'interno' ? 'ahorras haciéndolo en casa' : 'ahorras derivando';
+
+    const lectura = $('lectura');
+    lectura.dataset.nivel = r.mejor === 'igual' ? 'advertencia' : 'ok';
+    lectura.textContent =
+      r.mejor === 'igual'
+        ? 'Con estos datos ambas opciones cuestan lo mismo: decide por tiempo de respuesta, calidad y capacidad.'
+        : r.mejor === 'interno'
+          ? `Conviene procesarlo en tu laboratorio: ahorras ${dinero(r.ahorroMes)} al mes (${dinero(r.ahorroMes * 12)} al año).`
+          : `Conviene derivarlo: ahorras ${dinero(r.ahorroMes)} al mes (${dinero(r.ahorroMes * 12)} al año).`;
+
+    const eq = $('equilibrio');
+    eq.hidden = r.sentido === null;
+    if (r.sentido) {
+      eq.textContent =
+        r.sentido === 'sobre'
+          ? `Volumen de equilibrio: ${formato(Math.ceil(r.equilibrio), 0)} muestras al mes. Por encima de eso conviene procesar en casa; hoy tienes ${formato(volumen, 0)}.`
+          : `Volumen de equilibrio: ${formato(Math.floor(r.equilibrio), 0)} muestras al mes. Por debajo de eso conviene procesar en casa; hoy tienes ${formato(volumen, 0)}.`;
+    }
+
+    const filas = $('filas');
+    filas.replaceChildren();
+    for (const e of r.escenarios) {
+      const tr = document.createElement('tr');
+      const gana = Math.abs(e.diferencia) < 1e-9 ? 'Igual' : e.diferencia > 0 ? 'En casa' : 'Derivar';
+      for (const t of [formato(e.volumen, 0), dinero(e.internoPorDet), dinero(e.externoPorDet), gana]) {
+        const td = document.createElement('td');
+        td.textContent = t;
+        tr.append(td);
+      }
+      if (e.volumen === volumen) tr.className = 'calc-fila-elegida';
+      filas.append(tr);
+    }
+  }
+
+  form.addEventListener('input', calcular);
+  form.addEventListener('submit', (e) => e.preventDefault());
+  $('ejemplo').addEventListener('click', () => {
+    for (const [k, v] of Object.entries(ejemplo)) (form.elements.namedItem(k) as HTMLInputElement).value = v;
+    calcular();
+  });
+  calcular();
+</script>

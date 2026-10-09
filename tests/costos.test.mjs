@@ -80,3 +80,39 @@ test('equilibrio imposible si el arancel no cubre el costo variable', () => {
   const c = K.costoDeterminacion({ ...base, precioKit: 240000, costoFijoMes: 50000, arancel: 100 });
   assert.ok(Number.isNaN(c.equilibrio));
 });
+
+// Comprar vs. derivar: 400 al mes; propio con $900 variables y $200.000 fijos; externo a $1.400 + $100 de logística.
+const dv = { volumen: 400, varInterno: 900, fijoInterno: 200000, tarifaExterna: 1400, logisticaPorMuestra: 100 };
+
+test('comprar vs. derivar: costos mensuales, diferencia y equilibrio', () => {
+  const r = K.comprarVsDerivar(dv);
+  cerca(r.interno, 200000 + 900 * 400); // 560.000
+  cerca(r.externo, 1500 * 400); // 600.000
+  cerca(r.internoPorDet, 1400);
+  cerca(r.externoPorDet, 1500);
+  assert.equal(r.mejor, 'interno');
+  cerca(r.ahorroMes, 40000);
+  cerca(r.equilibrio, 200000 / 600); // 333,3 al mes
+  assert.equal(r.sentido, 'sobre');
+});
+
+test('comprar vs. derivar: con poco volumen conviene derivar', () => {
+  const r = K.comprarVsDerivar({ ...dv, volumen: 200 });
+  assert.equal(r.mejor, 'externo');
+  cerca(r.diferencia, 200 * 1500 - (200000 + 900 * 200)); // −80.000
+});
+
+test('comprar vs. derivar: sin costo fijo propio, lo propio siempre gana si es más barato', () => {
+  const r = K.comprarVsDerivar({ ...dv, fijoInterno: 0 });
+  assert.equal(r.mejor, 'interno');
+  assert.ok(Number.isNaN(r.equilibrio));
+});
+
+test('comprar vs. derivar: el costo fijo del envío adelanta el equilibrio; escenarios y entradas inválidas', () => {
+  const r = K.comprarVsDerivar({ ...dv, fijoExterno: 50000 });
+  cerca(r.equilibrio, 150000 / 600);
+  assert.deepEqual(r.escenarios.map((e) => e.volumen), [200, 400, 600, 800]);
+  assert.equal(K.comprarVsDerivar({ ...dv, volumen: 0 }), null);
+  assert.equal(K.comprarVsDerivar({ ...dv, tarifaExterna: NaN }), null);
+  assert.equal(K.comprarVsDerivar({ ...dv, varInterno: -1 }), null);
+});

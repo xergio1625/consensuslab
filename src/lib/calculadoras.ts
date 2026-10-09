@@ -36,6 +36,13 @@ export const CALCULADORAS = [
     herramientas: ['costeo-por-examen', 'control-de-presupuesto'],
   },
   {
+    id: 'comprar-vs-derivar',
+    familia: 'costos',
+    titulo: 'Comprar vs. derivar',
+    resumen: 'Compara hacer un examen en tu laboratorio con enviarlo a un laboratorio externo: costo mensual, ahorro y volumen de equilibrio.',
+    herramientas: ['derivaciones-a-laboratorios-externos', 'costeo-por-examen'],
+  },
+  {
     id: 'rendimiento-de-reactivos',
     familia: 'costos',
     titulo: 'Rendimiento de reactivos',
