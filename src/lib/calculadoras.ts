@@ -1,5 +1,5 @@
 // Catálogo de calculadoras. Cada una tiene su página en src/pages/calculadoras/<id>.astro y sus fórmulas
-// en src/lib/calidad.js (calidad) o src/lib/costos.js (costos). `familia`: grupo del índice.
+// en src/lib/calidad.js (calidad), src/lib/costos.js (costos) o src/lib/soluciones.js (soluciones). `familia`: grupo del índice.
 // `herramientas`: fichas del catálogo donde se recomienda.
 
 export const FAMILIAS = [
@@ -7,6 +7,11 @@ export const FAMILIAS = [
     id: 'costos',
     titulo: 'Costos y rendimiento',
     descripcion: 'Cuánto cuesta cada examen, cuánto rinde un reactivo y si el arancel alcanza.',
+  },
+  {
+    id: 'soluciones',
+    titulo: 'Preparación de soluciones',
+    descripcion: 'Diluciones, diluciones seriadas y soluciones por masa o por concentración.',
   },
   {
     id: 'calidad',
@@ -31,6 +36,13 @@ export const CALCULADORAS = [
     titulo: 'Rendimiento de reactivos',
     resumen: 'Cuántos resultados entrega de verdad un kit una vez descontados controles, calibraciones, repeticiones y pérdidas.',
     herramientas: ['costeo-por-examen', 'inventario-y-lotes-de-reactivos'],
+  },
+  {
+    id: 'diluciones-y-soluciones',
+    familia: 'soluciones',
+    titulo: 'Diluciones y preparación de soluciones',
+    resumen: 'C1·V1 = C2·V2, diluciones seriadas y cuánto pesar o medir para preparar una solución (molar, % p/v, % v/v, mg/mL).',
+    herramientas: ['limpieza-y-desinfeccion-de-areas-y-equipos'],
   },
   {
     id: 'estadistica-del-control',

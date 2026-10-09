@@ -70,7 +70,7 @@ const otras = CALCULADORAS.filter((o) => o.id !== c.id).sort(
               </p>
               <p><a class="boton boton-primario boton-ancho" href={url('herramientas/costeo-por-examen/')}>Ver la ficha</a></p>
             </section>
-          ) : (
+          ) : c.familia === 'calidad' ? (
             <section class="caja caja-app">
               <h2>Automático en Consensus QC</h2>
               <p>
@@ -79,7 +79,7 @@ const otras = CALCULADORAS.filter((o) => o.id !== c.id).sort(
               </p>
               <p><a class="boton boton-primario boton-ancho" href={url('consensus-qc/')}>Conocer Consensus QC</a></p>
             </section>
-          )
+          ) : null
         }
         <section class="caja">
           <h2>Otras calculadoras</h2>

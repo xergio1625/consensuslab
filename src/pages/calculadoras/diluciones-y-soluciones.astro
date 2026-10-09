@@ -1,0 +1,279 @@
+---
+import PaginaCalculadora from '../../componentes/PaginaCalculadora.astro';
+import { TIPOS_SOLUCION } from '../../lib/soluciones.js';
+---
+
+<PaginaCalculadora id="diluciones-y-soluciones">
+  <nav class="calc-familias" aria-label="Partes de esta calculadora">
+    <a href="#simple">Dilución simple</a>
+    <a href="#seriada">Dilución seriada</a>
+    <a href="#masa">Preparar una solución</a>
+  </nav>
+
+  <section class="calc-bloque" id="simple">
+    <h2>Dilución simple: C1·V1 = C2·V2</h2>
+    <form class="calc" id="form-simple" novalidate>
+      <p class="calc-ayuda">
+        Deja <strong>vacío</strong> el dato que quieres calcular. Usa la misma unidad de concentración en C1 y C2, y la
+        misma de volumen en V1 y V2.
+        <button type="button" class="boton boton-secundario calc-ejemplo" data-ejemplo-simple>Cargar un ejemplo</button>
+      </p>
+      <div class="calc-campos">
+        <label class="calc-campo">
+          <span>C1: concentración del stock</span>
+          <input class="campo" name="c1" inputmode="decimal" placeholder="5" />
+        </label>
+        <label class="calc-campo">
+          <span>V1: volumen de stock</span>
+          <input class="campo" name="v1" inputmode="decimal" placeholder="" />
+        </label>
+        <label class="calc-campo">
+          <span>C2: concentración final</span>
+          <input class="campo" name="c2" inputmode="decimal" placeholder="0,1" />
+        </label>
+        <label class="calc-campo">
+          <span>V2: volumen final</span>
+          <input class="campo" name="v2" inputmode="decimal" placeholder="1000" />
+        </label>
+      </div>
+    </form>
+    <section class="calc-resultado" aria-live="polite">
+      <p class="calc-mensaje" data-mensaje-simple>Completa tres de los cuatro datos.</p>
+      <div data-resultado-simple hidden>
+        <div class="calc-cifras">
+          <div><span data-etiqueta-simple></span><strong data-valor-simple></strong></div>
+          <div><span>Diluyente a agregar</span><strong data-diluyente-simple></strong></div>
+          <div><span>Factor de dilución</span><strong data-factor-simple></strong><small data-razon-simple></small></div>
+        </div>
+        <p class="calc-lectura" data-lectura-simple></p>
+      </div>
+    </section>
+  </section>
+
+  <section class="calc-bloque" id="seriada">
+    <h2>Dilución seriada</h2>
+    <form class="calc" id="form-seriada" novalidate>
+      <p class="calc-ayuda">
+        Cada tubo recibe un traspaso del anterior (el primero, del stock) y diluyente hasta completar el volumen final.
+        <button type="button" class="boton boton-secundario calc-ejemplo" data-ejemplo-seriada>Cargar un ejemplo</button>
+      </p>
+      <div class="calc-campos">
+        <label class="calc-campo">
+          <span>Factor de dilución por tubo</span>
+          <input class="campo" name="factor" inputmode="decimal" placeholder="2" />
+          <small>2 para diluciones al medio, 10 para decimales.</small>
+        </label>
+        <label class="calc-campo">
+          <span>Número de tubos</span>
+          <input class="campo" name="tubos" inputmode="numeric" placeholder="8" />
+        </label>
+        <label class="calc-campo">
+          <span>Volumen final por tubo</span>
+          <input class="campo" name="volFinal" inputmode="decimal" placeholder="1" />
+          <small>En la unidad que prefieras (mL, µL).</small>
+        </label>
+        <label class="calc-campo">
+          <span>Concentración del stock <em class="opcional">(opcional)</em></span>
+          <input class="campo" name="concInicial" inputmode="decimal" placeholder="800" />
+          <small>Para ver la concentración de cada tubo.</small>
+        </label>
+      </div>
+    </form>
+    <section class="calc-resultado" aria-live="polite">
+      <p class="calc-mensaje" data-mensaje-seriada>Ingresa el factor, el número de tubos y el volumen final.</p>
+      <div data-resultado-seriada hidden>
+        <div class="calc-tabla-envoltura">
+          <table class="calc-tabla">
+            <thead>
+              <tr><th>Tubo</th><th>Dilución</th><th data-col-conc>Concentración</th><th>Traspaso</th><th>Diluyente</th></tr>
+            </thead>
+            <tbody data-filas-seriada></tbody>
+          </table>
+        </div>
+        <p class="calc-nota" data-nota-seriada></p>
+      </div>
+    </section>
+  </section>
+
+  <section class="calc-bloque" id="masa">
+    <h2>Preparar una solución: cuánto pesar o medir</h2>
+    <form class="calc" id="form-masa" novalidate>
+      <p class="calc-ayuda">
+        <button type="button" class="boton boton-secundario calc-ejemplo" data-ejemplo-masa>Cargar un ejemplo</button>
+      </p>
+      <div class="calc-campos">
+        <label class="calc-campo">
+          <span>Tipo de concentración</span>
+          <select class="campo" name="tipo">
+            {Object.entries(TIPOS_SOLUCION).map(([id, t]) => <option value={id}>{t.texto}</option>)}
+          </select>
+        </label>
+        <label class="calc-campo">
+          <span>Concentración deseada</span>
+          <input class="campo" name="conc" inputmode="decimal" placeholder="0,9" />
+        </label>
+        <label class="calc-campo">
+          <span>Volumen a preparar (mL)</span>
+          <input class="campo" name="volMl" inputmode="decimal" placeholder="500" />
+        </label>
+        <label class="calc-campo" data-campo-pm>
+          <span>Peso molecular (g/mol)</span>
+          <input class="campo" name="pm" inputmode="decimal" placeholder="58,44" />
+          <small>Está en la etiqueta del frasco. NaCl: 58,44.</small>
+        </label>
+      </div>
+    </form>
+    <section class="calc-resultado" aria-live="polite">
+      <p class="calc-mensaje" data-mensaje-masa>Ingresa la concentración y el volumen.</p>
+      <div data-resultado-masa hidden>
+        <div class="calc-cifras">
+          <div><span data-etiqueta-masa></span><strong data-valor-masa></strong></div>
+        </div>
+        <p class="calc-lectura" data-lectura-masa></p>
+      </div>
+    </section>
+  </section>
+
+  <div slot="explicacion">
+    <h2>Cómo se calcula</h2>
+    <ul>
+      <li><strong>Dilución simple</strong>: C1·V1 = C2·V2. El diluyente es V2 − V1 y el factor es C1 / C2.</li>
+      <li>
+        <strong>Dilución seriada</strong>: el tubo <em>n</em> tiene una dilución acumulada de factor<sup><em>n</em></sup>.
+        El traspaso entre tubos es el volumen final / factor.
+      </li>
+      <li>
+        <strong>Soluciones</strong>: molar = M × PM × V (L); mM = mmol/L × PM × V (L) / 1000; % p/v = % × V (mL) / 100;
+        mg/mL = mg/mL × V (mL) / 1000; % v/v = % × V (mL) / 100.
+      </li>
+    </ul>
+    <h2>Buenas prácticas</h2>
+    <ul>
+      <li>
+        El volumen final es el de la solución completa: se disuelve el soluto en menos volumen y se completa hasta la
+        marca en un matraz aforado.
+      </li>
+      <li>
+        En diluciones muy grandes (factor sobre 100), conviene hacerla en dos pasos para no medir volúmenes
+        demasiado pequeños.
+      </li>
+      <li>
+        Rotula cada solución con su concentración, fecha de preparación, vencimiento y quién la preparó, según el
+        procedimiento de tu laboratorio.
+      </li>
+    </ul>
+    <p>
+      Las concentraciones de desinfectantes y otros usos sanitarios se rigen por el procedimiento aprobado de tu
+      laboratorio y la ficha técnica del producto: la calculadora solo hace la aritmética.
+    </p>
+  </div>
+</PaginaCalculadora>
+
+<script>
+  import { formato, numero } from '../../lib/calidad.js';
+  import { cantidadSoluto, dilucionSeriada, resolverDilucion, TIPOS_SOLUCION } from '../../lib/soluciones.js';
+
+  const $ = (s: string) => document.querySelector(`[data-${s}]`) as HTMLElement;
+  const campo = (f: HTMLFormElement, n: string) => (f.elements.namedItem(n) as HTMLInputElement).value;
+  const poner = (f: HTMLFormElement, datos: Record<string, string>) => {
+    for (const [k, v] of Object.entries(datos)) (f.elements.namedItem(k) as HTMLInputElement).value = v;
+  };
+  const mensaje = (id: string, texto: string | null) => {
+    $(`mensaje-${id}`).textContent = texto ?? '';
+    $(`mensaje-${id}`).hidden = texto === null;
+    $(`resultado-${id}`).hidden = texto !== null ? true : false;
+  };
+  const g = (v: number, d = 2) => (Number.isFinite(v) ? v.toLocaleString('es-CL', { maximumFractionDigits: v >= 100 ? 1 : d }) : '—');
+
+  // --- Dilución simple ---
+  const simple = document.getElementById('form-simple') as HTMLFormElement;
+  const nombres = { c1: 'C1: concentración del stock', v1: 'V1: volumen de stock a medir', c2: 'C2: concentración final', v2: 'V2: volumen final' } as const;
+  function calcularSimple() {
+    const datos = Object.fromEntries(
+      (['c1', 'v1', 'c2', 'v2'] as const).map((k) => [k, campo(simple, k).trim() === '' ? NaN : numero(campo(simple, k))]),
+    ) as Record<'c1' | 'v1' | 'c2' | 'v2', number>;
+    const escritoMal = (['c1', 'v1', 'c2', 'v2'] as const).some((k) => campo(simple, k).trim() !== '' && Number.isNaN(datos[k]));
+    if (escritoMal) return mensaje('simple', 'Hay un valor que no es un número.');
+    const vacios = (['c1', 'v1', 'c2', 'v2'] as const).filter((k) => campo(simple, k).trim() === '');
+    if (vacios.length > 1) return mensaje('simple', 'Completa tres de los cuatro datos.');
+    if (vacios.length === 0) return mensaje('simple', 'Deja vacío el dato que quieres calcular.');
+    const r = resolverDilucion(datos);
+    if (r.error === 'positivos') return mensaje('simple', 'Los valores deben ser mayores que cero.');
+    if (r.error === 'concentrar') return mensaje('simple', 'Con esos datos la solución final quedaría más concentrada que el stock: revisa los valores.');
+    if (r.error) return mensaje('simple', 'Completa tres de los cuatro datos.');
+    mensaje('simple', null);
+    const k = vacios[0];
+    $('etiqueta-simple').textContent = nombres[k];
+    $('valor-simple').textContent = g(r[k]);
+    $('diluyente-simple').textContent = g(r.diluyente);
+    $('factor-simple').textContent = g(r.factor);
+    $('razon-simple').textContent = `1 parte de stock en ${g(r.factor)} partes`;
+    $('lectura-simple').textContent = `Mide ${g(r.v1)} de stock (${g(r.c1)}) y agrega ${g(r.diluyente)} de diluyente hasta completar ${g(r.v2)} con una concentración de ${g(r.c2)}.`;
+  }
+  simple.addEventListener('input', calcularSimple);
+  simple.addEventListener('submit', (e) => e.preventDefault());
+  $('ejemplo-simple').addEventListener('click', () => { poner(simple, { c1: '5', v1: '', c2: '0,1', v2: '1000' }); calcularSimple(); });
+  calcularSimple();
+
+  // --- Dilución seriada ---
+  const seriada = document.getElementById('form-seriada') as HTMLFormElement;
+  function calcularSeriada() {
+    const factor = numero(campo(seriada, 'factor'));
+    const tubos = numero(campo(seriada, 'tubos'));
+    const volFinal = numero(campo(seriada, 'volFinal'));
+    const conc = campo(seriada, 'concInicial').trim() === '' ? NaN : numero(campo(seriada, 'concInicial'));
+    if ([factor, tubos, volFinal].some(Number.isNaN)) return mensaje('seriada', 'Ingresa el factor, el número de tubos y el volumen final.');
+    if (tubos > 30) return mensaje('seriada', 'Usa hasta 30 tubos.');
+    const filas = dilucionSeriada({ factor, tubos, volFinal, concInicial: conc });
+    if (!filas) return mensaje('seriada', 'El factor debe ser mayor que 1, los tubos un número entero y el volumen mayor que cero.');
+    mensaje('seriada', null);
+    $('col-conc').hidden = Number.isNaN(conc);
+    const cuerpo = $('filas-seriada');
+    cuerpo.replaceChildren();
+    const celdaDil = (n: number) => (n >= 1e7 ? n.toExponential(1).replace('e+', ' × 10^') : formato(n, 0));
+    for (const f of filas) {
+      const tr = document.createElement('tr');
+      const textos = [String(f.tubo), `1:${celdaDil(f.acumulado)}`];
+      if (!Number.isNaN(conc)) textos.push(f.concentracion >= 1000 ? formato(f.concentracion, 0) : formato(f.concentracion, f.concentracion >= 1 ? 2 : 4));
+      textos.push(g(f.traspaso), g(f.diluyente));
+      for (const t of textos) {
+        const td = document.createElement('td');
+        td.textContent = t;
+        tr.append(td);
+      }
+      cuerpo.append(tr);
+    }
+    $('nota-seriada').textContent = `Prepara cada tubo con ${g(filas[0].diluyente)} de diluyente. Al tubo 1 agrega ${g(filas[0].traspaso)} del stock; luego pasa ${g(filas[0].traspaso)} de cada tubo al siguiente, mezclando bien (y con punta nueva) entre pasos. Descarta el excedente del último tubo.`;
+  }
+  seriada.addEventListener('input', calcularSeriada);
+  seriada.addEventListener('submit', (e) => e.preventDefault());
+  $('ejemplo-seriada').addEventListener('click', () => { poner(seriada, { factor: '2', tubos: '8', volFinal: '1', concInicial: '800' }); calcularSeriada(); });
+  calcularSeriada();
+
+  // --- Preparar una solución ---
+  const masa = document.getElementById('form-masa') as HTMLFormElement;
+  function calcularMasa() {
+    const tipo = campo(masa, 'tipo') as keyof typeof TIPOS_SOLUCION;
+    const t = TIPOS_SOLUCION[tipo];
+    $('campo-pm').hidden = !t.necesitaPm;
+    const conc = numero(campo(masa, 'conc'));
+    const volMl = numero(campo(masa, 'volMl'));
+    const pm = numero(campo(masa, 'pm'));
+    if (Number.isNaN(conc) || Number.isNaN(volMl)) return mensaje('masa', 'Ingresa la concentración y el volumen.');
+    if (t.necesitaPm && Number.isNaN(pm)) return mensaje('masa', 'Ingresa el peso molecular.');
+    const cantidad = cantidadSoluto({ tipo, conc, volMl, pm });
+    if (Number.isNaN(cantidad)) return mensaje('masa', 'Los valores deben ser mayores que cero.');
+    mensaje('masa', null);
+    const enMg = t.unidad === 'g' && cantidad < 1;
+    const texto = enMg ? `${formato(cantidad * 1000, cantidad < 0.01 ? 2 : 1)} mg` : `${formato(cantidad, cantidad < 10 ? 3 : 2)} ${t.unidad}`;
+    $('etiqueta-masa').textContent = t.unidad === 'g' ? 'Soluto a pesar' : 'Soluto líquido a medir';
+    $('valor-masa').textContent = texto;
+    $('lectura-masa').textContent = t.unidad === 'g'
+      ? `Pesa ${texto}, disuélvelo en menos de ${formato(volMl, 0)} mL de disolvente y completa hasta ${formato(volMl, 0)} mL.`
+      : `Mide ${texto} de soluto y completa con disolvente hasta ${formato(volMl, 0)} mL.`;
+  }
+  masa.addEventListener('input', calcularMasa);
+  masa.addEventListener('submit', (e) => e.preventDefault());
+  $('ejemplo-masa').addEventListener('click', () => { poner(masa, { tipo: 'pv', conc: '0,9', volMl: '500', pm: '' }); calcularMasa(); });
+  calcularMasa();
+</script>

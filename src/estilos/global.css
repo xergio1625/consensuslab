@@ -578,3 +578,6 @@ img, svg { max-width: 100%; }
 .calc-seg-5 { background: var(--c-texto-suave); }
 .calc-muestra { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 8px; vertical-align: -1px; }
 .calc-tabla td:not(:first-child), .calc-tabla th:not(:first-child) { text-align: right; white-space: nowrap; }
+.calc-bloque { margin-top: 28px; scroll-margin-top: 80px; }
+.calc-bloque > h2 { font-size: 1.2rem; margin-bottom: 10px; }
+.calc-lectura:empty { display: none; }
