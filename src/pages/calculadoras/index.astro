@@ -1,37 +1,45 @@
 ---
 // Índice de calculadoras de calidad.
 import Base from '../../plantillas/Base.astro';
-import { CALCULADORAS } from '../../lib/calculadoras';
+import { CALCULADORAS, FAMILIAS } from '../../lib/calculadoras';
 import { url } from '../../lib/rutas';
 ---
 
 <Base
-  titulo="Calculadoras de control de calidad para laboratorio clínico"
+  titulo="Calculadoras para laboratorio clínico: costos, rendimiento y control de calidad"
   seccion="calculadoras"
-  descripcion="Calculadoras gratuitas de control de calidad para laboratorio clínico: estadística del control, error total, sigma, sesgo, SDI y error total permitido."
+  descripcion="Calculadoras gratuitas para laboratorio clínico: costo por determinación, rendimiento de reactivos, estadística del control, error total, sigma, sesgo y SDI."
 >
   <div class="contenedor seccion">
-    <h1>Calculadoras de calidad</h1>
+    <h1>Calculadoras</h1>
     <p class="texto-suave intro-prompts">
-      Para el día a día del control de calidad: establecer los límites de un control, saber cuánto error total tiene un
-      método, elegir las reglas de Westgard o fijar el error total permitido. Gratuitas, sin registrarte, y el cálculo
-      ocurre en tu navegador.
+      Para decidir con números: cuánto cuesta cada examen, cuánto rinde un reactivo, qué límites tiene un control o
+      cuánto error total tiene un método. Gratuitas, sin registrarte, y el cálculo ocurre en tu navegador.
     </p>
-    <div class="rejilla">
-      {
-        CALCULADORAS.map((c) => (
-          <article class="tarjeta">
-            <h3>
-              <a href={url(`calculadoras/${c.id}/`)}>{c.titulo}</a>
-            </h3>
-            <p>{c.resumen}</p>
-          </article>
-        ))
-      }
-    </div>
+    <nav class="calc-familias" aria-label="Familias de calculadoras">
+      {FAMILIAS.map((f) => <a href={`#${f.id}`}>{f.titulo}</a>)}
+    </nav>
+    {
+      FAMILIAS.map((f) => (
+        <section class="calc-familia" id={f.id}>
+          <h2>{f.titulo}</h2>
+          <p class="texto-suave">{f.descripcion}</p>
+          <div class="rejilla">
+            {CALCULADORAS.filter((c) => c.familia === f.id).map((c) => (
+              <article class="tarjeta">
+                <h3>
+                  <a href={url(`calculadoras/${c.id}/`)}>{c.titulo}</a>
+                </h3>
+                <p>{c.resumen}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+      ))
+    }
     <p class="texto-suave nota-opinion">
-      Las calculadoras son herramientas de apoyo: los criterios de aceptación los define el plan de calidad de tu
-      laboratorio.
+      Las calculadoras son herramientas de apoyo: los criterios de aceptación y los costos que cuentan los define el
+      plan de calidad y la gestión de tu laboratorio.
     </p>
   </div>
 </Base>

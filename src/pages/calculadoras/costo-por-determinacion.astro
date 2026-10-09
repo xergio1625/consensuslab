@@ -1,0 +1,291 @@
+---
+import PaginaCalculadora from '../../componentes/PaginaCalculadora.astro';
+import { url } from '../../lib/rutas';
+---
+
+<PaginaCalculadora id="costo-por-determinacion">
+  <form class="calc" id="calc" novalidate>
+    <p class="calc-ayuda">
+      Usa los montos en la moneda que prefieras (por ejemplo, pesos chilenos), siempre la misma en todos los campos.
+      <button type="button" class="boton boton-secundario calc-ejemplo" data-ejemplo>Cargar un ejemplo</button>
+    </p>
+
+    <fieldset class="calc-grupo">
+      <legend>Reactivo</legend>
+      <div class="calc-campos">
+        <label class="calc-campo">
+          <span>Precio del kit</span>
+          <input class="campo" name="precioKit" inputmode="decimal" placeholder="240000" />
+          <small>Precio neto por caja o kit, el que realmente pagas.</small>
+        </label>
+        <label class="calc-campo">
+          <span>Determinaciones declaradas por kit</span>
+          <input class="campo" name="deterKit" inputmode="decimal" placeholder="500" />
+          <small>Las que indica el fabricante en el inserto.</small>
+        </label>
+        <label class="calc-campo">
+          <span>Pérdidas por kit <em class="opcional">(opcional)</em></span>
+          <input class="campo" name="perdidaKit" inputmode="decimal" placeholder="20" />
+          <small>Cebado, volumen muerto, purgas y lavados.</small>
+        </label>
+      </div>
+    </fieldset>
+
+    <fieldset class="calc-grupo">
+      <legend>Producción mensual</legend>
+      <div class="calc-campos">
+        <label class="calc-campo">
+          <span>Muestras al mes</span>
+          <input class="campo" name="muestras" inputmode="decimal" placeholder="800" />
+          <small>Resultados que informas, sin contar repeticiones ni controles.</small>
+        </label>
+        <label class="calc-campo">
+          <span>Repeticiones <em class="opcional">(opcional)</em></span>
+          <span class="calc-entrada"><input class="campo" name="repeticionPct" inputmode="decimal" placeholder="5" /><em>%</em></span>
+          <small>Porcentaje de muestras que se procesa dos veces.</small>
+        </label>
+        <label class="calc-campo">
+          <span>Corridas de control al mes <em class="opcional">(opcional)</em></span>
+          <input class="campo" name="corridasControl" inputmode="decimal" placeholder="30" />
+        </label>
+        <label class="calc-campo">
+          <span>Niveles de control por corrida <em class="opcional">(opcional)</em></span>
+          <input class="campo" name="nivelesControl" inputmode="decimal" placeholder="2" />
+        </label>
+        <label class="calc-campo">
+          <span>Calibraciones al mes <em class="opcional">(opcional)</em></span>
+          <input class="campo" name="calibraciones" inputmode="decimal" placeholder="4" />
+        </label>
+        <label class="calc-campo">
+          <span>Réplicas por calibración <em class="opcional">(opcional)</em></span>
+          <input class="campo" name="replicadosCalib" inputmode="decimal" placeholder="2" />
+        </label>
+      </div>
+    </fieldset>
+
+    <fieldset class="calc-grupo">
+      <legend>Otros costos</legend>
+      <div class="calc-campos">
+        <label class="calc-campo">
+          <span>Material de control al mes <em class="opcional">(opcional)</em></span>
+          <input class="campo" name="costoControlMes" inputmode="decimal" placeholder="40000" />
+        </label>
+        <label class="calc-campo">
+          <span>Calibrador al mes <em class="opcional">(opcional)</em></span>
+          <input class="campo" name="costoCalibradorMes" inputmode="decimal" placeholder="20000" />
+        </label>
+        <label class="calc-campo">
+          <span>Insumos por determinación <em class="opcional">(opcional)</em></span>
+          <input class="campo" name="insumoPorDeterminacion" inputmode="decimal" placeholder="10" />
+          <small>Puntas, cubetas, tubos y otros consumibles.</small>
+        </label>
+        <label class="calc-campo">
+          <span>Minutos de personal por muestra <em class="opcional">(opcional)</em></span>
+          <input class="campo" name="minutosPorMuestra" inputmode="decimal" placeholder="3" />
+        </label>
+        <label class="calc-campo">
+          <span>Costo de una hora de personal <em class="opcional">(opcional)</em></span>
+          <input class="campo" name="costoHora" inputmode="decimal" placeholder="6000" />
+        </label>
+        <label class="calc-campo">
+          <span>Costo fijo mensual <em class="opcional">(opcional)</em></span>
+          <input class="campo" name="costoFijoMes" inputmode="decimal" placeholder="100000" />
+          <small>Comodato, mantención, arriendo del equipo.</small>
+        </label>
+        <label class="calc-campo">
+          <span>Arancel o precio de venta <em class="opcional">(opcional)</em></span>
+          <input class="campo" name="arancel" inputmode="decimal" placeholder="1500" />
+          <small>Para ver el margen y el punto de equilibrio.</small>
+        </label>
+      </div>
+    </fieldset>
+  </form>
+
+  <section class="calc-resultado" aria-live="polite">
+    <p class="calc-mensaje" data-mensaje>Ingresa el precio del kit, las determinaciones por kit y las muestras al mes.</p>
+    <div data-resultado hidden>
+      <div class="calc-cifras">
+        <div><span>Costo por determinación</span><strong data-costo></strong><small data-costo-nota></small></div>
+        <div data-caja-margen><span>Margen por determinación</span><strong data-margen></strong><small data-margen-nota></small></div>
+        <div><span>Gasto total al mes</span><strong data-total></strong><small data-total-nota></small></div>
+      </div>
+      <p class="calc-lectura" data-lectura></p>
+
+      <h2 class="calc-subtitulo">De qué se compone el costo</h2>
+      <div class="calc-barra" role="img" data-barra aria-label="Composición del costo por determinación"></div>
+      <div class="calc-tabla-envoltura">
+        <table class="calc-tabla">
+          <thead>
+            <tr><th>Componente</th><th>Por determinación</th><th>Al mes</th><th>Parte</th></tr>
+          </thead>
+          <tbody data-filas></tbody>
+        </table>
+      </div>
+      <p class="calc-nota" data-equilibrio hidden></p>
+    </div>
+  </section>
+
+  <div slot="explicacion">
+    <h2>Cómo se calcula</h2>
+    <ul>
+      <li>
+        <strong>Reactivo</strong>: los kits que consumes en el mes (muestras, repeticiones, controles y calibraciones,
+        sobre las determinaciones útiles de cada kit) por su precio. Para ver cuánto rinde de verdad el kit, usa
+        <a href={url('calculadoras/rendimiento-de-reactivos/')}>Rendimiento de reactivos</a>.
+      </li>
+      <li><strong>Insumos</strong>: lo que gastas por cada determinación procesada, incluidos controles y calibradores.</li>
+      <li><strong>Personal</strong>: muestras × minutos por muestra × costo de la hora de personal.</li>
+      <li><strong>Costo fijo</strong>: lo que pagas al mes aunque no proceses nada.</li>
+      <li><strong>Costo por determinación</strong> = gasto total del mes / muestras informadas al mes.</li>
+    </ul>
+    <h2>Cómo leer el resultado</h2>
+    <ul>
+      <li>
+        <strong>Margen</strong> = arancel − costo por determinación. Si es negativo, ese examen te cuesta más de lo que
+        cobras.
+      </li>
+      <li>
+        <strong>Punto de equilibrio</strong>: las determinaciones al mes que se necesitan para que el margen sobre el
+        costo variable cubra el costo fijo. Con menos volumen, el examen pierde.
+      </li>
+    </ul>
+    <p>
+      Un costo bajo por determinación con poco volumen puede esconder un costo fijo alto: revisa también el equilibrio.
+      El cálculo no incluye arriendo del local, administración ni depreciación, salvo que los pongas en el costo fijo.
+    </p>
+  </div>
+</PaginaCalculadora>
+
+<script>
+  import { formato, numero } from '../../lib/calidad.js';
+  import { costoDeterminacion } from '../../lib/costos.js';
+
+  const form = document.getElementById('calc') as HTMLFormElement;
+  const $ = (s: string) => document.querySelector(`[data-${s}]`) as HTMLElement;
+  const ejemplo: Record<string, string> = {
+    precioKit: '240000', deterKit: '500', perdidaKit: '20', muestras: '800', repeticionPct: '5',
+    corridasControl: '30', nivelesControl: '2', calibraciones: '4', replicadosCalib: '2',
+    costoControlMes: '40000', costoCalibradorMes: '20000', insumoPorDeterminacion: '10',
+    minutosPorMuestra: '3', costoHora: '6000', costoFijoMes: '100000', arancel: '1500',
+  };
+  const partes = [
+    { id: 'reactivo', texto: 'Reactivo' },
+    { id: 'control', texto: 'Material de control' },
+    { id: 'calibrador', texto: 'Calibrador' },
+    { id: 'insumos', texto: 'Insumos' },
+    { id: 'personal', texto: 'Personal' },
+    { id: 'fijo', texto: 'Costo fijo' },
+  ] as const;
+  const dinero = (v: number, d = 0) => '$' + formato(v, d);
+  const campo = (n: string) => (form.elements.namedItem(n) as HTMLInputElement).value;
+
+  /** Campo opcional: vacío vale `porDefecto`; escrito pero inválido, NaN. */
+  function leer(nombre: string, porDefecto = 0) {
+    return campo(nombre).trim() === '' ? porDefecto : numero(campo(nombre));
+  }
+
+  function mostrarMensaje(texto: string) {
+    $('mensaje').textContent = texto;
+    $('mensaje').hidden = false;
+    $('resultado').hidden = true;
+  }
+
+  function calcular() {
+    const precioKit = numero(campo('precioKit'));
+    const deterKit = numero(campo('deterKit'));
+    const muestras = numero(campo('muestras'));
+    if ([precioKit, deterKit, muestras].some(Number.isNaN)) {
+      return mostrarMensaje('Ingresa el precio del kit, las determinaciones por kit y las muestras al mes.');
+    }
+    const opcionales = {
+      perdidaKit: leer('perdidaKit'), repeticionPct: leer('repeticionPct'), corridasControl: leer('corridasControl'),
+      nivelesControl: leer('nivelesControl', 1), calibraciones: leer('calibraciones'), replicadosCalib: leer('replicadosCalib', 1),
+      costoControlMes: leer('costoControlMes'), costoCalibradorMes: leer('costoCalibradorMes'),
+      insumoPorDeterminacion: leer('insumoPorDeterminacion'), minutosPorMuestra: leer('minutosPorMuestra'),
+      costoHora: leer('costoHora'), costoFijoMes: leer('costoFijoMes'), arancel: leer('arancel', NaN),
+    };
+    if (Object.entries(opcionales).some(([k, v]) => Number.isNaN(v) && k !== 'arancel')) {
+      return mostrarMensaje('Revisa los campos opcionales: hay algún valor que no es un número.');
+    }
+    if (campo('arancel').trim() !== '' && Number.isNaN(opcionales.arancel)) {
+      return mostrarMensaje('El arancel no es un número.');
+    }
+    if ([precioKit, deterKit, muestras].some((v) => v <= 0) || Object.values(opcionales).some((v) => v < 0)) {
+      return mostrarMensaje('Los valores deben ser positivos.');
+    }
+    const c = costoDeterminacion({ precioKit, deterKit, muestras, ...opcionales });
+    if (!c) return mostrarMensaje('Las pérdidas por kit no pueden ser iguales o mayores que las determinaciones del kit.');
+
+    $('mensaje').hidden = true;
+    $('resultado').hidden = false;
+    $('costo').textContent = dinero(c.costo);
+    $('costo-nota').textContent = `Variable: ${dinero(c.variable)}`;
+    $('total').textContent = dinero(c.total);
+    $('total-nota').textContent = `${formato(c.rendimiento.kitsMes, 1)} kits · ${formato(muestras, 0)} muestras`;
+
+    const conArancel = Number.isFinite(c.arancel);
+    $('caja-margen').hidden = !conArancel;
+    const lectura = $('lectura');
+    lectura.hidden = !conArancel;
+    if (conArancel) {
+      $('margen').textContent = dinero(c.margen);
+      $('margen-nota').textContent = `${formato(c.margenPct, 0)} % del arancel`;
+      const nivel = c.margen < 0 ? 'error' : c.margenPct < 15 ? 'advertencia' : 'ok';
+      $('margen-nota').dataset.nivel = nivel;
+      lectura.dataset.nivel = nivel;
+      lectura.textContent =
+        c.margen < 0
+          ? `Con un arancel de ${dinero(c.arancel)}, pierdes ${dinero(-c.margen)} por determinación: ${dinero(-c.resultadoMes)} al mes.`
+          : `Con un arancel de ${dinero(c.arancel)}, ganas ${dinero(c.margen)} por determinación: ${dinero(c.resultadoMes)} al mes.`;
+    }
+
+    const barra = $('barra');
+    barra.replaceChildren();
+    const filas = $('filas');
+    filas.replaceChildren();
+    partes.forEach((p, i) => {
+      const monto = c.mensual[p.id];
+      const pct = (monto / c.total) * 100;
+      if (monto > 0) {
+        const seg = document.createElement('span');
+        seg.className = `calc-seg calc-seg-${i}`;
+        seg.style.width = `${pct}%`;
+        seg.title = `${p.texto}: ${formato(pct, 0)} %`;
+        barra.append(seg);
+      }
+      const tr = document.createElement('tr');
+      const nombre = document.createElement('td');
+      nombre.innerHTML = `<i class="calc-muestra calc-seg-${i}" aria-hidden="true"></i>`;
+      nombre.append(p.texto);
+      const celdas = [dinero(c.porDeterminacion[p.id], 1), dinero(monto), `${formato(pct, 0)} %`].map((t) => {
+        const td = document.createElement('td');
+        td.textContent = t;
+        return td;
+      });
+      tr.append(nombre, ...celdas);
+      filas.append(tr);
+    });
+    barra.setAttribute(
+      'aria-label',
+      'Composición del costo: ' + partes.filter((p) => c.mensual[p.id] > 0).map((p) => `${p.texto} ${formato((c.mensual[p.id] / c.total) * 100, 0)} %`).join(', '),
+    );
+
+    const eq = $('equilibrio');
+    if (conArancel && c.mensual.fijo > 0) {
+      eq.hidden = false;
+      eq.textContent = Number.isFinite(c.equilibrio)
+        ? `Punto de equilibrio: ${formato(Math.ceil(c.equilibrio), 0)} determinaciones al mes cubren el costo fijo (hoy procesas ${formato(muestras, 0)}).`
+        : 'El arancel no cubre ni siquiera el costo variable: no existe un volumen que equilibre el costo fijo.';
+    } else {
+      eq.hidden = true;
+    }
+  }
+
+  form.addEventListener('input', calcular);
+  form.addEventListener('submit', (e) => e.preventDefault());
+  $('ejemplo').addEventListener('click', () => {
+    for (const [k, v] of Object.entries(ejemplo)) (form.elements.namedItem(k) as HTMLInputElement).value = v;
+    calcular();
+  });
+  calcular();
+</script>

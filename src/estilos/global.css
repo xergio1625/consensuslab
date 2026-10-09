@@ -552,3 +552,29 @@ img, svg { max-width: 100%; }
 .caja-autor { margin: 32px 0 8px; padding: 16px 18px; border: 1px solid var(--c-borde); border-radius: var(--radio); background: var(--c-panel-alt); font-size: .95rem; line-height: 1.6; }
 .caja-autor p { margin: 0 0 8px; }
 .caja-autor p:last-child { margin-bottom: 0; }
+
+/* Calculadoras: familias, grupos de campos, lectura y barra de composición */
+.calc-familias { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 8px; }
+.calc-familias a { padding: 6px 14px; border: 1px solid var(--c-borde); border-radius: 999px; background: var(--c-panel); font-weight: 600; font-size: .92rem; text-decoration: none; }
+.calc-familias a:hover { border-color: var(--c-enlace); }
+.calc-familia { margin-top: 32px; scroll-margin-top: 80px; }
+.calc-familia h2 { margin-bottom: 4px; }
+.calc-familia > p { margin: 0 0 16px; }
+.calc-grupo { border: 1px solid var(--c-borde); border-radius: var(--radio); padding: 14px 16px 18px; margin: 0 0 16px; }
+.calc-grupo legend { font-weight: 650; padding: 0 8px; }
+.calc-ejemplo { margin-left: 8px; padding: 4px 12px; font-size: .88rem; }
+.calc-subtitulo { font-size: 1.05rem; margin: 20px 0 10px; }
+.calc-lectura { margin: 0 0 6px; padding: 10px 14px; border-radius: var(--radio-s); border-left: 4px solid var(--c-borde); background: var(--c-panel-alt); }
+.calc-lectura[data-nivel="ok"] { background: var(--c-ok-fondo); border-color: var(--c-ok); }
+.calc-lectura[data-nivel="advertencia"] { background: var(--c-prep-fondo); border-color: var(--c-prep); }
+.calc-lectura[data-nivel="error"] { background: var(--c-error-fondo); border-color: var(--c-error); }
+.calc-barra { display: flex; height: 22px; border-radius: 999px; overflow: hidden; background: var(--c-panel-alt); margin-bottom: 12px; }
+.calc-seg { display: block; min-width: 2px; }
+.calc-seg-0 { background: var(--c-boton); }
+.calc-seg-1 { background: var(--c-foco); }
+.calc-seg-2 { background: var(--c-ok); }
+.calc-seg-3 { background: var(--c-prep); }
+.calc-seg-4 { background: var(--c-info); opacity: .55; }
+.calc-seg-5 { background: var(--c-texto-suave); }
+.calc-muestra { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 8px; vertical-align: -1px; }
+.calc-tabla td:not(:first-child), .calc-tabla th:not(:first-child) { text-align: right; white-space: nowrap; }

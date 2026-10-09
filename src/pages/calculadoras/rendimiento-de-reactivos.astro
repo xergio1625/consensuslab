@@ -1,0 +1,204 @@
+---
+import PaginaCalculadora from '../../componentes/PaginaCalculadora.astro';
+import { url } from '../../lib/rutas';
+---
+
+<PaginaCalculadora id="rendimiento-de-reactivos">
+  <form class="calc" id="calc" novalidate>
+    <p class="calc-ayuda">
+      Lo que declara el inserto no es lo que rinde en tu laboratorio.
+      <button type="button" class="boton boton-secundario calc-ejemplo" data-ejemplo>Cargar un ejemplo</button>
+    </p>
+    <div class="calc-campos">
+      <label class="calc-campo">
+        <span>Determinaciones declaradas por kit</span>
+        <input class="campo" name="deterKit" inputmode="decimal" placeholder="500" />
+        <small>Las que indica el fabricante en el inserto.</small>
+      </label>
+      <label class="calc-campo">
+        <span>Pérdidas por kit <em class="opcional">(opcional)</em></span>
+        <input class="campo" name="perdidaKit" inputmode="decimal" placeholder="20" />
+        <small>Cebado, volumen muerto, purgas y lavados.</small>
+      </label>
+      <label class="calc-campo">
+        <span>Muestras al mes</span>
+        <input class="campo" name="muestras" inputmode="decimal" placeholder="800" />
+        <small>Resultados que informas, sin contar repeticiones ni controles.</small>
+      </label>
+      <label class="calc-campo">
+        <span>Repeticiones <em class="opcional">(opcional)</em></span>
+        <span class="calc-entrada"><input class="campo" name="repeticionPct" inputmode="decimal" placeholder="5" /><em>%</em></span>
+      </label>
+      <label class="calc-campo">
+        <span>Corridas de control al mes <em class="opcional">(opcional)</em></span>
+        <input class="campo" name="corridasControl" inputmode="decimal" placeholder="30" />
+      </label>
+      <label class="calc-campo">
+        <span>Niveles de control por corrida <em class="opcional">(opcional)</em></span>
+        <input class="campo" name="nivelesControl" inputmode="decimal" placeholder="2" />
+      </label>
+      <label class="calc-campo">
+        <span>Calibraciones al mes <em class="opcional">(opcional)</em></span>
+        <input class="campo" name="calibraciones" inputmode="decimal" placeholder="4" />
+      </label>
+      <label class="calc-campo">
+        <span>Réplicas por calibración <em class="opcional">(opcional)</em></span>
+        <input class="campo" name="replicadosCalib" inputmode="decimal" placeholder="2" />
+      </label>
+    </div>
+  </form>
+
+  <section class="calc-resultado" aria-live="polite">
+    <p class="calc-mensaje" data-mensaje>Ingresa las determinaciones por kit y las muestras al mes.</p>
+    <div data-resultado hidden>
+      <div class="calc-cifras">
+        <div><span>Rendimiento real</span><strong data-rend></strong><small data-rend-nota></small></div>
+        <div><span>Resultados por kit</span><strong data-porkit></strong><small data-porkit-nota></small></div>
+        <div><span>Kits al mes</span><strong data-kits></strong><small data-kits-nota></small></div>
+        <div><span>Duración de un kit</span><strong data-dias></strong><small>con tu ritmo actual</small></div>
+      </div>
+      <p class="calc-lectura" data-lectura></p>
+
+      <h2 class="calc-subtitulo">En qué se va cada kit</h2>
+      <div class="calc-barra" role="img" data-barra aria-label="Reparto de las determinaciones de un kit"></div>
+      <div class="calc-tabla-envoltura">
+        <table class="calc-tabla">
+          <thead>
+            <tr><th>Destino</th><th>Determinaciones por kit</th><th>Parte</th></tr>
+          </thead>
+          <tbody data-filas></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <div slot="explicacion">
+    <h2>Cómo se calcula</h2>
+    <ul>
+      <li>
+        <strong>Consumo mensual</strong> = muestras + repeticiones + controles (corridas × niveles) + calibraciones
+        (calibraciones × réplicas).
+      </li>
+      <li><strong>Determinaciones útiles por kit</strong> = declaradas − pérdidas por kit.</li>
+      <li><strong>Kits al mes</strong> = consumo mensual / determinaciones útiles.</li>
+      <li><strong>Resultados por kit</strong> = muestras / kits al mes.</li>
+      <li><strong>Rendimiento real</strong> = resultados por kit / determinaciones declaradas × 100.</li>
+    </ul>
+    <h2>Cómo usarlo</h2>
+    <ul>
+      <li>
+        Compara el rendimiento real con lo que declara el fabricante al cotizar: dos kits con el mismo precio pueden
+        costar distinto por resultado.
+      </li>
+      <li>
+        Con poco volumen, los controles y las calibraciones pesan más: un kit grande puede vencerse antes de usarse.
+        Revisa la duración del kit contra su vencimiento.
+      </li>
+      <li>
+        Con el rendimiento y el precio del kit, calcula lo que cuesta cada resultado en
+        <a href={url('calculadoras/costo-por-determinacion/')}>Costo por determinación</a>.
+      </li>
+    </ul>
+    <p>
+      Cuenta el mes típico, no el mejor: si el volumen cambia mucho entre meses, calcula con el promedio de los últimos
+      tres. Los kits se compran enteros, así que el consumo real redondea hacia arriba.
+    </p>
+  </div>
+</PaginaCalculadora>
+
+<script>
+  import { formato, numero } from '../../lib/calidad.js';
+  import { rendimientoReactivo } from '../../lib/costos.js';
+
+  const form = document.getElementById('calc') as HTMLFormElement;
+  const $ = (s: string) => document.querySelector(`[data-${s}]`) as HTMLElement;
+  const ejemplo: Record<string, string> = {
+    deterKit: '500', perdidaKit: '20', muestras: '800', repeticionPct: '5',
+    corridasControl: '30', nivelesControl: '2', calibraciones: '4', replicadosCalib: '2',
+  };
+  const partes = [
+    { id: 'resultados', texto: 'Resultados informados' },
+    { id: 'repeticiones', texto: 'Repeticiones' },
+    { id: 'controles', texto: 'Controles' },
+    { id: 'calibraciones', texto: 'Calibraciones' },
+    { id: 'perdidas', texto: 'Pérdidas (cebado, volumen muerto)' },
+  ] as const;
+  const campo = (n: string) => (form.elements.namedItem(n) as HTMLInputElement).value;
+  function leer(nombre: string, porDefecto = 0) {
+    return campo(nombre).trim() === '' ? porDefecto : numero(campo(nombre));
+  }
+  function mostrarMensaje(texto: string) {
+    $('mensaje').textContent = texto;
+    $('mensaje').hidden = false;
+    $('resultado').hidden = true;
+  }
+
+  function calcular() {
+    const deterKit = numero(campo('deterKit'));
+    const muestras = numero(campo('muestras'));
+    if ([deterKit, muestras].some(Number.isNaN)) return mostrarMensaje('Ingresa las determinaciones por kit y las muestras al mes.');
+    const opc = {
+      perdidaKit: leer('perdidaKit'), repeticionPct: leer('repeticionPct'), corridasControl: leer('corridasControl'),
+      nivelesControl: leer('nivelesControl', 1), calibraciones: leer('calibraciones'), replicadosCalib: leer('replicadosCalib', 1),
+    };
+    if (Object.values(opc).some(Number.isNaN)) return mostrarMensaje('Revisa los campos opcionales: hay algún valor que no es un número.');
+    if (deterKit <= 0 || muestras <= 0 || Object.values(opc).some((v) => v < 0)) return mostrarMensaje('Los valores deben ser positivos.');
+    const r = rendimientoReactivo({ deterKit, muestras, ...opc });
+    if (!r) return mostrarMensaje('Las pérdidas por kit no pueden ser iguales o mayores que las determinaciones del kit.');
+
+    $('mensaje').hidden = true;
+    $('resultado').hidden = false;
+    $('rend').textContent = `${formato(r.rendimiento, 1)} %`;
+    $('rend-nota').textContent = `de ${formato(deterKit, 0)} declaradas`;
+    const nivel = r.rendimiento >= 85 ? 'ok' : r.rendimiento >= 70 ? 'advertencia' : 'error';
+    $('rend-nota').dataset.nivel = nivel;
+    $('porkit').textContent = formato(r.reportablesPorKit, 0);
+    $('porkit-nota').textContent = `en vez de ${formato(deterKit, 0)}`;
+    $('kits').textContent = formato(r.kitsMes, 1);
+    $('kits-nota').textContent = `Compra ${r.kitsAComprar} ${r.kitsAComprar === 1 ? 'kit' : 'kits'} enteros`;
+    $('dias').textContent = `${formato(r.diasPorKit, 0)} días`;
+
+    const perdido = deterKit - r.reportablesPorKit;
+    const lectura = $('lectura');
+    lectura.dataset.nivel = nivel;
+    lectura.textContent = `De cada kit de ${formato(deterKit, 0)} determinaciones, ${formato(r.reportablesPorKit, 0)} terminan en resultados informados: ${formato(perdido, 0)} se van en repeticiones, controles, calibraciones y pérdidas.`;
+
+    const barra = $('barra');
+    barra.replaceChildren();
+    const filas = $('filas');
+    filas.replaceChildren();
+    partes.forEach((p, i) => {
+      const pct = r.reparto[p.id];
+      if (pct > 0) {
+        const seg = document.createElement('span');
+        seg.className = `calc-seg calc-seg-${i}`;
+        seg.style.width = `${pct}%`;
+        seg.title = `${p.texto}: ${formato(pct, 1)} %`;
+        barra.append(seg);
+      }
+      const tr = document.createElement('tr');
+      const nombre = document.createElement('td');
+      nombre.innerHTML = `<i class="calc-muestra calc-seg-${i}" aria-hidden="true"></i>`;
+      nombre.append(p.texto);
+      const celdas = [formato((pct / 100) * deterKit, 0), `${formato(pct, 1)} %`].map((t) => {
+        const td = document.createElement('td');
+        td.textContent = t;
+        return td;
+      });
+      tr.append(nombre, ...celdas);
+      filas.append(tr);
+    });
+    barra.setAttribute(
+      'aria-label',
+      'Reparto del kit: ' + partes.filter((p) => r.reparto[p.id] > 0).map((p) => `${p.texto} ${formato(r.reparto[p.id], 1)} %`).join(', '),
+    );
+  }
+
+  form.addEventListener('input', calcular);
+  form.addEventListener('submit', (e) => e.preventDefault());
+  $('ejemplo').addEventListener('click', () => {
+    for (const [k, v] of Object.entries(ejemplo)) (form.elements.namedItem(k) as HTMLInputElement).value = v;
+    calcular();
+  });
+  calcular();
+</script>

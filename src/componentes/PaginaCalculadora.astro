@@ -9,7 +9,9 @@ interface Props {
   id: IdCalculadora;
 }
 const c = calculadora(Astro.props.id);
-const otras = CALCULADORAS.filter((o) => o.id !== c.id);
+const otras = CALCULADORAS.filter((o) => o.id !== c.id).sort(
+  (a, b) => Number(b.familia === c.familia) - Number(a.familia === c.familia),
+);
 ---
 
 <Base
@@ -58,14 +60,27 @@ const otras = CALCULADORAS.filter((o) => o.id !== c.id);
       </article>
 
       <aside class="ficha-lateral" aria-label="Más calculadoras">
-        <section class="caja caja-app">
-          <h2>Automático en Consensus QC</h2>
-          <p>
-            Consensus QC calcula cada mes el CV, el sesgo, el error total y la sigma de cada analizador con tus controles
-            y tu control externo, y los compara con el plan de calidad.
-          </p>
-          <p><a class="boton boton-primario boton-ancho" href={url('consensus-qc/')}>Conocer Consensus QC</a></p>
-        </section>
+        {
+          c.familia === 'costos' ? (
+            <section class="caja caja-app">
+              <h2>Del cálculo al costeo continuo</h2>
+              <p>
+                La ficha Costeo por examen llevará este cálculo a tus compras y tu producción reales, mes a mes, para ver
+                qué exámenes pierden dinero.
+              </p>
+              <p><a class="boton boton-primario boton-ancho" href={url('herramientas/costeo-por-examen/')}>Ver la ficha</a></p>
+            </section>
+          ) : (
+            <section class="caja caja-app">
+              <h2>Automático en Consensus QC</h2>
+              <p>
+                Consensus QC calcula cada mes el CV, el sesgo, el error total y la sigma de cada analizador con tus controles
+                y tu control externo, y los compara con el plan de calidad.
+              </p>
+              <p><a class="boton boton-primario boton-ancho" href={url('consensus-qc/')}>Conocer Consensus QC</a></p>
+            </section>
+          )
+        }
         <section class="caja">
           <h2>Otras calculadoras</h2>
           <ul class="lista-simple">
