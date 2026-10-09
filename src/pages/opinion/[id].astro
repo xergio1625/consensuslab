@@ -15,7 +15,9 @@ const { articulo } = Astro.props;
 const a = articulo.data;
 const { Content } = await render(articulo);
 const direccion = new URL(Astro.url.pathname, Astro.site).href;
-const otros = (await obtenerOpinion()).filter((x) => x.id !== articulo.id).slice(0, 4);
+const todos = await obtenerOpinion();
+const deLaSerie = a.serie ? todos.filter((x) => x.data.serie === a.serie).sort((x, y) => x.data.fecha.getTime() - y.data.fecha.getTime()) : [];
+const otros = todos.filter((x) => x.id !== articulo.id && !deLaSerie.includes(x)).slice(0, 4);
 const palabras = (articulo.body ?? '').split(/\s+/).filter(Boolean).length;
 const minutos = Math.max(1, Math.round(palabras / 220));
 ---
@@ -53,6 +55,7 @@ const minutos = Math.max(1, Math.round(palabras / 220));
     </nav>
 
     <header class="ficha-cabeza">
+      {a.serie && <p class="antetitulo">Serie: {a.serie}</p>}
       <h1>{a.titulo}</h1>
       <div class="ficha-meta">
         <span>Sergio Inostroza</span>
@@ -81,8 +84,18 @@ const minutos = Math.max(1, Math.round(palabras / 220));
       </article>
 
       {
-        otros.length > 0 && (
+        (otros.length > 0 || deLaSerie.length > 1) && (
           <aside class="ficha-lateral">
+            {deLaSerie.length > 1 && (
+              <div class="caja">
+                <h2>Serie: {a.serie}</h2>
+                <ol class="lista-simple lista-serie">
+                  {deLaSerie.map((o) => (
+                    <li>{o.id === articulo.id ? <strong>{o.data.titulo}</strong> : <a href={url(`opinion/${o.id}/`)}>{o.data.titulo}</a>}</li>
+                  ))}
+                </ol>
+              </div>
+            )}
             <div class="caja">
               <h2>Otros artículos</h2>
               <ul class="lista-simple">

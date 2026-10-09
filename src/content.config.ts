@@ -122,6 +122,8 @@ const opinion = defineCollection({
     temas: z.array(z.string()).default([]),
     /** Imagen para compartir y de portada, dentro de public/ (p. ej. 'opinion/mi-articulo.jpg'). */
     imagen: z.string().optional(),
+    /** Nombre de la serie a la que pertenece (los artículos de una misma serie se enlazan entre sí). */
+    serie: z.string().optional(),
   }),
 });
 
