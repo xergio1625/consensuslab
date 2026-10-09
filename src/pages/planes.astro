@@ -1,6 +1,6 @@
 ---
-// Planes de suscripción. Sin montos públicos: la persona pide una cotización (llega a la app por doPost)
-// y la lista de precios vive solo en el repositorio privado de la app.
+// Planes de suscripción. Solo el plan Esencial muestra precio (decisión del 9-10-2026); los demás se cotizan
+// (llega a la app por doPost) y su lista de precios vive en el repositorio privado de la app.
 import Base from '../plantillas/Base.astro';
 import EspacioVideo from '../componentes/EspacioVideo.astro';
 import { VIDEOS } from '../lib/videos';
@@ -19,6 +19,7 @@ const planes = [
     nombre: 'Esencial',
     para: 'Laboratorios pequeños que quieren ordenar lo básico.',
     usuarios: 'Hasta 5 usuarios',
+    precio: { normal: '$199.900', fundador: '$119.940' },
     incluye: esencial.map((h) => h!.data.titulo),
   },
   {
@@ -99,6 +100,13 @@ const planes = [
               <h3>{p.nombre}</h3>
               <p class="plan-para">{p.para}</p>
               <p class="plan-usuarios">{p.usuarios}</p>
+              {p.precio && (
+                <p class="plan-precio">
+                  <span class="plan-precio-fundador">{p.precio.fundador}</span>
+                  <span class="plan-precio-nota">al año + IVA, precio fundador (40 % de descuento)</span>
+                  <span class="plan-precio-nota">Luego {p.precio.normal} al año + IVA</span>
+                </p>
+              )}
               <ul class="plan-incluye">
                 {p.incluye.map((x) => <li>{x}</li>)}
               </ul>

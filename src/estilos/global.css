@@ -775,3 +775,17 @@ img, svg { max-width: 100%; }
 .lj-reglas { display: grid; gap: 6px 18px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
 .lj-reglas label { display: flex; align-items: flex-start; gap: 8px; font-size: .92rem; }
 .lj-reglas input { margin-top: 4px; accent-color: var(--c-boton); }
+
+/* Formulario corto «Pedir demo» (componente PedirDemo) */
+.demo-franja { padding: 40px 0; background: var(--c-panel); border-block: 1px solid var(--c-borde); }
+.demo-franja-cuerpo { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: start; }
+.demo-texto h2 { margin-top: 0; }
+.form-demo { display: grid; gap: 12px; }
+.demo-nota { margin: 0; font-size: .85rem; }
+.demo-caja h2 { margin-top: 0; }
+@media (max-width: 760px) { .demo-franja-cuerpo { grid-template-columns: 1fr; } }
+
+/* Precio del plan Esencial */
+.plan-precio { margin: 0; display: grid; gap: 2px; }
+.plan-precio-fundador { font-size: 1.8rem; font-weight: 800; color: var(--marca-burdeo); line-height: 1.1; }
+.plan-precio-nota { font-size: .85rem; color: var(--c-texto-suave); }

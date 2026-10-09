@@ -4,6 +4,7 @@
 // Los filtros se reflejan en la dirección (?q=…&grupo=…&etiqueta=…) para poder compartirlos.
 import Base from '../../plantillas/Base.astro';
 import TarjetaHerramienta from '../../componentes/TarjetaHerramienta.astro';
+import PedirDemo from '../../componentes/PedirDemo.astro';
 import { obtenerCatalogo } from '../../lib/datos';
 import { ESTADOS, RELACION_CONSENSUS_QC, nombreEtiqueta } from '../../lib/rutas';
 
@@ -105,6 +106,7 @@ const etiquetas = [...new Set(catalogo.flatMap((c) => c.herramientas.flatMap((h)
       </div>
     </div>
   </div>
+  <PedirDemo />
 </Base>
 
 <script>

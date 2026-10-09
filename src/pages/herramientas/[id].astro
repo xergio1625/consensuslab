@@ -3,6 +3,7 @@
 import { getEntries, getEntry, render } from 'astro:content';
 import Base from '../../plantillas/Base.astro';
 import EspacioVideo from '../../componentes/EspacioVideo.astro';
+import PedirDemo from '../../componentes/PedirDemo.astro';
 import { obtenerHerramientas, obtenerPrompts } from '../../lib/datos';
 import {
   ESTADOS,
@@ -196,6 +197,8 @@ const siglas = { excel: 'XLS', sheets: 'GS', word: 'DOC', pdf: 'PDF', formulario
             </section>
           )
         }
+
+        <PedirDemo variante="caja" />
 
         <section class="caja">
           <h2>Consensus QC</h2>

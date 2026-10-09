@@ -2,6 +2,7 @@
 // Estructura común de una calculadora: migas, encabezado, aviso de privacidad, el formulario
 // (slot por defecto), la explicación (slot «explicacion») y el lateral con otras calculadoras.
 import Base from '../plantillas/Base.astro';
+import PedirDemo from './PedirDemo.astro';
 import { CALCULADORAS, calculadora, type IdCalculadora } from '../lib/calculadoras';
 import { migasLd, url } from '../lib/rutas';
 
@@ -90,6 +91,7 @@ const otras = CALCULADORAS.filter((o) => o.id !== c.id).sort(
             </section>
           ) : null
         }
+        <PedirDemo variante="caja" />
         <section class="caja">
           <h2>Otras calculadoras</h2>
           <ul class="lista-simple">

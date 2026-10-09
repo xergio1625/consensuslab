@@ -3,6 +3,7 @@
 // importa desde aquí (medium.com/p/import) y queda con «Originally published at…» y enlace canónico a esta URL.
 import { render } from 'astro:content';
 import Base from '../../plantillas/Base.astro';
+import PedirDemo from '../../componentes/PedirDemo.astro';
 import { enSitio, obtenerOpinion } from '../../lib/datos';
 import { formatoFecha, migasLd, url } from '../../lib/rutas';
 
@@ -110,6 +111,7 @@ const minutos = Math.max(1, Math.round(palabras / 220));
                 ))}
               </ul>
             </div>
+            <PedirDemo variante="caja" />
             <div class="caja">
               <h2>Herramientas gratuitas</h2>
               <p>Guías, demos y calculadoras para la gestión del laboratorio clínico.</p>

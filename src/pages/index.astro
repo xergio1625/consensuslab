@@ -4,6 +4,7 @@ import Base from '../plantillas/Base.astro';
 import TarjetaHerramienta from '../componentes/TarjetaHerramienta.astro';
 import TarjetaPrompt from '../componentes/TarjetaPrompt.astro';
 import EspacioVideo from '../componentes/EspacioVideo.astro';
+import PedirDemo from '../componentes/PedirDemo.astro';
 import { VIDEOS } from '../lib/videos';
 import { obtenerCatalogo, obtenerHerramientas, obtenerPrompts } from '../lib/datos';
 import { url } from '../lib/rutas';
@@ -236,6 +237,8 @@ const pasos = [
       </ol>
     </div>
   </section>
+
+  <PedirDemo />
 
   <section class="seccion">
     <div class="contenedor">
