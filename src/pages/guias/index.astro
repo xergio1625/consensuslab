@@ -1,0 +1,52 @@
+---
+// Sección Guías: textos de referencia para el laboratorio. Las que adaptan una obra ajena llevan su atribución.
+import Base from '../../plantillas/Base.astro';
+import { obtenerGuias } from '../../lib/datos';
+import { formatoFecha, url } from '../../lib/rutas';
+
+const guias = await obtenerGuias();
+---
+
+<Base
+  titulo="Guías para el laboratorio clínico"
+  seccion="guias"
+  descripcion="Guías en español sobre control de calidad y gestión del laboratorio clínico, con fuentes citadas y licencia clara."
+>
+  <div class="contenedor seccion">
+    <div class="seccion-cabeza">
+      <div>
+        <h1>Guías</h1>
+        <p class="texto-suave intro-prompts">
+          Textos de referencia para armar y mejorar procesos del laboratorio. Cuando una guía adapta una obra de acceso
+          abierto, ves arriba y al final quién la escribió, con qué licencia y qué se cambió.
+        </p>
+      </div>
+    </div>
+
+    {
+      guias.length > 0 ? (
+        <ol class="lista-articulos">
+          {guias.map((g) => (
+            <li>
+              <article class="tarjeta">
+                <div class="tarjeta-meta">
+                  <time datetime={(g.data.actualizado ?? g.data.fecha).toISOString().slice(0, 10)}>
+                    {g.data.actualizado ? 'Actualizada ' : ''}{formatoFecha(g.data.actualizado ?? g.data.fecha)}
+                  </time>
+                  {g.data.temas.length > 0 && <span>· {g.data.temas.join(' · ')}</span>}
+                </div>
+                <h2><a href={url(`guias/${g.id}/`)}>{g.data.titulo}</a></h2>
+                <p>{g.data.resumen}</p>
+                <div class="tarjeta-pie">
+                  <span class="texto-suave">Leer la guía →</span>
+                </div>
+              </article>
+            </li>
+          ))}
+        </ol>
+      ) : (
+        <p class="aviso aviso-info">Pronto publicaremos aquí las primeras guías.</p>
+      )
+    }
+  </div>
+</Base>

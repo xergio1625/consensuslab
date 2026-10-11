@@ -2,14 +2,19 @@
 titulo: "Guía para armar un plan de control interno de calidad"
 fecha: 2026-10-11
 resumen: "Qué debe definir un plan de control interno (materiales, frecuencia, niveles y reglas), cómo calcular sesgo, CV y sigma, qué hacer ante una alarma y cómo revisar el plan. Adaptación en español de una revisión de acceso abierto."
-temas: ["Control de calidad", "Guía"]
+temas: ["Control de calidad"]
+fuente:
+  titulo: "Internal Quality Controls in the Medical Laboratory: A Narrative Review of the Basic Principles of an Appropriate Quality Control Plan"
+  autores: "Lorenz Gruber, Artur Hausch y Thomas Mueller"
+  publicacion: "Diagnostics 2024, 14(19), 2223"
+  doi: "10.3390/diagnostics14192223"
+  enlaces:
+    - { texto: "Texto completo en PubMed Central (PMC11475633)", url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC11475633/" }
+    - { texto: "Registro en PubMed (PMID 39410627)", url: "https://pubmed.ncbi.nlm.nih.gov/39410627/" }
+  licencia: "CC BY 4.0"
+  licencia_url: "https://creativecommons.org/licenses/by/4.0/deed.es"
+  cambios: "Traducción y adaptación al español, condensación y reorganización de las secciones, redacción propia de los ejemplos y listas, escritura explícita de las fórmulas (que en el original son ecuaciones), tabla de reglas, lista de verificación final y enlaces a las herramientas de este sitio. Se omitieron los detalles de la regulación de cada país y las referencias bibliográficas; para ello consulta el texto original. Si encuentras una diferencia con el original, prevalece este último."
 ---
-
-> **Adaptación de una obra de acceso abierto.** Esta guía es una adaptación en español, resumida y reorganizada, de la revisión
-> *«Internal Quality Controls in the Medical Laboratory: A Narrative Review of the Basic Principles of an Appropriate Quality Control Plan»*
-> (*Diagnostics*, 2024; 14(19):2223), publicada bajo licencia [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.es).
-> Texto original: [doi.org/10.3390/diagnostics14192223](https://doi.org/10.3390/diagnostics14192223).
-> Los autores de la revisión no han revisado ni respaldado esta adaptación. Los cambios hechos están descritos al final.
 
 Casi todos los laboratorios miden controles todos los días. Mucho menos común es tener un **plan** que diga qué se mide, cuándo, con qué reglas y qué se hace cuando algo falla. Esta guía resume los elementos de ese plan según la literatura, y los aterriza con las calculadoras de ConsensusLab.
 
@@ -159,11 +164,5 @@ La revisión también advierte sobre dos críticas conocidas al enfoque clásico
 - [ ] Reglas de rechazo y de advertencia distinguidas; 1-2s como advertencia.
 - [ ] Procedimiento de alarma: vial nuevo, detener, corregir, repetir control, revisar retrospectivamente.
 - [ ] Revisión periódica del plan.
-
-## Atribución y cambios
-
-**Obra original:** Internal Quality Controls in the Medical Laboratory: A Narrative Review of the Basic Principles of an Appropriate Quality Control Plan. *Diagnostics* 2024, 14(19), 2223. [https://doi.org/10.3390/diagnostics14192223](https://doi.org/10.3390/diagnostics14192223). Disponible en [PubMed Central (PMC11475633)](https://pmc.ncbi.nlm.nih.gov/articles/PMC11475633/) y registrada en [PubMed (PMID 39410627)](https://pubmed.ncbi.nlm.nih.gov/39410627/). Licencia [Creative Commons Atribución 4.0 (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/deed.es).
-
-**Cambios realizados por ConsensusLab:** traducción y adaptación al español, condensación y reorganización de las secciones, redacción propia de los ejemplos y listas, escritura explícita de las fórmulas (que se presentan como ecuaciones en el original), tabla de reglas y lista de verificación final, y enlaces a las herramientas de este sitio. Se omitieron detalles de la regulación de cada país y de las referencias bibliográficas; para ello, consulta el texto original. Si encuentras una diferencia con el original, prevalece este último.
 
 Esta guía es material educativo y no reemplaza la normativa vigente ni el criterio de la jefatura del laboratorio.

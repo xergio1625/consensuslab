@@ -34,6 +34,12 @@ export async function obtenerOpinion() {
   return articulos.sort((a, b) => b.data.fecha.getTime() - a.data.fecha.getTime());
 }
 
+/** Guías, de la más reciente a la más antigua. */
+export async function obtenerGuias() {
+  const guias = await getCollection('guias');
+  return guias.sort((a, b) => (b.data.actualizado ?? b.data.fecha).getTime() - (a.data.actualizado ?? a.data.fecha).getTime());
+}
+
 /** Prompts de IA ordenados por categoría (en el orden de CATEGORIAS_PROMPT) y título. */
 export async function obtenerPrompts() {
   const orden = Object.keys(CATEGORIAS_PROMPT);

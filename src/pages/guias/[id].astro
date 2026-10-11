@@ -1,0 +1,140 @@
+---
+// Guía publicada en el sitio. Si adapta una obra ajena (campo `fuente`), muestra la atribución arriba y al final.
+import { render } from 'astro:content';
+import Base from '../../plantillas/Base.astro';
+import PedirDemo from '../../componentes/PedirDemo.astro';
+import { obtenerGuias } from '../../lib/datos';
+import { formatoFecha, migasLd, url } from '../../lib/rutas';
+
+export async function getStaticPaths() {
+  const guias = await obtenerGuias();
+  return guias.map((guia) => ({ params: { id: guia.id }, props: { guia } }));
+}
+
+const { guia } = Astro.props;
+const g = guia.data;
+const f = g.fuente;
+const { Content } = await render(guia);
+const direccion = new URL(Astro.url.pathname, Astro.site).href;
+const otras = (await obtenerGuias()).filter((x) => x.id !== guia.id).slice(0, 4);
+const palabras = (guia.body ?? '').split(/\s+/).filter(Boolean).length;
+const minutos = Math.max(1, Math.round(palabras / 220));
+const enlaceDoi = f?.doi ? `https://doi.org/${f.doi}` : undefined;
+---
+
+<Base
+  titulo={g.titulo}
+  seccion="guias"
+  descripcion={g.resumen}
+  datos={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      headline: g.titulo,
+      description: g.resumen,
+      datePublished: g.fecha.toISOString().slice(0, 10),
+      ...(g.actualizado ? { dateModified: g.actualizado.toISOString().slice(0, 10) } : {}),
+      author: { '@type': 'Person', name: 'Sergio Inostroza', url: new URL(url('acerca/'), Astro.site).href },
+      publisher: { '@type': 'Organization', name: 'ConsensusLab', url: Astro.site?.href, logo: new URL(url('logo.png'), Astro.site).href },
+      mainEntityOfPage: direccion,
+      inLanguage: 'es',
+      wordCount: palabras,
+      keywords: g.temas.join(', '),
+      ...(f ? { isBasedOn: enlaceDoi ?? f.enlaces[0]?.url, license: f.licencia_url } : {}),
+    },
+    migasLd(Astro.site, [['Guías', 'guias/'], [g.titulo, `guias/${guia.id}/`]]),
+  ]}
+>
+  <div class="contenedor">
+    <nav class="migas" aria-label="Ruta de navegación">
+      <ol>
+        <li><a href={url('guias/')}>Guías</a></li>
+        <li aria-current="page">{g.titulo}</li>
+      </ol>
+    </nav>
+
+    <header class="ficha-cabeza">
+      <p class="antetitulo">Guía</p>
+      <h1>{g.titulo}</h1>
+      <div class="ficha-meta">
+        <span>Sergio Inostroza</span>
+        <time datetime={g.fecha.toISOString().slice(0, 10)}>· {formatoFecha(g.fecha)}</time>
+        {g.actualizado && <span>· Actualizada {formatoFecha(g.actualizado)}</span>}
+        <span>· {minutos} min de lectura</span>
+        {g.temas.length > 0 && <span>· {g.temas.join(' · ')}</span>}
+      </div>
+    </header>
+
+    <div class="ficha">
+      <article class="ficha-cuerpo prosa articulo">
+        {
+          f && (
+            <div class="aviso aviso-info">
+              <p>
+                <strong>Adaptación de una obra con licencia abierta.</strong> Esta guía adapta, en español y de forma resumida, la
+                obra <em>«{f.titulo}»</em>, de {f.autores} ({f.publicacion}), publicada bajo licencia{' '}
+                <a href={f.licencia_url} target="_blank" rel="noopener">{f.licencia}</a>.
+                {enlaceDoi && <> Original: <a href={enlaceDoi} target="_blank" rel="noopener">{enlaceDoi.replace('https://', '')}</a>.</>}
+                {' '}Los autores no han revisado ni respaldado esta adaptación. Los cambios están descritos al final.
+              </p>
+            </div>
+          )
+        }
+
+        <Content />
+
+        {
+          f && (
+            <section class="atribucion" aria-labelledby="atribucion-titulo">
+              <h2 id="atribucion-titulo">Atribución y cambios</h2>
+              <p>
+                <strong>Obra original:</strong> {f.autores}. <em>{f.titulo}</em>. {f.publicacion}.
+                {enlaceDoi && <> <a href={enlaceDoi} target="_blank" rel="noopener">{enlaceDoi}</a>.</>}
+                {' '}Licencia <a href={f.licencia_url} target="_blank" rel="noopener">{f.licencia}</a>.
+              </p>
+              {
+                f.enlaces.length > 0 && (
+                  <ul>
+                    {f.enlaces.map((e) => (
+                      <li><a href={e.url} target="_blank" rel="noopener">{e.texto}</a></li>
+                    ))}
+                  </ul>
+                )
+              }
+              <p><strong>Cambios realizados por ConsensusLab:</strong> {f.cambios}</p>
+            </section>
+          )
+        }
+
+        <aside class="caja-autor">
+          <p>
+            <strong>Sergio Inostroza</strong> es tecnólogo médico, con más de 10 años en laboratorio clínico. Escribe sobre
+            gestión, calidad y la profesión, y desarrolla las herramientas de ConsensusLab.{' '}
+            <a href={url('acerca/')}>Más sobre el autor</a>.
+          </p>
+        </aside>
+      </article>
+
+      <aside class="ficha-lateral">
+        {
+          otras.length > 0 && (
+            <div class="caja">
+              <h2>Otras guías</h2>
+              <ul class="lista-simple">
+                {otras.map((o) => (
+                  <li><a href={url(`guias/${o.id}/`)}>{o.data.titulo}</a></li>
+                ))}
+              </ul>
+            </div>
+          )
+        }
+        <PedirDemo variante="caja" />
+        <div class="caja">
+          <h2>Calculadoras de calidad</h2>
+          <p>Levey-Jennings, sigma, sesgo y SDI, TEa y más, sin enviar datos a ningún servidor.</p>
+          <p><a class="boton boton-secundario boton-ancho" href={url('calculadoras/')}>Ver calculadoras</a></p>
+        </div>
+      </aside>
+    </div>
+  </div>
+</Base>

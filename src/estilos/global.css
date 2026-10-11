@@ -789,3 +789,7 @@ img, svg { max-width: 100%; }
 .plan-precio { margin: 0; display: grid; gap: 2px; }
 .plan-precio-fundador { font-size: 1.8rem; font-weight: 800; color: var(--marca-burdeo); line-height: 1.1; }
 .plan-precio-nota { font-size: .85rem; color: var(--c-texto-suave); }
+
+/* Guías: bloque de atribución al final de la guía */
+.atribucion { margin: 32px 0 8px; padding-top: 8px; border-top: 1px solid var(--c-borde); font-size: .95rem; }
+.atribucion h2 { font-size: 1.05rem; }

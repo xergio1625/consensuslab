@@ -3,6 +3,7 @@
 import { getCollection } from 'astro:content';
 import { url } from '../lib/rutas';
 import { GA_ID } from '../lib/sitio';
+const hayGuias = (await getCollection('guias')).length > 0;
 const hayOpinion = (await getCollection('opinion')).length > 0;
 const anio = new Date().getFullYear();
 ---
@@ -21,6 +22,7 @@ const anio = new Date().getFullYear();
       <li><a href={url('herramientas/')}>Herramientas</a></li>
       <li><a href={url('calculadoras/')}>Calculadoras</a></li>
       <li><a href={url('prompts/')}>Prompts de IA</a></li>
+      {hayGuias && <li><a href={url('guias/')}>Guías</a></li>}
       {hayOpinion && <li><a href={url('opinion/')}>Opinión</a></li>}
       <li><a href={url('consensus-qc/')}>Consensus QC</a></li>
       <li><a href={url('planes/')}>Planes</a></li>

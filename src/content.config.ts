@@ -129,4 +129,30 @@ const opinion = defineCollection({
   }),
 });
 
-export const collections = { grupos, herramientas, prompts, opinion };
+// Guías: textos de referencia para el laboratorio, escritos en el sitio. Si adaptan una obra ajena
+// (por ejemplo un artículo de acceso abierto), `fuente` es obligatoria en la práctica: la página muestra
+// la atribución completa (autores, obra, licencia y cambios) arriba y al final.
+const guias = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './contenido/guias' }),
+  schema: z.object({
+    titulo: z.string(),
+    resumen: z.string().max(320),
+    fecha: z.coerce.date(),
+    actualizado: z.coerce.date().optional(),
+    temas: z.array(z.string()).default([]),
+    fuente: z
+      .object({
+        titulo: z.string(),
+        autores: z.string(),
+        publicacion: z.string(),
+        doi: z.string().regex(/^10\.\d{4,9}\/\S+$/).optional(),
+        enlaces: z.array(z.object({ texto: z.string(), url: z.url() })).default([]),
+        licencia: z.string(),
+        licencia_url: z.url(),
+        cambios: z.string(),
+      })
+      .optional(),
+  }),
+});
+
+export const collections = { grupos, herramientas, prompts, opinion, guias };

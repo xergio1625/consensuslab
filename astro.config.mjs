@@ -9,12 +9,17 @@ import fs from 'node:fs';
 const enPreparacion = fs.readdirSync('contenido/herramientas')
   .filter((f) => f.endsWith('.md') && /^estado:\s*en-preparacion\s*$/m.test(fs.readFileSync('contenido/herramientas/' + f, 'utf8')))
   .map((f) => '/herramientas/' + f.replace(/\.md$/, '') + '/');
-const fueraDelSitemap = ['/cuenta/', '/404/'].concat(enPreparacion);
+// La guía nació en Opinión; su dirección antigua redirige a la sección Guías.
+const redirecciones = {
+  '/opinion/guia-plan-de-control-interno-de-calidad/': '/guias/plan-de-control-interno-de-calidad/',
+};
+const fueraDelSitemap = ['/cuenta/', '/404/'].concat(enPreparacion, Object.keys(redirecciones));
 
 export default defineConfig({
   site: 'https://consensuslab.cl',
   base: '/',
   trailingSlash: 'always',
+  redirects: redirecciones,
   integrations: [
     sitemap({
       filter: (pagina) => !fueraDelSitemap.includes(new URL(pagina).pathname),

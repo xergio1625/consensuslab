@@ -53,6 +53,17 @@ dirección terminada en `/copy` para que cada persona haga su propia copia.
    o `planillas`. En `herramientas` pon las fichas relacionadas: el prompt aparecerá también en esas fichas.
 4. Debajo, escribe «Cómo usarlo» y «Revisa siempre». Todo prompt debe pedir que no se ingresen datos de pacientes.
 
+## Agregar una guía
+
+1. Copia `contenido/_plantilla-guia.md` en `contenido/guias/` con un nombre en minúsculas y guiones (será la dirección:
+   `/guias/nombre-de-la-guia/`).
+2. Escribe el texto en Markdown debajo del encabezado.
+3. Si **adaptas una obra ajena**, completa el bloque `fuente` (autores, obra, DOI, licencia y cambios): la página muestra
+   la atribución arriba y al final sola. Antes de adaptar, confirma que la licencia lo permita (CC BY y CC BY-NC son
+   compatibles con este sitio; CC BY-ND, CC BY-NC-ND y «todos los derechos reservados» no se pueden adaptar). Si la guía
+   es solo tuya, borra el bloque `fuente`.
+4. Haz commit y `git push`. «Guías» aparece en el menú cuando hay al menos una.
+
 ## Calculadoras de calidad
 
 Las fórmulas están en `src/lib/calidad.js` (funciones puras, probadas con `npm test`); cada calculadora tiene su

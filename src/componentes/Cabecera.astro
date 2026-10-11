@@ -9,12 +9,14 @@ interface Props {
 }
 const { seccion } = Astro.props;
 
-// «Opinión» aparece en el menú solo cuando hay al menos un artículo.
+// «Guías» y «Opinión» aparecen en el menú solo cuando hay al menos un artículo.
+const hayGuias = (await getCollection('guias')).length > 0;
 const hayOpinion = (await getCollection('opinion')).length > 0;
 const enlaces = [
   { id: 'herramientas', texto: 'Herramientas', ruta: 'herramientas/' },
   { id: 'calculadoras', texto: 'Calculadoras', ruta: 'calculadoras/' },
   { id: 'prompts', texto: 'Prompts IA', ruta: 'prompts/' },
+  ...(hayGuias ? [{ id: 'guias', texto: 'Guías', ruta: 'guias/' }] : []),
   ...(hayOpinion ? [{ id: 'opinion', texto: 'Opinión', ruta: 'opinion/' }] : []),
   { id: 'consensus-qc', texto: 'Consensus QC', ruta: 'consensus-qc/' },
   { id: 'planes', texto: 'Planes', ruta: 'planes/' },
