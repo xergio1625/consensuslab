@@ -122,6 +122,13 @@ const correo = `mailto:${CORREO_CONTACTO}`;
             </td>
           </tr>
           <tr>
+            <td>Número de WhatsApp (próximamente, solo si lo aceptas)</td>
+            <td>
+              Enviarte avisos de vencimientos, alertas y recordatorios de las tareas del turno. Hoy la app no usa
+              WhatsApp; ver la sección 5.
+            </td>
+          </tr>
+          <tr>
             <td>Datos de facturación (suscripción)</td>
             <td>Razón social, RUT de la institución y correo de facturación, para cobrar y emitir documentos tributarios.</td>
           </tr>
@@ -146,6 +153,10 @@ const correo = `mailto:${CORREO_CONTACTO}`;
           <strong>Con tu consentimiento</strong>, para enviarte correos informativos; por ejemplo, un correo de seguimiento
           unos días después de probar una demo, con las guías de las herramientas que usaste. Puedes retirarlo cuando
           quieras en «Mi cuenta» o con el enlace «No quiero recibir más correos» que va al pie de cada uno.
+        </li>
+        <li>
+          <strong>Con tu consentimiento</strong>, para enviarte avisos por WhatsApp cuando esa función esté disponible
+          (ver la sección 5). No los enviaremos a quien no los haya aceptado.
         </li>
         {GA_ID && <li><strong>Con tu consentimiento</strong>, para medir el uso del sitio con Google Analytics.</li>}
         <li><strong>Por interés legítimo</strong>, para la seguridad de la app y la prevención de abusos.</li>
@@ -172,6 +183,35 @@ const correo = `mailto:${CORREO_CONTACTO}`;
           último ingreso y qué herramientas probaste. Si retiras el consentimiento, lo marcamos también en HubSpot y dejamos
           de enviarte esos correos. Quien no acepta correos informativos no se registra en HubSpot.
         </li>
+      </ul>
+      <h3>Avisos por WhatsApp (próximamente)</h3>
+      <p>
+        Después del lanzamiento de la suscripción incorporaremos avisos por WhatsApp de vencimientos, alertas y
+        recordatorios de las tareas del turno. <strong>Hoy la app no envía mensajes por WhatsApp</strong>; esta sección
+        describe cómo lo haremos cuando esté disponible:
+      </p>
+      <ul>
+        <li>
+          <strong>Solo si lo aceptas.</strong> Pediremos tu consentimiento, persona por persona, antes de enviar el
+          primer mensaje. Que el laboratorio contrate la app no basta: cada usuario decide si recibe avisos en su número.
+          Puedes retirar el consentimiento cuando quieras y dejaremos de escribirte.
+        </li>
+        <li>
+          <strong>Qué datos usamos:</strong> tu número de teléfono y el contenido del aviso. Los mensajes serán breves y
+          genéricos, por ejemplo la cantidad de vencimientos que tienes pendientes y un enlace a la app. No incluirán
+          datos de pacientes ni datos de salud, ni el detalle de registros de personas.
+        </li>
+        <li>
+          <strong>Quién interviene:</strong> los mensajes se envían con la plataforma WhatsApp Business de Meta Platforms,
+          Inc., con servidores que pueden estar fuera de Chile, incluso en Estados Unidos. Meta trata los datos del servicio
+          de mensajería según sus propias políticas. Aunque los mensajes viajan cifrados, Meta puede conocer que existe la
+          comunicación y tu número.
+        </li>
+        <li>
+          <strong>Conservación:</strong> guardamos tu número mientras tengas la cuenta y el consentimiento vigente. Si lo
+          retiras o eliminas tu cuenta, lo borramos.
+        </li>
+        <li>Mientras esta función no esté disponible, los avisos del servicio siguen llegando solo por correo.</li>
       </ul>
       <p>
         No compartimos tus datos con nadie más, salvo que la ley o una autoridad competente lo exija.
