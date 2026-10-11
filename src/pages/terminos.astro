@@ -19,7 +19,7 @@ const correo = `mailto:${CORREO_CONTACTO}`;
         <p>
           <strong>En breve:</strong> ConsensusLab ofrece herramientas de apoyo a la gestión del laboratorio. Tú (o tu
           laboratorio) eres dueño de tus registros y responsable de lo que ingresas. <strong>Nunca ingreses datos de
-          pacientes.</strong> La demo es gratuita y se borra sola; la suscripción es mensual.
+          pacientes.</strong> La demo es gratuita y se borra sola; la suscripción es anual, por laboratorio.
         </p>
       </div>
 
@@ -32,7 +32,7 @@ const correo = `mailto:${CORREO_CONTACTO}`;
         </li>
         <li>
           <strong>La app</strong>, una aplicación web con herramientas de registro y seguimiento. Se usa como demo
-          gratuita o con suscripción mensual.
+          gratuita o con suscripción anual por laboratorio.
         </li>
       </ul>
       <p>
@@ -82,16 +82,28 @@ const correo = `mailto:${CORREO_CONTACTO}`;
       <h2>5. Suscripción</h2>
       <ul>
         <li>
-          La suscripción es mensual y se contrata por laboratorio. Las condiciones de cada plan se publican en{' '}
-          <a href={url('planes/')}>Planes</a> o se acuerdan por escrito con la institución.
+          La suscripción se contrata por laboratorio (cada sede es un laboratorio con su propia licencia) y es anual. Los
+          precios se informan por laboratorio, al año y más IVA. Las condiciones de cada plan, incluido su tope de usuarios,
+          se publican en <a href={url('planes/')}>Planes</a> o se acuerdan por escrito con la institución.
         </li>
-        <li>El pago es anticipado. Tras el vencimiento hay 3 días de gracia antes de que el acceso real se suspenda.</li>
+        <li>
+          El pago es anticipado y se hace contra factura electrónica, por transferencia o con orden de compra. También
+          puedes pagar mes a mes, sin descuentos de preventa. Tras el vencimiento hay 3 días de gracia antes de que el
+          acceso real se suspenda.
+        </li>
+        <li>
+          <strong>Piloto y preventa.</strong> Puedes probar la app 30 días con los datos de tu laboratorio; si contratas,
+          tus registros se mantienen. El descuento de fundador (40 %) aplica solo al primer año pagado por adelantado, o con
+          orden de compra enviada, antes del 1 de diciembre de 2026, y el año pagado corre desde esa fecha. Si decides no
+          continuar dentro de los 30 días del piloto, te devolvemos el pago completo. Desde el 1 de diciembre de 2026 rigen
+          los precios normales.
+        </li>
         <li>
           Si la suscripción termina, los registros del laboratorio se conservan 90 días. En ese plazo el laboratorio
           puede renovar o descargar una copia de sus registros; avisamos a sus administradores 30 y 7 días antes. Después se
           eliminan de forma automática y definitiva.
         </li>
-        <li>Los cambios de precio se avisan con al menos 30 días de anticipación y rigen desde el periodo siguiente.</li>
+        <li>Los cambios de precio se avisan con al menos 30 días de anticipación y rigen desde el periodo siguiente al ya pagado.</li>
         <li>
           Si contratas como persona natural, conservas los derechos que te da la Ley 19.496 de protección de los
           derechos de los consumidores.
