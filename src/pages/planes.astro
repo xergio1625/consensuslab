@@ -82,7 +82,7 @@ const planes = [
         <a class="boton boton-dorado" href="#cotizar" data-plan="gestion_qc">Pedir cotización</a>
         <a class="boton boton-secundario boton-claro" href="#cotizar" data-piloto>Probar gratis 30 días</a>
       </div>
-      <p class="nota-portada">Precios por laboratorio, anuales, más IVA. Factura electrónica.</p>
+      <p class="nota-portada">Precios por laboratorio, anuales, con IVA incluido. Factura electrónica.</p>
     </div>
   </section>
 
@@ -103,8 +103,8 @@ const planes = [
               {p.precio && (
                 <p class="plan-precio">
                   <span class="plan-precio-fundador">{p.precio.fundador}</span>
-                  <span class="plan-precio-nota">al año + IVA, precio fundador (40 % de descuento)</span>
-                  <span class="plan-precio-nota">Luego {p.precio.normal} al año + IVA</span>
+                  <span class="plan-precio-nota">al año con IVA incluido, precio fundador (40 % de descuento)</span>
+                  <span class="plan-precio-nota">Luego {p.precio.normal} al año con IVA incluido</span>
                 </p>
               )}
               <ul class="plan-incluye">
