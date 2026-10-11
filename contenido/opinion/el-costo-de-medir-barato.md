@@ -50,6 +50,8 @@ Mientras tanto, el centro de salud de mayor complejidad al que ese laboratorio d
 
 Durante veinte meses consecutivos, el Error Total del método de Jaffé superó el límite permitido en trece de ellos, incluyendo los dos meses en que un problema puntual lo disparó por encima del 30 %. El cambio de equipo de fines de 2023 no alteró este patrón de manera sostenida.
 
+![Gráfico: el Error Total mensual superó el 10 % (límite CLIA) en 13 de 20 meses, entre enero de 2023 y agosto de 2024](/opinion/el-costo-de-medir-barato/imagen-5.png)
+
 > **Calcúlalo con tus datos:** [Error total y sigma](/calculadoras/error-total-y-sigma/) · [Estadística del control](/calculadoras/estadistica-del-control/) · [TEa por variabilidad biológica](/calculadoras/tea-variabilidad-biologica/)
 
 ## Lo que el criterio económico no alcanzó a ver
