@@ -18,7 +18,7 @@ import { CORREO_CONTACTO, URL_APP } from '../lib/sitio';
     <form class="form-boletin" novalidate data-url={URL_APP} data-correo={CORREO_CONTACTO}>
       <label class="calc-campo">
         <span>Correo</span>
-        <input class="campo" name="correo" type="email" required maxlength="254" autocomplete="email" />
+        <input class="campo" name="correo" type="email" required maxlength="254" autocomplete="email" inputmode="email" autocapitalize="none" spellcheck="false" enterkeyhint="send" />
       </label>
       <label class="calc-campo">
         <span>Tu rol <span class="texto-suave">(opcional)</span></span>
@@ -56,6 +56,7 @@ import { CORREO_CONTACTO, URL_APP } from '../lib/sitio';
       estado.hidden = false;
       estado.textContent = texto;
       estado.classList.toggle('estado-error', error);
+      estado.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
     };
 
     form.addEventListener('submit', async (e) => {

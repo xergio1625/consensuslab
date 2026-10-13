@@ -947,3 +947,21 @@ img, svg { max-width: 100%; }
   .seccion { padding: 36px 0; }
   .demo-franja { padding: 32px 0; }
 }
+
+/* ─── Móvil, fase 5: formularios ─── */
+.calc-mas { border: 1px solid var(--c-borde); border-radius: var(--radio); padding: 0 14px; background: var(--c-panel); }
+.calc-mas summary { cursor: pointer; min-height: 48px; display: flex; align-items: center; font-weight: 600; }
+.calc-mas[open] { padding-bottom: 14px; }
+.calc-mas[open] summary { margin-bottom: 8px; }
+@media (min-width: 761px) {
+  .calc-mas { border: 0; padding: 0; background: none; }
+  .calc-mas summary { display: none; }
+}
+@media (max-width: 760px) {
+  .form-demo, .form-boletin, .form-cotizacion { gap: 14px; }
+  .form-cotizacion button[type="submit"], .form-boletin button[type="submit"], .form-demo button[type="submit"] {
+    width: 100%; justify-self: stretch; min-height: 52px; font-size: 1.05rem;
+  }
+  .campo { min-height: 48px; }
+  .estado-cotizacion { scroll-margin-bottom: 96px; }
+}

@@ -167,11 +167,21 @@ const planes = [
       <p class="texto-suave">Solo datos de contacto del laboratorio: nunca datos de pacientes.</p>
       <form class="form-cotizacion" id="form-cotizacion" novalidate data-url={URL_APP} data-correo={CORREO_CONTACTO}>
         <div class="calc-campos">
-          <label class="calc-campo"><span>Nombre y apellido</span><input class="campo" name="nombre" required maxlength="120" autocomplete="name" /></label>
-          <label class="calc-campo"><span>Correo</span><input class="campo" name="correo" type="email" required maxlength="254" autocomplete="email" /></label>
-          <label class="calc-campo"><span>Laboratorio o institución</span><input class="campo" name="laboratorio" required maxlength="200" autocomplete="organization" /></label>
+          <label class="calc-campo"><span>Nombre y apellido</span><input class="campo" name="nombre" required maxlength="120" autocomplete="name" autocapitalize="words" enterkeyhint="next" /></label>
+          <label class="calc-campo"><span>Correo</span><input class="campo" name="correo" type="email" required maxlength="254" autocomplete="email" inputmode="email" autocapitalize="none" spellcheck="false" enterkeyhint="next" /></label>
+          <label class="calc-campo"><span>Laboratorio o institución</span><input class="campo" name="laboratorio" required maxlength="200" autocomplete="organization" autocapitalize="words" enterkeyhint="next" /></label>
+          <label class="calc-campo">
+            <span>Plan de interés</span>
+            <select class="campo" name="plan" id="cotizar-plan">
+              {planes.map((p) => <option value={p.id} selected={p.id === 'gestion_qc'}>{p.nombre}</option>)}
+              <option value="no_se">Aún no lo sé</option>
+            </select>
+          </label>
+          <details class="calc-mas calc-ancho" id="cotizar-mas" open>
+            <summary>Más datos para la cotización <span class="opcional">(opcional)</span></summary>
+            <div class="calc-campos">
           <label class="calc-campo"><span>Cargo <span class="opcional">(opcional)</span></span><input class="campo" name="cargo" maxlength="100" autocomplete="organization-title" /></label>
-          <label class="calc-campo"><span>Teléfono <span class="opcional">(opcional)</span></span><input class="campo" name="telefono" type="tel" maxlength="30" autocomplete="tel" /></label>
+          <label class="calc-campo"><span>Teléfono <span class="opcional">(opcional)</span></span><input class="campo" name="telefono" type="tel" maxlength="30" autocomplete="tel" inputmode="tel" /></label>
           <label class="calc-campo"><span>Ciudad <span class="opcional">(opcional)</span></span><input class="campo" name="ciudad" maxlength="80" autocomplete="address-level2" /></label>
           <label class="calc-campo">
             <span>Sector</span>
@@ -181,16 +191,11 @@ const planes = [
               <option value="otro">Otro</option>
             </select>
           </label>
-          <label class="calc-campo">
-            <span>Plan de interés</span>
-            <select class="campo" name="plan" id="cotizar-plan">
-              {planes.map((p) => <option value={p.id} selected={p.id === 'gestion_qc'}>{p.nombre}</option>)}
-              <option value="no_se">Aún no lo sé</option>
-            </select>
-          </label>
           <label class="calc-campo"><span>Usuarios <span class="opcional">(aprox.)</span></span><input class="campo" name="usuarios" type="number" min="1" max="1000" inputmode="numeric" /></label>
           <label class="calc-campo"><span>Sedes</span><input class="campo" name="sedes" type="number" min="1" max="50" value="1" inputmode="numeric" /></label>
           <label class="calc-campo calc-ancho"><span>Mensaje <span class="opcional">(opcional)</span></span><textarea class="campo" name="mensaje" maxlength="1500" rows="3" placeholder="Por ejemplo: qué necesitas ordenar, si te preparas para la acreditación o cómo compra tu institución"></textarea></label>
+            </div>
+          </details>
         </div>
         <label class="casilla-sitio"><input type="checkbox" name="piloto" id="cotizar-piloto" /> <span>Quiero el piloto gratis de 30 días con los datos de mi laboratorio.</span></label>
         <label class="casilla-sitio"><input type="checkbox" name="marketing" /> <span>Acepto recibir novedades y guías de ConsensusLab por correo (opcional; puedes darte de baja cuando quieras).</span></label>
@@ -252,10 +257,17 @@ const planes = [
       });
     });
 
+    // Los datos opcionales se pliegan en pantallas angostas (sin JavaScript quedan abiertos).
+    const mas = document.getElementById('cotizar-mas') as HTMLDetailsElement | null;
+    if (mas && matchMedia("(max-width: 760px)").matches) mas.open = false;
+
     function mostrar(texto: string, error: boolean) {
       estado.hidden = false;
       estado.textContent = texto;
       estado.classList.toggle('estado-error', error);
+      estado.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      // Si el servidor objetó un dato opcional, se despliega la sección para que se vea.
+      if (error && mas) mas.open = true;
     }
 
     const ETIQUETAS: Record<string, string> = { nombre: 'nombre', correo: 'correo', laboratorio: 'laboratorio', usuarios: 'usuarios', sedes: 'sedes', mensaje: 'mensaje' };

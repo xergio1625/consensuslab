@@ -23,9 +23,9 @@ const caja = variante === 'caja';
         </p>
       </div>
       <form class="form-demo" novalidate data-url={URL_APP} data-correo={CORREO_CONTACTO}>
-        <label class="calc-campo"><span>Nombre y apellido</span><input class="campo" name="nombre" required maxlength="120" autocomplete="name" /></label>
-        <label class="calc-campo"><span>Correo</span><input class="campo" name="correo" type="email" required maxlength="254" autocomplete="email" /></label>
-        <label class="calc-campo"><span>Laboratorio o institución</span><input class="campo" name="laboratorio" required maxlength="200" autocomplete="organization" /></label>
+        <label class="calc-campo"><span>Nombre y apellido</span><input class="campo" name="nombre" required maxlength="120" autocomplete="name" autocapitalize="words" enterkeyhint="next" /></label>
+        <label class="calc-campo"><span>Correo</span><input class="campo" name="correo" type="email" required maxlength="254" autocomplete="email" inputmode="email" autocapitalize="none" spellcheck="false" enterkeyhint="next" /></label>
+        <label class="calc-campo"><span>Laboratorio o institución</span><input class="campo" name="laboratorio" required maxlength="200" autocomplete="organization" autocapitalize="words" enterkeyhint="send" /></label>
         <div class="campo-trampa" aria-hidden="true">
           <label>Sitio web <input name="sitio_web" tabindex="-1" autocomplete="off" /></label>
         </div>
@@ -48,6 +48,7 @@ const caja = variante === 'caja';
       estado.hidden = false;
       estado.textContent = texto;
       estado.classList.toggle('estado-error', error);
+      estado.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
     };
 
     form.addEventListener('submit', async (e) => {
