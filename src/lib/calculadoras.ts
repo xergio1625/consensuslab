@@ -155,8 +155,8 @@ export const CALCULADORAS = [
   {
     id: 'ldl-calculado',
     familia: 'formulas',
-    titulo: 'LDL calculado: Friedewald y Sampson',
-    resumen: 'LDL-C a partir de colesterol total, HDL y triglicéridos con ambas ecuaciones, sus límites de uso y casos de prueba para tu sistema.',
+    titulo: 'LDL calculado: Friedewald, Martin-Hopkins y Sampson',
+    resumen: 'LDL-C desde colesterol total, HDL y triglicéridos con las tres ecuaciones, comparadas entre sí y con el LDL directo, con sus límites de uso y casos de prueba para tu sistema.',
     herramientas: ['acreditacion-y-autorizacion-sanitaria'],
   },
 ] as const;

@@ -107,15 +107,71 @@ export function ldlSampson(ct, hdl, tg) {
   return ct / 0.948 - hdl / 0.971 - (tg / 8.56 + (tg * noHdl) / 2140 - tg ** 2 / 16100) - 9.44;
 }
 
+/**
+ * Factor ajustable de Martin-Hopkins (Martin et al., JAMA 2013): mediana de TG/VLDL-C por estrato de triglicéridos
+ * (30 filas, `desde` en mg/dL) y de colesterol no HDL (6 columnas: <100, 100-129, 130-159, 160-189, 190-219, ≥220).
+ * La última fila (400-13.975) es una sola para todos los TG altos.
+ */
+export const TABLA_MARTIN = [
+  [7, [3.5, 3.4, 3.3, 3.3, 3.2, 3.1]],
+  [50, [4.0, 3.9, 3.7, 3.6, 3.6, 3.4]],
+  [57, [4.3, 4.1, 4.0, 3.9, 3.8, 3.6]],
+  [62, [4.5, 4.3, 4.1, 4.0, 3.9, 3.9]],
+  [67, [4.7, 4.4, 4.3, 4.2, 4.1, 3.9]],
+  [72, [4.8, 4.6, 4.4, 4.2, 4.2, 4.1]],
+  [76, [4.9, 4.6, 4.5, 4.3, 4.3, 4.2]],
+  [80, [5.0, 4.8, 4.6, 4.4, 4.3, 4.2]],
+  [84, [5.1, 4.8, 4.6, 4.5, 4.4, 4.3]],
+  [88, [5.2, 4.9, 4.7, 4.6, 4.4, 4.3]],
+  [93, [5.3, 5.0, 4.8, 4.7, 4.5, 4.4]],
+  [97, [5.4, 5.1, 4.8, 4.7, 4.5, 4.3]],
+  [101, [5.5, 5.2, 5.0, 4.7, 4.6, 4.5]],
+  [106, [5.6, 5.3, 5.0, 4.8, 4.6, 4.5]],
+  [111, [5.7, 5.4, 5.1, 4.9, 4.7, 4.5]],
+  [116, [5.8, 5.5, 5.2, 5.0, 4.8, 4.6]],
+  [121, [6.0, 5.5, 5.3, 5.0, 4.8, 4.6]],
+  [127, [6.1, 5.7, 5.3, 5.1, 4.9, 4.7]],
+  [133, [6.2, 5.8, 5.4, 5.2, 5.0, 4.7]],
+  [139, [6.3, 5.9, 5.6, 5.3, 5.0, 4.8]],
+  [147, [6.5, 6.0, 5.7, 5.4, 5.1, 4.8]],
+  [155, [6.7, 6.2, 5.8, 5.4, 5.2, 4.9]],
+  [164, [6.8, 6.3, 5.9, 5.5, 5.3, 5.0]],
+  [174, [7.0, 6.5, 6.0, 5.7, 5.4, 5.1]],
+  [186, [7.3, 6.7, 6.2, 5.8, 5.5, 5.2]],
+  [202, [7.6, 6.9, 6.4, 6.0, 5.6, 5.3]],
+  [221, [8.0, 7.2, 6.6, 6.2, 5.9, 5.4]],
+  [248, [8.5, 7.6, 7.0, 6.5, 6.1, 5.6]],
+  [293, [9.5, 8.3, 7.5, 7.0, 6.5, 5.9]],
+  [400, [11.9, 10.0, 8.8, 8.1, 7.5, 6.7]],
+];
+
+/** Factor de Martin-Hopkins para TG y colesterol no HDL (mg/dL). NaN con TG bajo 7 mg/dL (fuera de la tabla). */
+export function factorMartin(tg, noHdl) {
+  if (!(tg >= TABLA_MARTIN[0][0])) return NaN;
+  let fila = TABLA_MARTIN[0][1];
+  for (const [desde, factores] of TABLA_MARTIN) {
+    if (tg >= desde) fila = factores;
+    else break;
+  }
+  const columna = noHdl < 100 ? 0 : noHdl < 130 ? 1 : noHdl < 160 ? 2 : noHdl < 190 ? 3 : noHdl < 220 ? 4 : 5;
+  return fila[columna];
+}
+
+/** LDL-C de Martin-Hopkins (mg/dL): no HDL - TG / factor. Con TG de 400 o más la tabla tiene una sola fila y pierde exactitud. */
+export function ldlMartin(ct, hdl, tg) {
+  const noHdl = ct - hdl;
+  return noHdl - tg / factorMartin(tg, noHdl);
+}
+
 /** Rango de triglicéridos (mg/dL) donde cada ecuación está validada. */
-export const RANGO_LDL = { friedewald: 400, sampson: 800 };
+export const RANGO_LDL = { friedewald: 400, sampson: 800, martin: 400 };
 
 /**
- * Compara los métodos de LDL calculado para un mismo resultado. `martin` (Martin-Hopkins) y `directo` son
- * valores opcionales traídos del sistema del laboratorio. Cada fila: { id, valor, fueraDeRango, difDirecto, pctDirecto }.
- * Las diferencias se miden contra el LDL directo si existe.
+ * Compara Friedewald, Martin-Hopkins y Sampson-NIH para un mismo resultado, más el LDL `directo` opcional que
+ * mide el laboratorio. Cada fila: { id, valor, fueraDeRango, difDirecto, pctDirecto }. Las diferencias se miden
+ * contra el LDL directo si existe. Con TG de 400 o más, Friedewald queda fuera de rango y Martin-Hopkins con exactitud limitada.
  */
-export function comparacionLdl(ct, hdl, tg, { martin = NaN, directo = NaN } = {}) {
+export function comparacionLdl(ct, hdl, tg, { directo = NaN } = {}) {
   const fila = (id, valor, fuera) => {
     const hayDirecto = Number.isFinite(directo) && id !== 'directo';
     return {
@@ -130,17 +186,18 @@ export function comparacionLdl(ct, hdl, tg, { martin = NaN, directo = NaN } = {}
     fila('friedewald', ldlFriedewald(ct, hdl, tg), tg >= RANGO_LDL.friedewald),
     fila('sampson', ldlSampson(ct, hdl, tg), tg > RANGO_LDL.sampson),
   ];
-  if (Number.isFinite(martin)) filas.push(fila('martin', martin, tg >= RANGO_LDL.friedewald));
+  const martin = ldlMartin(ct, hdl, tg);
+  if (Number.isFinite(martin)) filas.splice(1, 0, fila('martin', martin, tg >= RANGO_LDL.martin));
   if (Number.isFinite(directo)) filas.push(fila('directo', directo, false));
   return filas;
 }
 
-/** Friedewald y Sampson-NIH con el mismo CT y HDL para distintos triglicéridos: cómo se separan los métodos. */
+/** Friedewald, Martin-Hopkins y Sampson-NIH con el mismo CT y HDL para distintos triglicéridos: cómo se separan los métodos. */
 export function barridoTg(ct, hdl, tgs) {
   return tgs.map((tg) => {
     const fried = ldlFriedewald(ct, hdl, tg);
     const samp = ldlSampson(ct, hdl, tg);
-    return { tg, friedewald: fried, sampson: samp, diferencia: fried - samp };
+    return { tg, friedewald: fried, martin: ldlMartin(ct, hdl, tg), sampson: samp, diferencia: fried - samp };
   });
 }
 
@@ -156,8 +213,8 @@ export const VECTORES = {
     { scr: 2.4, edad: 65, sexo: 'M', esperado: 29.2 },
   ],
   ldl: [
-    { ct: 200, hdl: 50, tg: 150, friedewald: 120.0, sampson: 123.4 },
-    { ct: 180, hdl: 40, tg: 300, friedewald: 80.0, sampson: 90.2 },
-    { ct: 150, hdl: 60, tg: 80, friedewald: 74.0, sampson: 74.7 },
+    { ct: 200, hdl: 50, tg: 150, friedewald: 120.0, martin: 123.7, sampson: 123.4 },
+    { ct: 180, hdl: 40, tg: 300, friedewald: 80.0, martin: 100.0, sampson: 90.2 },
+    { ct: 150, hdl: 60, tg: 80, friedewald: 74.0, martin: 74.0, sampson: 74.7 },
   ],
 };

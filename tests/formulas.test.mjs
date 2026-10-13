@@ -62,19 +62,49 @@ test('LDL calculado: Friedewald y Sampson-NIH', () => {
   for (const v of F.VECTORES.ldl) {
     cerca(F.ldlFriedewald(v.ct, v.hdl, v.tg), v.friedewald, 0.05);
     cerca(F.ldlSampson(v.ct, v.hdl, v.tg), v.sampson, 0.05);
+    cerca(F.ldlMartin(v.ct, v.hdl, v.tg), v.martin, 0.05);
   }
 });
 
+test('tabla de Martin-Hopkins: forma y coherencia (detecta errores de transcripción)', () => {
+  assert.equal(F.TABLA_MARTIN.length, 30);
+  F.TABLA_MARTIN.forEach(([, fila], i) => {
+    assert.equal(fila.length, 6);
+    for (let c = 1; c < 6; c++) assert.ok(fila[c] <= fila[c - 1], `fila ${i}: el factor no baja con más no HDL`);
+    if (i > 0) fila.forEach((v, c) => assert.ok(v >= F.TABLA_MARTIN[i - 1][1][c] - 0.11, `fila ${i} col ${c}: el factor sube con más TG (medianas empíricas: se tolera una caída de 0,1 como en 97-100 / ≥220)`));
+  });
+  const desdes = F.TABLA_MARTIN.map(([d]) => d);
+  assert.deepEqual(desdes, [...desdes].sort((a, b) => a - b));
+});
+
+test('factor y LDL de Martin-Hopkins: celdas y bordes de estrato', () => {
+  assert.equal(F.factorMartin(7, 90), 3.5);
+  assert.equal(F.factorMartin(49, 99.9), 3.5);
+  assert.equal(F.factorMartin(50, 100), 3.9);
+  assert.equal(F.factorMartin(150, 150), 5.7);
+  assert.equal(F.factorMartin(399, 230), 5.9);
+  assert.equal(F.factorMartin(400, 230), 6.7);
+  assert.equal(F.factorMartin(800, 80), 11.9);
+  assert.equal(F.factorMartin(13975, 160), 8.1);
+  assert.equal(F.factorMartin(293, 189.9), 7.0);
+  assert.equal(F.factorMartin(293, 190), 6.5);
+  assert.ok(Number.isNaN(F.factorMartin(6, 100)));
+  cerca(F.ldlMartin(200, 50, 150), 150 - 150 / 5.7, 1e-9);
+});
+
 test('comparación de LDL: filas, rangos y diferencias contra el directo', () => {
-  const f = F.comparacionLdl(200, 50, 450, { martin: 100, directo: 110 });
-  assert.deepEqual(f.map((x) => x.id), ['friedewald', 'sampson', 'martin', 'directo']);
+  const f = F.comparacionLdl(250, 40, 450, { directo: 110 });
+  assert.deepEqual(f.map((x) => x.id), ['friedewald', 'martin', 'sampson', 'directo']);
   assert.equal(f[0].fueraDeRango, true);
-  assert.equal(f[1].fueraDeRango, false);
-  cerca(f[2].difDirecto, -10, 1e-9);
-  cerca(f[2].pctDirecto, (-10 / 110) * 100, 1e-9);
+  assert.equal(f[1].fueraDeRango, true);
+  assert.equal(f[2].fueraDeRango, false);
+  cerca(f[1].valor, 210 - 450 / 7.5, 1e-9);
+  cerca(f[1].difDirecto, f[1].valor - 110, 1e-9);
+  cerca(f[1].pctDirecto, ((f[1].valor - 110) / 110) * 100, 1e-9);
   assert.ok(Number.isNaN(f[3].difDirecto));
-  assert.equal(F.comparacionLdl(200, 50, 900)[1].fueraDeRango, true);
-  assert.equal(F.comparacionLdl(200, 50, 150).length, 2);
+  assert.equal(F.comparacionLdl(200, 50, 900)[2].fueraDeRango, true);
+  assert.equal(F.comparacionLdl(200, 50, 150).length, 3);
+  assert.equal(F.comparacionLdl(200, 50, 3).length, 2);
 });
 
 test('barrido de triglicéridos: Friedewald se separa de Sampson al subir los TG', () => {
@@ -83,4 +113,5 @@ test('barrido de triglicéridos: Friedewald se separa de Sampson al subir los TG
   cerca(b[0].friedewald, 250 - 40 - 20, 1e-9);
   assert.ok(Math.abs(b[2].diferencia) > Math.abs(b[0].diferencia));
   cerca(b[1].diferencia, b[1].friedewald - b[1].sampson, 1e-9);
+  cerca(b[2].martin, 210 - 800 / 7.5, 1e-9);
 });
