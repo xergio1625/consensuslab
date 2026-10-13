@@ -1,0 +1,127 @@
+---
+import PaginaCalculadora from '../../componentes/PaginaCalculadora.astro';
+import { url } from '../../lib/rutas';
+---
+
+<PaginaCalculadora id="actividad-enzimatica">
+  <form class="calc" id="calc" novalidate>
+    <div class="calc-campos">
+      <label class="calc-campo">
+        <span>ΔA/min de la muestra</span>
+        <input class="campo" name="delta" inputmode="decimal" placeholder="0,100" />
+        <small>Cambio de absorbancia por minuto en la zona lineal. Usa el valor absoluto (en sentido positivo).</small>
+      </label>
+      <label class="calc-campo">
+        <span>ΔA/min del blanco <em class="opcional">(opcional)</em></span>
+        <input class="campo" name="blanco" inputmode="decimal" placeholder="0,000" />
+        <small>Se resta de la muestra.</small>
+      </label>
+      <label class="calc-campo">
+        <span>Volumen total de reacción</span>
+        <span class="calc-entrada"><input class="campo" name="vt" inputmode="decimal" placeholder="1,00" /><em>mL</em></span>
+      </label>
+      <label class="calc-campo">
+        <span>Volumen de muestra</span>
+        <span class="calc-entrada"><input class="campo" name="vs" inputmode="decimal" placeholder="0,02" /><em>mL</em></span>
+      </label>
+      <label class="calc-campo">
+        <span>Coeficiente de extinción molar (ε)</span>
+        <select class="campo" name="preset">
+          <option value="6.22">NADH o NADPH a 340 nm (6,22)</option>
+          <option value="otro">Otro valor</option>
+        </select>
+      </label>
+      <label class="calc-campo" data-caja-epsilon hidden>
+        <span>ε personalizado</span>
+        <span class="calc-entrada"><input class="campo" name="epsilon" inputmode="decimal" placeholder="6,22" /><em>L·mmol⁻¹·cm⁻¹</em></span>
+        <small>El del cromóforo de tu método, a su longitud de onda y condiciones.</small>
+      </label>
+      <label class="calc-campo">
+        <span>Paso óptico</span>
+        <span class="calc-entrada"><input class="campo" name="paso" inputmode="decimal" value="1" /><em>cm</em></span>
+      </label>
+      <label class="calc-campo">
+        <span>Factor de dilución de la muestra <em class="opcional">(opcional)</em></span>
+        <input class="campo" name="dilucion" inputmode="decimal" placeholder="1" />
+        <small>Si diluiste la muestra antes de medir (1:5 = 5).</small>
+      </label>
+    </div>
+  </form>
+
+  <section class="calc-resultado" aria-live="polite">
+    <p class="calc-mensaje" data-mensaje>Ingresa ΔA/min, los volúmenes y el coeficiente de extinción.</p>
+    <div data-resultado hidden>
+      <div class="calc-cifras">
+        <div><span>Actividad</span><strong data-ul></strong><small>U/L</small></div>
+        <div><span>En unidades SI</span><strong data-ukat></strong><small>µkat/L</small></div>
+        <div><span>Por mililitro</span><strong data-uml></strong><small>U/mL</small></div>
+      </div>
+      <p class="calc-nota" data-aviso hidden></p>
+    </div>
+  </section>
+
+  <div slot="explicacion">
+    <h2>Cómo se calcula</h2>
+    <ul>
+      <li><strong>Actividad (U/L)</strong> = (ΔA/min muestra − ΔA/min blanco) × V total × 1.000 × dilución / (ε × paso óptico × V muestra).</li>
+      <li>Con ε en L·mmol⁻¹·cm⁻¹ y los volúmenes en la misma unidad. 1 U = 1 µmol de sustrato por minuto = 16,67 nkat; 1 U/L = 0,01667 µkat/L.</li>
+      <li>Para NADH/NADPH a 340 nm, ε = 6,22 L·mmol⁻¹·cm⁻¹ (6.220 L·mol⁻¹·cm⁻¹). Con paso óptico 1 cm, V total 1 mL y V muestra 0,02 mL, la fórmula se reduce a ΔA/min × 8.039.</li>
+    </ul>
+    <h2>Cómo usarlo</h2>
+    <ul>
+      <li>Mide la velocidad en la parte lineal de la curva, sin consumo apreciable del sustrato: si la reacción se agota, diluye la muestra y vuelve a medir.</li>
+      <li>La temperatura de la reacción cambia la actividad: el resultado vale a la temperatura en que se midió. Compáralo con los valores de referencia de esa misma temperatura.</li>
+      <li>Si tu sistema es automatizado, el analizador ya aplica un factor: esta calculadora sirve para métodos manuales, para verificar el factor o para enseñar.</li>
+    </ul>
+    <p>Para el control de calidad del examen, mira <a href={url('calculadoras/estadistica-del-control/')}>Estadística del control</a>.</p>
+  </div>
+</PaginaCalculadora>
+
+<script>
+  import { formato, numero } from '../../lib/calidad.js';
+  import { actividadEnzimatica } from '../../lib/laboratorio.js';
+
+  const form = document.getElementById('calc') as HTMLFormElement;
+  const $ = (s: string) => document.querySelector(`[data-${s}]`) as HTMLElement;
+
+  function calcular() {
+    const otro = form.preset.value === 'otro';
+    ($('caja-epsilon') as HTMLElement).hidden = !otro;
+    const epsilon = otro ? numero(form.epsilon.value) : Number(form.preset.value);
+    const dilucion = numero(form.dilucion.value);
+    const blanco = numero(form.blanco.value);
+    const r = actividadEnzimatica({
+      deltaAbsMin: numero(form.delta.value),
+      blancoAbsMin: Number.isNaN(blanco) ? 0 : blanco,
+      volTotal: numero(form.vt.value),
+      volMuestra: numero(form.vs.value),
+      epsilon,
+      paso: numero(form.paso.value),
+      dilucion: Number.isNaN(dilucion) ? 1 : dilucion,
+    });
+    if (!r) {
+      const vt = numero(form.vt.value);
+      const vs = numero(form.vs.value);
+      $('mensaje').textContent = vs > vt ? 'El volumen de muestra no puede superar el volumen total.' : 'Ingresa ΔA/min, los volúmenes y el coeficiente de extinción.';
+      $('mensaje').hidden = false;
+      $('resultado').hidden = true;
+      return;
+    }
+    $('mensaje').hidden = true;
+    $('resultado').hidden = false;
+    $('ul').textContent = formato(r.ul, Math.abs(r.ul) >= 100 ? 0 : 1);
+    $('ukat').textContent = formato(r.ukatL, 2);
+    $('uml').textContent = formato(r.umL, 3);
+    const aviso = $('aviso');
+    const avisos = [];
+    if (r.velocidad < 0) avisos.push('La velocidad neta es negativa: revisa el sentido del cambio de absorbancia y el blanco.');
+    if (numero(form.delta.value) > 0.4) avisos.push('Un ΔA/min alto suele salirse de la zona lineal: diluye la muestra y repite.');
+    aviso.textContent = avisos.join(' ');
+    aviso.hidden = !avisos.length;
+  }
+
+  form.addEventListener('input', calcular);
+  form.addEventListener('change', calcular);
+  form.addEventListener('submit', (e) => e.preventDefault());
+  calcular();
+</script>

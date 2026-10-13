@@ -1,0 +1,264 @@
+---
+import PaginaCalculadora from '../../componentes/PaginaCalculadora.astro';
+import { url } from '../../lib/rutas';
+---
+
+<PaginaCalculadora id="curva-de-calibracion">
+  <form class="calc" id="calc" novalidate>
+    <p class="calc-ayuda">
+      Cada estándar con su señal (absorbancia, DO, cuentas). <button type="button" class="boton boton-secundario calc-ejemplo" data-ejemplo>Cargar un ejemplo (ELISA)</button>
+    </p>
+    <div class="calc-campos">
+      <label class="calc-campo calc-ancho">
+        <span>Estándares: concentración y señal</span>
+        <textarea class="campo" name="estandares" rows="8" placeholder="0 0,05&#10;10 0,21&#10;20 0,55"></textarea>
+        <small>Una línea por estándar: concentración, espacio y señal. Si midiste duplicados, escribe cada medición en su línea.</small>
+      </label>
+      <label class="calc-campo calc-ancho">
+        <span>Señales de las muestras <em class="opcional">(opcional)</em></span>
+        <textarea class="campo" name="desconocidas" rows="4" placeholder="0,35&#10;1,20"></textarea>
+        <small>Una señal por línea. Se calcula su concentración.</small>
+      </label>
+      <label class="calc-campo">
+        <span>Modelo</span>
+        <select class="campo" name="modelo">
+          <option value="lineal">Recta (lineal)</option>
+          <option value="4pl">Logística de 4 parámetros (4PL)</option>
+        </select>
+      </label>
+      <label class="calc-campo">
+        <span>Ponderación</span>
+        <select class="campo" name="peso"></select>
+        <small>Pondera menos los estándares altos cuando su dispersión es mayor.</small>
+      </label>
+      <label class="calc-campo">
+        <span>Escala del gráfico</span>
+        <select class="campo" name="escala">
+          <option value="lineal">Concentración lineal</option>
+          <option value="log">Concentración logarítmica</option>
+        </select>
+      </label>
+    </div>
+  </form>
+
+  <section class="calc-resultado" aria-live="polite">
+    <p class="calc-mensaje" data-mensaje>Pega los estándares (concentración y señal), al menos 3 con la recta o 5 con la 4PL.</p>
+    <div data-resultado hidden>
+      <div class="calc-cifras" data-cifras></div>
+      <div class="lj-envoltura" data-grafico></div>
+      <p class="lj-leyenda">
+        <span><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="4.5" class="lj-ok"></circle></svg>Estándar</span>
+        <span><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M7 1.5 12.5 7 7 12.5 1.5 7Z" class="lj-adv"></path></svg>Muestra</span>
+        <span>Línea: curva ajustada</span>
+      </p>
+      <p class="calc-nota" data-aviso hidden></p>
+
+      <h2>Recuperación de los estándares</h2>
+      <div class="calc-tabla-envoltura">
+        <table class="calc-tabla">
+          <thead><tr><th>Concentración nominal</th><th>Señal</th><th>Concentración calculada</th><th>Recuperación</th></tr></thead>
+          <tbody data-estandares></tbody>
+        </table>
+      </div>
+
+      <div data-caja-desconocidas hidden>
+        <h2>Muestras</h2>
+        <div class="calc-tabla-envoltura">
+          <table class="calc-tabla">
+            <thead><tr><th>Señal</th><th>Concentración</th><th>Observación</th></tr></thead>
+            <tbody data-desconocidas></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div slot="explicacion">
+    <h2>Cómo se calcula</h2>
+    <ul>
+      <li><strong>Recta</strong>: mínimos cuadrados (ponderados si eliges 1/x o 1/x²). La concentración de una muestra = (señal − intercepto) / pendiente.</li>
+      <li><strong>4PL</strong>: señal = d + (a − d) / (1 + (x/c)<sup>b</sup>), con a = señal con concentración 0, d = señal con concentración infinita, c = punto medio y b = pendiente. Se ajusta por Levenberg-Marquardt. La concentración = c · ((a − d)/(señal − d) − 1)<sup>1/b</sup>.</li>
+      <li><strong>Recuperación</strong> = concentración calculada / nominal × 100, para cada estándar con concentración mayor que cero.</li>
+    </ul>
+    <h2>Cómo leerlo</h2>
+    <ul>
+      <li>Un r² alto no basta: mira la recuperación de cada estándar. Una desviación sistemática en los extremos indica que el modelo no calza con la curva.</li>
+      <li>Las inmunoevaluaciones tipo ELISA suelen seguir una curva sigmoide: ahí la recta se aleja en los extremos y la 4PL es la que corresponde.</li>
+      <li>Las muestras con señal fuera de la de los estándares extremos se extrapolan: diluye y repite en vez de informar ese valor.</li>
+      <li>Los criterios de aceptación de la curva (por ejemplo, el rango de recuperación) los define el inserto del kit o tu procedimiento.</li>
+      <li>La 4PL necesita al menos 5 estándares con concentraciones distintas, incluidos puntos sobre la parte baja, media y alta de la curva.</li>
+    </ul>
+    <p>Para el control de calidad de cada corrida, mira <a href={url('calculadoras/levey-jennings/')}>Gráfico de Levey-Jennings</a>.</p>
+  </div>
+</PaginaCalculadora>
+
+<script>
+  import { formato, numero } from '../../lib/calidad.js';
+  import { calibrar } from '../../lib/calibracion.js';
+  import { GEOMETRIA, ejes, escala, lienzo, svg } from '../../lib/graficos.js';
+
+  const form = document.getElementById('calc') as HTMLFormElement;
+  const $ = (s: string) => document.querySelector(`[data-${s}]`) as HTMLElement;
+  const PESOS: Record<string, [string, string][]> = {
+    lineal: [['ninguno', 'Sin ponderar'], ['1/x', '1/x'], ['1/x2', '1/x²']],
+    '4pl': [['ninguno', 'Sin ponderar'], ['1/y2', '1/y²']],
+  };
+
+  function opcionesPeso() {
+    form.peso.replaceChildren(
+      ...PESOS[form.modelo.value].map(([v, t]) => {
+        const o = document.createElement('option');
+        o.value = v;
+        o.textContent = t;
+        return o;
+      }),
+    );
+  }
+
+  function mensaje(t: string) {
+    $('mensaje').textContent = t;
+    $('mensaje').hidden = false;
+    $('resultado').hidden = true;
+  }
+
+  const num = (v: number, d = 3) => (Number.isFinite(v) ? formato(v, d) : '—');
+  const cifra = (t: string, v: string, nota = '') => {
+    const d = document.createElement('div');
+    const a = document.createElement('span');
+    a.textContent = t;
+    const b = document.createElement('strong');
+    b.textContent = v;
+    d.append(a, b);
+    if (nota) {
+      const s = document.createElement('small');
+      s.textContent = nota;
+      d.append(s);
+    }
+    return d;
+  };
+  const fila = (celdas: string[]) => {
+    const tr = document.createElement('tr');
+    celdas.forEach((c) => {
+      const td = document.createElement('td');
+      td.textContent = c;
+      tr.appendChild(td);
+    });
+    return tr;
+  };
+
+  function leerPares(texto: string) {
+    const x: number[] = [];
+    const y: number[] = [];
+    const malas: number[] = [];
+    texto.split(/\r?\n/).forEach((l, i) => {
+      const t = l.trim();
+      if (!t) return;
+      const p = t.split(/[\t; ]+/).filter(Boolean).map(numero);
+      if (p.length !== 2 || p.some(Number.isNaN)) malas.push(i + 1);
+      else {
+        x.push(p[0]);
+        y.push(p[1]);
+      }
+    });
+    return { x, y, malas };
+  }
+
+  function dibujar(r: NonNullable<ReturnType<typeof calibrar>>, x: number[], desconocidas: number[], log: boolean) {
+    const g = GEOMETRIA;
+    const estX = x.filter((v) => v > 0);
+    const conLog = log && estX.length >= 2;
+    const tx = (v: number) => (conLog ? Math.log10(v) : v);
+    const puntosX = conLog ? estX : x;
+    const concs = r.desconocidas.map((d) => d.concentracion).filter((v) => Number.isFinite(v) && (!conLog || v > 0));
+    const todos = [...puntosX, ...concs];
+    const minX = Math.min(...todos.map(tx));
+    const maxX = Math.max(...todos.map(tx));
+    const ex = escala(minX - (maxX - minX) * 0.03, maxX + (maxX - minX) * 0.03);
+    const senales = [...r.estandares.map((e) => e.senal), ...desconocidas];
+    const ey = escala(Math.min(...senales) - (Math.max(...senales) - Math.min(...senales)) * 0.05, Math.max(...senales) + (Math.max(...senales) - Math.min(...senales)) * 0.05);
+    const s = lienzo(`Curva de calibración ${r.ajuste.modelo === '4pl' ? 'de 4 parámetros' : 'lineal'} con ${x.length} estándares y ${desconocidas.length} muestras.`);
+    const { X, Y } = ejes(s, ex, ey, conLog ? 'log10 de la concentración' : 'Concentración', 'Señal', g);
+    const pts = [];
+    const N = 120;
+    for (let i = 0; i <= N; i++) {
+      const xv = ex.ini + ((ex.fin - ex.ini) * i) / N;
+      const real = conLog ? 10 ** xv : xv;
+      if (real < 0) continue;
+      const yv = r.ajuste.predecir(real);
+      if (Number.isFinite(yv) && yv >= ey.ini && yv <= ey.fin) pts.push(`${X(xv).toFixed(1)},${Y(yv).toFixed(1)}`);
+    }
+    s.append(svg('polyline', { points: pts.join(' '), fill: 'none', stroke: 'var(--c-boton)', 'stroke-width': 2, opacity: 0.8 }));
+    r.estandares.forEach((e) => {
+      if (conLog && e.nominal <= 0) return;
+      s.append(svg('circle', { cx: X(tx(e.nominal)), cy: Y(e.senal), r: 4, class: 'lj-ok' }));
+    });
+    r.desconocidas.forEach((d) => {
+      if (!Number.isFinite(d.concentracion) || (conLog && d.concentracion <= 0)) return;
+      const cx = X(tx(d.concentracion));
+      const cy = Y(d.senal);
+      s.append(svg('path', { d: `M${cx} ${cy - 6}L${cx + 6} ${cy}L${cx} ${cy + 6}L${cx - 6} ${cy}Z`, class: 'lj-adv' }));
+    });
+    $('grafico').replaceChildren(s);
+  }
+
+  function calcular() {
+    const { x, y, malas } = leerPares(form.estandares.value);
+    if (malas.length) return mensaje(`La línea ${malas[0]} de los estándares no tiene dos números: concentración y señal.`);
+    const minimo = form.modelo.value === '4pl' ? 5 : 3;
+    if (x.length < minimo) return mensaje(`Pega los estándares (concentración y señal): necesitas al menos ${minimo} con este modelo.`);
+    const desconocidas = form.desconocidas.value.split(/[\s;]+/).filter(Boolean).map(numero);
+    if (desconocidas.some(Number.isNaN)) return mensaje('Hay señales de muestras que no son números.');
+    const r = calibrar({ x, y, modelo: form.modelo.value, peso: form.peso.value, desconocidas });
+    if (!r) {
+      return mensaje(
+        form.modelo.value === '4pl'
+          ? 'No se pudo ajustar la 4PL: necesita al menos 5 concentraciones distintas, 4 mayores que cero, y una señal que cambie con la concentración.'
+          : 'No se pudo ajustar la curva: revisa los datos.',
+      );
+    }
+    $('mensaje').hidden = true;
+    $('resultado').hidden = false;
+    const a = r.ajuste as any;
+    $('cifras').replaceChildren(
+      ...(a.modelo === 'lineal'
+        ? [cifra('Pendiente', num(a.b, 4)), cifra('Intercepto', num(a.a, 4)), cifra('r²', num(a.r2, 4))]
+        : [cifra('a (concentración 0)', num(a.a, 4)), cifra('b (pendiente)', num(a.b, 3)), cifra('c (punto medio)', num(a.c, 3)), cifra('d (máximo)', num(a.d, 4)), cifra('r²', num(a.r2, 4))]),
+    );
+    const avisos: string[] = [];
+    const fuera = r.desconocidas.filter((d) => d.fueraDeRango || !Number.isFinite(d.concentracion));
+    if (fuera.length) avisos.push(`${fuera.length} muestra(s) con señal fuera de la curva o sin solución: diluye y repite.`);
+    const malRec = r.estandares.filter((e) => Number.isFinite(e.recuperacion) && (e.recuperacion < 80 || e.recuperacion > 120));
+    if (malRec.length) avisos.push(`${malRec.length} estándar(es) con recuperación fuera de 80-120 %: revisa el modelo o repite la curva.`);
+    $('aviso').textContent = avisos.join(' ');
+    $('aviso').hidden = !avisos.length;
+    $('estandares').replaceChildren(
+      ...r.estandares.map((e) => fila([num(e.nominal, 3), num(e.senal, 3), num(e.calculada, 3), Number.isFinite(e.recuperacion) ? formato(e.recuperacion, 1) + ' %' : '—'])),
+    );
+    ($('caja-desconocidas') as HTMLElement).hidden = !desconocidas.length;
+    $('desconocidas').replaceChildren(
+      ...r.desconocidas.map((d) =>
+        fila([num(d.senal, 3), num(d.concentracion, 3), !Number.isFinite(d.concentracion) ? 'Sin solución en la curva' : d.fueraDeRango ? 'Fuera del rango de los estándares' : 'Dentro de la curva']),
+      ),
+    );
+    dibujar(r, x, desconocidas, form.escala.value === 'log');
+  }
+
+  const ejemplo = ['0 0,052', '1,56 0,078', '3,13 0,115', '6,25 0,19', '12,5 0,33', '25 0,6', '50 1,0', '100 1,55', '200 2,05', '400 2,3'];
+  form.querySelector('[data-ejemplo]')!.addEventListener('click', () => {
+    form.modelo.value = '4pl';
+    opcionesPeso();
+    form.estandares.value = ejemplo.join('\n');
+    form.desconocidas.value = '0,25\n0,8\n1,9';
+    form.escala.value = 'log';
+    calcular();
+  });
+  form.modelo.addEventListener('change', () => {
+    opcionesPeso();
+    calcular();
+  });
+  form.addEventListener('input', calcular);
+  form.addEventListener('change', calcular);
+  form.addEventListener('submit', (e) => e.preventDefault());
+  opcionesPeso();
+  calcular();
+</script>

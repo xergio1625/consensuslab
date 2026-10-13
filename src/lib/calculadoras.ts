@@ -201,6 +201,48 @@ export const CALCULADORAS = [
     resumen: 'Con el registro de temperaturas de un refrigerador o una bodega, la temperatura única que equivale a todo el período.',
     herramientas: ['registro-de-temperaturas'],
   },
+  {
+    id: 'centrifuga-g-rpm',
+    familia: 'formulas',
+    titulo: 'Centrífuga: g y rpm',
+    resumen: 'Convierte la velocidad en rpm a fuerza centrífuga relativa (× g) y al revés, según el radio del rotor, con las rpm para las fuerzas más usadas.',
+    herramientas: ['mantencion-preventiva-y-calibraciones'],
+  },
+  {
+    id: 'dilucion-de-hipoclorito',
+    familia: 'soluciones',
+    titulo: 'Dilución de hipoclorito y desinfectantes',
+    resumen: 'Del porcentaje de tu producto a la concentración de uso en ppm: cuánto producto y cuánta agua por cada volumen que quieres preparar.',
+    herramientas: ['limpieza-y-desinfeccion-de-areas-y-equipos'],
+  },
+  {
+    id: 'actividad-enzimatica',
+    familia: 'formulas',
+    titulo: 'Actividad enzimática desde ΔA/min',
+    resumen: 'Actividad en U/L y µkat/L desde la velocidad de cambio de absorbancia, el coeficiente de extinción, el paso óptico y los volúmenes.',
+    herramientas: ['control-de-calidad-interno-y-externo'],
+  },
+  {
+    id: 'curva-de-calibracion',
+    familia: 'formulas',
+    titulo: 'Curva de calibración (lineal y 4PL)',
+    resumen: 'Ajusta tus estándares con una recta o una curva logística de 4 parámetros, recupera cada estándar y calcula la concentración de tus muestras.',
+    herramientas: ['control-de-calidad-interno-y-externo'],
+  },
+  {
+    id: 'puntaje-de-licitacion',
+    familia: 'costos',
+    titulo: 'Puntaje de licitación',
+    resumen: 'Combina precio, puntaje técnico y otros criterios con las ponderaciones de tus bases, y obtén el ranking de ofertas con un mínimo técnico opcional.',
+    herramientas: ['solicitudes-de-compra', 'evaluacion-de-proveedores', 'contratos-y-comodatos'],
+  },
+  {
+    id: 'cusum-y-ewma',
+    familia: 'calidad',
+    titulo: 'CUSUM y EWMA',
+    resumen: 'Gráficos de control que detectan desvíos pequeños y sostenidos del control interno que las reglas de Westgard tardan en ver.',
+    herramientas: ['control-de-calidad-interno-y-externo'],
+  },
 ] as const;
 
 export type IdCalculadora = (typeof CALCULADORAS)[number]['id'];

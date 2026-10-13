@@ -1,0 +1,179 @@
+---
+import PaginaCalculadora from '../../componentes/PaginaCalculadora.astro';
+import { url } from '../../lib/rutas';
+
+const OFERTAS = [1, 2, 3, 4];
+---
+
+<PaginaCalculadora id="puntaje-de-licitacion">
+  <form class="calc" id="calc" novalidate>
+    <p class="calc-ayuda">
+      Usa las ponderaciones y los criterios que fijan tus bases. <button type="button" class="boton boton-secundario calc-ejemplo" data-ejemplo>Cargar un ejemplo</button>
+    </p>
+
+    <fieldset class="calc-grupo">
+      <legend>Ponderaciones (deben sumar 100 %)</legend>
+      <div class="calc-campos">
+        <label class="calc-campo">
+          <span>Criterio económico (precio)</span>
+          <span class="calc-entrada"><input class="campo" name="p_economico" inputmode="decimal" placeholder="60" /><em>%</em></span>
+        </label>
+        <label class="calc-campo">
+          <span>Criterio técnico</span>
+          <span class="calc-entrada"><input class="campo" name="p_tecnico" inputmode="decimal" placeholder="30" /><em>%</em></span>
+        </label>
+        <label class="calc-campo">
+          <span>Otros criterios (plazo, soporte, etc.)</span>
+          <span class="calc-entrada"><input class="campo" name="p_otros" inputmode="decimal" placeholder="10" /><em>%</em></span>
+        </label>
+        <label class="calc-campo">
+          <span>Puntaje técnico mínimo <em class="opcional">(opcional)</em></span>
+          <input class="campo" name="minimo" inputmode="decimal" placeholder="60" />
+          <small>Quien no lo alcance queda fuera de la evaluación económica.</small>
+        </label>
+      </div>
+    </fieldset>
+
+    {
+      OFERTAS.map((n) => (
+        <fieldset class="calc-grupo">
+          <legend>Oferta {n}</legend>
+          <div class="calc-campos">
+            <label class="calc-campo">
+              <span>Proveedor <em class="opcional">(opcional)</em></span>
+              <input class="campo" type="text" name={`o${n}_nombre`} placeholder={`Oferta ${n}`} />
+            </label>
+            <label class="calc-campo">
+              <span>Precio ofertado</span>
+              <input class="campo" name={`o${n}_precio`} inputmode="decimal" />
+            </label>
+            <label class="calc-campo">
+              <span>Puntaje técnico (0 a 100)</span>
+              <input class="campo" name={`o${n}_tecnico`} inputmode="decimal" />
+            </label>
+            <label class="calc-campo">
+              <span>Otros criterios (0 a 100) <em class="opcional">(opcional)</em></span>
+              <input class="campo" name={`o${n}_otros`} inputmode="decimal" />
+            </label>
+          </div>
+        </fieldset>
+      ))
+    }
+  </form>
+
+  <section class="calc-resultado" aria-live="polite">
+    <p class="calc-mensaje" data-mensaje>Ingresa las ponderaciones y al menos una oferta con precio.</p>
+    <div data-resultado hidden>
+      <div class="calc-cifras">
+        <div><span>Mejor evaluada</span><strong data-ganadora></strong><small data-puntaje></small></div>
+        <div><span>Precio mínimo admisible</span><strong data-minimo></strong></div>
+      </div>
+      <div class="calc-tabla-envoltura">
+        <table class="calc-tabla">
+          <thead><tr><th>Lugar</th><th>Oferta</th><th>Precio</th><th>Puntaje económico</th><th>Técnico</th><th>Otros</th><th>Puntaje total</th></tr></thead>
+          <tbody data-filas></tbody>
+        </table>
+      </div>
+      <p class="calc-nota" data-aviso hidden></p>
+    </div>
+  </section>
+
+  <div slot="explicacion">
+    <h2>Cómo se calcula</h2>
+    <ul>
+      <li><strong>Puntaje económico</strong> = precio mínimo ofertado entre las ofertas admisibles / precio de la oferta × 100. Es la fórmula más habitual en las bases de ChileCompra; las bases de tu licitación pueden definir otra (por ejemplo, un ranking de precios).</li>
+      <li><strong>Puntaje total</strong> = Σ (ponderación × puntaje del criterio) / 100.</li>
+      <li>Los puntajes técnico y de otros criterios (0 a 100) los asignas tú según las tablas de evaluación de tus bases.</li>
+    </ul>
+    <h2>Cómo usarlo</h2>
+    <ul>
+      <li>Aplica exactamente la fórmula, las ponderaciones y los mínimos de tus bases: esta calculadora sirve para simular y revisar, no reemplaza el informe de evaluación de la comisión.</li>
+      <li>La ley exige combinar criterios técnicos y económicos; adjudicar solo por menor precio no cumple con ella. Cuida que los criterios y su ponderación estén definidos antes de abrir las ofertas.</li>
+      <li>Antes de adjudicar, mira el costo real por resultado, no solo el precio del kit: <a href={url('calculadoras/comparador-de-ofertas/')}>Comparador de ofertas</a>.</li>
+      <li>Deja el expediente completo: las fichas de <a href={url('herramientas/solicitudes-de-compra/')}>solicitudes de compra</a> y <a href={url('herramientas/evaluacion-de-proveedores/')}>evaluación de proveedores</a> sostienen el respaldo de la decisión.</li>
+    </ul>
+  </div>
+</PaginaCalculadora>
+
+<script>
+  import { formato, numero } from '../../lib/calidad.js';
+  import { puntajeLicitacion } from '../../lib/laboratorio.js';
+
+  const form = document.getElementById('calc') as HTMLFormElement;
+  const $ = (s: string) => document.querySelector(`[data-${s}]`) as HTMLElement;
+  const campo = (n: string) => (form as any)[n] as HTMLInputElement;
+  const dinero = (v: number) => formato(v, 0);
+
+  function mensaje(t: string) {
+    $('mensaje').textContent = t;
+    $('mensaje').hidden = false;
+    $('resultado').hidden = true;
+  }
+
+  function calcular() {
+    const pesos = ['economico', 'tecnico', 'otros'].map((k) => numero(campo('p_' + k).value));
+    const [economico, tecnico, otros] = pesos.map((v) => (Number.isNaN(v) ? 0 : v));
+    const suma = economico + tecnico + otros;
+    if (suma === 0) return mensaje('Ingresa las ponderaciones.');
+    if (Math.abs(suma - 100) > 1e-9) return mensaje(`Las ponderaciones suman ${formato(suma, 1)} %: deben sumar 100 %.`);
+    const minimo = numero(campo('minimo').value);
+    const ofertas = [1, 2, 3, 4]
+      .map((n) => ({
+        nombre: campo(`o${n}_nombre`).value.trim() || `Oferta ${n}`,
+        precio: numero(campo(`o${n}_precio`).value),
+        tecnico: numero(campo(`o${n}_tecnico`).value),
+        otros: numero(campo(`o${n}_otros`).value),
+      }))
+      .filter((o) => !Number.isNaN(o.precio))
+      .map((o) => ({ ...o, tecnico: Number.isNaN(o.tecnico) ? 0 : o.tecnico, otros: Number.isNaN(o.otros) ? 0 : o.otros }));
+    if (!ofertas.length) return mensaje('Ingresa al menos una oferta con precio.');
+    const r = puntajeLicitacion({ ponderacion: { economico, tecnico, otros }, ofertas, minimoTecnico: Number.isNaN(minimo) ? 0 : minimo });
+    if (!r) return mensaje('Revisa los datos: los precios deben ser mayores que cero.');
+    if (!r.ganadora) return mensaje('Ninguna oferta alcanza el puntaje técnico mínimo.');
+    $('mensaje').hidden = true;
+    $('resultado').hidden = false;
+    $('ganadora').textContent = r.ganadora.nombre;
+    $('puntaje').textContent = `${formato(r.ganadora.total, 2)} puntos`;
+    $('minimo').textContent = dinero(r.precioMinimo);
+    const orden = [...r.filas].sort((a, b) => (Number.isNaN(a.lugar) ? 1e9 : a.lugar) - (Number.isNaN(b.lugar) ? 1e9 : b.lugar));
+    $('filas').replaceChildren(
+      ...orden.map((f) => {
+        const tr = document.createElement('tr');
+        [
+          f.admisible ? String(f.lugar) : '—',
+          f.nombre + (f.admisible ? '' : ' (no admisible)'),
+          dinero(f.precio),
+          f.admisible ? formato(f.puntajeEconomico, 2) : '—',
+          formato(f.tecnico, 1),
+          formato(f.otros, 1),
+          f.admisible ? formato(f.total, 2) : '—',
+        ].forEach((t) => {
+          const td = document.createElement('td');
+          td.textContent = t;
+          tr.appendChild(td);
+        });
+        return tr;
+      }),
+    );
+    const avisos = [];
+    if (r.empate) avisos.push('Hay empate en el primer lugar: aplica el criterio de desempate de tus bases.');
+    if (r.filas.some((f) => !f.admisible)) avisos.push('Hay ofertas bajo el puntaje técnico mínimo: no entran al cálculo del precio mínimo.');
+    if (ofertas.length < 2) avisos.push('Con una sola oferta el puntaje económico es siempre 100.');
+    $('aviso').textContent = avisos.join(' ');
+    $('aviso').hidden = !avisos.length;
+  }
+
+  const ejemplo: Record<string, string> = {
+    p_economico: '60', p_tecnico: '30', p_otros: '10', minimo: '75',
+    o1_nombre: 'Proveedor A', o1_precio: '100', o1_tecnico: '80', o1_otros: '50',
+    o2_nombre: 'Proveedor B', o2_precio: '80', o2_tecnico: '70', o2_otros: '100',
+    o3_nombre: 'Proveedor C', o3_precio: '120', o3_tecnico: '90', o3_otros: '0',
+  };
+  form.querySelector('[data-ejemplo]')!.addEventListener('click', () => {
+    for (const [k, v] of Object.entries(ejemplo)) campo(k).value = v;
+    calcular();
+  });
+  form.addEventListener('input', calcular);
+  form.addEventListener('submit', (e) => e.preventDefault());
+  calcular();
+</script>

@@ -1,0 +1,116 @@
+---
+import PaginaCalculadora from '../../componentes/PaginaCalculadora.astro';
+import { url } from '../../lib/rutas';
+---
+
+<PaginaCalculadora id="centrifuga-g-rpm">
+  <form class="calc" id="calc" novalidate>
+    <div class="calc-campos">
+      <label class="calc-campo">
+        <span>Radio del rotor</span>
+        <span class="calc-entrada"><input class="campo" name="radio" inputmode="decimal" placeholder="8,5" /><em>cm</em></span>
+        <small>Del eje de giro al fondo del tubo, en el punto más lejano. Lo indica el fabricante del rotor.</small>
+      </label>
+      <label class="calc-campo">
+        <span>Velocidad</span>
+        <span class="calc-entrada"><input class="campo" name="rpm" inputmode="decimal" placeholder="3000" /><em>rpm</em></span>
+        <small>Escribe en este campo o en el de fuerza g.</small>
+      </label>
+      <label class="calc-campo">
+        <span>Fuerza centrífuga relativa</span>
+        <span class="calc-entrada"><input class="campo" name="g" inputmode="decimal" placeholder="1000" /><em>× g</em></span>
+      </label>
+    </div>
+  </form>
+
+  <section class="calc-resultado" aria-live="polite">
+    <p class="calc-mensaje" data-mensaje>Ingresa el radio del rotor y las rpm o la fuerza g.</p>
+    <div data-resultado hidden>
+      <div class="calc-cifras">
+        <div><span>Velocidad</span><strong data-rpm></strong><small>rpm</small></div>
+        <div><span>Fuerza centrífuga relativa</span><strong data-rcf></strong><small>× g</small></div>
+      </div>
+      <h2>rpm para fuerzas habituales con este radio</h2>
+      <div class="calc-tabla-envoltura">
+        <table class="calc-tabla">
+          <thead><tr><th>Fuerza (× g)</th><th>rpm</th></tr></thead>
+          <tbody data-tabla></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <div slot="explicacion">
+    <h2>Cómo se calcula</h2>
+    <ul>
+      <li><strong>Fuerza centrífuga relativa</strong> = 1,118 × 10⁻⁵ × radio (cm) × rpm².</li>
+      <li><strong>rpm</strong> = √(fuerza g / (1,118 × 10⁻⁵ × radio (cm))).</li>
+      <li>La constante resulta de (2π/60)² / 980,665: convierte rpm y centímetros a múltiplos de la gravedad estándar.</li>
+    </ul>
+    <h2>Cómo usarlo</h2>
+    <ul>
+      <li>Los procedimientos y los insertos piden la fuerza en × g, no en rpm: dos centrífugas con las mismas rpm pero distinto radio no aplican la misma fuerza.</li>
+      <li>Usa el radio máximo del rotor que tienes montado (con cubetas oscilantes, el del tubo en posición horizontal). Si el fabricante entrega una tabla g–rpm de su rotor, prevalece sobre este cálculo.</li>
+      <li>La fuerza crece con el cuadrado de las rpm: un error pequeño en la velocidad cambia mucho la fuerza. Verifica las rpm con un tacómetro dentro de la mantención del equipo.</li>
+      <li>La fuerza y el tiempo del protocolo de cada examen (por ejemplo, para obtener plasma pobre en plaquetas) los define tu procedimiento y el fabricante del tubo.</li>
+    </ul>
+    <p>
+      Para llevar la mantención y la verificación periódica de las centrífugas, mira la ficha
+      <a href={url('herramientas/mantencion-preventiva-y-calibraciones/')}>Mantención preventiva y calibraciones</a>.
+    </p>
+  </div>
+</PaginaCalculadora>
+
+<script>
+  import { formato, numero } from '../../lib/calidad.js';
+  import { rcf, rpmDesdeRcf } from '../../lib/laboratorio.js';
+
+  const form = document.getElementById('calc') as HTMLFormElement;
+  const $ = (s: string) => document.querySelector(`[data-${s}]`) as HTMLElement;
+  const entero = (v: number) => formato(Math.round(v), 0);
+
+  function calcular(origen?: string) {
+    const radio = numero(form.radio.value);
+    let rpm = numero(form.rpm.value);
+    let g = numero(form.g.value);
+    if (Number.isNaN(radio) || radio <= 0) return mensaje('Ingresa el radio del rotor.');
+    if (origen === 'g' && !Number.isNaN(g) && g > 0) {
+      rpm = rpmDesdeRcf(g, radio);
+      form.rpm.value = String(Math.round(rpm));
+    } else if (!Number.isNaN(rpm) && rpm > 0) {
+      g = rcf(rpm, radio);
+      if (origen === 'rpm') form.g.value = String(Math.round(g));
+    } else if (!Number.isNaN(g) && g > 0) {
+      rpm = rpmDesdeRcf(g, radio);
+    } else {
+      return mensaje('Ingresa las rpm o la fuerza g.');
+    }
+    $('mensaje').hidden = true;
+    $('resultado').hidden = false;
+    $('rpm').textContent = entero(rpm);
+    $('rcf').textContent = entero(g);
+    $('tabla').replaceChildren(
+      ...[300, 500, 1000, 1500, 2000, 3000, 10000].map((f) => {
+        const tr = document.createElement('tr');
+        [formato(f, 0), entero(rpmDesdeRcf(f, radio))].forEach((t) => {
+          const td = document.createElement('td');
+          td.textContent = t;
+          tr.appendChild(td);
+        });
+        return tr;
+      }),
+    );
+  }
+
+  function mensaje(t: string) {
+    $('mensaje').textContent = t;
+    $('mensaje').hidden = false;
+    $('resultado').hidden = true;
+  }
+
+  form.rpm.addEventListener('input', () => calcular('rpm'));
+  form.g.addEventListener('input', () => calcular('g'));
+  form.radio.addEventListener('input', () => calcular());
+  form.addEventListener('submit', (e) => e.preventDefault());
+  calcular();
+</script>

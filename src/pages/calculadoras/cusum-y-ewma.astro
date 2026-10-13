@@ -1,0 +1,211 @@
+---
+import PaginaCalculadora from '../../componentes/PaginaCalculadora.astro';
+import { url } from '../../lib/rutas';
+---
+
+<PaginaCalculadora id="cusum-y-ewma">
+  <form class="calc" id="calc" novalidate>
+    <p class="calc-ayuda">
+      <button type="button" class="boton boton-secundario calc-ejemplo" data-ejemplo>Cargar un ejemplo</button>
+    </p>
+    <div class="calc-campos">
+      <label class="calc-campo calc-ancho">
+        <span>Resultados del control, en orden</span>
+        <textarea class="campo" name="datos" rows="9" placeholder="100,2&#10;99,8&#10;101,0&#10;..."></textarea>
+        <small>Un valor por línea, del más antiguo al más reciente, de un solo nivel, lote y analizador.</small>
+      </label>
+      <label class="calc-campo">
+        <span>Media establecida <em class="opcional">(opcional)</em></span>
+        <input class="campo" name="media" inputmode="decimal" placeholder="100" />
+        <small>La de tu control. Si la dejas vacía, se calcula con los primeros valores.</small>
+      </label>
+      <label class="calc-campo">
+        <span>DE establecida <em class="opcional">(opcional)</em></span>
+        <input class="campo" name="de" inputmode="decimal" placeholder="1,5" />
+      </label>
+      <label class="calc-campo">
+        <span>Valores de referencia si no hay media y DE</span>
+        <input class="campo" name="referencia" inputmode="numeric" value="20" />
+        <small>Cantidad de los primeros valores para estimar la media y la DE (al menos 10).</small>
+      </label>
+    </div>
+    <details class="calc-grupo">
+      <summary>Parámetros de los gráficos</summary>
+      <div class="calc-campos">
+        <label class="calc-campo">
+          <span>CUSUM: k</span>
+          <input class="campo" name="k" inputmode="decimal" value="0,5" />
+          <small>Mitad del desvío a detectar, en DE (0,5 detecta 1 DE).</small>
+        </label>
+        <label class="calc-campo">
+          <span>CUSUM: h</span>
+          <input class="campo" name="h" inputmode="decimal" value="5" />
+          <small>Límite de decisión, en DE (habitualmente 4 o 5).</small>
+        </label>
+        <label class="calc-campo">
+          <span>EWMA: λ</span>
+          <input class="campo" name="lambda" inputmode="decimal" value="0,2" />
+          <small>Peso del dato nuevo (0,05 a 0,3).</small>
+        </label>
+        <label class="calc-campo">
+          <span>EWMA: L</span>
+          <input class="campo" name="L" inputmode="decimal" value="3" />
+          <small>Ancho de los límites, en DE.</small>
+        </label>
+      </div>
+    </details>
+  </form>
+
+  <section class="calc-resultado" aria-live="polite">
+    <p class="calc-mensaje" data-mensaje>Pega los resultados del control (al menos 12).</p>
+    <div data-resultado hidden>
+      <div class="calc-cifras">
+        <div><span>Referencia</span><strong data-ref></strong><small data-ref-nota></small></div>
+        <div><span>CUSUM</span><strong data-cusum></strong><small data-cusum-nota></small></div>
+        <div><span>EWMA</span><strong data-ewma></strong><small data-ewma-nota></small></div>
+      </div>
+
+      <h2>CUSUM</h2>
+      <div class="lj-envoltura" data-grafico-cusum></div>
+      <p class="lj-leyenda"><span>Línea sólida: suma que sube (C⁺)</span><span>Línea punteada: suma que baja (C⁻, se dibuja hacia abajo)</span><span>Rojo: límite de decisión ±h</span></p>
+
+      <h2>EWMA</h2>
+      <div class="lj-envoltura" data-grafico-ewma></div>
+      <p class="lj-leyenda"><span>Línea: media móvil ponderada</span><span>Rojo: límites de control</span></p>
+    </div>
+  </section>
+
+  <div slot="explicacion">
+    <h2>Cómo se calcula</h2>
+    <ul>
+      <li><strong>CUSUM tabular</strong>: z = (x − media) / DE; C⁺ = máx(0, C⁺ anterior + z − k) y C⁻ = máx(0, C⁻ anterior − z − k). Hay señal cuando alguna suma supera h.</li>
+      <li><strong>EWMA</strong>: z<sub>i</sub> = λ·x<sub>i</sub> + (1 − λ)·z<sub>i−1</sub>, empezando en la media; límites = media ± L · DE · √(λ/(2 − λ) · (1 − (1 − λ)<sup>2i</sup>)).</li>
+      <li>Los valores por defecto (k = 0,5, h = 5; λ = 0,2, L = 3) son los habituales para detectar desvíos de alrededor de 1 DE.</li>
+    </ul>
+    <h2>Cómo leerlo</h2>
+    <ul>
+      <li>Una regla de Westgard mira cada resultado o unos pocos seguidos. CUSUM y EWMA acumulan la información de todos los anteriores: detectan un corrimiento pequeño que se mantiene, aunque ningún punto salga de ±2 DE.</li>
+      <li>El CUSUM señala además desde dónde venía subiendo la suma: ese punto estima cuándo comenzó el desvío, útil para buscar la causa (cambio de lote, calibración, reactivo).</li>
+      <li>Usan una media y una DE de referencia estables. Si las calculas con los primeros valores, deben ser de un período en control; si no, el gráfico queda sesgado.</li>
+      <li>Estos gráficos complementan las reglas de Westgard, no las reemplazan: las reglas multirregla detectan mejor los errores grandes y aleatorios.</li>
+      <li>Más sensibilidad implica más falsas alarmas: ajusta k, h, λ y L con tus propios datos y documenta la decisión.</li>
+    </ul>
+    <p>
+      Para las reglas de Westgard y el gráfico clásico, usa <a href={url('calculadoras/levey-jennings/')}>Gráfico de Levey-Jennings</a>;
+      para los límites del control, <a href={url('calculadoras/estadistica-del-control/')}>Estadística del control</a>.
+    </p>
+    <h2>Referencias</h2>
+    <p>Montgomery DC. <em>Introduction to Statistical Quality Control</em>; NIST/SEMATECH e-Handbook of Statistical Methods, secciones de gráficos CUSUM y EWMA.</p>
+  </div>
+</PaginaCalculadora>
+
+<script>
+  import { estadistica, formato, numero, valores } from '../../lib/calidad.js';
+  import { cusum, ewma } from '../../lib/control_avanzado.js';
+  import { GEOMETRIA, ejes, escala, lienzo, svg } from '../../lib/graficos.js';
+
+  const form = document.getElementById('calc') as HTMLFormElement;
+  const $ = (s: string) => document.querySelector(`[data-${s}]`) as HTMLElement;
+  const ROJO = { stroke: 'var(--c-error)', 'stroke-dasharray': '6 4', 'stroke-width': 1.5 };
+
+  function mensaje(t: string) {
+    $('mensaje').textContent = t;
+    $('mensaje').hidden = false;
+    $('resultado').hidden = true;
+  }
+
+  function lineaPuntos(s: SVGElement, puntos: [number, number][], extra: Record<string, string | number>) {
+    s.append(svg('polyline', { points: puntos.map(([a, b]) => `${a.toFixed(1)},${b.toFixed(1)}`).join(' '), fill: 'none', 'stroke-width': 2, ...extra }));
+  }
+
+  function dibujarCusum(c: ReturnType<typeof cusum>, h: number) {
+    const g = GEOMETRIA;
+    const n = c.length;
+    const maxV = Math.max(h * 1.2, ...c.map((p) => Math.max(p.cMas, p.cMenos)));
+    const ex = escala(1, n);
+    const ey = escala(-maxV, maxV);
+    const s = lienzo(`Gráfico CUSUM de ${n} resultados con límite de decisión ±${formato(h, 1)}.`);
+    const { X, Y } = ejes(s, ex, ey, 'Resultado n.º', 'Suma acumulada (en DE)', g);
+    [h, -h].forEach((v) => s.append(svg('line', { x1: X(ex.ini), x2: X(ex.fin), y1: Y(v), y2: Y(v), ...ROJO })));
+    s.append(svg('line', { x1: X(ex.ini), x2: X(ex.fin), y1: Y(0), y2: Y(0), class: 'lj-media' }));
+    lineaPuntos(s, c.map((p) => [X(p.indice), Y(p.cMas)]), { stroke: 'var(--c-boton)' });
+    lineaPuntos(s, c.map((p) => [X(p.indice), Y(-p.cMenos)]), { stroke: 'var(--c-boton)', 'stroke-dasharray': '2 4' });
+    c.filter((p) => p.senal).forEach((p) => {
+      const v = p.sentido === 'alza' ? p.cMas : -p.cMenos;
+      s.append(svg('circle', { cx: X(p.indice), cy: Y(v), r: 4, class: 'lj-rech' }));
+    });
+    $('grafico-cusum').replaceChildren(s);
+  }
+
+  function dibujarEwma(e: ReturnType<typeof ewma>, media: number) {
+    const g = GEOMETRIA;
+    const n = e.length;
+    const lo = Math.min(...e.map((p) => Math.min(p.ewma, p.limiteInf)));
+    const hi = Math.max(...e.map((p) => Math.max(p.ewma, p.limiteSup)));
+    const ex = escala(1, n);
+    const ey = escala(lo - (hi - lo) * 0.05, hi + (hi - lo) * 0.05);
+    const s = lienzo(`Gráfico EWMA de ${n} resultados con límites de control.`);
+    const { X, Y } = ejes(s, ex, ey, 'Resultado n.º', 'EWMA', g);
+    s.append(svg('line', { x1: X(ex.ini), x2: X(ex.fin), y1: Y(media), y2: Y(media), class: 'lj-media' }));
+    lineaPuntos(s, e.map((p) => [X(p.indice), Y(p.limiteSup)]), { ...ROJO, 'stroke-width': 1.5 });
+    lineaPuntos(s, e.map((p) => [X(p.indice), Y(p.limiteInf)]), { ...ROJO, 'stroke-width': 1.5 });
+    lineaPuntos(s, e.map((p) => [X(p.indice), Y(p.ewma)]), { stroke: 'var(--c-boton)' });
+    e.filter((p) => p.senal).forEach((p) => s.append(svg('circle', { cx: X(p.indice), cy: Y(p.ewma), r: 4, class: 'lj-rech' })));
+    $('grafico-ewma').replaceChildren(s);
+  }
+
+  function calcular() {
+    const datos = valores(form.datos.value);
+    if (datos.some(Number.isNaN)) return mensaje('Hay valores que no son números: revisa los datos.');
+    if (datos.length < 12) return mensaje('Pega los resultados del control (al menos 12).');
+    let media = numero(form.media.value);
+    let de = numero(form.de.value);
+    let nota = 'Valores establecidos';
+    if (Number.isNaN(media) || Number.isNaN(de) || de <= 0) {
+      const nRef = Math.min(datos.length, Math.max(10, numero(form.referencia.value) || 20));
+      const e = estadistica(datos.slice(0, nRef));
+      media = e.media;
+      de = e.de;
+      nota = `Con los primeros ${nRef} valores`;
+    }
+    if (!(de > 0)) return mensaje('La DE de referencia debe ser mayor que cero.');
+    const k = numero(form.k.value);
+    const h = numero(form.h.value);
+    const lambda = numero(form.lambda.value);
+    const L = numero(form.L.value);
+    if ([k, h, lambda, L].some((v) => Number.isNaN(v) || v <= 0) || lambda > 1) return mensaje('Revisa los parámetros: deben ser mayores que cero y λ no puede superar 1.');
+    $('mensaje').hidden = true;
+    $('resultado').hidden = false;
+    $('ref').textContent = `${formato(media, 2)} ± ${formato(de, 2)}`;
+    $('ref-nota').textContent = nota;
+    const c = cusum(datos, media, de, k, h);
+    const e = ewma(datos, media, de, lambda, L);
+    const pc = c.find((p) => p.senal);
+    const pe = e.find((p) => p.senal);
+    $('cusum').textContent = pc ? `Señal en el n.º ${pc.indice}` : 'Sin señal';
+    $('cusum-nota').textContent = pc ? `${pc.sentido === 'alza' ? 'Desvío al alza' : 'Desvío a la baja'}; comenzaría hacia el n.º ${pc.inicio}` : 'Las sumas no superan h';
+    $('cusum-nota').dataset.nivel = pc ? 'error' : 'ok';
+    $('ewma').textContent = pe ? `Señal en el n.º ${pe.indice}` : 'Sin señal';
+    $('ewma-nota').textContent = pe ? `Valor ${formato(pe.ewma, 2)} fuera de ${formato(pe.limiteInf, 2)} a ${formato(pe.limiteSup, 2)}` : 'La media móvil queda dentro de los límites';
+    $('ewma-nota').dataset.nivel = pe ? 'error' : 'ok';
+    dibujarCusum(c, h);
+    dibujarEwma(e, media);
+  }
+
+  form.querySelector('[data-ejemplo]')!.addEventListener('click', () => {
+    let semilla = 4242;
+    const azar = () => {
+      semilla = (semilla * 1664525 + 1013904223) % 4294967296;
+      return semilla / 4294967296;
+    };
+    const normal = () => Math.sqrt(-2 * Math.log(azar() + 1e-12)) * Math.cos(2 * Math.PI * azar());
+    const v = Array.from({ length: 50 }, (_, i) => 100 + (i >= 30 ? 1.6 : 0) + normal() * 1.5);
+    form.datos.value = v.map((x) => formato(x, 1).replace('.', '')).join('\n');
+    form.media.value = '100';
+    form.de.value = '1,5';
+    calcular();
+  });
+  form.addEventListener('input', calcular);
+  form.addEventListener('submit', (e) => e.preventDefault());
+  calcular();
+</script>

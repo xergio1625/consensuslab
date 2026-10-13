@@ -1,0 +1,118 @@
+---
+import PaginaCalculadora from '../../componentes/PaginaCalculadora.astro';
+import { url } from '../../lib/rutas';
+---
+
+<PaginaCalculadora id="dilucion-de-hipoclorito">
+  <form class="calc" id="calc" novalidate>
+    <div class="calc-campos">
+      <label class="calc-campo">
+        <span>Concentración de tu producto</span>
+        <span class="calc-entrada"><input class="campo" name="comercial" inputmode="decimal" placeholder="5" /><em>% de cloro activo</em></span>
+        <small>La que dice la etiqueta o tu medición. El cloro se degrada con el tiempo y la luz: mide o verifica el producto en uso.</small>
+      </label>
+      <label class="calc-campo">
+        <span>Concentración de uso</span>
+        <span class="calc-entrada">
+          <input class="campo" name="objetivo" inputmode="decimal" placeholder="1000" />
+          <select class="campo" name="unidad" aria-label="Unidad de la concentración de uso">
+            <option value="ppm">ppm</option>
+            <option value="pct">%</option>
+          </select>
+        </span>
+        <small>La que fija tu protocolo de limpieza y desinfección.</small>
+      </label>
+      <label class="calc-campo">
+        <span>Volumen a preparar</span>
+        <span class="calc-entrada"><input class="campo" name="volumen" inputmode="decimal" placeholder="1000" /><em>mL</em></span>
+      </label>
+    </div>
+    <p class="calc-ayuda">
+      Ejemplos habituales de concentración de uso (usa los de tu protocolo):
+      <button type="button" class="boton boton-secundario calc-ejemplo" data-preset="500">500 ppm</button>
+      <button type="button" class="boton boton-secundario calc-ejemplo" data-preset="1000">1.000 ppm</button>
+      <button type="button" class="boton boton-secundario calc-ejemplo" data-preset="5000">5.000 ppm</button>
+    </p>
+  </form>
+
+  <section class="calc-resultado" aria-live="polite">
+    <p class="calc-mensaje" data-mensaje>Ingresa la concentración de tu producto, la de uso y el volumen.</p>
+    <div data-resultado hidden>
+      <div class="calc-cifras">
+        <div><span>Producto</span><strong data-producto></strong><small>mL</small></div>
+        <div><span>Agua</span><strong data-agua></strong><small>mL</small></div>
+        <div><span>Dilución</span><strong data-factor></strong><small data-equivale></small></div>
+      </div>
+      <p class="calc-nota" data-aviso hidden></p>
+    </div>
+  </section>
+
+  <div slot="explicacion">
+    <h2>Cómo se calcula</h2>
+    <ul>
+      <li><strong>Producto</strong> = volumen final × concentración de uso / concentración del producto (C₁·V₁ = C₂·V₂).</li>
+      <li><strong>Agua</strong> = volumen final − producto.</li>
+      <li><strong>Equivalencia</strong>: 1 % de cloro activo = 10.000 ppm (mg/L).</li>
+    </ul>
+    <h2>Buenas prácticas</h2>
+    <ul>
+      <li>Agrega el producto al agua, no al revés, y prepara la solución en un lugar ventilado con los elementos de protección que indica tu protocolo.</li>
+      <li>No mezcles el hipoclorito con ácidos ni con amoníaco u otros productos de limpieza: libera gases tóxicos.</li>
+      <li>La solución diluida pierde fuerza rápido. Prepárala con la frecuencia que fije tu protocolo, rotúlala con fecha y hora, y guárdala en envase opaco y cerrado.</li>
+      <li>La concentración depende del uso (superficies limpias, derrames con materia orgánica, desinfección de equipos): no uses una sola para todo.</li>
+      <li>Verifica la concentración con tiras de medición cuando tu protocolo lo pida, sobre todo si el producto lleva tiempo abierto.</li>
+    </ul>
+    <p>
+      Para otras diluciones y soluciones, usa <a href={url('calculadoras/diluciones-y-soluciones/')}>Diluciones y preparación de soluciones</a>.
+      Para el registro de limpieza por área, mira la ficha
+      <a href={url('herramientas/limpieza-y-desinfeccion-de-areas-y-equipos/')}>Limpieza y desinfección de áreas y equipos</a>.
+    </p>
+  </div>
+</PaginaCalculadora>
+
+<script>
+  import { formato, numero } from '../../lib/calidad.js';
+  import { diluirDesinfectante, porcentajeAPpm, ppmAPorcentaje } from '../../lib/laboratorio.js';
+
+  const form = document.getElementById('calc') as HTMLFormElement;
+  const $ = (s: string) => document.querySelector(`[data-${s}]`) as HTMLElement;
+
+  function mensaje(t: string) {
+    $('mensaje').textContent = t;
+    $('mensaje').hidden = false;
+    $('resultado').hidden = true;
+  }
+
+  function calcular() {
+    const comercial = numero(form.comercial.value);
+    let objetivo = numero(form.objetivo.value);
+    const volumen = numero(form.volumen.value);
+    if ([comercial, objetivo, volumen].some(Number.isNaN)) return mensaje('Ingresa la concentración de tu producto, la de uso y el volumen.');
+    const ppm = form.unidad.value === 'ppm' ? objetivo : porcentajeAPpm(objetivo);
+    objetivo = ppmAPorcentaje(ppm);
+    const r = diluirDesinfectante({ comercial, objetivo, volumenFinal: volumen });
+    if (r.error === 'concentrar') return mensaje('La concentración de uso no puede superar la de tu producto.');
+    if (r.error) return mensaje('Los valores deben ser mayores que cero.');
+    $('mensaje').hidden = true;
+    $('resultado').hidden = false;
+    $('producto').textContent = formato(r.producto, r.producto < 10 ? 2 : 1);
+    $('agua').textContent = formato(r.agua, 1);
+    $('factor').textContent = '1 : ' + formato(r.factor - 1, r.factor - 1 < 10 ? 2 : 1);
+    $('equivale').textContent = `1 parte de producto en ${formato(r.factor - 1, 1)} de agua · ${formato(ppm, 0)} ppm = ${formato(objetivo, 3)} %`;
+    const aviso = $('aviso');
+    aviso.textContent = r.producto < 5 ? 'El volumen de producto es muy pequeño para medirlo con exactitud: prepara más cantidad o usa una dilución previa.' : '';
+    aviso.hidden = !aviso.textContent;
+  }
+
+  form.querySelectorAll('[data-preset]').forEach((b) =>
+    b.addEventListener('click', () => {
+      form.objetivo.value = (b as HTMLElement).dataset.preset!;
+      form.unidad.value = 'ppm';
+      calcular();
+    }),
+  );
+  form.addEventListener('input', calcular);
+  form.addEventListener('change', calcular);
+  form.addEventListener('submit', (e) => e.preventDefault());
+  calcular();
+</script>
