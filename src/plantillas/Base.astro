@@ -5,6 +5,7 @@ import Cabecera from '../componentes/Cabecera.astro';
 import Pie from '../componentes/Pie.astro';
 import Analitica from '../componentes/Analitica.astro';
 import AvisoPreventa from '../componentes/AvisoPreventa.astro';
+import BarraDemo from '../componentes/BarraDemo.astro';
 import { url } from '../lib/rutas';
 import { FIN_PREVENTA, INDEXAR } from '../lib/sitio';
 
@@ -88,6 +89,7 @@ const imagen = new URL(url(Astro.props.imagen ?? (enPreventa && paginaPreventa ?
       <slot />
     </main>
     <Pie />
+    {(seccion === 'inicio' || seccion === 'consensus-qc' || seccion === 'planes') && <BarraDemo />}
     <Analitica />
   </body>
 </html>

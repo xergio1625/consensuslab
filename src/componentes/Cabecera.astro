@@ -12,17 +12,21 @@ const { seccion } = Astro.props;
 // «Guías» y «Opinión» aparecen en el menú solo cuando hay al menos un artículo.
 const hayGuias = (await getCollection('guias')).length > 0;
 const hayOpinion = (await getCollection('opinion')).length > 0;
-const enlaces = [
+// En celular los cinco recursos gratuitos van en un grupo plegable; en pantallas anchas la lista va plana.
+const gratis = [
   { id: 'herramientas', texto: 'Herramientas', ruta: 'herramientas/' },
   { id: 'calculadoras', texto: 'Calculadoras', ruta: 'calculadoras/' },
   { id: 'prompts', texto: 'Prompts IA', ruta: 'prompts/' },
   ...(hayGuias ? [{ id: 'guias', texto: 'Guías', ruta: 'guias/' }] : []),
   ...(hayOpinion ? [{ id: 'opinion', texto: 'Opinión', ruta: 'opinion/' }] : []),
+];
+const resto = [
   { id: 'consensus-qc', texto: 'Consensus QC', ruta: 'consensus-qc/' },
   { id: 'planes', texto: 'Planes', ruta: 'planes/' },
   { id: 'acerca', texto: 'Acerca', ruta: 'acerca/' },
   { id: 'cuenta', texto: 'Ingresar', ruta: 'cuenta/' },
 ];
+const grupoActivo = gratis.some((e) => e.id === seccion);
 ---
 
 <header class="cabecera">
@@ -34,9 +38,26 @@ const enlaces = [
 
     <nav class="nav-principal" aria-label="Navegación principal">
       <ul class="nav-lista" id="menu-principal">
+        <li class="nav-grupo">
+          <button type="button" class="nav-grupo-boton" aria-expanded={grupoActivo ? 'true' : 'false'} aria-controls="menu-gratis">
+            Recursos gratis
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg>
+          </button>
+          <ul class="nav-sublista" id="menu-gratis">
+            {
+              gratis.map((e) => (
+                <li>
+                  <a href={url(e.ruta)} aria-current={seccion === e.id ? 'page' : undefined}>
+                    {e.texto}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </li>
         {
-          enlaces.map((e) => (
-            <li>
+          resto.map((e) => (
+            <li class={'nav-' + e.id}>
               <a href={url(e.ruta)} aria-current={seccion === e.id ? 'page' : undefined}>
                 {e.texto}
               </a>
@@ -76,12 +97,29 @@ const enlaces = [
     }),
   );
 
-  // Menú plegable en celular.
+  // Grupo «Recursos gratis» del menú móvil.
+  const grupoBoton = document.querySelector('.nav-grupo-boton');
+  grupoBoton?.addEventListener('click', () => {
+    grupoBoton.setAttribute('aria-expanded', String(grupoBoton.getAttribute('aria-expanded') !== 'true'));
+  });
+
+  // Menú plegable en celular: se cierra con Esc o al tocar fuera.
   const botonMenu = document.getElementById('boton-menu');
   const menu = document.getElementById('menu-principal');
-  botonMenu?.addEventListener('click', () => {
-    const abierto = menu?.classList.toggle('abierta') ?? false;
-    botonMenu.setAttribute('aria-expanded', String(abierto));
-    botonMenu.setAttribute('aria-label', abierto ? 'Cerrar menú' : 'Abrir menú');
+  const fijarMenu = (abierto: boolean) => {
+    menu?.classList.toggle('abierta', abierto);
+    botonMenu?.setAttribute('aria-expanded', String(abierto));
+    botonMenu?.setAttribute('aria-label', abierto ? 'Cerrar menú' : 'Abrir menú');
+  };
+  botonMenu?.addEventListener('click', () => fijarMenu(!menu?.classList.contains('abierta')));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && menu?.classList.contains('abierta')) {
+      fijarMenu(false);
+      botonMenu?.focus();
+    }
+  });
+  document.addEventListener('click', (e) => {
+    const t = e.target as Node;
+    if (menu?.classList.contains('abierta') && !menu.contains(t) && !botonMenu?.contains(t)) fijarMenu(false);
   });
 </script>

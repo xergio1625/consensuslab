@@ -862,3 +862,46 @@ img, svg { max-width: 100%; }
   .casilla-sitio input, .lj-reglas input { width: 24px; height: 24px; margin-top: 0; }
   .casilla-sitio, .lj-reglas label { align-items: center; gap: 12px; }
 }
+
+/* ─── Móvil, fase 3: menú agrupado y barra inferior ─── */
+/* En pantallas anchas el grupo «Recursos gratis» no existe: sus enlaces van planos en la lista */
+.nav-grupo, .nav-sublista { display: contents; list-style: none; margin: 0; padding: 0; }
+.nav-grupo-boton { display: none; }
+@media (min-width: 1081px) {
+  .nav-sublista { display: contents; }
+}
+@media (max-width: 1080px) {
+  .nav-grupo { display: block; order: 3; }
+  .nav-consensus-qc { order: 1; }
+  .nav-planes { order: 2; }
+  .nav-acerca { order: 4; }
+  .nav-cuenta { order: 5; margin-top: 8px; }
+  .nav-cuenta a { border: 1px solid rgba(255, 255, 255, .25); text-align: center; }
+  .nav-tema { order: 6; }
+  .nav-grupo-boton {
+    display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 12px;
+    background: none; border: 0; color: #F1E3E9; font: inherit; font-weight: 550; cursor: pointer; border-radius: var(--radio-s);
+  }
+  .nav-grupo-boton:hover { background: rgba(255, 255, 255, .08); color: #fff; }
+  .nav-grupo-boton svg { width: 18px; height: 18px; transition: transform var(--dur-2) var(--ease-out); }
+  .nav-grupo-boton[aria-expanded="true"] svg { transform: rotate(180deg); }
+  .nav-sublista { display: none; flex-direction: column; list-style: none; padding: 0 0 0 12px; border-left: 1px solid rgba(255, 255, 255, .15); margin: 0 0 4px 12px; }
+  .nav-grupo-boton[aria-expanded="true"] + .nav-sublista { display: flex; }
+  .nav-lista { max-height: calc(100vh - 60px); overflow-y: auto; overscroll-behavior: contain; }
+}
+
+/* Barra fija con «Pedir demo» (solo móvil) */
+.barra-demo { display: none; }
+@media (max-width: 760px) {
+  .barra-demo {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); background: var(--marca-burdeo-o); color: #fff;
+    box-shadow: 0 -4px 18px rgba(0, 0, 0, .3);
+  }
+  .barra-demo[hidden] { display: none; }
+  .barra-demo p { margin: 0; font-size: .9rem; line-height: 1.3; }
+  .barra-demo .boton { min-height: 44px; flex: none; }
+  body:has(.aviso-cookies:not([hidden])) .barra-demo { display: none; }
+  body:has(.barra-demo:not([hidden])) .pie { padding-bottom: 88px; }
+}
+@media print { .barra-demo { display: none !important; } }

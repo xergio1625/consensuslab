@@ -1,0 +1,43 @@
+---
+// Barra fija inferior en móvil con la acción principal («Pedir demo»). Aparece al bajar un poco, se oculta
+// mientras se ve algún formulario de demo o cotización y mientras el aviso de cookies está abierto (ver global.css).
+import { url } from '../lib/rutas';
+---
+
+<div class="barra-demo" id="barra-demo" hidden>
+  <p><strong>30 días gratis</strong> con tus datos</p>
+  <a class="boton boton-dorado" href={url('planes/#cotizar')}>Pedir demo</a>
+</div>
+
+<script>
+  const barra = document.getElementById('barra-demo');
+  if (barra) {
+    const formularios = document.querySelectorAll('#cotizar, .demo-franja, .demo-caja');
+    const visibles = new Set<Element>();
+    let abajo = false;
+    const actualizar = () => {
+      barra.hidden = !(abajo && visibles.size === 0);
+    };
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entradas) => {
+        for (const e of entradas) {
+          if (e.isIntersecting) visibles.add(e.target);
+          else visibles.delete(e.target);
+        }
+        actualizar();
+      });
+      formularios.forEach((f) => io.observe(f));
+    }
+    addEventListener(
+      'scroll',
+      () => {
+        const ahora = scrollY > 400;
+        if (ahora !== abajo) {
+          abajo = ahora;
+          actualizar();
+        }
+      },
+      { passive: true },
+    );
+  }
+</script>
