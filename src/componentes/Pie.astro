@@ -2,12 +2,14 @@
 // Pie de página: aviso de datos, licencia y enlaces secundarios.
 import { getCollection } from 'astro:content';
 import { url } from '../lib/rutas';
+import Boletin from './Boletin.astro';
 import { GA_ID } from '../lib/sitio';
 const hayGuias = (await getCollection('guias')).length > 0;
 const hayOpinion = (await getCollection('opinion')).length > 0;
 const anio = new Date().getFullYear();
 ---
 
+{!['/404/', '/cuenta/'].includes(Astro.url.pathname) && <Boletin />}
 <footer class="pie">
   <div class="contenedor pie-interior">
     <div>

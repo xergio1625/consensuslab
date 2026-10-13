@@ -785,6 +785,15 @@ img, svg { max-width: 100%; }
 .demo-caja h2 { margin-top: 0; }
 @media (max-width: 760px) { .demo-franja-cuerpo { grid-template-columns: 1fr; } }
 
+/* Suscripción a las novedades (componente Boletin, sobre el pie) */
+.boletin { padding: 36px 0; background: var(--c-panel); border-top: 1px solid var(--c-borde); }
+.boletin-cuerpo { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: start; }
+.boletin-texto h2 { margin-top: 0; }
+.boletin-texto p:last-child { margin-bottom: 0; }
+.form-boletin { display: grid; gap: 12px; }
+.form-boletin button[type="submit"] { justify-self: start; }
+@media (max-width: 760px) { .boletin-cuerpo { grid-template-columns: 1fr; } }
+
 /* Precio del plan Esencial */
 .plan-precio { margin: 0; display: grid; gap: 2px; }
 .plan-precio-fundador { font-size: 1.8rem; font-weight: 800; color: var(--marca-burdeo); line-height: 1.1; }

@@ -1,0 +1,100 @@
+---
+// Suscripción a las novedades (análisis gerencial y clínico, herramientas y calculadoras nuevas).
+// Va sobre el pie de todas las páginas. Envía a la app (acción «suscripcion»); los correos salen desde HubSpot.
+import { url } from '../lib/rutas';
+import { CORREO_CONTACTO, URL_APP } from '../lib/sitio';
+---
+
+<section class="boletin" aria-labelledby="boletin-titulo">
+  <div class="contenedor boletin-cuerpo">
+    <div class="boletin-texto">
+      <p class="antetitulo">Novedades</p>
+      <h2 id="boletin-titulo">Un análisis nuevo, cuando lo hay</h2>
+      <p>
+        Artículos de gestión y clínica del laboratorio, y las calculadoras y herramientas nuevas. Sin relleno y sin
+        compartir tu correo.
+      </p>
+    </div>
+    <form class="form-boletin" novalidate data-url={URL_APP} data-correo={CORREO_CONTACTO}>
+      <label class="calc-campo">
+        <span>Correo</span>
+        <input class="campo" name="correo" type="email" required maxlength="254" autocomplete="email" />
+      </label>
+      <label class="calc-campo">
+        <span>Tu rol <span class="texto-suave">(opcional)</span></span>
+        <select class="campo" name="perfil">
+          <option value="">Prefiero no decirlo</option>
+          <option value="jefatura">Jefatura o coordinación de laboratorio</option>
+          <option value="calidad">Calidad o acreditación</option>
+          <option value="tecnologo">Tecnología médica o clínico</option>
+          <option value="direccion">Dirección o gerencia</option>
+          <option value="docente">Docencia o investigación</option>
+          <option value="otro">Otro</option>
+        </select>
+      </label>
+      <div class="campo-trampa" aria-hidden="true">
+        <label>Sitio web <input name="sitio_web" tabindex="-1" autocomplete="off" /></label>
+      </div>
+      <label class="casilla-sitio">
+        <input type="checkbox" name="acepta" />
+        <span>
+          Acepto recibir por correo las novedades de ConsensusLab. Puedo darme de baja cuando quiera.{' '}
+          <a href={url('privacidad/')}>Privacidad</a>
+        </span>
+      </label>
+      <button type="submit" class="boton boton-primario">Suscribirme</button>
+      <p class="estado-cotizacion" role="status" hidden></p>
+    </form>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLFormElement>('.form-boletin').forEach((form) => {
+    const estado = form.querySelector('.estado-cotizacion') as HTMLElement;
+    const abierto = Date.now();
+    const mostrar = (texto: string, error: boolean) => {
+      estado.hidden = false;
+      estado.textContent = texto;
+      estado.classList.toggle('estado-error', error);
+    };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const datos: Record<string, unknown> = {};
+      new FormData(form).forEach((v, k) => { datos[k] = String(v); });
+      datos.acepta = (form.elements.namedItem('acepta') as HTMLInputElement).checked;
+      datos.t = Date.now() - abierto;
+      datos.origen = location.pathname.replace(/^\/|\/$/g, '').slice(0, 40) || 'inicio';
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(datos.correo).trim())) {
+        mostrar('Escribe un correo válido.', true);
+        return;
+      }
+      if (!datos.acepta) {
+        mostrar('Marca la casilla para aceptar recibir las novedades.', true);
+        return;
+      }
+      const boton = form.querySelector('button[type=submit]') as HTMLButtonElement;
+      boton.disabled = true;
+      mostrar('Enviando…', false);
+      try {
+        // Sin cabecera JSON: evita la consulta previa de CORS; la app responde JSON.
+        const r = await fetch(form.dataset.url!, { method: 'POST', body: JSON.stringify({ accion: 'suscripcion', datos }) });
+        const j = await r.json();
+        if (j.ok) {
+          form.reset();
+          mostrar('¡Listo! Te escribiremos cuando haya novedades. Revisa tu correo: te enviamos una bienvenida.', false);
+          const w = window as unknown as { gtag?: (...a: unknown[]) => void };
+          if (typeof w.gtag === 'function') w.gtag('event', 'sign_up', { metodo: 'boletin', pagina: location.pathname });
+        } else if (j.error === 'validacion') {
+          mostrar('Revisa tu correo y marca la casilla de aceptación.', true);
+        } else {
+          mostrar('No pudimos registrarte. Inténtalo de nuevo o escríbenos a ' + form.dataset.correo + '.', true);
+        }
+      } catch {
+        mostrar('No pudimos conectar. Revisa tu conexión o escríbenos a ' + form.dataset.correo + '.', true);
+      } finally {
+        boton.disabled = false;
+      }
+    });
+  });
+</script>

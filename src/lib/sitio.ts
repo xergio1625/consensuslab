@@ -38,5 +38,5 @@ export const CORREO_CONTACTO = 'contacto@consensuslab.cl';
 /** Fecha de la versión vigente de los términos de uso. */
 export const VIGENCIA_LEGAL = '11 de octubre de 2026';
 
-/** Fecha de la versión vigente de la política de privacidad (Google Analytics con consentimiento, formulario de cotización y avisos por WhatsApp futuros). */
-export const VIGENCIA_PRIVACIDAD = '11 de octubre de 2026';
+/** Fecha de la versión vigente de la política de privacidad (Google Analytics con consentimiento, formulario de cotización, suscripción a novedades y avisos por WhatsApp futuros). */
+export const VIGENCIA_PRIVACIDAD = '12 de octubre de 2026';
