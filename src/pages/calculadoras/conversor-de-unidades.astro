@@ -1,0 +1,171 @@
+---
+import PaginaCalculadora from '../../componentes/PaginaCalculadora.astro';
+import { ANALITOS } from '../../lib/conversion.js';
+---
+
+<PaginaCalculadora id="conversor-de-unidades">
+  <form class="calc" id="calc" novalidate>
+    <div class="calc-campos">
+      <label class="calc-campo">
+        <span>Analito</span>
+        <select class="campo" name="analito">
+          {ANALITOS.map((a) => <option value={a.id}>{a.nombre}</option>)}
+        </select>
+      </label>
+      <label class="calc-campo">
+        <span>Valor</span>
+        <input class="campo" name="valor" inputmode="decimal" placeholder="100" />
+      </label>
+      <label class="calc-campo">
+        <span>De</span>
+        <select class="campo" name="desde"></select>
+      </label>
+      <label class="calc-campo">
+        <span>A</span>
+        <select class="campo" name="hacia"></select>
+      </label>
+    </div>
+  </form>
+
+  <section class="calc-resultado" aria-live="polite">
+    <p class="calc-mensaje" data-mensaje>Ingresa el valor que quieres convertir.</p>
+    <div data-resultado hidden>
+      <div class="calc-cifras">
+        <div><span>Resultado</span><strong data-resultado-valor></strong><small data-resultado-unidad></small></div>
+      </div>
+      <h2>En todas las unidades</h2>
+      <div class="calc-tabla-envoltura">
+        <table class="calc-tabla">
+          <thead><tr><th>Unidad</th><th>Valor</th></tr></thead>
+          <tbody data-todas></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <form class="calc" id="hba" novalidate>
+    <h2>Hemoglobina glicosilada (HbA1c)</h2>
+    <div class="calc-campos">
+      <label class="calc-campo">
+        <span>HbA1c en %</span>
+        <span class="calc-entrada"><input class="campo" name="pct" inputmode="decimal" placeholder="7,0" /><em>%</em></span>
+        <small>Unidades NGSP / DCCT.</small>
+      </label>
+      <label class="calc-campo">
+        <span>HbA1c en mmol/mol</span>
+        <span class="calc-entrada"><input class="campo" name="mmol" inputmode="decimal" placeholder="53" /><em>mmol/mol</em></span>
+        <small>Unidades IFCC. Escribe en uno de los dos campos.</small>
+      </label>
+    </div>
+    <div class="calc-cifras">
+      <div><span>En %</span><strong data-hba-pct>—</strong></div>
+      <div><span>En mmol/mol</span><strong data-hba-mmol>—</strong></div>
+      <div><span>Glucosa promedio estimada</span><strong data-hba-eag>—</strong><small>mg/dL (ADAG)</small></div>
+    </div>
+  </form>
+
+  <div slot="explicacion">
+    <h2>Factores usados</h2>
+    <ul>
+      <li>Glucosa: mg/dL ÷ 18,016 = mmol/L. Colesterol: mg/dL ÷ 38,67. Triglicéridos: mg/dL ÷ 88,57.</li>
+      <li>Creatinina: mg/dL × 88,4 = µmol/L. Ácido úrico: × 59,48. Bilirrubina: × 17,104.</li>
+      <li>Urea: mg/dL ÷ 6,006 = mmol/L; nitrógeno ureico (BUN) = urea × 28,014 / 60,06 (≈ 0,467).</li>
+      <li>Calcio: mg/dL ÷ 4,008. Magnesio: ÷ 2,431. Fósforo: ÷ 3,097. Hierro: µg/dL × 0,1791 = µmol/L.</li>
+      <li>Albúmina y proteínas: g/dL × 10 = g/L. Hemoglobina: g/dL × 10 = g/L; × 0,6206 = mmol/L.</li>
+      <li>HbA1c: IFCC (mmol/mol) = (NGSP % − 2,15) × 10,929. Glucosa promedio estimada (mg/dL) = 28,7 × HbA1c − 46,7.</li>
+    </ul>
+    <h2>Cómo usarlo</h2>
+    <ul>
+      <li>Sodio, potasio y cloruro tienen el mismo número en mEq/L y en mmol/L: no necesitan conversión.</li>
+      <li>El colesterol se convierte igual para total, HDL y LDL.</li>
+      <li>La glucosa promedio estimada es una estimación poblacional: no reemplaza el automonitoreo, y la HbA1c puede no ser confiable con hemoglobinopatías, anemia o recambio alterado de glóbulos rojos.</li>
+      <li>Las conversiones usan masas molares estándar; verifica las unidades que informa tu método antes de usar el resultado.</li>
+    </ul>
+    <h2>Referencias</h2>
+    <p>
+      Ecuación maestra IFCC-NGSP (Hoelzel W, et al. <em>Clin Chem</em> 2004; programa NGSP). Glucosa promedio estimada:
+      Nathan DM, et al. (ADAG). <em>Diabetes Care</em> 2008;31:1473-1478.
+    </p>
+  </div>
+</PaginaCalculadora>
+
+<script>
+  import { formato, numero } from '../../lib/calidad.js';
+  import { ANALITOS, convertir, glucosaPromedioEstimada, hba1cAIfcc, hba1cANgsp } from '../../lib/conversion.js';
+
+  const form = document.getElementById('calc') as HTMLFormElement;
+  const hba = document.getElementById('hba') as HTMLFormElement;
+  const $ = (s: string) => document.querySelector(`[data-${s}]`) as HTMLElement;
+
+  function opciones() {
+    const a = ANALITOS.find((x) => x.id === form.analito.value)!;
+    const unidades = Object.keys(a.unidades);
+    for (const sel of [form.desde, form.hacia] as HTMLSelectElement[]) {
+      sel.replaceChildren(
+        ...unidades.map((u) => {
+          const o = document.createElement('option');
+          o.value = u;
+          o.textContent = u;
+          return o;
+        }),
+      );
+    }
+    form.hacia.value = unidades[1];
+  }
+
+  function decimales(v: number) {
+    const a = Math.abs(v);
+    return a >= 100 ? 1 : a >= 10 ? 2 : 3;
+  }
+
+  function calcular() {
+    const v = numero(form.valor.value);
+    if (Number.isNaN(v)) {
+      $('mensaje').hidden = false;
+      $('resultado').hidden = true;
+      return;
+    }
+    $('mensaje').hidden = true;
+    $('resultado').hidden = false;
+    const r = convertir(form.analito.value, v, form.desde.value, form.hacia.value);
+    $('resultado-valor').textContent = formato(r, decimales(r));
+    $('resultado-unidad').textContent = form.hacia.value;
+    const a = ANALITOS.find((x) => x.id === form.analito.value)!;
+    $('todas').replaceChildren(
+      ...Object.keys(a.unidades).map((u) => {
+        const tr = document.createElement('tr');
+        const x = convertir(a.id, v, form.desde.value, u);
+        [u, formato(x, decimales(x))].forEach((t) => {
+          const td = document.createElement('td');
+          td.textContent = t;
+          tr.appendChild(td);
+        });
+        return tr;
+      }),
+    );
+  }
+
+  function calcularHba(origen?: string) {
+    let pct = NaN;
+    if (origen === 'mmol') pct = hba1cANgsp(numero(hba.mmol.value));
+    else pct = numero(hba.pct.value);
+    if (origen === 'mmol' && !Number.isNaN(pct)) hba.pct.value = formato(pct, 1).replace('.', '');
+    if (origen !== 'mmol' && !Number.isNaN(pct)) hba.mmol.value = formato(hba1cAIfcc(pct), 0).replace('.', '');
+    const ok = !Number.isNaN(pct) && pct > 0;
+    $('hba-pct').textContent = ok ? formato(pct, 1) + ' %' : '—';
+    $('hba-mmol').textContent = ok ? formato(hba1cAIfcc(pct), 0) + ' mmol/mol' : '—';
+    $('hba-eag').textContent = ok ? formato(glucosaPromedioEstimada(pct), 0) : '—';
+  }
+
+  form.analito.addEventListener('change', () => {
+    opciones();
+    calcular();
+  });
+  form.addEventListener('input', calcular);
+  form.addEventListener('submit', (e) => e.preventDefault());
+  hba.pct.addEventListener('input', () => calcularHba('pct'));
+  hba.mmol.addEventListener('input', () => calcularHba('mmol'));
+  hba.addEventListener('submit', (e) => e.preventDefault());
+  opciones();
+  calcular();
+</script>

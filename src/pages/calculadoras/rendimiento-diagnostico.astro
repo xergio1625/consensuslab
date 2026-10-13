@@ -1,0 +1,145 @@
+---
+import PaginaCalculadora from '../../componentes/PaginaCalculadora.astro';
+import { url } from '../../lib/rutas';
+---
+
+<PaginaCalculadora id="rendimiento-diagnostico">
+  <form class="calc" id="calc" novalidate>
+    <p class="calc-ayuda">
+      Cuenta cuántas muestras cayeron en cada casilla al comparar tu prueba con el estándar de referencia.
+    </p>
+    <div class="calc-campos">
+      <label class="calc-campo">
+        <span>Verdaderos positivos (VP)</span>
+        <input class="campo" name="vp" inputmode="numeric" placeholder="90" />
+        <small>Prueba positiva y enfermedad presente.</small>
+      </label>
+      <label class="calc-campo">
+        <span>Falsos positivos (FP)</span>
+        <input class="campo" name="fp" inputmode="numeric" placeholder="20" />
+        <small>Prueba positiva y enfermedad ausente.</small>
+      </label>
+      <label class="calc-campo">
+        <span>Falsos negativos (FN)</span>
+        <input class="campo" name="fn" inputmode="numeric" placeholder="10" />
+        <small>Prueba negativa y enfermedad presente.</small>
+      </label>
+      <label class="calc-campo">
+        <span>Verdaderos negativos (VN)</span>
+        <input class="campo" name="vn" inputmode="numeric" placeholder="80" />
+        <small>Prueba negativa y enfermedad ausente.</small>
+      </label>
+      <label class="calc-campo">
+        <span>Prevalencia en tu población <em class="opcional">(opcional)</em></span>
+        <span class="calc-entrada"><input class="campo" name="prev" inputmode="decimal" placeholder="5" /><em>%</em></span>
+        <small>Si la dejas vacía, se usa la de la muestra del estudio.</small>
+      </label>
+    </div>
+  </form>
+
+  <section class="calc-resultado" aria-live="polite">
+    <p class="calc-mensaje" data-mensaje>Ingresa las cuatro casillas de la tabla.</p>
+    <div data-resultado hidden>
+      <div class="calc-cifras">
+        <div><span>Sensibilidad</span><strong data-sens></strong></div>
+        <div><span>Especificidad</span><strong data-esp></strong></div>
+        <div><span>Valor predictivo positivo</span><strong data-vpp></strong><small data-vpp-nota></small></div>
+        <div><span>Valor predictivo negativo</span><strong data-vpn></strong></div>
+      </div>
+      <div class="calc-tabla-envoltura">
+        <table class="calc-tabla">
+          <thead><tr><th>Medida</th><th>Valor</th><th>IC 95 %</th></tr></thead>
+          <tbody data-filas></tbody>
+        </table>
+      </div>
+      <p class="calc-nota" data-aviso hidden></p>
+    </div>
+  </section>
+
+  <div slot="explicacion">
+    <h2>Cómo se calcula</h2>
+    <ul>
+      <li><strong>Sensibilidad</strong> = VP / (VP + FN). <strong>Especificidad</strong> = VN / (VN + FP).</li>
+      <li><strong>Valor predictivo positivo</strong> = sens · p / (sens · p + (1 − esp)(1 − p)), con p la prevalencia. El negativo se calcula igual por Bayes.</li>
+      <li><strong>Razón de verosimilitud positiva</strong> = sens / (1 − esp); <strong>negativa</strong> = (1 − sens) / esp.</li>
+      <li><strong>Índice de Youden</strong> = sens + esp − 1. <strong>Exactitud</strong> = (VP + VN) / total.</li>
+      <li>Los intervalos de proporciones son de Wilson; los de las razones de verosimilitud, logarítmicos (método de Simel).</li>
+    </ul>
+    <h2>Cómo leerlo</h2>
+    <ul>
+      <li>La sensibilidad y la especificidad no dependen de la prevalencia; los valores predictivos sí. Una prueba excelente aplicada donde la enfermedad es rara tiene muchos falsos positivos: ingresa la prevalencia de tu población para verlo.</li>
+      <li>Con pocas muestras los intervalos son anchos: la cifra puntual dice menos de lo que parece.</li>
+      <li>El estándar de referencia imperfecto sesga todas estas medidas. La calidad del estudio pesa más que el cálculo.</li>
+    </ul>
+    <p>
+      Para evaluar el rendimiento analítico de un método cuantitativo, usa
+      <a href={url('calculadoras/comparacion-de-metodos/')}>Comparación de métodos</a>.
+    </p>
+    <h2>Referencias</h2>
+    <p>Simel DL, Samsa GP, Matchar DB. Likelihood ratios with confidence. <em>J Clin Epidemiol</em> 1991;44:763-770. Wilson EB. <em>J Am Stat Assoc</em> 1927;22:209-212.</p>
+  </div>
+</PaginaCalculadora>
+
+<script>
+  import { formato, numero } from '../../lib/calidad.js';
+  import { rendimientoDiagnostico } from '../../lib/formulas.js';
+
+  const form = document.getElementById('calc') as HTMLFormElement;
+  const $ = (s: string) => document.querySelector(`[data-${s}]`) as HTMLElement;
+  const pct = (v: number) => formato(v, 1) + ' %';
+  const rango = (c: number[], f: (v: number) => string) => (Number.isNaN(c[0]) ? '—' : `${f(c[0])} a ${f(c[1])}`);
+
+  function calcular() {
+    const [vp, fp, fn, vn] = ['vp', 'fp', 'fn', 'vn'].map((n) => numero((form as any)[n].value));
+    const prev = numero(form.prev.value);
+    const r = [vp, fp, fn, vn].every((x) => !Number.isNaN(x))
+      ? rendimientoDiagnostico({ vp, fp, fn, vn, prevalencia: !Number.isNaN(prev) && prev > 0 && prev < 100 ? prev : NaN })
+      : null;
+    if (!r) {
+      $('mensaje').textContent =
+        [vp, fp, fn, vn].some((x) => Number.isNaN(x)) ? 'Ingresa las cuatro casillas de la tabla.' : 'Necesitas casos con y sin enfermedad, y números enteros.';
+      $('mensaje').hidden = false;
+      $('resultado').hidden = true;
+      return;
+    }
+    $('mensaje').hidden = true;
+    $('resultado').hidden = false;
+    $('sens').textContent = pct(r.sensibilidad);
+    $('esp').textContent = pct(r.especificidad);
+    $('vpp').textContent = pct(r.vpp);
+    $('vpn').textContent = pct(r.vpn);
+    $('vpp-nota').textContent = `Prevalencia usada: ${formato(r.prevalenciaUsada, 1)} %`;
+    const filas: [string, string, string][] = [
+      ['Sensibilidad', pct(r.sensibilidad), rango(r.ciSensibilidad, pct)],
+      ['Especificidad', pct(r.especificidad), rango(r.ciEspecificidad, pct)],
+      ['Valor predictivo positivo', pct(r.vpp), rango(r.ciVpp, pct)],
+      ['Valor predictivo negativo', pct(r.vpn), rango(r.ciVpn, pct)],
+      ['Exactitud', pct(r.exactitud), rango(r.ciExactitud, pct)],
+      ['Razón de verosimilitud positiva', Number.isFinite(r.lrPositiva) ? formato(r.lrPositiva, 2) : '∞', rango(r.ciLrPositiva, (v) => formato(v, 2))],
+      ['Razón de verosimilitud negativa', formato(r.lrNegativa, 3), rango(r.ciLrNegativa, (v) => formato(v, 3))],
+      ['Índice de Youden', pct(r.youden), '—'],
+    ];
+    $('filas').replaceChildren(
+      ...filas.map((f) => {
+        const tr = document.createElement('tr');
+        f.forEach((t) => {
+          const td = document.createElement('td');
+          td.textContent = t;
+          tr.appendChild(td);
+        });
+        return tr;
+      }),
+    );
+    const aviso = $('aviso');
+    const conPrevExterna = !Number.isNaN(prev) && prev > 0 && prev < 100;
+    const mensajes = [];
+    if (conPrevExterna) mensajes.push('Los valores predictivos usan la prevalencia que ingresaste; por eso no llevan intervalo de confianza.');
+    if (r.total < 100) mensajes.push('Con menos de 100 muestras, los intervalos son muy anchos.');
+    aviso.textContent = mensajes.join(' ');
+    aviso.hidden = !mensajes.length;
+  }
+
+  form.addEventListener('input', calcular);
+  form.addEventListener('submit', (e) => e.preventDefault());
+  calcular();
+</script>

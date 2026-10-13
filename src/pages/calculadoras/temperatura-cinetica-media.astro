@@ -1,0 +1,95 @@
+---
+import PaginaCalculadora from '../../componentes/PaginaCalculadora.astro';
+import { url } from '../../lib/rutas';
+---
+
+<PaginaCalculadora id="temperatura-cinetica-media">
+  <form class="calc" id="calc" novalidate>
+    <div class="calc-campos">
+      <label class="calc-campo calc-ancho">
+        <span>Temperaturas registradas (°C)</span>
+        <textarea class="campo" name="temps" rows="7" placeholder="4,2&#10;4,5&#10;5,1&#10;7,8&#10;4,9"></textarea>
+        <small>Una por línea, medidas a intervalos iguales (por ejemplo, cada hora). Acepta coma o punto decimal.</small>
+      </label>
+      <label class="calc-campo">
+        <span>Límite superior de almacenamiento <em class="opcional">(opcional)</em></span>
+        <span class="calc-entrada"><input class="campo" name="limite" inputmode="decimal" placeholder="8" /><em>°C</em></span>
+        <small>El que indica el fabricante o tu procedimiento.</small>
+      </label>
+    </div>
+  </form>
+
+  <section class="calc-resultado" aria-live="polite">
+    <p class="calc-mensaje" data-mensaje>Pega las temperaturas del registro.</p>
+    <div data-resultado hidden>
+      <div class="calc-cifras">
+        <div><span>Temperatura cinética media</span><strong data-mkt></strong><small data-vs-limite></small></div>
+        <div><span>Promedio aritmético</span><strong data-media></strong></div>
+        <div><span>Mínima / máxima</span><strong data-rango></strong><small data-n></small></div>
+      </div>
+    </div>
+  </section>
+
+  <div slot="explicacion">
+    <h2>Cómo se calcula</h2>
+    <p>
+      <strong>MKT</strong> = (ΔH/R) / −ln( Σ e<sup>−ΔH/(R·T<sub>i</sub>)</sup> / n ), con las temperaturas en kelvin y
+      ΔH/R = 10.000 K (ΔH = 83,144 kJ/mol, el valor por defecto de la USP). Se obtiene la temperatura constante que
+      produciría la misma degradación que todo el registro.
+    </p>
+    <h2>Cómo usarlo</h2>
+    <ul>
+      <li>La MKT es siempre igual o mayor que el promedio, porque las temperaturas altas degradan más que lo que las bajas compensan.</li>
+      <li>Sirve para evaluar excursiones de temperatura en almacenamiento y transporte, no para autorizar el uso de un reactivo fuera de lo que indica su inserto: ante una excursión, consulta al fabricante.</li>
+      <li>No compensa congelación ni períodos fuera de los límites de estabilidad: revisa también la temperatura máxima y mínima registradas.</li>
+      <li>Los datos deben estar a intervalos iguales. Si hay huecos en el registro, el resultado no es válido.</li>
+      <li>Si conoces la energía de activación de tu producto, puedes obtener un resultado más exacto: esta calculadora usa el valor por defecto.</li>
+    </ul>
+    <p>
+      Para llevar el registro diario de cada refrigerador con alertas, mira la ficha
+      <a href={url('herramientas/registro-de-temperaturas/')}>Registro de temperaturas</a>.
+    </p>
+    <h2>Referencia</h2>
+    <p>USP, capítulo general &lt;1079&gt;, <em>Good Storage and Distribution Practices for Drug Products</em>; Haynes JD. <em>J Pharm Sci</em> 1971;60:927-929.</p>
+  </div>
+</PaginaCalculadora>
+
+<script>
+  import { formato, numero, valores } from '../../lib/calidad.js';
+  import { temperaturaCineticaMedia } from '../../lib/formulas.js';
+
+  const form = document.getElementById('calc') as HTMLFormElement;
+  const $ = (s: string) => document.querySelector(`[data-${s}]`) as HTMLElement;
+
+  function calcular() {
+    const temps = valores(form.temps.value);
+    if (!temps.length || temps.some(Number.isNaN)) {
+      $('mensaje').textContent = temps.some(Number.isNaN) ? 'Hay valores que no son números: revisa el registro.' : 'Pega las temperaturas del registro.';
+      $('mensaje').hidden = false;
+      $('resultado').hidden = true;
+      return;
+    }
+    $('mensaje').hidden = true;
+    $('resultado').hidden = false;
+    const mkt = temperaturaCineticaMedia(temps);
+    const media = temps.reduce((s, t) => s + t, 0) / temps.length;
+    $('mkt').textContent = formato(mkt, 2) + ' °C';
+    $('media').textContent = formato(media, 2) + ' °C';
+    $('rango').textContent = `${formato(Math.min(...temps), 1)} / ${formato(Math.max(...temps), 1)} °C`;
+    $('n').textContent = `${temps.length} lecturas`;
+    const limite = numero(form.limite.value);
+    const aviso = $('vs-limite');
+    if (Number.isNaN(limite)) {
+      aviso.textContent = '';
+    } else {
+      const ok = mkt <= limite;
+      const sobre = Math.max(...temps) > limite;
+      aviso.textContent = ok ? 'Bajo el límite' + (sobre ? ', pero hubo lecturas sobre él' : '') : 'Sobre el límite';
+      aviso.dataset.nivel = ok && !sobre ? 'ok' : ok ? 'advertencia' : 'error';
+    }
+  }
+
+  form.addEventListener('input', calcular);
+  form.addEventListener('submit', (e) => e.preventDefault());
+  calcular();
+</script>

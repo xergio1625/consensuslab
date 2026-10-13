@@ -130,3 +130,31 @@ export function comprarVsDerivar({
     escenarios: [0.5, 1, 1.5, 2].map((k) => costos(volumen * k)),
   };
 }
+
+/**
+ * Comparador de ofertas de proveedores para una misma producción: costo por resultado reportable de cada oferta
+ * (reactivo, control, calibrador, insumos y costo fijo/arriendo del equipo, con las mismas reglas que
+ * `costoDeterminacion`). `produccion`: muestras, repeticionPct, corridasControl, nivelesControl, calibraciones,
+ * replicadosCalib, minutosPorMuestra y costoHora (comunes a todas). `ofertas`: lista con `nombre`, `precioKit`,
+ * `deterKit` y, opcionales, perdidaKit, costoControlMes, costoCalibradorMes, insumoPorDeterminacion, costoFijoMes.
+ * Devuelve cada oferta con su costo y su diferencia contra la más barata, e `indiceMejor` (-1 si ninguna es válida).
+ */
+export function compararOfertas(produccion, ofertas) {
+  const filas = ofertas.map((o) => {
+    const { nombre, ...datos } = o;
+    const r = costoDeterminacion({ ...produccion, ...datos });
+    return { nombre, resultado: r, costo: r ? r.costo : NaN, totalMes: r ? r.total : NaN, totalAnio: r ? r.total * 12 : NaN };
+  });
+  const validos = filas.filter((f) => f.resultado);
+  const mejor = validos.length ? validos.reduce((a, b) => (b.costo < a.costo ? b : a)) : null;
+  const { muestras } = produccion;
+  return {
+    filas: filas.map((f) => ({
+      ...f,
+      difUnitaria: mejor && f.resultado ? f.costo - mejor.costo : NaN,
+      difPct: mejor && f.resultado ? ((f.costo - mejor.costo) / mejor.costo) * 100 : NaN,
+      difAnio: mejor && f.resultado ? (f.costo - mejor.costo) * muestras * 12 : NaN,
+    })),
+    indiceMejor: mejor ? filas.indexOf(mejor) : -1,
+  };
+}

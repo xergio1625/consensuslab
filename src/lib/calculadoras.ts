@@ -159,6 +159,48 @@ export const CALCULADORAS = [
     resumen: 'LDL-C desde colesterol total, HDL y triglicéridos con las tres ecuaciones, comparadas entre sí y con el LDL directo, con sus límites de uso y casos de prueba para tu sistema.',
     herramientas: ['acreditacion-y-autorizacion-sanitaria'],
   },
+  {
+    id: 'comparador-de-ofertas',
+    familia: 'costos',
+    titulo: 'Comparador de ofertas de proveedores',
+    resumen: 'Hasta tres ofertas para la misma producción: costo por resultado reportable, gasto mensual y anual y cuánto ahorras con la más barata.',
+    herramientas: ['costeo-por-examen', 'contratos-y-comodatos', 'solicitudes-de-compra', 'evaluacion-de-proveedores'],
+  },
+  {
+    id: 'verificacion-de-precision',
+    familia: 'calidad',
+    titulo: 'Verificación de precisión (5 × 5)',
+    resumen: 'Pega los resultados de 5 días con 5 réplicas: repetibilidad e intralaboratorio por ANOVA, comparados con el CV declarado por el fabricante.',
+    herramientas: ['control-de-calidad-interno-y-externo', 'acreditacion-y-autorizacion-sanitaria'],
+  },
+  {
+    id: 'comparacion-de-metodos',
+    familia: 'calidad',
+    titulo: 'Comparación de métodos',
+    resumen: 'Pega los pares de resultados de dos métodos: Bland-Altman, regresión de Deming y de Passing-Bablok, y el sesgo en tus niveles de decisión.',
+    herramientas: ['control-de-calidad-interno-y-externo', 'acreditacion-y-autorizacion-sanitaria'],
+  },
+  {
+    id: 'conversor-de-unidades',
+    familia: 'formulas',
+    titulo: 'Conversor de unidades',
+    resumen: 'Glucosa, colesterol, triglicéridos, creatinina, urea, calcio, bilirrubina, hemoglobina y más entre unidades convencionales y SI, y HbA1c entre % y mmol/mol.',
+    herramientas: [],
+  },
+  {
+    id: 'rendimiento-diagnostico',
+    familia: 'formulas',
+    titulo: 'Rendimiento diagnóstico (tabla 2 × 2)',
+    resumen: 'Sensibilidad, especificidad, valores predictivos y razones de verosimilitud con intervalo de confianza, y cómo cambian con la prevalencia.',
+    herramientas: [],
+  },
+  {
+    id: 'temperatura-cinetica-media',
+    familia: 'formulas',
+    titulo: 'Temperatura cinética media (MKT)',
+    resumen: 'Con el registro de temperaturas de un refrigerador o una bodega, la temperatura única que equivale a todo el período.',
+    herramientas: ['registro-de-temperaturas'],
+  },
 ] as const;
 
 export type IdCalculadora = (typeof CALCULADORAS)[number]['id'];

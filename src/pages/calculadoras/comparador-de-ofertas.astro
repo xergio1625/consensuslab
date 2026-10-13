@@ -1,0 +1,236 @@
+---
+import PaginaCalculadora from '../../componentes/PaginaCalculadora.astro';
+import { url } from '../../lib/rutas';
+
+const OFERTAS = ['a', 'b', 'c'] as const;
+const NOMBRES = { a: 'Oferta A', b: 'Oferta B', c: 'Oferta C' };
+---
+
+<PaginaCalculadora id="comparador-de-ofertas">
+  <form class="calc" id="calc" novalidate>
+    <p class="calc-ayuda">
+      Usa la misma moneda en todos los campos. Las ofertas B y C son opcionales: completa al menos dos.
+      <button type="button" class="boton boton-secundario calc-ejemplo" data-ejemplo>Cargar un ejemplo</button>
+    </p>
+
+    <fieldset class="calc-grupo">
+      <legend>Tu producción mensual (igual para todas las ofertas)</legend>
+      <div class="calc-campos">
+        <label class="calc-campo">
+          <span>Muestras al mes</span>
+          <input class="campo" name="muestras" inputmode="decimal" placeholder="800" />
+          <small>Resultados que informas, sin repeticiones ni controles.</small>
+        </label>
+        <label class="calc-campo">
+          <span>Repeticiones <em class="opcional">(opcional)</em></span>
+          <span class="calc-entrada"><input class="campo" name="repeticionPct" inputmode="decimal" placeholder="5" /><em>%</em></span>
+        </label>
+        <label class="calc-campo">
+          <span>Corridas de control al mes <em class="opcional">(opcional)</em></span>
+          <input class="campo" name="corridasControl" inputmode="decimal" placeholder="30" />
+        </label>
+        <label class="calc-campo">
+          <span>Niveles de control por corrida <em class="opcional">(opcional)</em></span>
+          <input class="campo" name="nivelesControl" inputmode="decimal" placeholder="2" />
+        </label>
+        <label class="calc-campo">
+          <span>Calibraciones al mes <em class="opcional">(opcional)</em></span>
+          <input class="campo" name="calibraciones" inputmode="decimal" placeholder="4" />
+        </label>
+        <label class="calc-campo">
+          <span>Réplicas por calibración <em class="opcional">(opcional)</em></span>
+          <input class="campo" name="replicadosCalib" inputmode="decimal" placeholder="2" />
+        </label>
+        <label class="calc-campo">
+          <span>Minutos de personal por muestra <em class="opcional">(opcional)</em></span>
+          <input class="campo" name="minutosPorMuestra" inputmode="decimal" placeholder="3" />
+        </label>
+        <label class="calc-campo">
+          <span>Costo de una hora de personal <em class="opcional">(opcional)</em></span>
+          <input class="campo" name="costoHora" inputmode="decimal" placeholder="6000" />
+        </label>
+      </div>
+    </fieldset>
+
+    {
+      OFERTAS.map((o) => (
+        <fieldset class="calc-grupo">
+          <legend>{NOMBRES[o]}</legend>
+          <div class="calc-campos">
+            <label class="calc-campo">
+              <span>Proveedor <em class="opcional">(opcional)</em></span>
+              <input class="campo" type="text" name={`${o}_nombre`} placeholder={NOMBRES[o]} />
+            </label>
+            <label class="calc-campo">
+              <span>Precio del kit</span>
+              <input class="campo" name={`${o}_precioKit`} inputmode="decimal" />
+            </label>
+            <label class="calc-campo">
+              <span>Determinaciones declaradas por kit</span>
+              <input class="campo" name={`${o}_deterKit`} inputmode="decimal" />
+            </label>
+            <label class="calc-campo">
+              <span>Pérdidas por kit <em class="opcional">(opcional)</em></span>
+              <input class="campo" name={`${o}_perdidaKit`} inputmode="decimal" />
+              <small>Cebado, volumen muerto, purgas.</small>
+            </label>
+            <label class="calc-campo">
+              <span>Control al mes <em class="opcional">(opcional)</em></span>
+              <input class="campo" name={`${o}_costoControlMes`} inputmode="decimal" />
+            </label>
+            <label class="calc-campo">
+              <span>Calibrador al mes <em class="opcional">(opcional)</em></span>
+              <input class="campo" name={`${o}_costoCalibradorMes`} inputmode="decimal" />
+            </label>
+            <label class="calc-campo">
+              <span>Insumos por determinación <em class="opcional">(opcional)</em></span>
+              <input class="campo" name={`${o}_insumoPorDeterminacion`} inputmode="decimal" />
+            </label>
+            <label class="calc-campo">
+              <span>Costo fijo mensual <em class="opcional">(opcional)</em></span>
+              <input class="campo" name={`${o}_costoFijoMes`} inputmode="decimal" />
+              <small>Arriendo o comodato del equipo, mantención.</small>
+            </label>
+          </div>
+        </fieldset>
+      ))
+    }
+  </form>
+
+  <section class="calc-resultado" aria-live="polite">
+    <p class="calc-mensaje" data-mensaje>Ingresa tu producción y al menos dos ofertas con precio y determinaciones por kit.</p>
+    <div data-resultado hidden>
+      <div class="calc-cifras">
+        <div><span>Oferta más barata</span><strong data-mejor></strong><small data-mejor-costo></small></div>
+        <div><span>Ahorro anual frente a la más cara</span><strong data-ahorro></strong><small data-ahorro-nota></small></div>
+      </div>
+      <div class="calc-tabla-envoltura">
+        <table class="calc-tabla">
+          <thead>
+            <tr><th>Oferta</th><th>Costo por resultado</th><th>Gasto al mes</th><th>Gasto al año</th><th>Kits al mes</th><th>Rendimiento</th><th>Diferencia con la mejor</th></tr>
+          </thead>
+          <tbody data-filas></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <div slot="explicacion">
+    <h2>Cómo se calcula</h2>
+    <ul>
+      <li>Cada oferta se calcula con las mismas reglas que <a href={url('calculadoras/costo-por-determinacion/')}>Costo por determinación</a>: kits consumidos (muestras, repeticiones, controles y calibraciones sobre las determinaciones útiles de cada kit) por su precio, más control, calibrador, insumos, personal y costo fijo.</li>
+      <li><strong>Costo por resultado</strong> = gasto total del mes / muestras informadas al mes. Es lo que se debe comparar, no el precio del kit ni el precio por determinación declarado.</li>
+      <li><strong>Ahorro anual</strong> = diferencia de costo por resultado × muestras × 12.</li>
+    </ul>
+    <h2>Cómo usarlo</h2>
+    <ul>
+      <li>Un kit más barato con más pérdidas, más controles o más calibraciones puede salir más caro por resultado. Pide al proveedor el dato de pérdidas y el esquema de control recomendado.</li>
+      <li>Incluye el arriendo o comodato como costo fijo: con volumen bajo pesa más que el reactivo.</li>
+      <li>El precio no es todo: compara también plazos de entrega, soporte técnico, estabilidad, rendimiento analítico y condiciones del contrato. La <a href={url('herramientas/evaluacion-de-proveedores/')}>evaluación de proveedores</a> y los <a href={url('herramientas/contratos-y-comodatos/')}>contratos y comodatos</a> ayudan a verlo en el tiempo.</li>
+      <li>Si necesitas también el margen contra tu arancel, calcula la oferta elegida en <a href={url('calculadoras/costo-por-determinacion/')}>Costo por determinación</a>.</li>
+    </ul>
+  </div>
+</PaginaCalculadora>
+
+<script>
+  import { formato, numero } from '../../lib/calidad.js';
+  import { compararOfertas } from '../../lib/costos.js';
+
+  const form = document.getElementById('calc') as HTMLFormElement;
+  const $ = (s: string) => document.querySelector(`[data-${s}]`) as HTMLElement;
+  const campo = (n: string) => (form as any)[n] as HTMLInputElement;
+  const n = (nombre: string, porDefecto: number) => {
+    const v = numero(campo(nombre).value);
+    return Number.isNaN(v) ? porDefecto : v;
+  };
+  const dinero = (v: number) => formato(v, 0);
+
+  function mensaje(t: string) {
+    $('mensaje').textContent = t;
+    $('mensaje').hidden = false;
+    $('resultado').hidden = true;
+  }
+
+  function calcular() {
+    const muestras = numero(campo('muestras').value);
+    if (Number.isNaN(muestras) || muestras <= 0) return mensaje('Ingresa las muestras al mes.');
+    const produccion = {
+      muestras,
+      repeticionPct: n('repeticionPct', 0),
+      corridasControl: n('corridasControl', 0),
+      nivelesControl: n('nivelesControl', 1),
+      calibraciones: n('calibraciones', 0),
+      replicadosCalib: n('replicadosCalib', 1),
+      minutosPorMuestra: n('minutosPorMuestra', 0),
+      costoHora: n('costoHora', 0),
+    };
+    const ofertas = ['a', 'b', 'c']
+      .map((o, i) => ({
+        o,
+        nombre: campo(`${o}_nombre`).value.trim() || `Oferta ${o.toUpperCase()}`,
+        precioKit: numero(campo(`${o}_precioKit`).value),
+        deterKit: numero(campo(`${o}_deterKit`).value),
+      }))
+      .filter((x) => !Number.isNaN(x.precioKit) && !Number.isNaN(x.deterKit))
+      .map((x) => ({
+        nombre: x.nombre,
+        precioKit: x.precioKit,
+        deterKit: x.deterKit,
+        perdidaKit: n(`${x.o}_perdidaKit`, 0),
+        costoControlMes: n(`${x.o}_costoControlMes`, 0),
+        costoCalibradorMes: n(`${x.o}_costoCalibradorMes`, 0),
+        insumoPorDeterminacion: n(`${x.o}_insumoPorDeterminacion`, 0),
+        costoFijoMes: n(`${x.o}_costoFijoMes`, 0),
+      }));
+    if (ofertas.length < 2) return mensaje('Ingresa al menos dos ofertas con precio y determinaciones por kit.');
+    const r = compararOfertas(produccion, ofertas);
+    const validas = r.filas.filter((f) => f.resultado);
+    if (validas.length < 2) return mensaje('Revisa los datos: las determinaciones útiles de cada kit deben ser mayores que cero.');
+    $('mensaje').hidden = true;
+    $('resultado').hidden = false;
+    const mejor = r.filas[r.indiceMejor];
+    const peor = validas.reduce((a, b) => (b.costo > a.costo ? b : a));
+    $('mejor').textContent = mejor.nombre;
+    $('mejor-costo').textContent = `${dinero(mejor.costo)} por resultado`;
+    const ahorro = (peor.costo - mejor.costo) * muestras * 12;
+    $('ahorro').textContent = dinero(ahorro);
+    $('ahorro-nota').textContent = peor === mejor ? 'Las ofertas cuestan lo mismo' : `Frente a ${peor.nombre}`;
+    $('filas').replaceChildren(
+      ...r.filas
+        .filter((f) => f.resultado)
+        .map((f) => {
+          const tr = document.createElement('tr');
+          const esMejor = f === mejor;
+          const diff = esMejor ? 'La más barata' : `+${dinero(f.difUnitaria)} por resultado (+${formato(f.difPct, 1)} %), ${dinero(f.difAnio)} al año`;
+          [
+            f.nombre + (esMejor ? ' ★' : ''),
+            dinero(f.costo),
+            dinero(f.totalMes),
+            dinero(f.totalAnio),
+            formato(f.resultado!.rendimiento.kitsMes, 1),
+            formato(f.resultado!.rendimiento.rendimiento, 0) + ' %',
+            diff,
+          ].forEach((t) => {
+            const td = document.createElement('td');
+            td.textContent = t;
+            tr.appendChild(td);
+          });
+          return tr;
+        }),
+    );
+  }
+
+  const ejemplo: Record<string, string> = {
+    muestras: '800', repeticionPct: '5', corridasControl: '30', nivelesControl: '2', calibraciones: '4', replicadosCalib: '2',
+    minutosPorMuestra: '3', costoHora: '6000',
+    a_nombre: 'Proveedor A', a_precioKit: '240000', a_deterKit: '500', a_perdidaKit: '20', a_costoControlMes: '40000', a_costoCalibradorMes: '20000', a_costoFijoMes: '100000',
+    b_nombre: 'Proveedor B', b_precioKit: '200000', b_deterKit: '500', b_perdidaKit: '40', b_costoControlMes: '40000', b_costoCalibradorMes: '25000', b_costoFijoMes: '250000',
+  };
+  form.querySelector('[data-ejemplo]')!.addEventListener('click', () => {
+    for (const [k, v] of Object.entries(ejemplo)) campo(k).value = v;
+    calcular();
+  });
+  form.addEventListener('input', calcular);
+  form.addEventListener('submit', (e) => e.preventDefault());
+  calcular();
+</script>

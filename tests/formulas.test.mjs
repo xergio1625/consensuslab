@@ -115,3 +115,36 @@ test('barrido de triglicéridos: Friedewald se separa de Sampson al subir los TG
   cerca(b[1].diferencia, b[1].friedewald - b[1].sampson, 1e-9);
   cerca(b[2].martin, 210 - 800 / 7.5, 1e-9);
 });
+
+test('rendimiento diagnóstico: tabla 2×2 con valores a mano', () => {
+  const r = F.rendimientoDiagnostico({ vp: 90, fp: 20, fn: 10, vn: 80 });
+  cerca(r.sensibilidad, 90, 1e-9);
+  cerca(r.especificidad, 80, 1e-9);
+  cerca(r.exactitud, 85, 1e-9);
+  cerca(r.prevalenciaUsada, 50, 1e-9);
+  cerca(r.vpp, (90 / 110) * 100, 1e-9);
+  cerca(r.vpn, (80 / 90) * 100, 1e-9);
+  cerca(r.lrPositiva, 4.5, 1e-9);
+  cerca(r.lrNegativa, 0.125, 1e-9);
+  cerca(r.youden, 70, 1e-9);
+  assert.ok(r.ciLrPositiva[0] < 4.5 && r.ciLrPositiva[1] > 4.5);
+  assert.ok(r.ciSensibilidad[0] < 90 && r.ciSensibilidad[1] > 90);
+});
+
+test('rendimiento diagnóstico: prevalencia externa (Bayes) y casos inválidos', () => {
+  const r = F.rendimientoDiagnostico({ vp: 90, fp: 20, fn: 10, vn: 80, prevalencia: 5 });
+  // sens 0,9; esp 0,8; prevalencia 5 %: VPP = 0,045 / (0,045 + 0,2 × 0,95) = 19,1 %
+  cerca(r.vpp, (0.045 / (0.045 + 0.19)) * 100, 1e-9);
+  cerca(r.vpn, ((0.8 * 0.95) / (0.8 * 0.95 + 0.1 * 0.05)) * 100, 1e-9);
+  assert.ok(Number.isNaN(r.ciVpp[0]));
+  assert.equal(F.rendimientoDiagnostico({ vp: 0, fp: 0, fn: 0, vn: 5 }), null);
+  assert.equal(F.rendimientoDiagnostico({ vp: 1.5, fp: 1, fn: 1, vn: 1 }), null);
+});
+
+test('temperatura cinética media: constante, mayor que el promedio y valor conocido', () => {
+  cerca(F.temperaturaCineticaMedia([25, 25, 25]), 25, 1e-9);
+  const m = F.temperaturaCineticaMedia([25, 35]);
+  assert.ok(m > 30 && m < 35);
+  cerca(m, 31.2, 0.1);
+  assert.ok(Number.isNaN(F.temperaturaCineticaMedia([])));
+});

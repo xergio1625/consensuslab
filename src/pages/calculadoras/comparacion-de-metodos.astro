@@ -1,0 +1,306 @@
+---
+import PaginaCalculadora from '../../componentes/PaginaCalculadora.astro';
+import { url } from '../../lib/rutas';
+---
+
+<PaginaCalculadora id="comparacion-de-metodos">
+  <form class="calc" id="calc" novalidate>
+    <p class="calc-ayuda">
+      Cada muestra se mide con los dos métodos. <button type="button" class="boton boton-secundario calc-ejemplo" data-ejemplo>Cargar un ejemplo</button>
+    </p>
+    <div class="calc-campos">
+      <label class="calc-campo calc-ancho">
+        <span>Pares de resultados</span>
+        <textarea class="campo" name="pares" rows="9" placeholder="95 97&#10;110 113&#10;152 150"></textarea>
+        <small>Una muestra por línea: primero el método actual o de referencia (X) y después el método nuevo (Y), separados por espacio o tabulación. Solo valores numéricos, sin datos de pacientes. EP09 recomienda al menos 40 muestras que cubran todo el intervalo de medición.</small>
+      </label>
+      <label class="calc-campo">
+        <span>Razón de varianzas del error (Deming)</span>
+        <input class="campo" name="lambda" inputmode="decimal" placeholder="1" value="1" />
+        <small>Error de Y / error de X, como (CV de Y / CV de X)². Con 1 se asumen errores iguales.</small>
+      </label>
+      <label class="calc-campo">
+        <span>Niveles de decisión <em class="opcional">(opcional)</em></span>
+        <input class="campo" name="niveles" placeholder="100 126" />
+        <small>Concentraciones donde se toman decisiones clínicas, separadas por espacio. Se estima el sesgo en cada una.</small>
+      </label>
+    </div>
+  </form>
+
+  <section class="calc-resultado" aria-live="polite">
+    <p class="calc-mensaje" data-mensaje>Pega los pares de resultados (al menos 3).</p>
+    <div data-resultado hidden>
+      <div class="calc-cifras">
+        <div><span>Sesgo medio</span><strong data-sesgo></strong><small data-sesgo-pct></small></div>
+        <div><span>Pendiente (Passing-Bablok)</span><strong data-pend></strong><small data-pend-nota></small></div>
+        <div><span>Intercepto (Passing-Bablok)</span><strong data-inter></strong><small data-inter-nota></small></div>
+        <div><span>Correlación r</span><strong data-r></strong><small data-r-nota></small></div>
+      </div>
+      <p class="calc-nota" data-aviso hidden></p>
+
+      <h2>Regresión</h2>
+      <div class="lj-envoltura" data-grafico-dispersion></div>
+      <p class="lj-leyenda">
+        <span><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="4.5" class="lj-ok"></circle></svg>Muestra</span>
+        <span>Línea punteada: identidad (Y = X)</span>
+        <span>Línea continua: Passing-Bablok</span>
+        <span>Línea color: Deming</span>
+      </p>
+      <div class="calc-tabla-envoltura">
+        <table class="calc-tabla">
+          <thead><tr><th>Método de regresión</th><th>Pendiente (IC 95 %)</th><th>Intercepto (IC 95 %)</th></tr></thead>
+          <tbody data-regresiones></tbody>
+        </table>
+      </div>
+
+      <h2>Diferencias (Bland-Altman)</h2>
+      <div class="lj-envoltura" data-grafico-ba></div>
+      <div class="calc-tabla-envoltura">
+        <table class="calc-tabla">
+          <thead><tr><th>Medida</th><th>Valor</th><th>IC 95 %</th></tr></thead>
+          <tbody data-ba></tbody>
+        </table>
+      </div>
+
+      <div data-caja-niveles hidden>
+        <h2>Sesgo en los niveles de decisión</h2>
+        <div class="calc-tabla-envoltura">
+          <table class="calc-tabla">
+            <thead><tr><th>Nivel</th><th>Y estimado (P-B)</th><th>Sesgo (P-B)</th><th>Y estimado (Deming)</th><th>Sesgo (Deming)</th></tr></thead>
+            <tbody data-niveles></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div slot="explicacion">
+    <h2>Cómo se calcula</h2>
+    <ul>
+      <li><strong>Bland-Altman</strong>: diferencia Y − X de cada muestra. Sesgo = media de las diferencias; límites de concordancia = sesgo ± 1,96 DE, con intervalos de confianza de Bland y Altman (1999).</li>
+      <li><strong>Passing-Bablok</strong>: pendiente = mediana desplazada de todas las pendientes entre pares de muestras; intercepto = mediana de Y − pendiente · X. No supone distribución normal ni un solo método sin error, y resiste valores atípicos.</li>
+      <li><strong>Deming</strong>: mínimos cuadrados con error en ambos métodos, según la razón de varianzas que indiques. Intervalos por jackknife.</li>
+      <li><strong>Mínimos cuadrados</strong> se muestra solo para comparar: subestima la pendiente cuando X tiene error.</li>
+      <li><strong>Sesgo en un nivel de decisión</strong> = (intercepto + pendiente · X<sub>c</sub>) − X<sub>c</sub>.</li>
+    </ul>
+    <h2>Cómo leerlo</h2>
+    <ul>
+      <li>Los métodos concuerdan si el intervalo de la pendiente incluye 1 y el del intercepto incluye 0. Si no los incluye, hay un error proporcional (pendiente) o constante (intercepto).</li>
+      <li>Lo importante es el tamaño del sesgo en los niveles de decisión frente a tu error total permitido, no solo la significancia estadística. Compáralo con la <a href={url('calculadoras/tea-variabilidad-biologica/')}>especificación de calidad</a> del analito.</li>
+      <li>Mira el gráfico: una curvatura, un abanico de dispersión o grupos de puntos separados indican que una sola recta no describe la relación. Passing-Bablok y Deming suponen una relación lineal.</li>
+      <li>Con menos de 40 muestras o un rango estrecho, los intervalos son poco confiables.</li>
+    </ul>
+    <h2>Referencias</h2>
+    <p>
+      Bland JM, Altman DG. <em>Stat Methods Med Res</em> 1999;8:135-160. Passing H, Bablok W. <em>J Clin Chem Clin Biochem</em>
+      1983;21:709-720. Linnet K. <em>Clin Chem</em> 1990;36:1627-1632 (Deming). CLSI EP09c: Measurement Procedure Comparison and
+      Bias Estimation Using Patient Samples. Para verificar la precisión del método nuevo, usa
+      <a href={url('calculadoras/verificacion-de-precision/')}>Verificación de precisión</a>.
+    </p>
+  </div>
+</PaginaCalculadora>
+
+<script>
+  import { formato, numero } from '../../lib/calidad.js';
+  import { compararMetodos } from '../../lib/metodos.js';
+
+  const form = document.getElementById('calc') as HTMLFormElement;
+  const $ = (s: string) => document.querySelector(`[data-${s}]`) as HTMLElement;
+  const NS = 'http://www.w3.org/2000/svg';
+
+  function svg(nombre: string, atributos: Record<string, string | number> = {}, texto?: string) {
+    const el = document.createElementNS(NS, nombre);
+    for (const [k, v] of Object.entries(atributos)) el.setAttribute(k, String(v));
+    if (texto !== undefined) el.textContent = texto;
+    return el;
+  }
+
+  function mensaje(t: string) {
+    $('mensaje').textContent = t;
+    $('mensaje').hidden = false;
+    $('resultado').hidden = true;
+  }
+
+  const num = (v: number, d = 3) => (Number.isFinite(v) ? formato(v, d) : '—');
+  const ic = (c: number[] | undefined, d = 3) => (c && c.every(Number.isFinite) ? `${formato(c[0], d)} a ${formato(c[1], d)}` : '—');
+
+  function filaTabla(celdas: string[]) {
+    const tr = document.createElement('tr');
+    celdas.forEach((c) => {
+      const td = document.createElement('td');
+      td.textContent = c;
+      tr.appendChild(td);
+    });
+    return tr;
+  }
+
+  function escala(min: number, max: number, pasos = 5) {
+    const rango = max - min || 1;
+    const bruto = rango / pasos;
+    const pot = 10 ** Math.floor(Math.log10(bruto));
+    const paso = [1, 2, 5, 10].map((f) => f * pot).find((p) => p >= bruto)!;
+    const ini = Math.floor(min / paso) * paso;
+    const fin = Math.ceil(max / paso) * paso;
+    const marcas = [];
+    for (let v = ini; v <= fin + paso / 2; v += paso) marcas.push(Number(v.toFixed(10)));
+    return { ini, fin, marcas };
+  }
+
+  function lienzo(titulo: string) {
+    const s = svg('svg', { viewBox: '0 0 640 340', role: 'img' });
+    s.setAttribute('aria-label', titulo);
+    return s;
+  }
+
+  function ejes(s: SVGElement, ex: ReturnType<typeof escala>, ey: ReturnType<typeof escala>, tx: string, ty: string, g: { ml: number; mr: number; mt: number; mb: number; W: number; H: number }) {
+    const X = (v: number) => g.ml + ((v - ex.ini) / (ex.fin - ex.ini)) * (g.W - g.ml - g.mr);
+    const Y = (v: number) => g.mt + ((ey.fin - v) / (ey.fin - ey.ini)) * (g.H - g.mt - g.mb);
+    for (const v of ey.marcas) {
+      s.append(svg('line', { x1: g.ml, x2: g.W - g.mr, y1: Y(v), y2: Y(v), class: 'lj-grilla' }));
+      s.append(svg('text', { x: g.ml - 6, y: Y(v) + 4, 'text-anchor': 'end', class: 'lj-texto' }, formato(v, Math.abs(ey.marcas[1] - ey.marcas[0]) < 1 ? 1 : 0)));
+    }
+    for (const v of ex.marcas) {
+      s.append(svg('text', { x: X(v), y: g.H - g.mb + 16, 'text-anchor': 'middle', class: 'lj-texto' }, formato(v, Math.abs(ex.marcas[1] - ex.marcas[0]) < 1 ? 1 : 0)));
+    }
+    s.append(svg('text', { x: (g.ml + g.W - g.mr) / 2, y: g.H - 6, 'text-anchor': 'middle', class: 'lj-texto' }, tx));
+    s.append(svg('text', { x: 14, y: (g.mt + g.H - g.mb) / 2, 'text-anchor': 'middle', class: 'lj-texto', transform: `rotate(-90 14 ${(g.mt + g.H - g.mb) / 2})` }, ty));
+    return { X, Y };
+  }
+
+  function dibujarDispersion(x: number[], y: number[], r: NonNullable<ReturnType<typeof compararMetodos>>) {
+    const g = { W: 640, H: 340, ml: 56, mr: 16, mt: 12, mb: 40 };
+    const lo = Math.min(...x, ...y);
+    const hi = Math.max(...x, ...y);
+    const e = escala(lo - (hi - lo) * 0.03, hi + (hi - lo) * 0.03);
+    const s = lienzo(`Dispersión de ${x.length} pares, con la línea de identidad y las rectas de Passing-Bablok y Deming.`);
+    const { X, Y } = ejes(s, e, e, 'Método actual (X)', 'Método nuevo (Y)', g);
+    s.append(svg('line', { x1: X(e.ini), y1: Y(e.ini), x2: X(e.fin), y2: Y(e.fin), class: 'lj-grilla', 'stroke-width': 2 }));
+    const recta = (a: number, b: number, extra: Record<string, string | number>) => {
+      const y1 = a + b * e.ini;
+      const y2 = a + b * e.fin;
+      s.append(svg('line', { x1: X(e.ini), y1: Y(y1), x2: X(e.fin), y2: Y(y2), 'stroke-width': 2, ...extra }));
+    };
+    if (r.pb) recta(r.pb.intercepto, r.pb.pendiente, { class: 'lj-media' });
+    recta(r.deming.intercepto, r.deming.pendiente, { stroke: 'var(--c-prep)' });
+    x.forEach((v, i) => s.append(svg('circle', { cx: X(v), cy: Y(y[i]), r: 3.5, class: 'lj-ok', opacity: 0.75 })));
+    $('grafico-dispersion').replaceChildren(s);
+  }
+
+  function dibujarBa(r: NonNullable<ReturnType<typeof compararMetodos>>) {
+    const g = { W: 640, H: 340, ml: 56, mr: 16, mt: 12, mb: 40 };
+    const px = r.ba.promedios;
+    const d = r.ba.diferencias;
+    const ex = escala(Math.min(...px), Math.max(...px));
+    const ey = escala(Math.min(...d, r.ba.limiteInf), Math.max(...d, r.ba.limiteSup));
+    const s = lienzo(`Gráfico de Bland-Altman con ${px.length} pares: sesgo ${formato(r.ba.sesgo, 2)}, límites de concordancia ${formato(r.ba.limiteInf, 2)} y ${formato(r.ba.limiteSup, 2)}.`);
+    const { X, Y } = ejes(s, ex, ey, 'Promedio de los dos métodos', 'Diferencia (Y − X)', g);
+    const linea = (v: number, extra: Record<string, string | number>, texto: string) => {
+      s.append(svg('line', { x1: X(ex.ini), x2: X(ex.fin), y1: Y(v), y2: Y(v), 'stroke-width': 1.5, ...extra }));
+      s.append(svg('text', { x: X(ex.fin) - 4, y: Y(v) - 4, 'text-anchor': 'end', class: 'lj-texto' }, texto));
+    };
+    linea(0, { class: 'lj-grilla' }, '');
+    linea(r.ba.sesgo, { class: 'lj-media' }, `Sesgo ${formato(r.ba.sesgo, 2)}`);
+    linea(r.ba.limiteSup, { stroke: 'var(--c-error)', 'stroke-dasharray': '6 4' }, `+1,96 DE ${formato(r.ba.limiteSup, 2)}`);
+    linea(r.ba.limiteInf, { stroke: 'var(--c-error)', 'stroke-dasharray': '6 4' }, `−1,96 DE ${formato(r.ba.limiteInf, 2)}`);
+    px.forEach((v, i) => s.append(svg('circle', { cx: X(v), cy: Y(d[i]), r: 3.5, class: 'lj-ok', opacity: 0.75 })));
+    $('grafico-ba').replaceChildren(s);
+  }
+
+  function leerPares(texto: string) {
+    const x: number[] = [];
+    const y: number[] = [];
+    const malas: number[] = [];
+    texto.split(/\r?\n/).forEach((l, i) => {
+      const t = l.trim();
+      if (!t) return;
+      const partes = t.split(/[\t; ]+/).filter(Boolean).map(numero);
+      if (partes.length !== 2 || partes.some(Number.isNaN)) malas.push(i + 1);
+      else {
+        x.push(partes[0]);
+        y.push(partes[1]);
+      }
+    });
+    return { x, y, malas };
+  }
+
+  function calcular() {
+    const { x, y, malas } = leerPares(form.pares.value);
+    if (malas.length) return mensaje(`La línea ${malas[0]} no tiene dos números: cada muestra necesita su valor X y su valor Y.`);
+    if (x.length < 3) return mensaje('Pega los pares de resultados (al menos 3).');
+    const lambda = numero(form.lambda.value);
+    const niveles = form.niveles.value.split(/[\t;, ]+/).filter(Boolean).map(numero).filter((v: number) => !Number.isNaN(v));
+    const r = compararMetodos(x, y, { lambda: Number.isNaN(lambda) || lambda <= 0 ? 1 : lambda, niveles });
+    if (!r) return mensaje('No se pudo calcular: revisa que haya al menos 3 pares y que los valores varíen.');
+    $('mensaje').hidden = true;
+    $('resultado').hidden = false;
+
+    $('sesgo').textContent = num(r.ba.sesgo, 2);
+    $('sesgo-pct').textContent = Number.isFinite(r.sesgoPctMedio) ? `${formato(r.sesgoPctMedio, 1)} % en promedio` : '';
+    const pb = r.pb;
+    const incluye = (c: number[], v: number) => c[0] <= v && v <= c[1];
+    $('pend').textContent = pb ? num(pb.pendiente) : '—';
+    $('pend-nota').textContent = pb ? (incluye(pb.ciPendiente, 1) ? 'El IC incluye 1' : 'El IC no incluye 1: error proporcional') : '';
+    $('pend-nota').dataset.nivel = pb ? (incluye(pb.ciPendiente, 1) ? 'ok' : 'advertencia') : '';
+    $('inter').textContent = pb ? num(pb.intercepto) : '—';
+    $('inter-nota').textContent = pb ? (incluye(pb.ciIntercepto, 0) ? 'El IC incluye 0' : 'El IC no incluye 0: error constante') : '';
+    $('inter-nota').dataset.nivel = pb ? (incluye(pb.ciIntercepto, 0) ? 'ok' : 'advertencia') : '';
+    $('r').textContent = num(r.ols.r, 4);
+    $('r-nota').textContent = r.ols.r < 0.975 ? 'Bajo 0,975: rango estrecho o dispersión alta' : 'La correlación no mide concordancia';
+
+    const avisos: string[] = [];
+    if (r.n < 40) avisos.push(`Tienes ${r.n} muestras: EP09 recomienda al menos 40 para estimar el sesgo con confianza.`);
+    if (!pb) avisos.push('No se pudo calcular Passing-Bablok con estos datos.');
+    $('aviso').textContent = avisos.join(' ');
+    $('aviso').hidden = !avisos.length;
+
+    $('regresiones').replaceChildren(
+      filaTabla(['Passing-Bablok', pb ? `${num(pb.pendiente)} (${ic(pb.ciPendiente)})` : '—', pb ? `${num(pb.intercepto)} (${ic(pb.ciIntercepto)})` : '—']),
+      filaTabla(['Deming', `${num(r.deming.pendiente)} (${ic(r.deming.ciPendiente)})`, `${num(r.deming.intercepto)} (${ic(r.deming.ciIntercepto)})`]),
+      filaTabla(['Mínimos cuadrados (solo referencia)', num(r.ols.pendiente), num(r.ols.intercepto)]),
+    );
+    $('ba').replaceChildren(
+      filaTabla(['Sesgo medio (Y − X)', num(r.ba.sesgo, 3), ic(r.ba.ciSesgo)]),
+      filaTabla(['DE de las diferencias', num(r.ba.de, 3), '—']),
+      filaTabla(['Límite inferior de concordancia', num(r.ba.limiteInf, 3), ic(r.ba.ciInf)]),
+      filaTabla(['Límite superior de concordancia', num(r.ba.limiteSup, 3), ic(r.ba.ciSup)]),
+    );
+    ($('caja-niveles') as HTMLElement).hidden = !niveles.length;
+    $('niveles').replaceChildren(
+      ...r.nivelesDeming.map((d, i) => {
+        const p = r.nivelesPb[i];
+        return filaTabla([
+          num(d.nivel, 2),
+          p ? num(p.estimado, 2) : '—',
+          p ? `${num(p.sesgo, 2)} (${num(p.sesgoPct, 1)} %)` : '—',
+          num(d.estimado, 2),
+          `${num(d.sesgo, 2)} (${num(d.sesgoPct, 1)} %)`,
+        ]);
+      }),
+    );
+    dibujarDispersion(x, y, r);
+    dibujarBa(r);
+  }
+
+  function ejemplo() {
+    let semilla = 20261013;
+    const azar = () => {
+      semilla = (semilla * 1664525 + 1013904223) % 4294967296;
+      return semilla / 4294967296;
+    };
+    const normal = () => Math.sqrt(-2 * Math.log(azar() + 1e-12)) * Math.cos(2 * Math.PI * azar());
+    const lineas = [];
+    for (let i = 0; i < 40; i++) {
+      const xv = 40 + (i / 39) * 260;
+      const yv = 3 + 1.04 * xv + normal() * 4;
+      lineas.push(`${formato(xv, 1).replace('.', '')} ${formato(yv, 1).replace('.', '')}`);
+    }
+    form.pares.value = lineas.join('\n');
+    form.niveles.value = '100 200';
+    calcular();
+  }
+
+  form.querySelector('[data-ejemplo]')!.addEventListener('click', ejemplo);
+  form.addEventListener('input', calcular);
+  form.addEventListener('submit', (e) => e.preventDefault());
+  calcular();
+</script>

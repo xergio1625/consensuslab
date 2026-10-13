@@ -163,6 +163,59 @@ export function ldlMartin(ct, hdl, tg) {
   return noHdl - tg / factorMartin(tg, noHdl);
 }
 
+/** Intervalo de Wilson para una proporción (en %). */
+function wilson(x, n, z = 1.96) {
+  if (!(n > 0)) return [NaN, NaN];
+  const t = tasa(x, n, z);
+  return [t.bajo, t.alto];
+}
+
+/**
+ * Rendimiento diagnóstico desde una tabla 2×2 (vp, fp, fn, vn). Sensibilidad, especificidad, exactitud, valores
+ * predictivos y razones de verosimilitud con intervalo de confianza al 95 % (Wilson para proporciones; logarítmico
+ * de Simel para las razones). Con `prevalencia` (%) los valores predictivos se calculan por Bayes; sin ella, con la
+ * prevalencia de la muestra. Todo en %, salvo las razones.
+ */
+export function rendimientoDiagnostico({ vp, fp, fn, vn, prevalencia = NaN }) {
+  const enfermos = vp + fn;
+  const sanos = fp + vn;
+  const total = enfermos + sanos;
+  if (![vp, fp, fn, vn].every((x) => Number.isInteger(x) && x >= 0) || enfermos === 0 || sanos === 0) return null;
+  const sens = vp / enfermos;
+  const esp = vn / sanos;
+  const prev = Number.isFinite(prevalencia) ? prevalencia / 100 : enfermos / total;
+  const vpp = (sens * prev) / (sens * prev + (1 - esp) * (1 - prev));
+  const vpn = (esp * (1 - prev)) / (esp * (1 - prev) + (1 - sens) * prev);
+  const lrPos = sens / (1 - esp);
+  const lrNeg = (1 - sens) / esp;
+  const ciLr = (lr, ee) => (Number.isFinite(lr) && lr > 0 && Number.isFinite(ee) ? [Math.exp(Math.log(lr) - 1.96 * ee), Math.exp(Math.log(lr) + 1.96 * ee)] : [NaN, NaN]);
+  const eePos = Math.sqrt(1 / vp - 1 / enfermos + 1 / fp - 1 / sanos);
+  const eeNeg = Math.sqrt(1 / fn - 1 / enfermos + 1 / vn - 1 / sanos);
+  // Con valores predictivos por Bayes (prevalencia externa) no hay intervalo de Wilson: se informa solo con la muestra.
+  const conPrevalenciaPropia = !Number.isFinite(prevalencia);
+  return {
+    total, prevalenciaUsada: prev * 100,
+    sensibilidad: sens * 100, ciSensibilidad: wilson(vp, enfermos),
+    especificidad: esp * 100, ciEspecificidad: wilson(vn, sanos),
+    exactitud: ((vp + vn) / total) * 100, ciExactitud: wilson(vp + vn, total),
+    vpp: vpp * 100, ciVpp: conPrevalenciaPropia ? wilson(vp, vp + fp) : [NaN, NaN],
+    vpn: vpn * 100, ciVpn: conPrevalenciaPropia ? wilson(vn, vn + fn) : [NaN, NaN],
+    lrPositiva: lrPos, ciLrPositiva: ciLr(lrPos, eePos),
+    lrNegativa: lrNeg, ciLrNegativa: ciLr(lrNeg, eeNeg),
+    youden: (sens + esp - 1) * 100,
+  };
+}
+
+/**
+ * Temperatura cinética media (MKT, USP): Tk = (ΔH/R) / −ln(Σ e^(−ΔH/(R·Ti)) / n), con ΔH/R = 10.000 K
+ * (ΔH = 83,144 kJ/mol por defecto), temperaturas medidas a intervalos iguales. Entra y sale en °C.
+ */
+export function temperaturaCineticaMedia(temperaturasC, deltaHsobreR = 10000) {
+  if (!temperaturasC.length || temperaturasC.some((t) => !Number.isFinite(t) || t <= -273.15)) return NaN;
+  const suma = temperaturasC.reduce((s, t) => s + Math.exp(-deltaHsobreR / (t + 273.15)), 0);
+  return deltaHsobreR / -Math.log(suma / temperaturasC.length) - 273.15;
+}
+
 /** Rango de triglicéridos (mg/dL) donde cada ecuación está validada. */
 export const RANGO_LDL = { friedewald: 400, sampson: 800, martin: 400 };
 

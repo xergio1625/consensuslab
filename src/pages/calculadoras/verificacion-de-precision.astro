@@ -1,0 +1,172 @@
+---
+import PaginaCalculadora from '../../componentes/PaginaCalculadora.astro';
+import { url } from '../../lib/rutas';
+---
+
+<PaginaCalculadora id="verificacion-de-precision">
+  <form class="calc" id="calc" novalidate>
+    <p class="calc-ayuda">
+      Un nivel de control a la vez. <button type="button" class="boton boton-secundario calc-ejemplo" data-ejemplo>Cargar un ejemplo</button>
+    </p>
+    <div class="calc-campos">
+      <label class="calc-campo calc-ancho">
+        <span>Resultados por día</span>
+        <textarea class="campo" name="datos" rows="7" placeholder="100,2 99,8 101,0 100,5 99,4&#10;101,1 100,7 100,3 101,5 100,9"></textarea>
+        <small>Una línea por día, con las réplicas separadas por espacio. Todos los días con el mismo número de réplicas (por ejemplo, 5 días × 5 réplicas).</small>
+      </label>
+      <label class="calc-campo">
+        <span>CV de repetibilidad declarado</span>
+        <span class="calc-entrada"><input class="campo" name="cvR" inputmode="decimal" placeholder="1,5" /><em>%</em></span>
+        <small>Del inserto del fabricante, para un nivel de concentración parecido.</small>
+      </label>
+      <label class="calc-campo">
+        <span>CV intralaboratorio declarado <em class="opcional">(opcional)</em></span>
+        <span class="calc-entrada"><input class="campo" name="cvWl" inputmode="decimal" placeholder="2,5" /><em>%</em></span>
+        <small>También llamado precisión intermedia o total.</small>
+      </label>
+      <label class="calc-campo">
+        <span>Confianza por nivel</span>
+        <select class="campo" name="confianza">
+          <option value="0.95">95 % (un nivel de control)</option>
+          <option value="0.975">97,5 % (dos niveles: reparte el 5 %)</option>
+          <option value="0.9833333333333333">98,3 % (tres niveles)</option>
+        </select>
+      </label>
+    </div>
+  </form>
+
+  <section class="calc-resultado" aria-live="polite">
+    <p class="calc-mensaje" data-mensaje>Pega los resultados de cada día y el CV declarado de repetibilidad.</p>
+    <div data-resultado hidden>
+      <div class="calc-cifras">
+        <div><span>Media</span><strong data-media></strong><small data-diseno></small></div>
+        <div><span>Repetibilidad</span><strong data-cv-r></strong><small data-vr></small></div>
+        <div data-caja-wl><span>Intralaboratorio</span><strong data-cv-wl></strong><small data-vwl></small></div>
+      </div>
+      <div class="calc-tabla-envoltura">
+        <table class="calc-tabla">
+          <thead><tr><th>Componente</th><th>DE</th><th>CV observado</th><th>CV declarado</th><th>Gl</th><th>Límite de verificación</th></tr></thead>
+          <tbody data-filas></tbody>
+        </table>
+      </div>
+      <p class="calc-nota" data-nota hidden></p>
+    </div>
+  </section>
+
+  <div slot="explicacion">
+    <h2>Cómo se calcula</h2>
+    <ul>
+      <li><strong>Repetibilidad</strong>: raíz del cuadrado medio dentro de los días (ANOVA de un factor).</li>
+      <li><strong>Intralaboratorio</strong>: √(repetibilidad² + componente entre días²), con el componente entre días = (CM entre − CM dentro) / n réplicas, y 0 si sale negativo.</li>
+      <li>
+        <strong>Límite de verificación</strong> = CV declarado × √(χ²<sub>confianza, gl</sub> / gl). Tu CV observado puede superar un
+        poco el declarado solo por azar: el límite fija cuánto, con la confianza elegida. Para el intralaboratorio los grados de libertad son los de Satterthwaite.
+      </li>
+    </ul>
+    <h2>Cómo leerlo</h2>
+    <ul>
+      <li>Si el CV observado queda bajo el límite, la declaración del fabricante se verifica en tu laboratorio. Si lo supera, es poco probable que sea azar: revisa el método, el equipo y el material.</li>
+      <li>Si falla la repetibilidad, el problema está dentro de la corrida (pipeteo, burbujas, reactivo). Si falla solo el intralaboratorio, mira lo que cambia de un día a otro (calibración, lotes, ambiente).</li>
+      <li>Verifica cada nivel por separado. Con dos o tres niveles, la opción de confianza reparte el 5 % de falsos rechazos entre ellos (Bonferroni).</li>
+      <li>Descarta antes los valores atípicos con una causa conocida y deja constancia del motivo.</li>
+    </ul>
+    <p>
+      El diseño 5 × 5 es el del protocolo EP15-A3 del CLSI. Esta calculadora usa el enfoque de chi cuadrado: si tu plan sigue
+      las tablas de factores del documento, usa esas. Para el CV de largo plazo, mira
+      <a href={url('calculadoras/estadistica-del-control/')}>Estadística del control</a>; para la incertidumbre,
+      <a href={url('calculadoras/incertidumbre-de-medicion/')}>Incertidumbre de medición</a>.
+    </p>
+  </div>
+</PaginaCalculadora>
+
+<script>
+  import { formato, numero } from '../../lib/calidad.js';
+  import { limiteVerificacion, precisionAnova } from '../../lib/metodos.js';
+
+  const form = document.getElementById('calc') as HTMLFormElement;
+  const $ = (s: string) => document.querySelector(`[data-${s}]`) as HTMLElement;
+
+  function leerDias(texto: string) {
+    return texto
+      .split(/\r?\n/)
+      .map((l) => l.trim())
+      .filter(Boolean)
+      .map((l) => l.split(/[\t; ]+/).filter(Boolean).map(numero));
+  }
+
+  function mensaje(t: string) {
+    $('mensaje').textContent = t;
+    $('mensaje').hidden = false;
+    $('resultado').hidden = true;
+  }
+
+  function veredicto(obs: number, limite: number) {
+    return obs <= limite ? { texto: 'Verificada', nivel: 'ok' } : { texto: 'No verificada', nivel: 'error' };
+  }
+
+  function fila(celdas: string[]) {
+    const tr = document.createElement('tr');
+    celdas.forEach((c) => {
+      const td = document.createElement('td');
+      td.textContent = c;
+      tr.appendChild(td);
+    });
+    return tr;
+  }
+
+  function calcular() {
+    const dias = leerDias(form.datos.value);
+    if (!dias.length) return mensaje('Pega los resultados de cada día y el CV declarado de repetibilidad.');
+    if (dias.flat().some(Number.isNaN)) return mensaje('Hay valores que no son números: revisa los datos.');
+    if (new Set(dias.map((d) => d.length)).size > 1) return mensaje('Todos los días deben tener el mismo número de réplicas.');
+    const r = precisionAnova(dias);
+    if (!r) return mensaje('Necesitas al menos 2 días y 2 réplicas por día.');
+    const cvR = numero(form.cvR.value);
+    const cvWl = numero(form.cvWl.value);
+    if (Number.isNaN(cvR) || cvR <= 0) return mensaje('Ingresa el CV de repetibilidad declarado por el fabricante.');
+    const confianza = Number(form.confianza.value);
+    $('mensaje').hidden = true;
+    $('resultado').hidden = false;
+    $('media').textContent = formato(r.media, 2);
+    $('diseno').textContent = `${r.D} días × ${r.n} réplicas`;
+    $('cv-r').textContent = formato(r.cvR, 2) + ' %';
+    const limR = limiteVerificacion(cvR, r.glR, confianza);
+    const vr = veredicto(r.cvR, limR);
+    $('vr').textContent = vr.texto;
+    $('vr').dataset.nivel = vr.nivel;
+    const filas = [fila(['Repetibilidad', formato(r.sr, 3), formato(r.cvR, 2) + ' %', formato(cvR, 2) + ' %', formato(r.glR, 0), formato(limR, 2) + ' %'])];
+    const conWl = !Number.isNaN(cvWl) && cvWl > 0;
+    ($('caja-wl') as HTMLElement).hidden = false;
+    $('cv-wl').textContent = formato(r.cvWl, 2) + ' %';
+    if (conWl) {
+      const limW = limiteVerificacion(cvWl, r.glWl, confianza);
+      const vw = veredicto(r.cvWl, limW);
+      $('vwl').textContent = vw.texto;
+      $('vwl').dataset.nivel = vw.nivel;
+      filas.push(fila(['Intralaboratorio', formato(r.swl, 3), formato(r.cvWl, 2) + ' %', formato(cvWl, 2) + ' %', formato(r.glWl, 1), formato(limW, 2) + ' %']));
+    } else {
+      $('vwl').textContent = 'Sin CV declarado para comparar';
+      $('vwl').dataset.nivel = '';
+      filas.push(fila(['Intralaboratorio', formato(r.swl, 3), formato(r.cvWl, 2) + ' %', '—', formato(r.glWl, 1), '—']));
+    }
+    $('filas').replaceChildren(...filas);
+    const nota = $('nota');
+    const avisos = [];
+    if (r.D < 5 || r.n < 5) avisos.push('El diseño recomendado es de al menos 5 días con 5 réplicas: con menos datos, los límites son muy amplios.');
+    if (r.entreDias === 0) avisos.push('El componente entre días salió negativo y se tomó como 0: la precisión intralaboratorio queda igual a la repetibilidad.');
+    nota.textContent = avisos.join(' ');
+    nota.hidden = !avisos.length;
+  }
+
+  const ejemplo = ['100,2 99,8 101,0 100,5 99,4', '101,1 100,7 100,3 101,5 100,9', '99,6 100,1 99,9 100,8 100,0', '100,9 101,3 100,4 101,0 100,6', '100,3 99,7 100,5 100,1 99,9'];
+  form.querySelector('[data-ejemplo]')!.addEventListener('click', () => {
+    form.datos.value = ejemplo.join('\n');
+    form.cvR.value = '1,2';
+    form.cvWl.value = '1,6';
+    calcular();
+  });
+  form.addEventListener('input', calcular);
+  form.addEventListener('change', calcular);
+  form.addEventListener('submit', (e) => e.preventDefault());
+  calcular();
+</script>
