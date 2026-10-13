@@ -12,7 +12,9 @@ const activa = hoy < FIN_PREVENTA && Astro.url.pathname !== url('planes/');
   <div class="franja-preventa" id="franja-preventa" data-fin={FIN_PREVENTA} hidden>
     <div class="contenedor franja-preventa-interior">
       <p>
-        <strong>Preventa fundadores:</strong> 40 % de descuento pagando antes del 1 de diciembre
+        <strong>Preventa fundadores:</strong>
+        <span class="franja-largo">40 % de descuento pagando antes del 1 de diciembre</span>
+        <span class="franja-corto">−40 % hasta el 1-dic</span>
         <span class="franja-dias" id="franja-dias"></span>
       </p>
       <span class="franja-acciones">

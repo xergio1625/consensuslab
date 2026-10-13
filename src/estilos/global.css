@@ -455,10 +455,9 @@ img, svg { max-width: 100%; }
 .portada-texto > :nth-child(3) { animation-delay: .16s; }
 .portada-texto > :nth-child(4) { animation-delay: .24s; }
 
-.portada-visual { margin: 0; display: none; }
+.portada-visual { margin: 0; }
 .portada-visual-video { display: block; }
 .portada-visual-video .video { margin: 0; }
-@media (min-width: 940px) { .portada-visual { display: block; } }
 @supports (animation-timeline: scroll()) {
   .portada-visual { animation: paralaje linear both; animation-timeline: scroll(root); animation-range: 0 600px; }
 }
@@ -552,17 +551,19 @@ img, svg { max-width: 100%; }
 @keyframes rebote { 40% { transform: translateY(-3px) rotate(-6deg); } }
 
 /* ─── Fase 2: microinteracciones y revelado al scroll ─────────── */
-.tarjeta:hover, .tarjeta:focus-within { transform: translateY(-3px); }
+@media (hover: hover) { .tarjeta:hover, .tarjeta:focus-within { transform: translateY(-3px); } }
 .boton { transition: background var(--transicion), border-color var(--transicion), transform var(--dur-1) var(--ease-out); }
 .boton:active { transform: scale(.97); }
 
 /* Revelado al entrar en pantalla (solo CSS; sin soporte, todo queda visible) */
 @keyframes revelar { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
-@supports (animation-timeline: view()) {
-  .seccion-cabeza, .rejilla > *, .franja-qc > * {
-    animation: revelar linear backwards; /* «backwards»: al terminar no retiene transform y el hover sigue funcionando */
-    animation-timeline: view();
-    animation-range: entry 0% entry 45%;
+@media (min-width: 900px) {
+  @supports (animation-timeline: view()) {
+    .seccion-cabeza, .rejilla > *, .franja-qc > * {
+      animation: revelar linear backwards; /* «backwards»: al terminar no retiene transform y el hover sigue funcionando */
+      animation-timeline: view();
+      animation-range: entry 0% entry 45%;
+    }
   }
 }
 
@@ -802,3 +803,62 @@ img, svg { max-width: 100%; }
 /* Guías: bloque de atribución al final de la guía */
 .atribucion { margin: 32px 0 8px; padding-top: 8px; border-top: 1px solid var(--c-borde); font-size: .95rem; }
 .atribucion h2 { font-size: 1.05rem; }
+
+/* ─── Móvil (revisión de diseño, fases 1 y 2) ─── */
+/* Cabecera: «Pedir demo» siempre visible; el tema pasa al menú en pantallas angostas */
+.boton-demo { min-height: 40px; padding: 6px 14px; font-size: .92rem; white-space: nowrap; }
+.nav-tema { display: none; }
+.nav-tema button { width: 100%; text-align: left; padding: 12px; background: none; border: 0; color: #F1E3E9; font: inherit; font-weight: 550; cursor: pointer; border-radius: var(--radio-s); }
+.nav-tema button:hover { background: rgba(255, 255, 255, .08); color: #fff; }
+.franja-corto { display: none; }
+@media (max-width: 1080px) {
+  .boton-tema-cabecera { display: none; }
+  .nav-tema { display: block; }
+  .nav-principal { gap: 8px; }
+}
+@media (max-width: 400px) {
+  .marca { font-size: 1rem; gap: 8px; }
+  .marca-logo { width: 26px; height: 26px; }
+  .boton-demo { padding: 6px 10px; font-size: .88rem; }
+}
+
+@media (max-width: 760px) {
+  /* Franja de preventa: una sola línea, toda ella es un enlace */
+  .franja-preventa { position: relative; font-size: .88rem; }
+  .franja-preventa-interior { flex-wrap: nowrap; padding-top: 0; padding-bottom: 0; min-height: 44px; }
+  .franja-preventa p { flex: 1 1 auto; line-height: 1.3; white-space: nowrap; }
+  .franja-largo, .franja-dias { display: none; }
+  .franja-corto { display: inline; }
+  .franja-acciones { margin-left: 0; }
+  .franja-enlace { font-size: 0; }
+  .franja-enlace::after { content: ""; position: absolute; inset: 0; }
+  .franja-cerrar { position: relative; z-index: 1; min-width: 44px; min-height: 44px; }
+
+  /* Aviso de cookies compacto: texto y dos botones en fila */
+  .aviso-cookies { padding: 10px 0 12px; }
+  .aviso-cookies-interior { gap: 10px; }
+  .aviso-cookies p { flex-basis: 100%; font-size: .88rem; line-height: 1.45; }
+  .aviso-cookies-acciones { width: 100%; }
+  .aviso-cookies-acciones .boton { flex: 1; min-height: 44px; padding: 6px 12px; }
+
+  /* Portada: título visible de inmediato, fondo estático, maqueta reducida */
+  .portada { padding: 28px 0 36px; }
+  .portada-rejilla { gap: 24px; }
+  .portada-texto > * { animation: none; }
+  .portada-fondo::before, .portada-fondo::after { filter: none; animation: none; opacity: .35; }
+  .portada h1 { max-width: none; font-size: clamp(1.7rem, 7.4vw, 2.1rem); }
+  .portada-lema { font-size: 1rem; margin-bottom: 20px; }
+  .acciones-portada { display: grid; grid-template-columns: 1fr; gap: 10px; }
+  .acciones-portada .boton { min-height: 48px; }
+  .nota-portada { margin-top: 16px; }
+  .nota-portada .enlace-portada { display: inline-block; padding: 10px 0; }
+  .maqueta { animation: none; max-width: 420px; margin: 0 auto; box-shadow: 0 12px 32px rgba(0, 0, 0, .35); }
+  .portada-visual { animation: none !important; }
+  .maqueta-barra { padding: 8px 12px; }
+
+  /* Zonas táctiles de 44 px en enlaces sueltos, pie y casillas */
+  .seccion-cabeza a, .pie a, .enlace-pie { display: inline-flex; align-items: center; min-height: 44px; }
+  .pie ul { gap: 0 18px; }
+  .casilla-sitio input, .lj-reglas input { width: 24px; height: 24px; margin-top: 0; }
+  .casilla-sitio, .lj-reglas label { align-items: center; gap: 12px; }
+}

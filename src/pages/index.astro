@@ -62,24 +62,19 @@ const pasos = [
     <div class="portada-fondo" aria-hidden="true"></div>
     <div class="contenedor portada-rejilla">
       <div class="portada-texto">
-        <p class="antetitulo">Para profesionales de laboratorio clínico</p>
-        <h1>Herramientas para coordinar, ordenar y mejorar tu laboratorio</h1>
+        <p class="antetitulo">Consensus QC · laboratorio clínico</p>
+        <h1>Control de calidad del laboratorio, sin planillas</h1>
         <p class="portada-lema">
-          Planillas, plantillas y guías listas para usar en la operación diaria, la calidad y la administración del
-          servicio. Hechas por un tecnólogo médico de laboratorio clínico, sin datos de pacientes y gratuitas.
+          Westgard, Levey-Jennings, sigma y control externo en una sola plataforma. Pruébalo 30 días gratis con los
+          datos de tu laboratorio, hecho por un tecnólogo médico.
         </p>
-        <form class="buscador-portada" action={url('herramientas/')} method="get" role="search">
-          <label class="solo-lectores" for="busqueda-portada">Buscar herramientas</label>
-          <input
-            class="campo"
-            id="busqueda-portada"
-            name="q"
-            type="search"
-            placeholder="Temperaturas, turnos, auditoría…"
-            autocomplete="off"
-          />
-          <button class="boton" type="submit">Buscar</button>
-        </form>
+        <div class="acciones-portada">
+          <a class="boton boton-primario" href={url('planes/#cotizar')}>Pedir demo</a>
+          <a class="boton boton-secundario boton-claro" href={url('consensus-qc/')}>Conocer Consensus QC</a>
+        </div>
+        <p class="nota-portada">
+          <a class="enlace-portada" href={url('herramientas/')}>Ver planillas y guías gratuitas →</a>
+        </p>
       </div>
       {VIDEOS.portada ? (
         <div class="portada-visual portada-visual-video">
