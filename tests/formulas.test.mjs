@@ -64,3 +64,23 @@ test('LDL calculado: Friedewald y Sampson-NIH', () => {
     cerca(F.ldlSampson(v.ct, v.hdl, v.tg), v.sampson, 0.05);
   }
 });
+
+test('comparación de LDL: filas, rangos y diferencias contra el directo', () => {
+  const f = F.comparacionLdl(200, 50, 450, { martin: 100, directo: 110 });
+  assert.deepEqual(f.map((x) => x.id), ['friedewald', 'sampson', 'martin', 'directo']);
+  assert.equal(f[0].fueraDeRango, true);
+  assert.equal(f[1].fueraDeRango, false);
+  cerca(f[2].difDirecto, -10, 1e-9);
+  cerca(f[2].pctDirecto, (-10 / 110) * 100, 1e-9);
+  assert.ok(Number.isNaN(f[3].difDirecto));
+  assert.equal(F.comparacionLdl(200, 50, 900)[1].fueraDeRango, true);
+  assert.equal(F.comparacionLdl(200, 50, 150).length, 2);
+});
+
+test('barrido de triglicéridos: Friedewald se separa de Sampson al subir los TG', () => {
+  const b = F.barridoTg(250, 40, [100, 400, 800]);
+  assert.equal(b.length, 3);
+  cerca(b[0].friedewald, 250 - 40 - 20, 1e-9);
+  assert.ok(Math.abs(b[2].diferencia) > Math.abs(b[0].diferencia));
+  cerca(b[1].diferencia, b[1].friedewald - b[1].sampson, 1e-9);
+});

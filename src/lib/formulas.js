@@ -107,6 +107,43 @@ export function ldlSampson(ct, hdl, tg) {
   return ct / 0.948 - hdl / 0.971 - (tg / 8.56 + (tg * noHdl) / 2140 - tg ** 2 / 16100) - 9.44;
 }
 
+/** Rango de triglicéridos (mg/dL) donde cada ecuación está validada. */
+export const RANGO_LDL = { friedewald: 400, sampson: 800 };
+
+/**
+ * Compara los métodos de LDL calculado para un mismo resultado. `martin` (Martin-Hopkins) y `directo` son
+ * valores opcionales traídos del sistema del laboratorio. Cada fila: { id, valor, fueraDeRango, difDirecto, pctDirecto }.
+ * Las diferencias se miden contra el LDL directo si existe.
+ */
+export function comparacionLdl(ct, hdl, tg, { martin = NaN, directo = NaN } = {}) {
+  const fila = (id, valor, fuera) => {
+    const hayDirecto = Number.isFinite(directo) && id !== 'directo';
+    return {
+      id,
+      valor,
+      fueraDeRango: fuera,
+      difDirecto: hayDirecto ? valor - directo : NaN,
+      pctDirecto: hayDirecto && directo !== 0 ? ((valor - directo) / directo) * 100 : NaN,
+    };
+  };
+  const filas = [
+    fila('friedewald', ldlFriedewald(ct, hdl, tg), tg >= RANGO_LDL.friedewald),
+    fila('sampson', ldlSampson(ct, hdl, tg), tg > RANGO_LDL.sampson),
+  ];
+  if (Number.isFinite(martin)) filas.push(fila('martin', martin, tg >= RANGO_LDL.friedewald));
+  if (Number.isFinite(directo)) filas.push(fila('directo', directo, false));
+  return filas;
+}
+
+/** Friedewald y Sampson-NIH con el mismo CT y HDL para distintos triglicéridos: cómo se separan los métodos. */
+export function barridoTg(ct, hdl, tgs) {
+  return tgs.map((tg) => {
+    const fried = ldlFriedewald(ct, hdl, tg);
+    const samp = ldlSampson(ct, hdl, tg);
+    return { tg, friedewald: fried, sampson: samp, diferencia: fried - samp };
+  });
+}
+
 /**
  * Casos de prueba para verificar el cálculo automático de un LIS o un analizador.
  * Valores calculados con las funciones de este archivo y comprobados a mano (ver tests/formulas.test.mjs).

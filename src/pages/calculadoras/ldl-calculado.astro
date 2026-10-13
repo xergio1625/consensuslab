@@ -20,6 +20,16 @@ import { VECTORES } from '../../lib/formulas.js';
         <span class="calc-entrada"><input class="campo" name="tg" inputmode="decimal" placeholder="150" /><em>mg/dL</em></span>
         <small>Si trabajas en mmol/L: colesterol × 38,67 y triglicéridos × 88,57.</small>
       </label>
+      <label class="calc-campo">
+        <span>LDL Martin-Hopkins <em class="opcional">(opcional)</em></span>
+        <span class="calc-entrada"><input class="campo" name="martin" inputmode="decimal" placeholder="123" /><em>mg/dL</em></span>
+        <small>El que entrega tu sistema o la calculadora de Johns Hopkins, para compararlo.</small>
+      </label>
+      <label class="calc-campo">
+        <span>LDL directo <em class="opcional">(opcional)</em></span>
+        <span class="calc-entrada"><input class="campo" name="directo" inputmode="decimal" placeholder="118" /><em>mg/dL</em></span>
+        <small>Si lo mediste, las diferencias se calculan contra él.</small>
+      </label>
     </div>
   </form>
 
@@ -31,6 +41,26 @@ import { VECTORES } from '../../lib/formulas.js';
         <div><span>LDL Sampson-NIH</span><strong data-sampson></strong><small data-aviso-sampson></small></div>
         <div><span>Colesterol no HDL</span><strong data-nohdl></strong></div>
       </div>
+
+      <h2>Comparación de métodos</h2>
+      <div class="calc-tabla-envoltura">
+        <table class="calc-tabla">
+          <thead><tr><th>Método</th><th>LDL (mg/dL)</th><th data-col-dif>Diferencia con el directo</th><th data-col-pct>%</th><th>Uso válido</th></tr></thead>
+          <tbody data-comparacion></tbody>
+        </table>
+      </div>
+
+      <h2>Cómo se separan los métodos al subir los triglicéridos</h2>
+      <p class="calc-ayuda">
+        Mismo colesterol total y HDL que ingresaste, solo cambian los triglicéridos. Los valores fuera del rango de
+        cada ecuación van marcados con asterisco.
+      </p>
+      <div class="calc-tabla-envoltura">
+        <table class="calc-tabla">
+          <thead><tr><th>TG (mg/dL)</th><th>Friedewald</th><th>Sampson-NIH</th><th>Friedewald − Sampson</th></tr></thead>
+          <tbody data-barrido></tbody>
+        </table>
+      </div>
     </div>
   </section>
 
@@ -41,6 +71,11 @@ import { VECTORES } from '../../lib/formulas.js';
       <li>
         <strong>Sampson-NIH</strong>: LDL = CT/0,948 − HDL/0,971 − (TG/8,56 + TG × no HDL/2.140 − TG²/16.100) − 9,44.
         Desarrollada para TG hasta 800 mg/dL.
+      </li>
+      <li>
+        <strong>Martin-Hopkins</strong>: LDL = CT − HDL − TG/factor, con un factor entre 3,1 y 11,9 que sale de una
+        tabla de 180 celdas según TG y colesterol no HDL. Para evitar copiar la tabla, esta calculadora no la calcula:
+        ingresa el valor de tu sistema y lo compara con los otros métodos.
       </li>
     </ul>
     <h2>Casos de prueba para verificar tu sistema</h2>
@@ -59,24 +94,49 @@ import { VECTORES } from '../../lib/formulas.js';
     <ul>
       <li>Las ecuaciones estiman el LDL: no reemplazan la medición directa cuando la clínica la exige.</li>
       <li>Friedewald subestima el LDL con triglicéridos altos y con LDL bajo. Sampson-NIH corrige gran parte de ese error, pero con triglicéridos muy altos también pierde exactitud.</li>
-      <li>Existe además la ecuación de Martin-Hopkins, que usa una tabla de 180 factores y no está en esta calculadora.</li>
+      <li>Con TG de 400 mg/dL o más, Friedewald no es válida y Martin-Hopkins estándar tampoco: queda Sampson-NIH hasta 800 mg/dL, o la medición directa.</li>
       <li>El método de cada laboratorio y sus puntos de decisión los define el laboratorio con los clínicos que lo usan.</li>
     </ul>
     <h2>Referencias</h2>
     <p>
-      Friedewald WT, Levy RI, Fredrickson DS. <em>Clin Chem</em> 1972;18:499-502. Sampson M, et al. A new equation for
-      calculation of low-density lipoprotein cholesterol in patients with normolipidemia and/or hypertriglyceridemia.
-      <em>JAMA Cardiol</em> 2020;5(5):540-548.
+      Friedewald WT, Levy RI, Fredrickson DS. <em>Clin Chem</em> 1972;18:499-502. Martin SS, et al. Friedewald-estimated
+      versus directly measured low-density lipoprotein cholesterol and treatment implications. <em>JAMA</em>
+      2013;310(19):2061-2068. Sampson M, et al. A new equation for calculation of low-density lipoprotein cholesterol
+      in patients with normolipidemia and/or hypertriglyceridemia. <em>JAMA Cardiol</em> 2020;5(5):540-548.
     </p>
   </div>
 </PaginaCalculadora>
 
 <script>
   import { formato, numero } from '../../lib/calidad.js';
-  import { ldlFriedewald, ldlSampson } from '../../lib/formulas.js';
+  import { RANGO_LDL, barridoTg, comparacionLdl } from '../../lib/formulas.js';
 
   const form = document.getElementById('calc') as HTMLFormElement;
   const $ = (s: string) => document.querySelector(`[data-${s}]`) as HTMLElement;
+  const NOMBRES: Record<string, string> = {
+    friedewald: 'Friedewald',
+    sampson: 'Sampson-NIH',
+    martin: 'Martin-Hopkins (ingresado)',
+    directo: 'LDL directo (ingresado)',
+  };
+  const USO: Record<string, string> = {
+    friedewald: 'TG menores de 400',
+    sampson: 'TG hasta 800',
+    martin: 'TG menores de 400',
+    directo: 'Cualquier TG',
+  };
+  const TGS = [100, 200, 300, 399, 400, 500, 600, 700, 800];
+
+  function fila(celdas: string[], atenuada = false) {
+    const tr = document.createElement('tr');
+    celdas.forEach((c) => {
+      const td = document.createElement('td');
+      td.textContent = c;
+      if (atenuada) td.style.opacity = '0.6';
+      tr.appendChild(td);
+    });
+    return tr;
+  }
 
   function calcular() {
     const ct = numero(form.ct.value);
@@ -90,13 +150,36 @@ import { VECTORES } from '../../lib/formulas.js';
     }
     $('mensaje').hidden = true;
     $('resultado').hidden = false;
-    const fueraFried = tg >= 400;
-    const fueraSampson = tg > 800;
-    $('fried').textContent = fueraFried ? '—' : formato(ldlFriedewald(ct, hdl, tg), 1);
-    $('aviso-fried').textContent = fueraFried ? 'No válida con TG de 400 mg/dL o más' : 'mg/dL';
-    $('sampson').textContent = fueraSampson ? '—' : formato(ldlSampson(ct, hdl, tg), 1);
-    $('aviso-sampson').textContent = fueraSampson ? 'No válida con TG sobre 800 mg/dL: mide el LDL directo' : 'mg/dL';
+    const martin = numero(form.martin.value);
+    const directo = numero(form.directo.value);
+    const filas = comparacionLdl(ct, hdl, tg, { martin, directo });
+    const fried = filas[0];
+    const samp = filas[1];
+    $('fried').textContent = fried.fueraDeRango ? '—' : formato(fried.valor, 1);
+    $('aviso-fried').textContent = fried.fueraDeRango ? 'No válida con TG de 400 mg/dL o más' : 'mg/dL';
+    $('sampson').textContent = samp.fueraDeRango ? '—' : formato(samp.valor, 1);
+    $('aviso-sampson').textContent = samp.fueraDeRango ? 'No válida con TG sobre 800 mg/dL: mide el LDL directo' : 'mg/dL';
     $('nohdl').textContent = formato(ct - hdl, 0);
+
+    const hayDirecto = !Number.isNaN(directo);
+    ($('col-dif') as HTMLElement).hidden = !hayDirecto;
+    ($('col-pct') as HTMLElement).hidden = !hayDirecto;
+    const cuerpo = $('comparacion');
+    cuerpo.replaceChildren(
+      ...filas.map((f) => {
+        const celdas = [NOMBRES[f.id] + (f.fueraDeRango ? ' *' : ''), formato(f.valor, 1)];
+        if (hayDirecto) celdas.push(f.id === 'directo' ? '—' : formato(f.difDirecto, 1), f.id === 'directo' ? '—' : formato(f.pctDirecto, 1) + ' %');
+        celdas.push(f.fueraDeRango ? 'Fuera de rango' : USO[f.id]);
+        return fila(celdas, f.fueraDeRango);
+      }),
+    );
+
+    $('barrido').replaceChildren(
+      ...barridoTg(ct, hdl, TGS).map((b) => {
+        const fuera = b.tg >= RANGO_LDL.friedewald;
+        return fila([String(b.tg), formato(b.friedewald, 1) + (fuera ? ' *' : ''), formato(b.sampson, 1), formato(b.diferencia, 1)]);
+      }),
+    );
   }
 
   form.addEventListener('input', calcular);
