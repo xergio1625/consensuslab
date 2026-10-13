@@ -1,0 +1,105 @@
+---
+import PaginaCalculadora from '../../componentes/PaginaCalculadora.astro';
+import { formato } from '../../lib/calidad.js';
+import { VECTORES } from '../../lib/formulas.js';
+---
+
+<PaginaCalculadora id="ldl-calculado">
+  <form class="calc" id="calc" novalidate>
+    <div class="calc-campos">
+      <label class="calc-campo">
+        <span>Colesterol total</span>
+        <span class="calc-entrada"><input class="campo" name="ct" inputmode="decimal" placeholder="200" /><em>mg/dL</em></span>
+      </label>
+      <label class="calc-campo">
+        <span>HDL</span>
+        <span class="calc-entrada"><input class="campo" name="hdl" inputmode="decimal" placeholder="50" /><em>mg/dL</em></span>
+      </label>
+      <label class="calc-campo">
+        <span>Triglicéridos</span>
+        <span class="calc-entrada"><input class="campo" name="tg" inputmode="decimal" placeholder="150" /><em>mg/dL</em></span>
+        <small>Si trabajas en mmol/L: colesterol × 38,67 y triglicéridos × 88,57.</small>
+      </label>
+    </div>
+  </form>
+
+  <section class="calc-resultado" aria-live="polite">
+    <p class="calc-mensaje" data-mensaje>Ingresa colesterol total, HDL y triglicéridos.</p>
+    <div data-resultado hidden>
+      <div class="calc-cifras">
+        <div><span>LDL Friedewald</span><strong data-fried></strong><small data-aviso-fried></small></div>
+        <div><span>LDL Sampson-NIH</span><strong data-sampson></strong><small data-aviso-sampson></small></div>
+        <div><span>Colesterol no HDL</span><strong data-nohdl></strong></div>
+      </div>
+    </div>
+  </section>
+
+  <div slot="explicacion">
+    <h2>Ecuaciones (mg/dL)</h2>
+    <ul>
+      <li><strong>Friedewald</strong>: LDL = CT − HDL − TG/5. Válida con TG menores de 400 mg/dL.</li>
+      <li>
+        <strong>Sampson-NIH</strong>: LDL = CT/0,948 − HDL/0,971 − (TG/8,56 + TG × no HDL/2.140 − TG²/16.100) − 9,44.
+        Desarrollada para TG hasta 800 mg/dL.
+      </li>
+    </ul>
+    <h2>Casos de prueba para verificar tu sistema</h2>
+    <p>Compara estos resultados con lo que entrega tu LIS o analizador: la diferencia debe ser solo de redondeo.</p>
+    <div class="calc-tabla-envoltura">
+      <table class="calc-tabla">
+        <thead><tr><th>CT</th><th>HDL</th><th>TG</th><th>Friedewald</th><th>Sampson-NIH</th></tr></thead>
+        <tbody>
+          {VECTORES.ldl.map((v) => (
+            <tr><td>{v.ct}</td><td>{v.hdl}</td><td>{v.tg}</td><td>{formato(v.friedewald, 1)}</td><td>{formato(v.sampson, 1)}</td></tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    <h2>Límites de uso</h2>
+    <ul>
+      <li>Las ecuaciones estiman el LDL: no reemplazan la medición directa cuando la clínica la exige.</li>
+      <li>Friedewald subestima el LDL con triglicéridos altos y con LDL bajo. Sampson-NIH corrige gran parte de ese error, pero con triglicéridos muy altos también pierde exactitud.</li>
+      <li>Existe además la ecuación de Martin-Hopkins, que usa una tabla de 180 factores y no está en esta calculadora.</li>
+      <li>El método de cada laboratorio y sus puntos de decisión los define el laboratorio con los clínicos que lo usan.</li>
+    </ul>
+    <h2>Referencias</h2>
+    <p>
+      Friedewald WT, Levy RI, Fredrickson DS. <em>Clin Chem</em> 1972;18:499-502. Sampson M, et al. A new equation for
+      calculation of low-density lipoprotein cholesterol in patients with normolipidemia and/or hypertriglyceridemia.
+      <em>JAMA Cardiol</em> 2020;5(5):540-548.
+    </p>
+  </div>
+</PaginaCalculadora>
+
+<script>
+  import { formato, numero } from '../../lib/calidad.js';
+  import { ldlFriedewald, ldlSampson } from '../../lib/formulas.js';
+
+  const form = document.getElementById('calc') as HTMLFormElement;
+  const $ = (s: string) => document.querySelector(`[data-${s}]`) as HTMLElement;
+
+  function calcular() {
+    const ct = numero(form.ct.value);
+    const hdl = numero(form.hdl.value);
+    const tg = numero(form.tg.value);
+    if ([ct, hdl, tg].some(Number.isNaN) || ct <= 0 || hdl < 0 || tg < 0 || hdl >= ct) {
+      $('mensaje').textContent = hdl >= ct ? 'El HDL debe ser menor que el colesterol total.' : 'Ingresa colesterol total, HDL y triglicéridos.';
+      $('mensaje').hidden = false;
+      $('resultado').hidden = true;
+      return;
+    }
+    $('mensaje').hidden = true;
+    $('resultado').hidden = false;
+    const fueraFried = tg >= 400;
+    const fueraSampson = tg > 800;
+    $('fried').textContent = fueraFried ? '—' : formato(ldlFriedewald(ct, hdl, tg), 1);
+    $('aviso-fried').textContent = fueraFried ? 'No válida con TG de 400 mg/dL o más' : 'mg/dL';
+    $('sampson').textContent = fueraSampson ? '—' : formato(ldlSampson(ct, hdl, tg), 1);
+    $('aviso-sampson').textContent = fueraSampson ? 'No válida con TG sobre 800 mg/dL: mide el LDL directo' : 'mg/dL';
+    $('nohdl').textContent = formato(ct - hdl, 0);
+  }
+
+  form.addEventListener('input', calcular);
+  form.addEventListener('submit', (e) => e.preventDefault());
+  calcular();
+</script>

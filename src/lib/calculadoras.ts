@@ -24,6 +24,11 @@ export const FAMILIAS = [
     titulo: 'Control de calidad',
     descripcion: 'Límites del control, error total, sigma, sesgo y especificaciones de calidad.',
   },
+  {
+    id: 'formulas',
+    titulo: 'Fórmulas y resultados',
+    descripcion: 'Cambio crítico, delta check, incertidumbre, indicadores y parámetros calculados, con casos de prueba para verificar tu sistema.',
+  },
 ] as const;
 
 export type IdFamilia = (typeof FAMILIAS)[number]['id'];
@@ -104,6 +109,55 @@ export const CALCULADORAS = [
     titulo: 'Error total permitido por variabilidad biológica',
     resumen: 'Desde el CV intra e interindividual: especificaciones óptima, deseable y mínima de CV, sesgo y error total.',
     herramientas: ['control-de-calidad-interno-y-externo', 'indicadores-de-calidad'],
+  },
+  {
+    id: 'cambio-critico-rcv',
+    familia: 'formulas',
+    titulo: 'Cambio crítico entre resultados (RCV)',
+    resumen: 'Cuánto debe cambiar un resultado seriado para que el cambio sea real y no variación analítica y biológica (valor de referencia de cambio).',
+    herramientas: ['control-de-calidad-interno-y-externo'],
+  },
+  {
+    id: 'delta-check',
+    familia: 'formulas',
+    titulo: 'Delta check',
+    resumen: 'Compara un resultado con el anterior de la misma persona y marca si el cambio supera tu límite porcentual o absoluto.',
+    herramientas: ['control-de-calidad-interno-y-externo'],
+  },
+  {
+    id: 'incertidumbre-de-medicion',
+    familia: 'formulas',
+    titulo: 'Incertidumbre de medición',
+    resumen: 'Incertidumbre combinada y expandida de arriba hacia abajo, con tu CV a largo plazo, el sesgo y la incertidumbre del calibrador.',
+    herramientas: ['control-de-calidad-interno-y-externo'],
+  },
+  {
+    id: 'indicadores-tasa-y-sigma',
+    familia: 'formulas',
+    titulo: 'Indicador de calidad: tasa, intervalo y sigma',
+    resumen: 'Tasa de rechazos, hemólisis o repeticiones con su intervalo de confianza, comparada con tu meta y expresada en sigma.',
+    herramientas: ['indicadores-de-calidad'],
+  },
+  {
+    id: 'tiempos-de-respuesta-tat',
+    familia: 'formulas',
+    titulo: 'Tiempos de respuesta (TAT)',
+    resumen: 'Pega los tiempos en minutos y obtén la mediana, el percentil 90 y el porcentaje dentro de tu meta.',
+    herramientas: ['tiempos-de-respuesta-tat'],
+  },
+  {
+    id: 'filtrado-glomerular-ckd-epi',
+    familia: 'formulas',
+    titulo: 'Filtrado glomerular CKD-EPI 2021',
+    resumen: 'Ecuación de creatinina sin raza para verificar el cálculo de tu sistema, con casos de prueba y su resultado esperado.',
+    herramientas: [],
+  },
+  {
+    id: 'ldl-calculado',
+    familia: 'formulas',
+    titulo: 'LDL calculado: Friedewald y Sampson',
+    resumen: 'LDL-C a partir de colesterol total, HDL y triglicéridos con ambas ecuaciones, sus límites de uso y casos de prueba para tu sistema.',
+    herramientas: [],
   },
 ] as const;
 

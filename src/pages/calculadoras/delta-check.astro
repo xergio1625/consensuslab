@@ -1,0 +1,96 @@
+---
+import PaginaCalculadora from '../../componentes/PaginaCalculadora.astro';
+import { url } from '../../lib/rutas';
+---
+
+<PaginaCalculadora id="delta-check">
+  <form class="calc" id="calc" novalidate>
+    <div class="calc-campos">
+      <label class="calc-campo">
+        <span>Resultado anterior</span>
+        <input class="campo" name="previo" inputmode="decimal" placeholder="4,2" />
+      </label>
+      <label class="calc-campo">
+        <span>Resultado actual</span>
+        <input class="campo" name="actual" inputmode="decimal" placeholder="5,6" />
+      </label>
+      <label class="calc-campo">
+        <span>Límite porcentual <em class="opcional">(opcional)</em></span>
+        <span class="calc-entrada"><input class="campo" name="pct" inputmode="decimal" placeholder="25" /><em>%</em></span>
+      </label>
+      <label class="calc-campo">
+        <span>Límite absoluto <em class="opcional">(opcional)</em></span>
+        <input class="campo" name="abs" inputmode="decimal" placeholder="1" />
+        <small>En la unidad del resultado.</small>
+      </label>
+    </div>
+  </form>
+
+  <section class="calc-resultado" aria-live="polite">
+    <p class="calc-mensaje" data-mensaje>Ingresa el resultado anterior y el actual.</p>
+    <div data-resultado hidden>
+      <div class="calc-cifras">
+        <div><span>Diferencia</span><strong data-dif></strong></div>
+        <div><span>Cambio</span><strong data-pct></strong></div>
+        <div><span>Resultado</span><strong data-veredicto></strong><small data-detalle></small></div>
+      </div>
+    </div>
+  </section>
+
+  <div slot="explicacion">
+    <h2>Cómo se calcula</h2>
+    <ul>
+      <li><strong>Diferencia</strong> = actual − anterior.</li>
+      <li><strong>Cambio %</strong> = (actual − anterior) / |anterior| × 100.</li>
+      <li>El resultado se marca para revisión si supera el límite porcentual, el absoluto, o ambos, según los que informes.</li>
+    </ul>
+    <h2>Cómo elegir los límites</h2>
+    <ul>
+      <li>Parte de la variación esperada: el <a href={url('calculadoras/cambio-critico-rcv/')}>cambio crítico (RCV)</a> es un punto de partida razonable para el límite porcentual.</li>
+      <li>Usa el límite absoluto en analitos con valores bajos, donde un porcentaje grande puede ser un cambio mínimo.</li>
+      <li>Ajusta con tus propios datos: mide cuántas alertas generan los límites y cuántas resultan en un error real (identificación, contaminación, muestra equivocada).</li>
+      <li>El delta check detecta errores preanalíticos de identificación y de muestra, no solo analíticos. Documenta qué haces cuando salta la alerta.</li>
+    </ul>
+    <p>Los límites y la ventana de tiempo entre muestras los define cada laboratorio: esta calculadora no tiene valores por defecto.</p>
+  </div>
+</PaginaCalculadora>
+
+<script>
+  import { formato, numero } from '../../lib/calidad.js';
+  import { deltaCheck } from '../../lib/formulas.js';
+
+  const form = document.getElementById('calc') as HTMLFormElement;
+  const $ = (s: string) => document.querySelector(`[data-${s}]`) as HTMLElement;
+
+  function calcular() {
+    const previo = numero(form.previo.value);
+    const actual = numero(form.actual.value);
+    if (Number.isNaN(previo) || Number.isNaN(actual) || previo === 0) {
+      $('mensaje').textContent = previo === 0 ? 'El resultado anterior no puede ser cero.' : 'Ingresa el resultado anterior y el actual.';
+      $('mensaje').hidden = false;
+      $('resultado').hidden = true;
+      return;
+    }
+    $('mensaje').hidden = true;
+    $('resultado').hidden = false;
+    const limPct = numero(form.pct.value);
+    const limAbs = numero(form.abs.value);
+    const r = deltaCheck(previo, actual, limPct, limAbs);
+    $('dif').textContent = formato(r.absoluta, 2);
+    $('pct').textContent = formato(r.porcentaje, 1) + ' %';
+    if (Number.isNaN(limPct) && Number.isNaN(limAbs)) {
+      $('veredicto').textContent = '—';
+      $('detalle').textContent = 'Ingresa al menos un límite';
+      $('detalle').dataset.nivel = '';
+      return;
+    }
+    $('veredicto').textContent = r.revisar ? 'Revisar' : 'Sin alerta';
+    const causas = [r.superaPorcentaje ? 'supera el límite porcentual' : '', r.superaAbsoluta ? 'supera el límite absoluto' : ''].filter(Boolean);
+    $('detalle').textContent = r.revisar ? causas.join(' y ') : 'Dentro de los límites';
+    $('detalle').dataset.nivel = r.revisar ? 'advertencia' : 'ok';
+  }
+
+  form.addEventListener('input', calcular);
+  form.addEventListener('submit', (e) => e.preventDefault());
+  calcular();
+</script>

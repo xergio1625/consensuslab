@@ -1,0 +1,109 @@
+---
+import PaginaCalculadora from '../../componentes/PaginaCalculadora.astro';
+import { formato } from '../../lib/calidad.js';
+import { VECTORES } from '../../lib/formulas.js';
+---
+
+<PaginaCalculadora id="filtrado-glomerular-ckd-epi">
+  <form class="calc" id="calc" novalidate>
+    <div class="calc-campos">
+      <label class="calc-campo">
+        <span>Creatinina sérica</span>
+        <span class="calc-entrada">
+          <input class="campo" name="scr" inputmode="decimal" placeholder="1,0" />
+          <select class="campo" name="unidad" aria-label="Unidad de creatinina">
+            <option value="mgdl">mg/dL</option>
+            <option value="umol">µmol/L</option>
+          </select>
+        </span>
+        <small>Creatinina con trazabilidad IDMS.</small>
+      </label>
+      <label class="calc-campo">
+        <span>Edad</span>
+        <span class="calc-entrada"><input class="campo" name="edad" inputmode="numeric" placeholder="50" /><em>años</em></span>
+        <small>La ecuación es para adultos (18 años o más).</small>
+      </label>
+      <label class="calc-campo">
+        <span>Sexo al nacer registrado</span>
+        <select class="campo" name="sexo">
+          <option value="M">Masculino</option>
+          <option value="F">Femenino</option>
+        </select>
+      </label>
+    </div>
+  </form>
+
+  <section class="calc-resultado" aria-live="polite">
+    <p class="calc-mensaje" data-mensaje>Ingresa la creatinina y la edad.</p>
+    <div data-resultado hidden>
+      <div class="calc-cifras">
+        <div><span>eGFR</span><strong data-egfr></strong><small>mL/min/1,73 m²</small></div>
+      </div>
+    </div>
+  </section>
+
+  <div slot="explicacion">
+    <h2>Ecuación</h2>
+    <p>
+      <strong>eGFRcr = 142 × mín(Scr/κ, 1)<sup>α</sup> × máx(Scr/κ, 1)<sup>−1,200</sup> × 0,9938<sup>edad</sup> × 1,012
+      [si es mujer]</strong>
+    </p>
+    <ul>
+      <li>Scr: creatinina sérica en mg/dL (µmol/L ÷ 88,4).</li>
+      <li>κ = 0,7 (mujer) o 0,9 (hombre). α = −0,241 (mujer) o −0,302 (hombre).</li>
+    </ul>
+    <h2>Casos de prueba para verificar tu sistema</h2>
+    <p>
+      Ingresa estos valores en tu LIS o analizador, o compáralos con tu informe de verificación. La diferencia debe ser
+      solo de redondeo.
+    </p>
+    <div class="calc-tabla-envoltura">
+      <table class="calc-tabla">
+        <thead><tr><th>Creatinina (mg/dL)</th><th>Edad</th><th>Sexo</th><th>eGFR esperado</th></tr></thead>
+        <tbody>
+          {VECTORES.ckdEpi2021.map((v) => (
+            <tr><td>{formato(v.scr, 1)}</td><td>{v.edad}</td><td>{v.sexo === 'F' ? 'Mujer' : 'Hombre'}</td><td>{formato(v.esperado, 1)}</td></tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    <h2>Límites de uso</h2>
+    <ul>
+      <li>Solo adultos. En niños se usan otras ecuaciones.</li>
+      <li>Es una estimación con creatinina en estado estable: no aplica en insuficiencia renal aguda, embarazo, masa muscular extrema ni algunas dietas.</li>
+      <li>La versión de 2021 no usa raza. Si tu sistema todavía calcula con la ecuación de 2009, esta es la comparación que justifica la actualización.</li>
+    </ul>
+    <h2>Referencia</h2>
+    <p>
+      Inker LA, et al. New creatinine- and cystatin C–based equations to estimate GFR without race. <em>N Engl J
+      Med</em> 2021;385:1737-1749. Ecuación publicada por la National Kidney Foundation.
+    </p>
+  </div>
+</PaginaCalculadora>
+
+<script>
+  import { formato, numero } from '../../lib/calidad.js';
+  import { ckdEpi2021, umolAMgdl } from '../../lib/formulas.js';
+
+  const form = document.getElementById('calc') as HTMLFormElement;
+  const $ = (s: string) => document.querySelector(`[data-${s}]`) as HTMLElement;
+
+  function calcular() {
+    let scr = numero(form.scr.value);
+    const edad = numero(form.edad.value);
+    if (Number.isNaN(scr) || Number.isNaN(edad) || scr <= 0 || edad < 18 || edad > 120) {
+      $('mensaje').textContent = edad < 18 ? 'La ecuación es para adultos (18 años o más).' : 'Ingresa la creatinina y la edad.';
+      $('mensaje').hidden = false;
+      $('resultado').hidden = true;
+      return;
+    }
+    if (form.unidad.value === 'umol') scr = umolAMgdl(scr);
+    $('mensaje').hidden = true;
+    $('resultado').hidden = false;
+    $('egfr').textContent = formato(ckdEpi2021(scr, edad, form.sexo.value), 1);
+  }
+
+  form.addEventListener('input', calcular);
+  form.addEventListener('submit', (e) => e.preventDefault());
+  calcular();
+</script>

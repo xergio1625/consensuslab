@@ -1,0 +1,96 @@
+---
+import PaginaCalculadora from '../../componentes/PaginaCalculadora.astro';
+import { url } from '../../lib/rutas';
+---
+
+<PaginaCalculadora id="incertidumbre-de-medicion">
+  <form class="calc" id="calc" novalidate>
+    <div class="calc-campos">
+      <label class="calc-campo">
+        <span>CV a largo plazo (imprecisión)</span>
+        <span class="calc-entrada"><input class="campo" name="cv" inputmode="decimal" placeholder="3" /><em>%</em></span>
+        <small>CV intermedio del control interno de varios meses, con distintos lotes y calibraciones.</small>
+      </label>
+      <label class="calc-campo">
+        <span>Sesgo (raíz del cuadrado medio)</span>
+        <span class="calc-entrada"><input class="campo" name="sesgo" inputmode="decimal" placeholder="2" /><em>%</em></span>
+        <small>Del control externo: RMS de los sesgos de varias rondas. Con una sola ronda, su valor absoluto.</small>
+      </label>
+      <label class="calc-campo">
+        <span>Incertidumbre expandida del calibrador <em class="opcional">(opcional)</em></span>
+        <span class="calc-entrada"><input class="campo" name="cal" inputmode="decimal" placeholder="2" /><em>%</em></span>
+        <small>La declara el fabricante, normalmente con k = 2.</small>
+      </label>
+      <label class="calc-campo">
+        <span>Factor de cobertura (k)</span>
+        <select class="campo" name="k">
+          <option value="2">k = 2 (≈ 95 %)</option>
+          <option value="3">k = 3 (≈ 99 %)</option>
+        </select>
+      </label>
+    </div>
+  </form>
+
+  <section class="calc-resultado" aria-live="polite">
+    <p class="calc-mensaje" data-mensaje>Ingresa el CV a largo plazo y el sesgo.</p>
+    <div data-resultado hidden>
+      <div class="calc-cifras">
+        <div><span>Incertidumbre combinada (uc)</span><strong data-uc></strong></div>
+        <div><span>Incertidumbre expandida (U)</span><strong data-u></strong><small data-ejemplo></small></div>
+      </div>
+    </div>
+  </section>
+
+  <div slot="explicacion">
+    <h2>Cómo se calcula</h2>
+    <ul>
+      <li><strong>u(calibrador)</strong> = incertidumbre expandida del calibrador / k del fabricante (normalmente 2).</li>
+      <li><strong>u(sesgo)</strong> = √(RMS del sesgo² + u(calibrador)²).</li>
+      <li><strong>uc</strong> = √(CV² + u(sesgo)²).</li>
+      <li><strong>U</strong> = k · uc.</li>
+    </ul>
+    <h2>Cómo usarlo</h2>
+    <ul>
+      <li>Es el enfoque «de arriba hacia abajo», que aprovecha los datos que el laboratorio ya tiene. Es una forma simplificada y común; la guía completa está en la norma.</li>
+      <li>La incertidumbre se estima por examen y por nivel de concentración: repite el cálculo con el control bajo y el alto.</li>
+      <li>El CV debe ser de largo plazo. Un CV de una sola corrida subestima la incertidumbre.</li>
+      <li>Si el sesgo es significativo, corrígelo. Si no se corrige, se incluye en la incertidumbre como aquí.</li>
+    </ul>
+    <h2>Referencias</h2>
+    <p>
+      ISO/TS 20914:2019, <em>Medical laboratories: Practical guidance for the estimation of measurement uncertainty</em>.
+      Nordtest TR 537, <em>Handbook for calculation of measurement uncertainty in environmental laboratories</em>. Para
+      obtener el CV, usa <a href={url('calculadoras/estadistica-del-control/')}>Estadística del control</a>.
+    </p>
+  </div>
+</PaginaCalculadora>
+
+<script>
+  import { formato, numero } from '../../lib/calidad.js';
+  import { incertidumbre } from '../../lib/formulas.js';
+
+  const form = document.getElementById('calc') as HTMLFormElement;
+  const $ = (s: string) => document.querySelector(`[data-${s}]`) as HTMLElement;
+
+  function calcular() {
+    const cv = numero(form.cv.value);
+    const sesgo = numero(form.sesgo.value);
+    if (Number.isNaN(cv) || Number.isNaN(sesgo) || cv < 0) {
+      $('mensaje').hidden = false;
+      $('resultado').hidden = true;
+      return;
+    }
+    $('mensaje').hidden = true;
+    $('resultado').hidden = false;
+    const cal = numero(form.cal.value);
+    const k = Number(form.k.value);
+    const r = incertidumbre(cv, Math.abs(sesgo), Number.isNaN(cal) ? 0 : cal, 2, k);
+    $('uc').textContent = formato(r.uc, 2) + ' %';
+    $('u').textContent = '± ' + formato(r.U, 2) + ' %';
+    $('ejemplo').textContent = `Un resultado de 100 se informaría como 100 ± ${formato(r.U, 1)}`;
+  }
+
+  form.addEventListener('input', calcular);
+  form.addEventListener('submit', (e) => e.preventDefault());
+  calcular();
+</script>

@@ -51,10 +51,20 @@ const otras = CALCULADORAS.filter((o) => o.id !== c.id).sort(
     <div class="ficha">
       <article class="ficha-cuerpo">
         <div class="aviso aviso-info">
-          <p>
-            El cálculo se hace en tu navegador: no se envía ni se guarda nada. Usa resultados de control o de control
-            externo, nunca datos de pacientes.
-          </p>
+          {
+            c.familia === 'formulas' ? (
+              <p>
+                El cálculo se hace en tu navegador: no se envía ni se guarda nada. Ingresa solo valores numéricos, sin
+                nombres, RUT ni otros identificadores. Es una herramienta de verificación y apoyo: no reemplaza el
+                informe validado ni el criterio profesional.
+              </p>
+            ) : (
+              <p>
+                El cálculo se hace en tu navegador: no se envía ni se guarda nada. Usa resultados de control o de
+                control externo, nunca datos de pacientes.
+              </p>
+            )
+          }
         </div>
         <slot />
         <slot name="explicacion" />
@@ -86,6 +96,15 @@ const otras = CALCULADORAS.filter((o) => o.id !== c.id).sort(
               <p>
                 Consensus QC calcula cada mes el CV, el sesgo, el error total y la sigma de cada analizador con tus controles
                 y tu control externo, y los compara con el plan de calidad.
+              </p>
+              <p><a class="boton boton-primario boton-ancho" href={url('consensus-qc/')}>Conocer Consensus QC</a></p>
+            </section>
+          ) : c.familia === 'formulas' ? (
+            <section class="caja caja-app">
+              <h2>Verifica y deja registro</h2>
+              <p>
+                Consensus QC lleva el control de calidad y el cambio crítico de cada analizador. Para dejar evidencia
+                trazable de tus verificaciones, conoce el plan Gestión.
               </p>
               <p><a class="boton boton-primario boton-ancho" href={url('consensus-qc/')}>Conocer Consensus QC</a></p>
             </section>

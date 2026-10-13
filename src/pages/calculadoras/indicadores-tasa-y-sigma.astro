@@ -1,0 +1,95 @@
+---
+import PaginaCalculadora from '../../componentes/PaginaCalculadora.astro';
+import { url } from '../../lib/rutas';
+---
+
+<PaginaCalculadora id="indicadores-tasa-y-sigma">
+  <form class="calc" id="calc" novalidate>
+    <div class="calc-campos">
+      <label class="calc-campo">
+        <span>Eventos</span>
+        <input class="campo" name="eventos" inputmode="numeric" placeholder="12" />
+        <small>Muestras rechazadas, hemolizadas, repetidas, etc.</small>
+      </label>
+      <label class="calc-campo">
+        <span>Total</span>
+        <input class="campo" name="total" inputmode="numeric" placeholder="800" />
+        <small>Muestras u órdenes del mismo período.</small>
+      </label>
+      <label class="calc-campo">
+        <span>Meta máxima <em class="opcional">(opcional)</em></span>
+        <span class="calc-entrada"><input class="campo" name="meta" inputmode="decimal" placeholder="2" /><em>%</em></span>
+        <small>La que fija tu plan de calidad.</small>
+      </label>
+    </div>
+  </form>
+
+  <section class="calc-resultado" aria-live="polite">
+    <p class="calc-mensaje" data-mensaje>Ingresa los eventos y el total.</p>
+    <div data-resultado hidden>
+      <div class="calc-cifras">
+        <div><span>Tasa</span><strong data-tasa></strong><small data-meta></small></div>
+        <div><span>Intervalo de confianza 95 %</span><strong data-ic></strong><small>Wilson</small></div>
+        <div><span>Sigma del indicador</span><strong data-sigma></strong><small data-categoria></small></div>
+      </div>
+    </div>
+  </section>
+
+  <div slot="explicacion">
+    <h2>Cómo se calcula</h2>
+    <ul>
+      <li><strong>Tasa</strong> = eventos / total × 100.</li>
+      <li><strong>Intervalo de Wilson al 95 %</strong>: se comporta bien con pocos eventos y con tasas cercanas a 0 %, donde el intervalo normal simple falla.</li>
+      <li><strong>Sigma</strong> = z(1 − tasa) + 1,5, la convención Six Sigma con desplazamiento de 1,5. Una tasa de 0,135 % da sigma 4,5.</li>
+    </ul>
+    <h2>Cómo leerlo</h2>
+    <ul>
+      <li>Si la meta cae dentro del intervalo, con ese volumen no puedes afirmar que la tasa esté por encima o por debajo de la meta: sigue midiendo.</li>
+      <li>Con totales pequeños el intervalo es ancho: un mes de pocos casos dice poco. Junta períodos o compara tendencias.</li>
+      <li>La sigma permite comparar indicadores muy distintos en una misma escala, pero la meta de cada uno la define tu laboratorio.</li>
+    </ul>
+    <p>
+      Para el error analítico usa <a href={url('calculadoras/error-total-y-sigma/')}>Error total y sigma</a>; los
+      indicadores se describen en la ficha <a href={url('herramientas/indicadores-de-calidad/')}>Indicadores de calidad</a>.
+    </p>
+  </div>
+</PaginaCalculadora>
+
+<script>
+  import { formato, numero } from '../../lib/calidad.js';
+  import { sigmaDeTasa, tasa } from '../../lib/formulas.js';
+
+  const form = document.getElementById('calc') as HTMLFormElement;
+  const $ = (s: string) => document.querySelector(`[data-${s}]`) as HTMLElement;
+
+  function calcular() {
+    const eventos = numero(form.eventos.value);
+    const total = numero(form.total.value);
+    if (Number.isNaN(eventos) || Number.isNaN(total) || total <= 0 || eventos < 0 || eventos > total) {
+      $('mensaje').textContent = eventos > total ? 'Los eventos no pueden superar el total.' : 'Ingresa los eventos y el total.';
+      $('mensaje').hidden = false;
+      $('resultado').hidden = true;
+      return;
+    }
+    $('mensaje').hidden = true;
+    $('resultado').hidden = false;
+    const r = tasa(eventos, total);
+    $('tasa').textContent = formato(r.tasa, 2) + ' %';
+    $('ic').textContent = `${formato(r.bajo, 2)} a ${formato(r.alto, 2)} %`;
+    const s = sigmaDeTasa(eventos / total);
+    $('sigma').textContent = Number.isNaN(s) ? '—' : formato(s, 1);
+    $('categoria').textContent = eventos === 0 ? 'Sin eventos: la sigma no se puede calcular' : '';
+    const meta = numero(form.meta.value);
+    if (!Number.isNaN(meta) && meta > 0) {
+      const dentro = r.alto <= meta ? 'ok' : r.bajo > meta ? 'error' : 'advertencia';
+      $('meta').textContent = dentro === 'ok' ? 'Cumple la meta' : dentro === 'error' ? 'Sobre la meta' : 'La meta cae dentro del intervalo';
+      $('meta').dataset.nivel = dentro;
+    } else {
+      $('meta').textContent = '';
+    }
+  }
+
+  form.addEventListener('input', calcular);
+  form.addEventListener('submit', (e) => e.preventDefault());
+  calcular();
+</script>

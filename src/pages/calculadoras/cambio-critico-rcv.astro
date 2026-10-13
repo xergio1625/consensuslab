@@ -1,0 +1,104 @@
+---
+import PaginaCalculadora from '../../componentes/PaginaCalculadora.astro';
+import { url } from '../../lib/rutas';
+---
+
+<PaginaCalculadora id="cambio-critico-rcv">
+  <form class="calc" id="calc" novalidate>
+    <div class="calc-campos">
+      <label class="calc-campo">
+        <span>CV analítico (CVa)</span>
+        <span class="calc-entrada"><input class="campo" name="cva" inputmode="decimal" placeholder="3" /><em>%</em></span>
+        <small>El CV de tu control interno a largo plazo para ese examen.</small>
+      </label>
+      <label class="calc-campo">
+        <span>CV biológico intraindividual (CVi)</span>
+        <span class="calc-entrada"><input class="campo" name="cvi" inputmode="decimal" placeholder="5" /><em>%</em></span>
+        <small>De la base de variabilidad biológica de la EFLM.</small>
+      </label>
+      <label class="calc-campo">
+        <span>Tipo de cambio y confianza</span>
+        <select class="campo" name="z">
+          <option value="1.96">Subida o bajada, 95 % (Z = 1,96)</option>
+          <option value="2.58">Subida o bajada, 99 % (Z = 2,58)</option>
+          <option value="1.65">Solo en un sentido, 95 % (Z = 1,65)</option>
+          <option value="2.33">Solo en un sentido, 99 % (Z = 2,33)</option>
+        </select>
+      </label>
+      <label class="calc-campo">
+        <span>Resultado anterior <em class="opcional">(opcional)</em></span>
+        <input class="campo" name="previo" inputmode="decimal" placeholder="100" />
+      </label>
+      <label class="calc-campo">
+        <span>Resultado actual <em class="opcional">(opcional)</em></span>
+        <input class="campo" name="actual" inputmode="decimal" placeholder="125" />
+      </label>
+    </div>
+  </form>
+
+  <section class="calc-resultado" aria-live="polite">
+    <p class="calc-mensaje" data-mensaje>Ingresa el CV analítico y el CV biológico.</p>
+    <div data-resultado hidden>
+      <div class="calc-cifras">
+        <div><span>RCV</span><strong data-rcv></strong><small>cambio mínimo significativo</small></div>
+        <div data-caja-cambio><span>Cambio observado</span><strong data-cambio></strong><small data-veredicto></small></div>
+      </div>
+    </div>
+  </section>
+
+  <div slot="explicacion">
+    <h2>Cómo se calcula</h2>
+    <p><strong>RCV</strong> = √2 · Z · √(CVa² + CVi²), en %. El √2 aparece porque se comparan dos resultados, cada uno con su propia variación.</p>
+    <h2>Cómo usarlo</h2>
+    <ul>
+      <li>Si el cambio entre dos resultados seriados supera el RCV, es poco probable que se deba solo al azar analítico y biológico.</li>
+      <li>Con CVa bajo, el RCV queda dominado por la variación biológica: mejorar un método ya preciso casi no cambia el RCV.</li>
+      <li>Esta versión simétrica funciona bien con CV pequeños. Con CV grandes, la literatura propone una versión asimétrica (logarítmica) porque la subida y la bajada no son simétricas.</li>
+    </ul>
+    <h2>Referencias</h2>
+    <p>
+      Fraser CG. <em>Biological Variation: From Principles to Practice</em>, AACC Press, 2001. Datos de variabilidad
+      biológica: base de datos de la EFLM. Para derivar especificaciones de calidad desde los mismos CV, usa
+      <a href={url('calculadoras/tea-variabilidad-biologica/')}>Error total permitido por variabilidad biológica</a>.
+    </p>
+  </div>
+</PaginaCalculadora>
+
+<script>
+  import { formato, numero } from '../../lib/calidad.js';
+  import { delta, rcv } from '../../lib/formulas.js';
+
+  const form = document.getElementById('calc') as HTMLFormElement;
+  const $ = (s: string) => document.querySelector(`[data-${s}]`) as HTMLElement;
+
+  function calcular() {
+    const cva = numero(form.cva.value);
+    const cvi = numero(form.cvi.value);
+    if (Number.isNaN(cva) || Number.isNaN(cvi) || cva < 0 || cvi < 0) {
+      $('mensaje').hidden = false;
+      $('resultado').hidden = true;
+      return;
+    }
+    $('mensaje').hidden = true;
+    $('resultado').hidden = false;
+    const z = Number(form.z.value);
+    const r = rcv(cva, cvi, z);
+    $('rcv').textContent = '± ' + formato(r, 1) + ' %';
+    const previo = numero(form.previo.value);
+    const actual = numero(form.actual.value);
+    const conCambio = !Number.isNaN(previo) && !Number.isNaN(actual) && previo !== 0;
+    $('caja-cambio').hidden = !conCambio;
+    if (conCambio) {
+      const d = delta(previo, actual);
+      const unSentido = z === 1.65 || z === 2.33;
+      const supera = unSentido ? d.porcentaje > r || d.porcentaje < -r : Math.abs(d.porcentaje) > r;
+      $('cambio').textContent = formato(d.porcentaje, 1) + ' %';
+      $('veredicto').textContent = supera ? 'Supera el RCV: cambio significativo' : 'Dentro del RCV: puede ser variación esperada';
+      $('veredicto').dataset.nivel = supera ? 'advertencia' : 'ok';
+    }
+  }
+
+  form.addEventListener('input', calcular);
+  form.addEventListener('submit', (e) => e.preventDefault());
+  calcular();
+</script>

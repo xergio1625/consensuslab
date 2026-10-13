@@ -1,0 +1,81 @@
+---
+import PaginaCalculadora from '../../componentes/PaginaCalculadora.astro';
+import { url } from '../../lib/rutas';
+---
+
+<PaginaCalculadora id="tiempos-de-respuesta-tat">
+  <form class="calc" id="calc" novalidate>
+    <div class="calc-campos">
+      <label class="calc-campo calc-ancho">
+        <span>Tiempos de respuesta (minutos)</span>
+        <textarea class="campo" name="tiempos" rows="6" placeholder="45&#10;62&#10;38&#10;120&#10;55"></textarea>
+        <small>Uno por línea, desde la toma o recepción hasta la validación. Solo números: sin datos de pacientes.</small>
+      </label>
+      <label class="calc-campo">
+        <span>Meta</span>
+        <span class="calc-entrada"><input class="campo" name="meta" inputmode="decimal" placeholder="60" /><em>min</em></span>
+        <small>Tu compromiso de entrega para ese examen o grupo.</small>
+      </label>
+    </div>
+  </form>
+
+  <section class="calc-resultado" aria-live="polite">
+    <p class="calc-mensaje" data-mensaje>Pega los tiempos y la meta.</p>
+    <div data-resultado hidden>
+      <div class="calc-cifras">
+        <div><span>Resultados</span><strong data-n></strong></div>
+        <div><span>Mediana</span><strong data-mediana></strong></div>
+        <div><span>Percentil 90</span><strong data-p90></strong><small>9 de cada 10 salen antes</small></div>
+        <div><span>Dentro de la meta</span><strong data-dentro></strong></div>
+      </div>
+    </div>
+  </section>
+
+  <div slot="explicacion">
+    <h2>Cómo se calcula</h2>
+    <ul>
+      <li><strong>Mediana</strong>: el tiempo típico, poco afectado por casos extremos.</li>
+      <li><strong>Percentil 90</strong> por interpolación lineal (igual que PERCENTILE.INC en Excel y Google Sheets).</li>
+      <li><strong>Dentro de la meta</strong> = resultados con tiempo ≤ meta / total.</li>
+    </ul>
+    <h2>Por qué el percentil 90</h2>
+    <p>
+      El promedio esconde a quienes esperan más. Un laboratorio con promedio de 45 minutos puede tener un 10 % de
+      resultados sobre 2 horas. Comprometer y vigilar el percentil 90 (o el porcentaje dentro de la meta) muestra la
+      experiencia de la cola, que es donde nacen los reclamos.
+    </p>
+    <p>
+      Para llevar este análisis a cada examen y turno desde el archivo de tu LIS, mira la ficha
+      <a href={url('herramientas/tiempos-de-respuesta-tat/')}>Tiempos de respuesta (TAT)</a>.
+    </p>
+  </div>
+</PaginaCalculadora>
+
+<script>
+  import { formato, numero, valores } from '../../lib/calidad.js';
+  import { resumenTat } from '../../lib/formulas.js';
+
+  const form = document.getElementById('calc') as HTMLFormElement;
+  const $ = (s: string) => document.querySelector(`[data-${s}]`) as HTMLElement;
+
+  function calcular() {
+    const lista = valores(form.tiempos.value).filter((v) => !Number.isNaN(v) && v >= 0);
+    const meta = numero(form.meta.value);
+    if (!lista.length || Number.isNaN(meta) || meta <= 0) {
+      $('mensaje').hidden = false;
+      $('resultado').hidden = true;
+      return;
+    }
+    $('mensaje').hidden = true;
+    $('resultado').hidden = false;
+    const r = resumenTat(lista, meta);
+    $('n').textContent = String(r.n);
+    $('mediana').textContent = formato(r.mediana, 0) + ' min';
+    $('p90').textContent = formato(r.p90, 0) + ' min';
+    $('dentro').textContent = formato(r.dentroPct, 1) + ' %';
+  }
+
+  form.addEventListener('input', calcular);
+  form.addEventListener('submit', (e) => e.preventDefault());
+  calcular();
+</script>
