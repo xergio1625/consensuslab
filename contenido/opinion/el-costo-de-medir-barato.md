@@ -72,4 +72,4 @@ Ahí está el problema de fondo, otra vez: el criterio económico no es ilegíti
 
 No tengo una solución elegante para esto, y sospecho que nadie la tiene todavía: mientras la evaluación económica en salud pública siga mirando solo el ítem presupuestario más cercano a la firma, este patrón se va a repetir con otros métodos, en otros laboratorios, con otros nombres que tampoco vamos a mencionar. Lo que sí tengo es la pregunta que falta hacer antes de aceptar la oferta más barata: barata, ¿comparada con qué?
 
-*Próximo episodio: qué pasa cuando la decisión no es sobre un método, sino sobre si vale la pena automatizar.*
+*Próximo episodio: [qué pasa cuando la decisión no es sobre un método, sino sobre si vale la pena automatizar](/opinion/cuando-la-decision-es-si-vale-la-pena-automatizar/).*
