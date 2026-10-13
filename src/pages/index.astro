@@ -115,101 +115,6 @@ const pasos = [
     </div>
   </section>
 
-  {
-    prioritarias.length > 0 && (
-      <section class="seccion">
-        <div class="contenedor">
-          <div class="seccion-cabeza">
-            <div>
-              <p class="antetitulo">Para empezar</p>
-              <h2>Las prioridades de la coordinación</h2>
-            </div>
-            <a href={url('herramientas/?etiqueta=prioridad-coordinador')}>Ver todas las prioritarias</a>
-          </div>
-          <div class="rejilla">
-            {prioritarias.map((h) => (
-              <TarjetaHerramienta herramienta={h} nombreGrupo={nombreGrupo.get(h.data.grupo.id)} />
-            ))}
-          </div>
-        </div>
-      </section>
-    )
-  }
-
-  <section class="seccion seccion-alt">
-    <div class="contenedor">
-      <div class="seccion-cabeza">
-        <div>
-          <p class="antetitulo">Catálogo</p>
-          <h2>Siete grupos de herramientas</h2>
-        </div>
-        <a href={url('herramientas/')}>Ver el catálogo completo</a>
-      </div>
-      <div class="rejilla">
-        {
-          catalogo.map(({ grupo, herramientas }) => (
-            <article class="tarjeta tarjeta-grupo">
-              <div class="tarjeta-meta">
-                <span class="numero">{grupo.data.numero}</span>
-                <span class="conteo">
-                  <span data-contar={herramientas.length}>{herramientas.length}</span>{' '}
-                  {herramientas.length === 1 ? 'herramienta' : 'herramientas'}
-                </span>
-              </div>
-              <h3>
-                <a href={url(`grupos/${grupo.id}/`)}>{grupo.data.nombre}</a>
-              </h3>
-              <p>{grupo.data.descripcion}</p>
-            </article>
-          ))
-        }
-      </div>
-    </div>
-  </section>
-
-  <section class="seccion">
-    <div class="contenedor">
-      <div class="seccion-cabeza">
-        <div>
-          <p class="antetitulo">Gratis</p>
-          <h2>Calculadoras para el laboratorio</h2>
-        </div>
-        <a href={url('calculadoras/')}>Ver las {CALCULADORAS.length} calculadoras</a>
-      </div>
-      <div class="rejilla">
-        {
-          CALCULADORAS.filter((c) => 'destacada' in c).map((c) => (
-            <article class="tarjeta">
-              <h3>
-                <a href={url(`calculadoras/${c.id}/`)}>{c.titulo}</a>
-              </h3>
-              <p>{c.resumen}</p>
-            </article>
-          ))
-        }
-      </div>
-    </div>
-  </section>
-
-  <section class="seccion seccion-alt">
-    <div class="contenedor">
-      <div class="seccion-cabeza">
-        <div>
-          <p class="antetitulo">Gratis</p>
-          <h2>Prompts de IA para el laboratorio</h2>
-        </div>
-        <a href={url('prompts/')}>Ver todos los prompts</a>
-      </div>
-      <p class="texto-suave">
-        Instrucciones listas para copiar en tu asistente de IA: procedimientos, análisis de causa, control de calidad,
-        capacitación y comunicación. Sin datos de pacientes.
-      </p>
-      <div class="rejilla">
-        {promptsDestacados.map((p) => <TarjetaPrompt prompt={p} conCategoria />)}
-      </div>
-    </div>
-  </section>
-
   <section class="seccion">
     <div class="contenedor">
       <div class="seccion-cabeza">
@@ -235,7 +140,98 @@ const pasos = [
 
   <PedirDemo />
 
+  <section class="seccion seccion-alt" id="gratis" data-pestanas>
+    <div class="contenedor">
+      <div class="seccion-cabeza">
+        <div>
+          <p class="antetitulo">Gratis, sin crear cuenta</p>
+          <h2>Herramientas para tu laboratorio</h2>
+        </div>
+        <a href={url('herramientas/')}>Ver el catálogo completo</a>
+      </div>
+
+      <div class="pestanas" role="tablist" aria-label="Tipo de herramienta gratuita" hidden>
+        <button type="button" role="tab" id="pest-herramientas" aria-controls="panel-herramientas" aria-selected="true">Planillas</button>
+        <button type="button" role="tab" id="pest-calculadoras" aria-controls="panel-calculadoras" aria-selected="false" tabindex="-1">Calculadoras</button>
+        <button type="button" role="tab" id="pest-prompts" aria-controls="panel-prompts" aria-selected="false" tabindex="-1">Prompts IA</button>
+      </div>
+
+      {
+        prioritarias.length > 0 && (
+          <div class="panel-pestana" role="tabpanel" id="panel-herramientas" aria-labelledby="pest-herramientas">
+            <h3 class="panel-titulo">Las prioridades de la coordinación</h3>
+            <div class="rejilla carrusel">
+              {prioritarias.map((h) => (
+                <TarjetaHerramienta herramienta={h} nombreGrupo={nombreGrupo.get(h.data.grupo.id)} />
+              ))}
+            </div>
+            <p class="panel-enlace"><a href={url('herramientas/?etiqueta=prioridad-coordinador')}>Ver todas las prioritarias</a></p>
+          </div>
+        )
+      }
+
+      <div class="panel-pestana" role="tabpanel" id="panel-calculadoras" aria-labelledby="pest-calculadoras">
+        <h3 class="panel-titulo">Calculadoras para el laboratorio</h3>
+        <div class="rejilla carrusel">
+          {
+            CALCULADORAS.filter((c) => 'destacada' in c).map((c) => (
+              <article class="tarjeta">
+                <h3>
+                  <a href={url(`calculadoras/${c.id}/`)}>{c.titulo}</a>
+                </h3>
+                <p>{c.resumen}</p>
+              </article>
+            ))
+          }
+        </div>
+        <p class="panel-enlace"><a href={url('calculadoras/')}>Ver las {CALCULADORAS.length} calculadoras</a></p>
+      </div>
+
+      <div class="panel-pestana" role="tabpanel" id="panel-prompts" aria-labelledby="pest-prompts">
+        <h3 class="panel-titulo">Prompts de IA para el laboratorio</h3>
+        <p class="texto-suave">
+          Instrucciones listas para copiar en tu asistente de IA. Sin datos de pacientes.
+        </p>
+        <div class="rejilla carrusel">
+          {promptsDestacados.map((p) => <TarjetaPrompt prompt={p} conCategoria />)}
+        </div>
+        <p class="panel-enlace"><a href={url('prompts/')}>Ver todos los prompts</a></p>
+      </div>
+    </div>
+  </section>
+
   <section class="seccion">
+    <div class="contenedor">
+      <div class="seccion-cabeza">
+        <div>
+          <p class="antetitulo">Catálogo</p>
+          <h2>Siete grupos de herramientas</h2>
+        </div>
+        <a href={url('herramientas/')}>Ver el catálogo completo</a>
+      </div>
+      <div class="rejilla rejilla-grupos">
+        {
+          catalogo.map(({ grupo, herramientas }) => (
+            <article class="tarjeta tarjeta-grupo">
+              <div class="tarjeta-meta">
+                <span class="numero">{grupo.data.numero}</span>
+                <span class="conteo">
+                  <span data-contar={herramientas.length}>{herramientas.length}</span>{' '}
+                  {herramientas.length === 1 ? 'herramienta' : 'herramientas'}
+                </span>
+              </div>
+              <h3>
+                <a href={url(`grupos/${grupo.id}/`)}>{grupo.data.nombre}</a>
+              </h3>
+              <p>{grupo.data.descripcion}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion seccion-alt">
     <div class="contenedor">
       <div class="franja-qc">
         <div>
@@ -252,6 +248,38 @@ const pasos = [
 </Base>
 
 <script>
+  // Pestañas de «Herramientas para tu laboratorio». Sin JavaScript se ven los tres bloques uno bajo otro.
+  const seccionPestanas = document.querySelector<HTMLElement>('[data-pestanas]');
+  const listaPestanas = seccionPestanas?.querySelector<HTMLElement>('[role="tablist"]');
+  if (seccionPestanas && listaPestanas) {
+    const pestanas = [...listaPestanas.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+    const paneles = pestanas.map((p) => document.getElementById(p.getAttribute('aria-controls') ?? ''));
+    const elegir = (i: number, enfocar = false) => {
+      pestanas.forEach((p, j) => {
+        p.setAttribute('aria-selected', String(i === j));
+        p.tabIndex = i === j ? 0 : -1;
+        const panel = paneles[j];
+        if (panel) panel.hidden = i !== j;
+      });
+      if (enfocar) pestanas[i].focus();
+    };
+    listaPestanas.hidden = false;
+    seccionPestanas.classList.add('con-pestanas');
+    pestanas.forEach((p, i) => {
+      p.addEventListener('click', () => elegir(i));
+      p.addEventListener('keydown', (e) => {
+        const n = pestanas.length;
+        if (e.key === 'ArrowRight') elegir((i + 1) % n, true);
+        else if (e.key === 'ArrowLeft') elegir((i + n - 1) % n, true);
+        else if (e.key === 'Home') elegir(0, true);
+        else if (e.key === 'End') elegir(n - 1, true);
+        else return;
+        e.preventDefault();
+      });
+    });
+    elegir(0);
+  }
+
   // Cuenta hasta el total cuando el número entra en pantalla (el HTML ya trae el valor final).
   const reducir = matchMedia('(prefers-reduced-motion: reduce)').matches || document.documentElement.dataset.movimiento === 'reducido';
   const nums = document.querySelectorAll<HTMLElement>('[data-contar]');

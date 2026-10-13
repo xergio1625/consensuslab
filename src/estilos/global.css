@@ -905,3 +905,45 @@ img, svg { max-width: 100%; }
   body:has(.barra-demo:not([hidden])) .pie { padding-bottom: 88px; }
 }
 @media print { .barra-demo { display: none !important; } }
+
+/* ─── Móvil, fase 4: portada más corta (pestañas, carruseles, grupos compactos) ─── */
+.pestanas { display: flex; gap: 6px; margin: 0 0 20px; overflow-x: auto; scrollbar-width: none; }
+.pestanas::-webkit-scrollbar { display: none; }
+.pestanas[hidden] { display: none; }
+.pestanas button {
+  flex: none; min-height: 44px; padding: 8px 18px; border-radius: 999px; border: 1px solid var(--c-borde);
+  background: var(--c-panel); color: var(--c-texto); font: inherit; font-weight: 600; cursor: pointer;
+}
+.pestanas button:hover { border-color: var(--c-enlace); }
+.pestanas button[aria-selected="true"] { background: var(--c-boton); border-color: var(--c-boton); color: var(--c-boton-texto); }
+.con-pestanas .panel-titulo { display: none; }
+.panel-titulo { font-size: 1.15rem; }
+.panel-enlace { margin: 14px 0 0; }
+.panel-pestana[hidden] { display: none; }
+.panel-pestana > .texto-suave { margin-bottom: 14px; }
+
+@media (max-width: 760px) {
+  /* Carrusel horizontal con imán: se ve que hay más tarjetas a la derecha */
+  .carrusel {
+    display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain;
+    margin-inline: -16px; padding: 4px 16px 12px; scroll-padding-inline: 16px; scrollbar-width: none;
+  }
+  .carrusel::-webkit-scrollbar { display: none; }
+  .carrusel > * { flex: 0 0 82%; max-width: 320px; scroll-snap-align: start; animation: none !important; }
+  .panel-enlace a { display: inline-flex; align-items: center; min-height: 44px; }
+
+  /* Grupos del catálogo: filas compactas, descripción recortada a dos líneas */
+  .rejilla-grupos { grid-template-columns: 1fr; gap: 10px; }
+  .rejilla-grupos .tarjeta { padding: 12px 14px; gap: 4px; }
+  .rejilla-grupos .tarjeta-meta { gap: 10px; }
+  .rejilla-grupos .tarjeta p { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-size: .9rem; }
+
+  /* Cifras: una fila que se desliza, en vez de cuatro bloques apilados */
+  .cifras-fila { display: flex; gap: 24px; overflow-x: auto; scrollbar-width: none; scroll-snap-type: x proximity; }
+  .cifras-fila::-webkit-scrollbar { display: none; }
+  .cifras-fila p { flex: none; white-space: nowrap; scroll-snap-align: start; }
+  .cifras strong { font-size: 1.25rem; }
+
+  .seccion { padding: 36px 0; }
+  .demo-franja { padding: 32px 0; }
+}
