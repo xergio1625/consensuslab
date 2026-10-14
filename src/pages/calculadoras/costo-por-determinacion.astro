@@ -14,19 +14,49 @@ import { url } from '../../lib/rutas';
       <legend>Reactivo</legend>
       <div class="calc-campos">
         <label class="calc-campo">
+          <span>Cómo te cobra el proveedor</span>
+          <select class="campo" name="cobro">
+            <option value="kit">Por kit o caja</option>
+            <option value="realizado">Por test realizado en el analizador</option>
+            <option value="reportado">Por test reportado (estadística del laboratorio)</option>
+          </select>
+          <small>«Realizado» incluye repeticiones, controles y calibraciones; «reportado», solo los resultados que informas.</small>
+        </label>
+        <label class="calc-campo" data-solo="kit">
           <span>Precio del kit</span>
           <input class="campo" name="precioKit" inputmode="decimal" placeholder="240000" />
           <small>Precio neto por caja o kit, el que realmente pagas.</small>
         </label>
-        <label class="calc-campo">
+        <label class="calc-campo" data-solo="kit">
           <span>Determinaciones declaradas por kit</span>
           <input class="campo" name="deterKit" inputmode="decimal" placeholder="500" />
           <small>Las que indica el fabricante en el inserto.</small>
         </label>
-        <label class="calc-campo">
+        <label class="calc-campo" data-solo="kit">
           <span>Pérdidas por kit <em class="opcional">(opcional)</em></span>
           <input class="campo" name="perdidaKit" inputmode="decimal" placeholder="20" />
           <small>Cebado, volumen muerto, purgas y lavados.</small>
+        </label>
+        <label class="calc-campo" data-solo="test" hidden>
+          <span>Precio por test</span>
+          <input class="campo" name="precioTest" inputmode="decimal" placeholder="1000" />
+          <small>El que cotiza el proveedor, según la base de conteo elegida.</small>
+        </label>
+      </div>
+    </fieldset>
+
+    <fieldset class="calc-grupo">
+      <legend>Analizador en comodato</legend>
+      <div class="calc-campos">
+        <label class="calc-campo">
+          <span>Parte del precio del reactivo que paga el equipo <em class="opcional">(opcional)</em></span>
+          <span class="calc-entrada"><input class="campo" name="equipoEnPrecioPct" inputmode="decimal" placeholder="30" /><em>%</em></span>
+          <small>Si el comodato va incluido en el precio, pregunta al proveedor cuánto representa. Se separa del reactivo.</small>
+        </label>
+        <label class="calc-campo">
+          <span>Cargo mensual del equipo <em class="opcional">(opcional)</em></span>
+          <input class="campo" name="costoFijoMes" inputmode="decimal" placeholder="100000" />
+          <small>Comodato cobrado aparte, arriendo, mantención.</small>
         </label>
       </div>
     </fieldset>
@@ -88,11 +118,6 @@ import { url } from '../../lib/rutas';
           <input class="campo" name="costoHora" inputmode="decimal" placeholder="6000" />
         </label>
         <label class="calc-campo">
-          <span>Costo fijo mensual <em class="opcional">(opcional)</em></span>
-          <input class="campo" name="costoFijoMes" inputmode="decimal" placeholder="100000" />
-          <small>Comodato, mantención, arriendo del equipo.</small>
-        </label>
-        <label class="calc-campo">
           <span>Arancel o precio de venta <em class="opcional">(opcional)</em></span>
           <input class="campo" name="arancel" inputmode="decimal" placeholder="1500" />
           <small>Para ver el margen y el punto de equilibrio.</small>
@@ -108,8 +133,12 @@ import { url } from '../../lib/rutas';
         <div><span>Costo por determinación</span><strong data-costo></strong><small data-costo-nota></small></div>
         <div data-caja-margen><span>Margen por determinación</span><strong data-margen></strong><small data-margen-nota></small></div>
         <div><span>Gasto total al mes</span><strong data-total></strong><small data-total-nota></small></div>
+        <div><span>Costo sin el analizador</span><strong data-sin-equipo></strong><small data-sin-equipo-nota></small></div>
       </div>
       <p class="calc-lectura" data-lectura></p>
+
+      <h2 class="calc-subtitulo">Reportado y realizado</h2>
+      <p class="calc-nota" data-conteo></p>
 
       <h2 class="calc-subtitulo">De qué se compone el costo</h2>
       <div class="calc-barra" role="img" data-barra aria-label="Composición del costo por determinación"></div>
@@ -138,6 +167,26 @@ import { url } from '../../lib/rutas';
       <li><strong>Costo fijo</strong>: lo que pagas al mes aunque no proceses nada.</li>
       <li><strong>Costo por determinación</strong> = gasto total del mes / muestras informadas al mes.</li>
     </ul>
+    <h2>Analizador en comodato y comparación entre proveedores</h2>
+    <ul>
+      <li>
+        El comodato rara vez se cobra igual: un proveedor lo factura aparte (cargo mensual) y otro lo reparte dentro del
+        precio del reactivo. Si pones en «Parte del precio del reactivo que paga el equipo» el porcentaje que te indique
+        el proveedor, el reactivo y el equipo se muestran por separado.
+      </li>
+      <li>
+        <strong>Costo sin el analizador</strong> = (gasto total − cargo mensual del equipo − equipo incluido en el
+        precio) / muestras informadas. Es la cifra para comparar proveedores sin que el comodato distorsione el
+        resultado. Para comparar varias ofertas lado a lado, usa el{' '}
+        <a href={url('calculadoras/comparador-de-ofertas/')}>comparador de ofertas</a>.
+      </li>
+      <li>
+        <strong>Test reportado y test realizado</strong>: la estadística del laboratorio cuenta los resultados que
+        informas; el analizador cuenta además repeticiones, controles y calibraciones. Algunos proveedores y
+        mandantes piden una cifra y otros la otra, y el costo por test cambia según cuál uses. Elige la base en «Cómo te
+        cobra el proveedor» y compara siempre con la misma.
+      </li>
+    </ul>
     <h2>Cómo leer el resultado</h2>
     <ul>
       <li>
@@ -163,6 +212,7 @@ import { url } from '../../lib/rutas';
   const form = document.getElementById('calc') as HTMLFormElement;
   const $ = (s: string) => document.querySelector(`[data-${s}]`) as HTMLElement;
   const ejemplo: Record<string, string> = {
+    cobro: 'kit', precioTest: '', equipoEnPrecioPct: '20',
     precioKit: '240000', deterKit: '500', perdidaKit: '20', muestras: '800', repeticionPct: '5',
     corridasControl: '30', nivelesControl: '2', calibraciones: '4', replicadosCalib: '2',
     costoControlMes: '40000', costoCalibradorMes: '20000', insumoPorDeterminacion: '10',
@@ -175,9 +225,10 @@ import { url } from '../../lib/rutas';
     { id: 'insumos', texto: 'Insumos' },
     { id: 'personal', texto: 'Personal' },
     { id: 'fijo', texto: 'Costo fijo' },
+    { id: 'equipoIncluido', texto: 'Equipo incluido en el precio' },
   ] as const;
   const dinero = (v: number, d = 0) => '$' + formato(v, d);
-  const campo = (n: string) => (form.elements.namedItem(n) as HTMLInputElement).value;
+  const campo = (n: string) => (form.elements.namedItem(n) as HTMLInputElement | HTMLSelectElement).value;
 
   /** Campo opcional: vacío vale `porDefecto`; escrito pero inválido, NaN. */
   function leer(nombre: string, porDefecto = 0) {
@@ -191,14 +242,25 @@ import { url } from '../../lib/rutas';
   }
 
   function calcular() {
-    const precioKit = numero(campo('precioKit'));
-    const deterKit = numero(campo('deterKit'));
+    const cobro = campo('cobro') as 'kit' | 'realizado' | 'reportado';
+    const porKit = cobro === 'kit';
+    form.querySelectorAll<HTMLElement>('[data-solo]').forEach((el) => {
+      el.hidden = (el.dataset.solo === 'kit') !== porKit;
+    });
+    const precioKit = porKit ? numero(campo('precioKit')) : 0;
+    const deterKit = porKit ? numero(campo('deterKit')) : 1;
+    const precioTest = porKit ? NaN : numero(campo('precioTest'));
     const muestras = numero(campo('muestras'));
-    if ([precioKit, deterKit, muestras].some(Number.isNaN)) {
-      return mostrarMensaje('Ingresa el precio del kit, las determinaciones por kit y las muestras al mes.');
+    if ([precioKit, deterKit, muestras].some(Number.isNaN) || (!porKit && Number.isNaN(precioTest))) {
+      return mostrarMensaje(
+        porKit
+          ? 'Ingresa el precio del kit, las determinaciones por kit y las muestras al mes.'
+          : 'Ingresa el precio por test y las muestras al mes.',
+      );
     }
     const opcionales = {
-      perdidaKit: leer('perdidaKit'), repeticionPct: leer('repeticionPct'), corridasControl: leer('corridasControl'),
+      perdidaKit: porKit ? leer('perdidaKit') : 0, equipoEnPrecioPct: leer('equipoEnPrecioPct'),
+      repeticionPct: leer('repeticionPct'), corridasControl: leer('corridasControl'),
       nivelesControl: leer('nivelesControl', 1), calibraciones: leer('calibraciones'), replicadosCalib: leer('replicadosCalib', 1),
       costoControlMes: leer('costoControlMes'), costoCalibradorMes: leer('costoCalibradorMes'),
       insumoPorDeterminacion: leer('insumoPorDeterminacion'), minutosPorMuestra: leer('minutosPorMuestra'),
@@ -210,10 +272,12 @@ import { url } from '../../lib/rutas';
     if (campo('arancel').trim() !== '' && Number.isNaN(opcionales.arancel)) {
       return mostrarMensaje('El arancel no es un número.');
     }
-    if ([precioKit, deterKit, muestras].some((v) => v <= 0) || Object.values(opcionales).some((v) => v < 0)) {
+    const obligatorios = porKit ? [precioKit, deterKit, muestras] : [precioTest, muestras];
+    if (obligatorios.some((v) => v <= 0) || Object.values(opcionales).some((v) => v < 0)) {
       return mostrarMensaje('Los valores deben ser positivos.');
     }
-    const c = costoDeterminacion({ precioKit, deterKit, muestras, ...opcionales });
+    if (opcionales.equipoEnPrecioPct > 100) return mostrarMensaje('La parte del precio que paga el equipo no puede pasar de 100 %.');
+    const c = costoDeterminacion({ precioKit, cobro, precioTest, deterKit, muestras, ...opcionales });
     if (!c) return mostrarMensaje('Las pérdidas por kit no pueden ser iguales o mayores que las determinaciones del kit.');
 
     $('mensaje').hidden = true;
@@ -221,7 +285,18 @@ import { url } from '../../lib/rutas';
     $('costo').textContent = dinero(c.costo);
     $('costo-nota').textContent = `Variable: ${dinero(c.variable)}`;
     $('total').textContent = dinero(c.total);
-    $('total-nota').textContent = `${formato(c.rendimiento.kitsMes, 1)} kits · ${formato(muestras, 0)} muestras`;
+    $('total-nota').textContent = porKit
+      ? `${formato(c.rendimiento.kitsMes, 1)} kits · ${formato(muestras, 0)} muestras`
+      : `${formato(c.realizadas, 0)} test realizados · ${formato(muestras, 0)} reportados`;
+    $('sin-equipo').textContent = dinero(c.sinEquipo);
+    $('sin-equipo-nota').textContent =
+      c.equipoMes > 0 ? `Sin ${dinero(c.equipoMes)} al mes del equipo` : 'No declaraste costo del equipo';
+    $('conteo').textContent =
+      `El analizador procesa ${formato(c.realizadas, 0)} test al mes y tú reportas ${formato(muestras, 0)}: ` +
+      `cada resultado reportado carga ${formato(c.factorRealizadas, 2)} test realizados. ` +
+      `Por test realizado el costo es ${dinero(c.porRealizada, 1)} (${dinero(c.sinEquipoPorRealizada, 1)} sin el equipo); ` +
+      `por test reportado, ${dinero(c.costo, 1)} (${dinero(c.sinEquipo, 1)} sin el equipo). ` +
+      'Al comparar proveedores, usa siempre la misma base de conteo.';
 
     const conArancel = Number.isFinite(c.arancel);
     $('caja-margen').hidden = !conArancel;
@@ -284,7 +359,7 @@ import { url } from '../../lib/rutas';
   form.addEventListener('input', calcular);
   form.addEventListener('submit', (e) => e.preventDefault());
   $('ejemplo').addEventListener('click', () => {
-    for (const [k, v] of Object.entries(ejemplo)) (form.elements.namedItem(k) as HTMLInputElement).value = v;
+    for (const [k, v] of Object.entries(ejemplo)) (form.elements.namedItem(k) as HTMLInputElement | HTMLSelectElement).value = v;
     calcular();
   });
   calcular();

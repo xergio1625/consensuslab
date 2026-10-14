@@ -116,3 +116,72 @@ test('comprar vs. derivar: el costo fijo del envío adelanta el equilibrio; esce
   assert.equal(K.comprarVsDerivar({ ...dv, tarifaExterna: NaN }), null);
   assert.equal(K.comprarVsDerivar({ ...dv, varInterno: -1 }), null);
 });
+
+// Comodato y base de conteo. Con `base`: consumo = 908 test realizados para 800 reportados (factor 1,135).
+test('equipo incluido en el precio: se separa del reactivo y no cambia el total', () => {
+  const sin = K.costoDeterminacion({ ...base, precioKit: 240000, costoFijoMes: 100000 });
+  const con = K.costoDeterminacion({ ...base, precioKit: 240000, costoFijoMes: 100000, equipoEnPrecioPct: 30 });
+  cerca(con.total, sin.total, 1e-6);
+  cerca(con.mensual.equipoIncluido, sin.mensual.reactivo * 0.3, 1e-6);
+  cerca(con.mensual.reactivo, sin.mensual.reactivo * 0.7, 1e-6);
+  cerca(con.equipoMes, 100000 + sin.mensual.reactivo * 0.3, 1e-6);
+  cerca(con.sinEquipo, (con.total - con.equipoMes) / 800, 1e-9);
+  cerca(sin.sinEquipo, (sin.total - 100000) / 800, 1e-9);
+});
+
+test('sin equipo: el costo excluye el cargo mensual del equipo', () => {
+  const a = K.costoDeterminacion({ ...base, precioKit: 240000, costoFijoMes: 100000 });
+  cerca(a.sinEquipo, a.costo - 100000 / 800, 1e-9);
+  cerca(a.sinEquipoPorRealizada, (a.total - 100000) / 908, 1e-9);
+});
+
+test('cobro por test realizado o reportado: el cargo depende de la base de conteo', () => {
+  const real = K.costoDeterminacion({ ...base, cobro: 'realizado', precioTest: 1000 });
+  const rep = K.costoDeterminacion({ ...base, cobro: 'reportado', precioTest: 1000 });
+  cerca(real.mensual.reactivo, 908 * 1000);
+  cerca(rep.mensual.reactivo, 800 * 1000);
+  cerca(real.factorRealizadas, 908 / 800);
+  cerca(real.costo, 908000 / 800);
+  cerca(real.porRealizada, 1000);
+  assert.ok(Number.isNaN(real.rendimiento.kitsMes));
+});
+
+test('cobro por test: datos inválidos y porcentaje fuera de rango', () => {
+  assert.equal(K.costoDeterminacion({ ...base, cobro: 'realizado' }), null); // sin precio por test
+  assert.equal(K.costoDeterminacion({ ...base, cobro: 'otro', precioTest: 10 }), null);
+  assert.equal(K.costoDeterminacion({ ...base, precioKit: 100, equipoEnPrecioPct: 120 }), null);
+});
+
+test('convertir precio por test entre test realizados y reportados', () => {
+  const p = { muestras: 800, repeticionPct: 5, corridasControl: 30, nivelesControl: 2, calibraciones: 4, replicadosCalib: 2 };
+  const r = K.convertirPrecioPorTest({ precio: 1000, base: 'realizado', ...p });
+  cerca(r.factor, 1.135);
+  cerca(r.porReportado, 1135);
+  const i = K.convertirPrecioPorTest({ precio: 1135, base: 'reportado', ...p });
+  cerca(i.porRealizado, 1000);
+  assert.equal(K.convertirPrecioPorTest({ precio: 1, base: 'x', ...p }), null);
+  assert.equal(K.convertirPrecioPorTest({ precio: 1, base: 'realizado', muestras: 0 }), null);
+});
+
+test('comparador: con sinEquipo gana la oferta de menor costo sin comodato aunque su total sea mayor', () => {
+  const prod = { muestras: 800 };
+  const ofertas = [
+    { nombre: 'A', precioKit: 100000, deterKit: 500, costoFijoMes: 20000 }, // reactivo barato, equipo caro
+    { nombre: 'B', precioKit: 120000, deterKit: 500, equipoEnPrecioPct: 0 }, // sin equipo, reactivo más caro
+  ];
+  const total = K.compararOfertas(prod, ofertas);
+  const sin = K.compararOfertas(prod, ofertas, { sinEquipo: true });
+  assert.equal(total.indiceMejor, 0); // A: 160.000 + 20.000 < B: 192.000
+  assert.equal(sin.indiceMejor, 0);
+  const sin2 = K.compararOfertas(prod, [
+    { nombre: 'A', precioKit: 100000, deterKit: 500, costoFijoMes: 100000 },
+    { nombre: 'B', precioKit: 120000, deterKit: 500 },
+  ], { sinEquipo: true });
+  assert.equal(sin2.indiceMejor, 0); // sin su comodato A cuesta 160.000 vs 192.000 de B
+  const conTotal = K.compararOfertas(prod, [
+    { nombre: 'A', precioKit: 100000, deterKit: 500, costoFijoMes: 100000 },
+    { nombre: 'B', precioKit: 120000, deterKit: 500 },
+  ]);
+  assert.equal(conTotal.indiceMejor, 1); // con comodato A: 260.000 vs 192.000
+  cerca(sin2.filas[1].difUnitaria, (192000 - 160000) / 800, 1e-9);
+});

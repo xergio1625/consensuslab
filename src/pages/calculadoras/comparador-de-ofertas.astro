@@ -52,6 +52,20 @@ const NOMBRES = { a: 'Oferta A', b: 'Oferta B', c: 'Oferta C' };
       </div>
     </fieldset>
 
+    <fieldset class="calc-grupo">
+      <legend>Qué comparar</legend>
+      <div class="lj-reglas">
+        <label>
+          <input type="checkbox" name="sinEquipo" checked />
+          <span>Comparar sin el costo del analizador (comodato)</span>
+        </label>
+      </div>
+      <p class="calc-ayuda">
+        Quita de cada oferta el cargo mensual del equipo y la parte del precio del reactivo que corresponde al comodato,
+        para que no pese cómo lo cobra cada proveedor. Desmárcalo para comparar el costo total.
+      </p>
+    </fieldset>
+
     {
       OFERTAS.map((o) => (
         <fieldset class="calc-grupo">
@@ -62,17 +76,34 @@ const NOMBRES = { a: 'Oferta A', b: 'Oferta B', c: 'Oferta C' };
               <input class="campo" type="text" name={`${o}_nombre`} placeholder={NOMBRES[o]} />
             </label>
             <label class="calc-campo">
+              <span>Cómo cobra</span>
+              <select class="campo" name={`${o}_cobro`}>
+                <option value="kit">Por kit o caja</option>
+                <option value="realizado">Por test realizado (analizador)</option>
+                <option value="reportado">Por test reportado (laboratorio)</option>
+              </select>
+            </label>
+            <label class="calc-campo" data-oferta={o} data-solo="kit">
               <span>Precio del kit</span>
               <input class="campo" name={`${o}_precioKit`} inputmode="decimal" />
             </label>
-            <label class="calc-campo">
+            <label class="calc-campo" data-oferta={o} data-solo="kit">
               <span>Determinaciones declaradas por kit</span>
               <input class="campo" name={`${o}_deterKit`} inputmode="decimal" />
             </label>
-            <label class="calc-campo">
+            <label class="calc-campo" data-oferta={o} data-solo="kit">
               <span>Pérdidas por kit <em class="opcional">(opcional)</em></span>
               <input class="campo" name={`${o}_perdidaKit`} inputmode="decimal" />
               <small>Cebado, volumen muerto, purgas.</small>
+            </label>
+            <label class="calc-campo" data-oferta={o} data-solo="test" hidden>
+              <span>Precio por test</span>
+              <input class="campo" name={`${o}_precioTest`} inputmode="decimal" />
+            </label>
+            <label class="calc-campo">
+              <span>Parte del precio que paga el equipo <em class="opcional">(opcional)</em></span>
+              <span class="calc-entrada"><input class="campo" name={`${o}_equipoEnPrecioPct`} inputmode="decimal" /><em>%</em></span>
+              <small>Comodato incluido en el precio del reactivo.</small>
             </label>
             <label class="calc-campo">
               <span>Control al mes <em class="opcional">(opcional)</em></span>
@@ -87,9 +118,9 @@ const NOMBRES = { a: 'Oferta A', b: 'Oferta B', c: 'Oferta C' };
               <input class="campo" name={`${o}_insumoPorDeterminacion`} inputmode="decimal" />
             </label>
             <label class="calc-campo">
-              <span>Costo fijo mensual <em class="opcional">(opcional)</em></span>
+              <span>Cargo mensual del equipo <em class="opcional">(opcional)</em></span>
               <input class="campo" name={`${o}_costoFijoMes`} inputmode="decimal" />
-              <small>Arriendo o comodato del equipo, mantención.</small>
+              <small>Comodato cobrado aparte, arriendo, mantención.</small>
             </label>
           </div>
         </fieldset>
@@ -101,13 +132,13 @@ const NOMBRES = { a: 'Oferta A', b: 'Oferta B', c: 'Oferta C' };
     <p class="calc-mensaje" data-mensaje>Ingresa tu producción y al menos dos ofertas con precio y determinaciones por kit.</p>
     <div data-resultado hidden>
       <div class="calc-cifras">
-        <div><span>Oferta más barata</span><strong data-mejor></strong><small data-mejor-costo></small></div>
+        <div><span data-etiqueta-mejor>Oferta más barata</span><strong data-mejor></strong><small data-mejor-costo></small></div>
         <div><span>Ahorro anual frente a la más cara</span><strong data-ahorro></strong><small data-ahorro-nota></small></div>
       </div>
       <div class="calc-tabla-envoltura">
         <table class="calc-tabla">
           <thead>
-            <tr><th>Oferta</th><th>Costo por resultado</th><th>Gasto al mes</th><th>Gasto al año</th><th>Kits al mes</th><th>Rendimiento</th><th>Diferencia con la mejor</th></tr>
+            <tr><th>Oferta</th><th data-col-metrica>Costo por resultado</th><th>Sin el analizador</th><th>Con el analizador</th><th>Gasto al mes</th><th>Gasto al año</th><th>Kits al mes</th><th>Rendimiento</th><th>Diferencia con la mejor</th></tr>
           </thead>
           <tbody data-filas></tbody>
         </table>
@@ -120,6 +151,8 @@ const NOMBRES = { a: 'Oferta A', b: 'Oferta B', c: 'Oferta C' };
     <ul>
       <li>Cada oferta se calcula con las mismas reglas que <a href={url('calculadoras/costo-por-determinacion/')}>Costo por determinación</a>: kits consumidos (muestras, repeticiones, controles y calibraciones sobre las determinaciones útiles de cada kit) por su precio, más control, calibrador, insumos, personal y costo fijo.</li>
       <li><strong>Costo por resultado</strong> = gasto total del mes / muestras informadas al mes. Es lo que se debe comparar, no el precio del kit ni el precio por determinación declarado.</li>
+      <li><strong>Sin el analizador</strong>: descuenta el cargo mensual del equipo y la parte del precio del reactivo que paga el comodato. Sirve para comparar el reactivo y el resto de la operación cuando cada proveedor cobra el equipo de una forma distinta (aparte, dentro del kit o dentro del precio por test).</li>
+      <li><strong>Test reportado y realizado</strong>: si un proveedor cobra por test realizado en el analizador, el costo por resultado informado sube, porque también se pagan repeticiones, controles y calibraciones. Si cobra por test reportado, ya los incluyó en su precio. Todas las ofertas se llevan a costo por resultado informado para que sean comparables.</li>
       <li><strong>Ahorro anual</strong> = diferencia de costo por resultado × muestras × 12.</li>
     </ul>
     <h2>Cómo usarlo</h2>
@@ -138,7 +171,7 @@ const NOMBRES = { a: 'Oferta A', b: 'Oferta B', c: 'Oferta C' };
 
   const form = document.getElementById('calc') as HTMLFormElement;
   const $ = (s: string) => document.querySelector(`[data-${s}]`) as HTMLElement;
-  const campo = (n: string) => (form as any)[n] as HTMLInputElement;
+  const campo = (n: string) => (form as any)[n] as HTMLInputElement & HTMLSelectElement;
   const n = (nombre: string, porDefecto: number) => {
     const v = numero(campo(nombre).value);
     return Number.isNaN(v) ? porDefecto : v;
@@ -165,34 +198,48 @@ const NOMBRES = { a: 'Oferta A', b: 'Oferta B', c: 'Oferta C' };
       costoHora: n('costoHora', 0),
     };
     const ofertas = ['a', 'b', 'c']
-      .map((o, i) => ({
-        o,
-        nombre: campo(`${o}_nombre`).value.trim() || `Oferta ${o.toUpperCase()}`,
-        precioKit: numero(campo(`${o}_precioKit`).value),
-        deterKit: numero(campo(`${o}_deterKit`).value),
-      }))
-      .filter((x) => !Number.isNaN(x.precioKit) && !Number.isNaN(x.deterKit))
+      .map((o) => {
+        const cobro = campo(`${o}_cobro`).value as 'kit' | 'realizado' | 'reportado';
+        form.querySelectorAll<HTMLElement>(`[data-oferta="${o}"]`).forEach((el) => {
+          el.hidden = (el.dataset.solo === 'kit') !== (cobro === 'kit');
+        });
+        return {
+          o,
+          cobro,
+          nombre: campo(`${o}_nombre`).value.trim() || `Oferta ${o.toUpperCase()}`,
+          precioKit: numero(campo(`${o}_precioKit`).value),
+          deterKit: numero(campo(`${o}_deterKit`).value),
+          precioTest: numero(campo(`${o}_precioTest`).value),
+        };
+      })
+      .filter((x) => (x.cobro === 'kit' ? !Number.isNaN(x.precioKit) && !Number.isNaN(x.deterKit) : !Number.isNaN(x.precioTest)))
       .map((x) => ({
         nombre: x.nombre,
-        precioKit: x.precioKit,
-        deterKit: x.deterKit,
-        perdidaKit: n(`${x.o}_perdidaKit`, 0),
+        cobro: x.cobro,
+        precioKit: x.cobro === 'kit' ? x.precioKit : 0,
+        deterKit: x.cobro === 'kit' ? x.deterKit : 1,
+        precioTest: x.cobro === 'kit' ? NaN : x.precioTest,
+        equipoEnPrecioPct: n(`${x.o}_equipoEnPrecioPct`, 0),
+        perdidaKit: x.cobro === 'kit' ? n(`${x.o}_perdidaKit`, 0) : 0,
         costoControlMes: n(`${x.o}_costoControlMes`, 0),
         costoCalibradorMes: n(`${x.o}_costoCalibradorMes`, 0),
         insumoPorDeterminacion: n(`${x.o}_insumoPorDeterminacion`, 0),
         costoFijoMes: n(`${x.o}_costoFijoMes`, 0),
       }));
-    if (ofertas.length < 2) return mensaje('Ingresa al menos dos ofertas con precio y determinaciones por kit.');
-    const r = compararOfertas(produccion, ofertas);
+    if (ofertas.length < 2) return mensaje('Ingresa al menos dos ofertas con precio (y determinaciones por kit, si cobran por kit).');
+    const sinEquipo = campo('sinEquipo').checked;
+    const r = compararOfertas(produccion, ofertas, { sinEquipo });
     const validas = r.filas.filter((f) => f.resultado);
-    if (validas.length < 2) return mensaje('Revisa los datos: las determinaciones útiles de cada kit deben ser mayores que cero.');
+    if (validas.length < 2) return mensaje('Revisa los datos: las determinaciones útiles de cada kit deben ser mayores que cero y la parte del equipo, entre 0 y 100 %.');
     $('mensaje').hidden = true;
     $('resultado').hidden = false;
     const mejor = r.filas[r.indiceMejor];
-    const peor = validas.reduce((a, b) => (b.costo > a.costo ? b : a));
+    const peor = validas.reduce((a, b) => (b.metrica > a.metrica ? b : a));
     $('mejor').textContent = mejor.nombre;
-    $('mejor-costo').textContent = `${dinero(mejor.costo)} por resultado`;
-    const ahorro = (peor.costo - mejor.costo) * muestras * 12;
+    $('etiqueta-mejor').textContent = sinEquipo ? 'Oferta más barata sin el analizador' : 'Oferta más barata';
+    $('mejor-costo').textContent = `${dinero(mejor.metrica)} por resultado${sinEquipo ? ', sin el analizador' : ''}`;
+    document.querySelector('[data-col-metrica]')!.textContent = sinEquipo ? 'Costo comparado (sin analizador)' : 'Costo comparado (total)';
+    const ahorro = (peor.metrica - mejor.metrica) * muestras * 12;
     $('ahorro').textContent = dinero(ahorro);
     $('ahorro-nota').textContent = peor === mejor ? 'Las ofertas cuestan lo mismo' : `Frente a ${peor.nombre}`;
     $('filas').replaceChildren(
@@ -204,11 +251,13 @@ const NOMBRES = { a: 'Oferta A', b: 'Oferta B', c: 'Oferta C' };
           const diff = esMejor ? 'La más barata' : `+${dinero(f.difUnitaria)} por resultado (+${formato(f.difPct, 1)} %), ${dinero(f.difAnio)} al año`;
           [
             f.nombre + (esMejor ? ' ★' : ''),
+            dinero(f.metrica),
+            dinero(f.resultado!.sinEquipo),
             dinero(f.costo),
             dinero(f.totalMes),
             dinero(f.totalAnio),
-            formato(f.resultado!.rendimiento.kitsMes, 1),
-            formato(f.resultado!.rendimiento.rendimiento, 0) + ' %',
+            Number.isNaN(f.resultado!.rendimiento.kitsMes) ? '—' : formato(f.resultado!.rendimiento.kitsMes, 1),
+            Number.isNaN(f.resultado!.rendimiento.rendimiento) ? '—' : formato(f.resultado!.rendimiento.rendimiento, 0) + ' %',
             diff,
           ].forEach((t) => {
             const td = document.createElement('td');
@@ -224,7 +273,7 @@ const NOMBRES = { a: 'Oferta A', b: 'Oferta B', c: 'Oferta C' };
     muestras: '800', repeticionPct: '5', corridasControl: '30', nivelesControl: '2', calibraciones: '4', replicadosCalib: '2',
     minutosPorMuestra: '3', costoHora: '6000',
     a_nombre: 'Proveedor A', a_precioKit: '240000', a_deterKit: '500', a_perdidaKit: '20', a_costoControlMes: '40000', a_costoCalibradorMes: '20000', a_costoFijoMes: '100000',
-    b_nombre: 'Proveedor B', b_precioKit: '200000', b_deterKit: '500', b_perdidaKit: '40', b_costoControlMes: '40000', b_costoCalibradorMes: '25000', b_costoFijoMes: '250000',
+    b_nombre: 'Proveedor B (comodato en el precio)', b_precioKit: '300000', b_deterKit: '500', b_perdidaKit: '40', b_equipoEnPrecioPct: '30', b_costoControlMes: '40000', b_costoCalibradorMes: '25000',
   };
   form.querySelector('[data-ejemplo]')!.addEventListener('click', () => {
     for (const [k, v] of Object.entries(ejemplo)) campo(k).value = v;
