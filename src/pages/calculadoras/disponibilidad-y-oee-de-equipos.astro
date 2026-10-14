@@ -1,0 +1,151 @@
+---
+import PaginaCalculadora from '../../componentes/PaginaCalculadora.astro';
+import { url } from '../../lib/rutas';
+---
+
+<PaginaCalculadora id="disponibilidad-y-oee-de-equipos">
+  <form class="calc" id="calc" novalidate>
+    <p class="calc-ayuda">
+      Un equipo y un período (por ejemplo, un mes). <button type="button" class="boton boton-secundario calc-ejemplo" data-ejemplo>Cargar un ejemplo</button>
+    </p>
+    <fieldset class="calc-grupo">
+      <legend>Tiempo</legend>
+      <div class="calc-campos">
+        <label class="calc-campo">
+          <span>Horas programadas</span>
+          <span class="calc-entrada"><input class="campo" name="programadas" inputmode="decimal" placeholder="720" /><em>h</em></span>
+          <small>Horas en que el equipo debía estar disponible en el período.</small>
+        </label>
+        <label class="calc-campo">
+          <span>Paradas planificadas <em class="opcional">(opcional)</em></span>
+          <span class="calc-entrada"><input class="campo" name="planificadas" inputmode="decimal" placeholder="12" /><em>h</em></span>
+          <small>Mantención preventiva, calibraciones y lavados programados.</small>
+        </label>
+        <label class="calc-campo">
+          <span>Horas detenido por fallas <em class="opcional">(opcional)</em></span>
+          <span class="calc-entrada"><input class="campo" name="horasFalla" inputmode="decimal" placeholder="18" /><em>h</em></span>
+        </label>
+        <label class="calc-campo">
+          <span>Número de fallas <em class="opcional">(opcional)</em></span>
+          <input class="campo" name="fallas" inputmode="numeric" placeholder="3" />
+        </label>
+      </div>
+    </fieldset>
+    <fieldset class="calc-grupo">
+      <legend>Producción <span class="opcional">(opcional, para el OEE)</span></legend>
+      <div class="calc-campos">
+        <label class="calc-campo">
+          <span>Resultados procesados</span>
+          <input class="campo" name="procesados" inputmode="decimal" placeholder="22000" />
+          <small>Todas las determinaciones, incluidas repeticiones y controles.</small>
+        </label>
+        <label class="calc-campo">
+          <span>Capacidad ideal por hora</span>
+          <input class="campo" name="capacidadHora" inputmode="decimal" placeholder="40" />
+          <small>La velocidad nominal del equipo para tu mezcla de exámenes.</small>
+        </label>
+        <label class="calc-campo">
+          <span>Resultados buenos</span>
+          <input class="campo" name="buenos" inputmode="decimal" placeholder="20900" />
+          <small>Los que salen reportables a la primera, sin repetir ni descartar.</small>
+        </label>
+      </div>
+    </fieldset>
+  </form>
+
+  <section class="calc-resultado" aria-live="polite">
+    <p class="calc-mensaje" data-mensaje>Ingresa las horas programadas del período.</p>
+    <div data-resultado hidden>
+      <div class="calc-cifras">
+        <div><span>Disponibilidad</span><strong data-disp></strong><small data-operacion></small></div>
+        <div><span>MTBF</span><strong data-mtbf></strong><small>horas entre fallas</small></div>
+        <div><span>MTTR</span><strong data-mttr></strong><small>horas por reparación</small></div>
+      </div>
+      <div class="calc-cifras" data-caja-oee hidden>
+        <div><span>Rendimiento</span><strong data-rend></strong></div>
+        <div><span>Calidad</span><strong data-cal></strong></div>
+        <div><span>OEE</span><strong data-oee></strong><small>disponibilidad × rendimiento × calidad</small></div>
+      </div>
+      <p class="calc-nota" data-aviso hidden></p>
+    </div>
+  </section>
+
+  <div slot="explicacion">
+    <h2>Cómo se calcula</h2>
+    <ul>
+      <li><strong>Horas de operación</strong> = programadas − paradas planificadas − horas de falla.</li>
+      <li><strong>Disponibilidad</strong> = horas de operación / (programadas − planificadas).</li>
+      <li><strong>MTBF</strong> (tiempo medio entre fallas) = horas de operación / número de fallas. <strong>MTTR</strong> (tiempo medio de reparación) = horas de falla / número de fallas.</li>
+      <li><strong>Rendimiento</strong> = resultados procesados / (capacidad ideal por hora × horas de operación). <strong>Calidad</strong> = resultados buenos / procesados.</li>
+      <li><strong>OEE</strong> = disponibilidad × rendimiento × calidad: la fracción del tiempo programado que el equipo produjo resultados buenos a velocidad plena.</li>
+    </ul>
+    <h2>Cómo leerlo</h2>
+    <ul>
+      <li>Una disponibilidad baja con un MTBF corto apunta a fallas frecuentes (mantención o repuestos); con un MTTR largo, a reparaciones lentas (soporte técnico, repuestos que demoran).</li>
+      <li>En un laboratorio, el rendimiento refleja esperas por falta de muestras, reactivo o personal; la calidad, las repeticiones y corridas rechazadas.</li>
+      <li>La capacidad ideal depende de tu mezcla de exámenes: usa un valor realista y el mismo en cada período para comparar.</li>
+      <li>Úsalo para decidir con datos: contrato de mantención, equipo de respaldo, o plan de contingencia cuando la disponibilidad no alcanza.</li>
+    </ul>
+    <p>
+      Para registrar fallas y tiempos de detención, mira la ficha
+      <a href={url('herramientas/estado-y-bitacora-de-equipos/')}>Estado y bitácora de equipos</a>;
+      para la mantención, <a href={url('herramientas/mantencion-preventiva-y-calibraciones/')}>Mantención preventiva y calibraciones</a>.
+    </p>
+  </div>
+</PaginaCalculadora>
+
+<script>
+  import { formato, numero } from '../../lib/calidad.js';
+  import { oeeEquipo } from '../../lib/estadistica.js';
+
+  const form = document.getElementById('calc') as HTMLFormElement;
+  const $ = (s: string) => document.querySelector(`[data-${s}]`) as HTMLElement;
+  const n = (nombre: string, porDefecto = 0) => {
+    const v = numero((form as any)[nombre].value);
+    return Number.isNaN(v) ? porDefecto : v;
+  };
+  const pct = (v: number) => (Number.isFinite(v) ? formato(v, 1) + ' %' : '—');
+
+  function mensaje(t: string) {
+    $('mensaje').textContent = t;
+    $('mensaje').hidden = false;
+    $('resultado').hidden = true;
+  }
+
+  function calcular() {
+    const programadas = numero(form.programadas.value);
+    if (Number.isNaN(programadas) || programadas <= 0) return mensaje('Ingresa las horas programadas del período.');
+    const r = oeeEquipo({
+      programadas, planificadas: n('planificadas'), horasFalla: n('horasFalla'), fallas: n('fallas'),
+      procesados: n('procesados', NaN), capacidadHora: n('capacidadHora', NaN), buenos: n('buenos', NaN),
+    });
+    if (!r) return mensaje('Revisa los datos: las horas de operación (programadas menos paradas y fallas) deben ser mayores que cero.');
+    $('mensaje').hidden = true;
+    $('resultado').hidden = false;
+    $('disp').textContent = pct(r.disponibilidad);
+    $('operacion').textContent = `${formato(r.operacion, 1)} h de operación`;
+    $('mtbf').textContent = Number.isFinite(r.mtbf) ? formato(r.mtbf, 1) : '—';
+    $('mttr').textContent = Number.isFinite(r.mttr) ? formato(r.mttr, 1) : '—';
+    const conOee = Number.isFinite(r.oee);
+    ($('caja-oee') as HTMLElement).hidden = !conOee;
+    if (conOee) {
+      $('rend').textContent = pct(r.rendimiento);
+      $('cal').textContent = pct(r.calidad);
+      $('oee').textContent = pct(r.oee);
+    }
+    const avisos = [];
+    if (n('horasFalla') > 0 && n('fallas') === 0) avisos.push('Hay horas de falla pero ninguna falla registrada: sin el número de fallas no se calculan el MTBF ni el MTTR.');
+    if (conOee && r.rendimiento > 100) avisos.push('El rendimiento supera el 100 %: la capacidad ideal por hora parece subestimada.');
+    $('aviso').textContent = avisos.join(' ');
+    $('aviso').hidden = !avisos.length;
+  }
+
+  form.querySelector('[data-ejemplo]')!.addEventListener('click', () => {
+    const ej: Record<string, string> = { programadas: '720', planificadas: '12', horasFalla: '18', fallas: '3', procesados: '22000', capacidadHora: '40', buenos: '20900' };
+    for (const [k, v] of Object.entries(ej)) (form as any)[k].value = v;
+    calcular();
+  });
+  form.addEventListener('input', calcular);
+  form.addEventListener('submit', (e) => e.preventDefault());
+  calcular();
+</script>

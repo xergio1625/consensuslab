@@ -1,0 +1,178 @@
+---
+import PaginaCalculadora from '../../componentes/PaginaCalculadora.astro';
+import { url } from '../../lib/rutas';
+---
+
+<PaginaCalculadora id="grafico-p-de-indicadores">
+  <form class="calc" id="calc" novalidate>
+    <p class="calc-ayuda">
+      <button type="button" class="boton boton-secundario calc-ejemplo" data-ejemplo>Cargar un ejemplo</button>
+    </p>
+    <div class="calc-campos">
+      <label class="calc-campo calc-ancho">
+        <span>Períodos: eventos y total</span>
+        <textarea class="campo" name="datos" rows="10" placeholder="Ene 12 800&#10;Feb 9 760&#10;Mar 15 830"></textarea>
+        <small>Una línea por período: nombre (opcional), cantidad de eventos y total. Por ejemplo, muestras rechazadas y muestras recibidas del mes. Al menos 8 períodos para que el gráfico sea confiable.</small>
+      </label>
+    </div>
+  </form>
+
+  <section class="calc-resultado" aria-live="polite">
+    <p class="calc-mensaje" data-mensaje>Pega los períodos con sus eventos y totales (al menos 2).</p>
+    <div data-resultado hidden>
+      <div class="calc-cifras">
+        <div><span>Tasa media (línea central)</span><strong data-pbarra></strong></div>
+        <div><span>Fuera de límites</span><strong data-fuera></strong><small data-fuera-nota></small></div>
+        <div><span>Rachas</span><strong data-rachas></strong><small data-rachas-nota></small></div>
+      </div>
+      <div class="lj-envoltura" data-grafico></div>
+      <p class="lj-leyenda">
+        <span><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="4.5" class="lj-ok"></circle></svg>Período normal</span>
+        <span><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><rect x="2.5" y="2.5" width="9" height="9" class="lj-rech"></rect></svg>Fuera de límites</span>
+        <span><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M7 1.5 12.5 7 7 12.5 1.5 7Z" class="lj-adv"></path></svg>Racha de 8 o más</span>
+      </p>
+      <div class="calc-tabla-envoltura">
+        <table class="calc-tabla">
+          <thead><tr><th>Período</th><th>Eventos</th><th>Total</th><th>Tasa</th><th>Límites (3 DE)</th><th>Señal</th></tr></thead>
+          <tbody data-filas></tbody>
+        </table>
+      </div>
+      <p class="calc-nota" data-aviso hidden></p>
+    </div>
+  </section>
+
+  <div slot="explicacion">
+    <h2>Cómo se calcula</h2>
+    <ul>
+      <li><strong>Línea central</strong> p̄ = suma de eventos / suma de totales de todos los períodos.</li>
+      <li><strong>Límites de cada período</strong> = p̄ ± 3 · √(p̄ (1 − p̄) / n), con n el total de ese período: se ensanchan en los períodos con menos muestras. El límite inferior no baja de 0 ni el superior pasa de 100 %.</li>
+      <li><strong>Señales</strong>: un período fuera de los límites, o 8 o más períodos seguidos al mismo lado de la línea central (cambio sostenido).</li>
+    </ul>
+    <h2>Cómo leerlo</h2>
+    <ul>
+      <li>La tasa de un mes varía por azar aunque nada cambie. Dentro de los límites, esa variación es normal y no justifica reaccionar a cada subida o bajada.</li>
+      <li>Un punto fuera de los límites o una racha indican una causa especial: busca qué cambió (proveedor, personal, procedimiento, lote de tubos).</li>
+      <li>Una mejora real aparece como un punto bajo el límite inferior o una racha bajo la central, y se mantiene después de la acción.</li>
+      <li>Calcula los límites con un período en que el proceso era estable. Si hubo un cambio importante, vuelve a calcular desde ahí.</li>
+      <li>Las metas del indicador las define tu plan de calidad: este gráfico muestra si el proceso es estable, no si cumple la meta.</li>
+    </ul>
+    <p>
+      Para una sola tasa con su intervalo y su sigma, usa <a href={url('calculadoras/indicadores-tasa-y-sigma/')}>Indicador de calidad: tasa, intervalo y sigma</a>;
+      para las causas, <a href={url('calculadoras/pareto-de-causas/')}>Diagrama de Pareto</a>.
+    </p>
+    <h2>Referencia</h2>
+    <p>Montgomery DC. <em>Introduction to Statistical Quality Control</em>, capítulo sobre gráficos de control para atributos.</p>
+  </div>
+</PaginaCalculadora>
+
+<script>
+  import { formato, numero } from '../../lib/calidad.js';
+  import { graficoP } from '../../lib/estadistica.js';
+  import { GEOMETRIA, ejes, escala, lienzo, svg } from '../../lib/graficos.js';
+
+  const form = document.getElementById('calc') as HTMLFormElement;
+  const $ = (s: string) => document.querySelector(`[data-${s}]`) as HTMLElement;
+
+  function mensaje(t: string) {
+    $('mensaje').textContent = t;
+    $('mensaje').hidden = false;
+    $('resultado').hidden = true;
+  }
+
+  function leer(texto: string) {
+    const periodos: { etiqueta: string; eventos: number; total: number }[] = [];
+    const malas: number[] = [];
+    texto.split(/\r?\n/).forEach((l, i) => {
+      const t = l.trim();
+      if (!t) return;
+      const partes = t.split(/[\t; ]+/).filter(Boolean);
+      const total = numero(partes[partes.length - 1]);
+      const eventos = numero(partes[partes.length - 2]);
+      if (partes.length < 2 || Number.isNaN(total) || Number.isNaN(eventos)) malas.push(i + 1);
+      else periodos.push({ etiqueta: partes.slice(0, -2).join(' ') || String(periodos.length + 1), eventos, total });
+    });
+    return { periodos, malas };
+  }
+
+  function dibujar(r: NonNullable<ReturnType<typeof graficoP>>) {
+    const g = { ...GEOMETRIA, mb: 54 };
+    const n = r.puntos.length;
+    const maxV = Math.max(...r.puntos.map((p) => Math.max(p.p, p.limiteSup))) * 100;
+    const ex = escala(1, Math.max(n, 2));
+    const ey = escala(0, maxV * 1.05);
+    const s = lienzo(`Gráfico p de ${n} períodos con tasa media ${formato(r.pBarra * 100, 2)} %.`);
+    const { X, Y } = ejes(s, { ini: 1, fin: Math.max(n, 2), marcas: [] }, ey, 'Período', 'Tasa (%)', g);
+    void ex;
+    s.append(svg('line', { x1: X(1), x2: X(Math.max(n, 2)), y1: Y(r.pBarra * 100), y2: Y(r.pBarra * 100), class: 'lj-media' }));
+    const trazo = (campo: 'limiteSup' | 'limiteInf') =>
+      s.append(svg('polyline', { points: r.puntos.map((p) => `${X(p.indice).toFixed(1)},${Y(p[campo] * 100).toFixed(1)}`).join(' '), fill: 'none', stroke: 'var(--c-error)', 'stroke-dasharray': '6 4', 'stroke-width': 1.5 }));
+    trazo('limiteSup');
+    trazo('limiteInf');
+    s.append(svg('polyline', { points: r.puntos.map((p) => `${X(p.indice).toFixed(1)},${Y(p.p * 100).toFixed(1)}`).join(' '), fill: 'none', stroke: 'var(--c-boton)', 'stroke-width': 1.5, opacity: 0.7 }));
+    const paso = Math.max(1, Math.ceil(n / 12));
+    r.puntos.forEach((p) => {
+      const cx = X(p.indice);
+      const cy = Y(p.p * 100);
+      if (p.fuera) s.append(svg('rect', { x: cx - 5, y: cy - 5, width: 10, height: 10, class: 'lj-rech' }));
+      else if (p.racha) s.append(svg('path', { d: `M${cx} ${cy - 6}L${cx + 6} ${cy}L${cx} ${cy + 6}L${cx - 6} ${cy}Z`, class: 'lj-adv' }));
+      else s.append(svg('circle', { cx, cy, r: 3.5, class: 'lj-ok' }));
+      if ((p.indice - 1) % paso === 0) {
+        const etiqueta = p.etiqueta.length > 8 ? p.etiqueta.slice(0, 7) + '…' : p.etiqueta;
+        s.append(svg('text', { x: cx, y: g.H - g.mb + 16, 'text-anchor': 'middle', class: 'lj-texto' }, etiqueta));
+      }
+    });
+    $('grafico').replaceChildren(s);
+  }
+
+  function calcular() {
+    const { periodos, malas } = leer(form.datos.value);
+    if (malas.length) return mensaje(`La línea ${malas[0]} necesita los eventos y el total al final: por ejemplo «Ene 12 800».`);
+    if (periodos.length < 2) return mensaje('Pega los períodos con sus eventos y totales (al menos 2).');
+    const r = graficoP(periodos);
+    if (!r) return mensaje('Revisa los datos: los eventos y los totales deben ser enteros, con eventos no mayores que el total y total mayor que cero.');
+    $('mensaje').hidden = true;
+    $('resultado').hidden = false;
+    $('pbarra').textContent = formato(r.pBarra * 100, 2) + ' %';
+    const fuera = r.puntos.filter((p) => p.fuera);
+    const racha = r.puntos.filter((p) => p.racha);
+    $('fuera').textContent = String(fuera.length);
+    $('fuera-nota').textContent = fuera.length ? 'Períodos ' + fuera.map((p) => p.etiqueta).join(', ') : 'Todos dentro de los límites';
+    $('fuera-nota').dataset.nivel = fuera.length ? 'error' : 'ok';
+    $('rachas').textContent = racha.length ? String(racha.length) + ' períodos' : 'Sin rachas';
+    $('rachas-nota').textContent = racha.length ? 'Cambio sostenido: busca qué cambió' : 'Sin cambios sostenidos';
+    $('rachas-nota').dataset.nivel = racha.length ? 'advertencia' : 'ok';
+    dibujar(r);
+    $('filas').replaceChildren(
+      ...r.puntos.map((p) => {
+        const tr = document.createElement('tr');
+        [
+          p.etiqueta, formato(p.eventos, 0), formato(p.total, 0), formato(p.p * 100, 2) + ' %',
+          `${formato(p.limiteInf * 100, 2)} a ${formato(p.limiteSup * 100, 2)} %`,
+          p.fuera ? 'Fuera de límites' : p.racha ? 'Racha' : '—',
+        ].forEach((t) => {
+          const td = document.createElement('td');
+          td.textContent = t;
+          tr.appendChild(td);
+        });
+        return tr;
+      }),
+    );
+    const aviso = $('aviso');
+    const avisos = [];
+    if (r.puntos.length < 8) avisos.push('Con menos de 8 períodos el gráfico no permite ver rachas ni una línea central confiable.');
+    if (r.puntos.some((p) => p.total < 20)) avisos.push('Algunos períodos tienen menos de 20 observaciones: la aproximación normal de los límites es débil.');
+    aviso.textContent = avisos.join(' ');
+    aviso.hidden = !avisos.length;
+  }
+
+  form.querySelector('[data-ejemplo]')!.addEventListener('click', () => {
+    form.datos.value = [
+      'Ene 12 800', 'Feb 9 760', 'Mar 15 830', 'Abr 11 790', 'May 13 810', 'Jun 10 770', 'Jul 14 820', 'Ago 12 800',
+      'Sep 25 810', 'Oct 27 790', 'Nov 26 805', 'Dic 24 800',
+    ].join('\n');
+    calcular();
+  });
+  form.addEventListener('input', calcular);
+  form.addEventListener('submit', (e) => e.preventDefault());
+  calcular();
+</script>

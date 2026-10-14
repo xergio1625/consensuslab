@@ -1,0 +1,157 @@
+---
+import PaginaCalculadora from '../../componentes/PaginaCalculadora.astro';
+import { url } from '../../lib/rutas';
+---
+
+<PaginaCalculadora id="comparacion-de-lotes">
+  <form class="calc" id="calc" novalidate>
+    <p class="calc-ayuda">
+      Mide el mismo material con el lote anterior y con el nuevo. <button type="button" class="boton boton-secundario calc-ejemplo" data-ejemplo>Cargar un ejemplo</button>
+    </p>
+    <div class="calc-campos">
+      <label class="calc-campo calc-ancho">
+        <span>Lote anterior</span>
+        <textarea class="campo" name="a" rows="7" placeholder="100,2&#10;99,8&#10;101,0"></textarea>
+        <small>Un resultado por línea (o separados por espacio).</small>
+      </label>
+      <label class="calc-campo calc-ancho">
+        <span>Lote nuevo</span>
+        <textarea class="campo" name="b" rows="7" placeholder="101,5&#10;102,0&#10;100,9"></textarea>
+        <small>Mismo analito, mismo nivel y mismo analizador.</small>
+      </label>
+      <label class="calc-campo">
+        <span>Diferencia máxima aceptable <em class="opcional">(opcional)</em></span>
+        <span class="calc-entrada"><input class="campo" name="limite" inputmode="decimal" placeholder="3" /><em>%</em></span>
+        <small>De tu plan de calidad, por ejemplo una fracción de tu error total permitido.</small>
+      </label>
+      <label class="calc-campo">
+        <span>Confianza</span>
+        <select class="campo" name="confianza">
+          <option value="0.95">95 %</option>
+          <option value="0.99">99 %</option>
+          <option value="0.9">90 %</option>
+        </select>
+      </label>
+    </div>
+  </form>
+
+  <section class="calc-resultado" aria-live="polite">
+    <p class="calc-mensaje" data-mensaje>Pega los resultados de los dos lotes (al menos 2 de cada uno).</p>
+    <div data-resultado hidden>
+      <div class="calc-cifras">
+        <div><span>Diferencia de medias</span><strong data-dif></strong><small data-dif-pct></small></div>
+        <div><span>Medias (prueba t de Welch)</span><strong data-p-medias></strong><small data-v-medias></small></div>
+        <div><span>Dispersión (prueba F)</span><strong data-p-var></strong><small data-v-var></small></div>
+      </div>
+      <p class="calc-lectura" data-lectura></p>
+      <div class="calc-tabla-envoltura">
+        <table class="calc-tabla">
+          <thead><tr><th>Serie</th><th>n</th><th>Media</th><th>DE</th><th>CV</th></tr></thead>
+          <tbody data-filas></tbody>
+        </table>
+      </div>
+      <p class="calc-nota" data-aviso hidden></p>
+    </div>
+  </section>
+
+  <div slot="explicacion">
+    <h2>Cómo se calcula</h2>
+    <ul>
+      <li><strong>Diferencia</strong> = media del lote nuevo − media del lote anterior, con su intervalo de confianza y en % de la media anterior.</li>
+      <li><strong>Prueba t de Welch</strong>: compara las medias sin suponer varianzas iguales; los grados de libertad son los de Welch-Satterthwaite. El valor p es bilateral.</li>
+      <li><strong>Prueba F</strong>: compara las varianzas (DE²) de las dos series; valor p bilateral.</li>
+    </ul>
+    <h2>Cómo leerlo</h2>
+    <ul>
+      <li>Un valor p bajo (por ejemplo, menor que 0,05) indica que la diferencia es poco probable por azar. No dice si importa: una diferencia pequeña puede ser significativa con muchos datos y una grande puede no serlo con pocos.</li>
+      <li>Por eso conviene mirar el intervalo de confianza de la diferencia y compararlo con la diferencia que tu plan de calidad tolera. Si el intervalo completo queda dentro de ±ese límite, puedes aceptar el cambio de lote con respaldo.</li>
+      <li>Con pocos datos (menos de 10 por lote) las pruebas detectan solo cambios grandes: «sin diferencia significativa» no equivale a «sin diferencia».</li>
+      <li>Si la media cambió, la nueva media del control para el lote nuevo debe establecerse con datos propios, no con los del lote anterior. Si cambió la dispersión, revisa el CV.</li>
+    </ul>
+    <p>
+      Para fijar la media y la DE del lote nuevo, usa <a href={url('calculadoras/estadistica-del-control/')}>Estadística del control</a>;
+      para depurar datos antes, <a href={url('calculadoras/valores-atipicos/')}>Valores atípicos</a>.
+    </p>
+  </div>
+</PaginaCalculadora>
+
+<script>
+  import { formato, numero, valores } from '../../lib/calidad.js';
+  import { compararSeries } from '../../lib/estadistica.js';
+
+  const form = document.getElementById('calc') as HTMLFormElement;
+  const $ = (s: string) => document.querySelector(`[data-${s}]`) as HTMLElement;
+  const pFormato = (p: number) => (p < 0.001 ? 'p < 0,001' : 'p = ' + formato(p, 3));
+
+  function mensaje(t: string) {
+    $('mensaje').textContent = t;
+    $('mensaje').hidden = false;
+    $('resultado').hidden = true;
+  }
+
+  function fila(celdas: string[]) {
+    const tr = document.createElement('tr');
+    celdas.forEach((c) => {
+      const td = document.createElement('td');
+      td.textContent = c;
+      tr.appendChild(td);
+    });
+    return tr;
+  }
+
+  function calcular() {
+    const a = valores(form.a.value);
+    const b = valores(form.b.value);
+    if (a.some(Number.isNaN) || b.some(Number.isNaN)) return mensaje('Hay valores que no son números: revisa los datos.');
+    if (a.length < 2 || b.length < 2) return mensaje('Pega los resultados de los dos lotes (al menos 2 de cada uno).');
+    const confianza = Number(form.confianza.value);
+    const r = compararSeries(a, b, confianza);
+    if (!r) return mensaje('No se pudo calcular con estos datos.');
+    $('mensaje').hidden = true;
+    $('resultado').hidden = false;
+    const cp = Math.round(confianza * 100);
+    const alfa = 1 - confianza;
+    $('dif').textContent = formato(r.diferencia, 3);
+    $('dif-pct').textContent = `${formato(r.diferenciaPct, 2)} % · IC ${cp} %: ${formato(r.ciDiferenciaPct[0], 2)} a ${formato(r.ciDiferenciaPct[1], 2)} %`;
+    $('p-medias').textContent = pFormato(r.pMedias);
+    const sigMedias = r.pMedias < alfa;
+    $('v-medias').textContent = sigMedias ? 'Diferencia significativa' : 'Sin diferencia significativa';
+    $('v-medias').dataset.nivel = sigMedias ? 'advertencia' : 'ok';
+    $('p-var').textContent = Number.isNaN(r.pVarianzas) ? '—' : pFormato(r.pVarianzas);
+    const sigVar = r.pVarianzas < alfa;
+    $('v-var').textContent = Number.isNaN(r.pVarianzas) ? 'La serie anterior no varía' : sigVar ? 'Dispersión distinta' : 'Dispersión similar';
+    $('v-var').dataset.nivel = sigVar ? 'advertencia' : 'ok';
+    $('filas').replaceChildren(
+      ...[['Lote anterior', r.primera], ['Lote nuevo', r.segunda]].map(([nombre, s]: any) =>
+        fila([nombre, String(s.n), formato(s.media, 3), formato(s.de, 3), formato(s.cv, 2) + ' %']),
+      ),
+    );
+    const limite = numero(form.limite.value);
+    const lectura = $('lectura');
+    if (!Number.isNaN(limite) && limite > 0 && Number.isFinite(r.ciDiferenciaPct[0])) {
+      const dentro = r.ciDiferenciaPct[0] >= -limite && r.ciDiferenciaPct[1] <= limite;
+      lectura.textContent = dentro
+        ? `El intervalo de confianza de la diferencia (${formato(r.ciDiferenciaPct[0], 2)} a ${formato(r.ciDiferenciaPct[1], 2)} %) queda dentro de ±${formato(limite, 1)} %: la diferencia está acotada por debajo de tu límite.`
+        : `El intervalo de confianza de la diferencia (${formato(r.ciDiferenciaPct[0], 2)} a ${formato(r.ciDiferenciaPct[1], 2)} %) no queda dentro de ±${formato(limite, 1)} %: con estos datos no puedes asegurar que el cambio esté bajo tu límite.`;
+      lectura.dataset.nivel = dentro ? 'ok' : 'advertencia';
+    } else {
+      lectura.textContent = '';
+    }
+    const aviso = $('aviso');
+    const avisos = [];
+    if (Math.min(r.primera.n, r.segunda.n) < 10) avisos.push('Con menos de 10 resultados por lote, las pruebas detectan solo cambios grandes.');
+    aviso.textContent = avisos.join(' ');
+    aviso.hidden = !avisos.length;
+  }
+
+  form.querySelector('[data-ejemplo]')!.addEventListener('click', () => {
+    form.a.value = ['100,2', '99,8', '101,0', '100,5', '99,4', '101,1', '100,7', '100,3', '99,9', '100,6'].join('\n');
+    form.b.value = ['101,5', '102,0', '100,9', '101,8', '101,2', '102,4', '101,1', '101,6', '100,8', '102,3'].join('\n');
+    form.limite.value = '3';
+    calcular();
+  });
+  form.addEventListener('input', calcular);
+  form.addEventListener('change', calcular);
+  form.addEventListener('submit', (e) => e.preventDefault());
+  calcular();
+</script>

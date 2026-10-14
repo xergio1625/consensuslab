@@ -1,0 +1,162 @@
+---
+import PaginaCalculadora from '../../componentes/PaginaCalculadora.astro';
+import { url } from '../../lib/rutas';
+---
+
+<PaginaCalculadora id="pareto-de-causas">
+  <form class="calc" id="calc" novalidate>
+    <p class="calc-ayuda">
+      <button type="button" class="boton boton-secundario calc-ejemplo" data-ejemplo>Cargar un ejemplo</button>
+    </p>
+    <div class="calc-campos">
+      <label class="calc-campo calc-ancho">
+        <span>Causas y cantidades</span>
+        <textarea class="campo" name="datos" rows="9" placeholder="Hemólisis; 42&#10;Volumen insuficiente; 25&#10;Sin identificar; 12"></textarea>
+        <small>Una causa por línea: el nombre, un punto y coma y la cantidad (también sirve una tabulación o solo un espacio antes del número).</small>
+      </label>
+    </div>
+  </form>
+
+  <section class="calc-resultado" aria-live="polite">
+    <p class="calc-mensaje" data-mensaje>Pega las causas con su cantidad (al menos 2).</p>
+    <div data-resultado hidden>
+      <div class="calc-cifras">
+        <div><span>Total</span><strong data-total></strong></div>
+        <div><span>Causas vitales</span><strong data-vitales></strong><small data-vitales-nota></small></div>
+        <div><span>Causa principal</span><strong data-principal></strong><small data-principal-nota></small></div>
+      </div>
+      <div class="lj-envoltura" data-grafico></div>
+      <div class="calc-tabla-envoltura">
+        <table class="calc-tabla">
+          <thead><tr><th>Causa</th><th>Cantidad</th><th>%</th><th>% acumulado</th></tr></thead>
+          <tbody data-filas></tbody>
+        </table>
+      </div>
+      <p class="calc-nota" data-aviso hidden></p>
+    </div>
+  </section>
+
+  <div slot="explicacion">
+    <h2>Cómo se calcula</h2>
+    <ul>
+      <li>Las causas se ordenan de mayor a menor cantidad; cada una lleva su % del total y el % acumulado.</li>
+      <li><strong>Causas vitales</strong>: las primeras que, sumadas, alcanzan el 80 % del total (principio de Pareto: pocas causas explican la mayor parte de los casos).</li>
+      <li>En el gráfico, las barras son las cantidades (eje izquierdo) y la línea es el % acumulado (eje derecho). Si hay más de 12 causas, las menores se agrupan en «Otras».</li>
+    </ul>
+    <h2>Cómo usarlo</h2>
+    <ul>
+      <li>Úsalo con datos de un mismo período y criterio: motivos de rechazo de muestras, causas de repetición, tipos de reclamo o de no conformidad.</li>
+      <li>Atiende primero las causas vitales: reducir la principal suele mover el indicador más que mejorar varias menores.</li>
+      <li>La frecuencia no es la gravedad. Una causa poco frecuente pero grave puede merecer atención aunque no aparezca entre las vitales: combínalo con la priorización por riesgo.</li>
+      <li>Repite el diagrama después de actuar: si el plan funcionó, la causa principal cambia.</li>
+      <li>Revisa que las categorías sean claras y excluyentes; si «Otros» pesa más que las causas principales, la clasificación necesita ajuste.</li>
+    </ul>
+    <p>
+      Para priorizar por riesgo, usa <a href={url('calculadoras/amef-npr/')}>AMEF</a>; para vigilar la tasa mes a mes,
+      <a href={url('calculadoras/grafico-p-de-indicadores/')}>Gráfico p de indicadores</a>.
+    </p>
+  </div>
+</PaginaCalculadora>
+
+<script>
+  import { formato, numero } from '../../lib/calidad.js';
+  import { pareto } from '../../lib/estadistica.js';
+  import { GEOMETRIA, escala, lienzo, svg } from '../../lib/graficos.js';
+
+  const form = document.getElementById('calc') as HTMLFormElement;
+  const $ = (s: string) => document.querySelector(`[data-${s}]`) as HTMLElement;
+
+  function mensaje(t: string) {
+    $('mensaje').textContent = t;
+    $('mensaje').hidden = false;
+    $('resultado').hidden = true;
+  }
+
+  function leer(texto: string) {
+    const items: { nombre: string; cantidad: number }[] = [];
+    const malas: number[] = [];
+    texto.split(/\r?\n/).forEach((l, i) => {
+      const t = l.trim();
+      if (!t) return;
+      const m = t.match(/^(.*?)[\s;\t]+([-+]?[\d.,]+)$/);
+      const cantidad = m ? numero(m[2]) : NaN;
+      if (!m || Number.isNaN(cantidad) || !m[1].trim()) malas.push(i + 1);
+      else items.push({ nombre: m[1].replace(/[;\t]+$/, '').trim(), cantidad });
+    });
+    return { items, malas };
+  }
+
+  function dibujar(filas: { nombre: string; cantidad: number; acumulado: number }[], total: number) {
+    const g = { ...GEOMETRIA, mr: 48, mb: 70 };
+    const ey = escala(0, Math.max(...filas.map((f) => f.cantidad)));
+    const s = lienzo(`Diagrama de Pareto con ${filas.length} causas: la principal es ${filas[0].nombre}.`);
+    const ancho = (g.W - g.ml - g.mr) / filas.length;
+    const Y = (v: number) => g.mt + ((ey.fin - v) / (ey.fin - ey.ini)) * (g.H - g.mt - g.mb);
+    const Yp = (p: number) => g.mt + ((100 - p) / 100) * (g.H - g.mt - g.mb);
+    ey.marcas.forEach((v) => {
+      s.append(svg('line', { x1: g.ml, x2: g.W - g.mr, y1: Y(v), y2: Y(v), class: 'lj-grilla' }));
+      s.append(svg('text', { x: g.ml - 6, y: Y(v) + 4, 'text-anchor': 'end', class: 'lj-texto' }, formato(v, 0)));
+    });
+    [0, 20, 40, 60, 80, 100].forEach((p) => s.append(svg('text', { x: g.W - g.mr + 6, y: Yp(p) + 4, class: 'lj-texto' }, p + ' %')));
+    s.append(svg('line', { x1: g.ml, x2: g.W - g.mr, y1: Yp(80), y2: Yp(80), stroke: 'var(--c-error)', 'stroke-dasharray': '6 4', 'stroke-width': 1.2 }));
+    filas.forEach((f, i) => {
+      const x0 = g.ml + i * ancho + ancho * 0.12;
+      const alto = Y(0) - Y(f.cantidad);
+      const barra = svg('rect', { x: x0, y: Y(f.cantidad), width: ancho * 0.76, height: alto, class: 'lj-ok', opacity: 0.85 });
+      barra.append(svg('title', {}, `${f.nombre}: ${f.cantidad}`));
+      s.append(barra);
+      const etiqueta = f.nombre.length > 16 ? f.nombre.slice(0, 15) + '…' : f.nombre;
+      const cx = g.ml + i * ancho + ancho / 2;
+      s.append(svg('text', { x: cx, y: g.H - g.mb + 14, 'text-anchor': 'end', class: 'lj-texto', transform: `rotate(-35 ${cx} ${g.H - g.mb + 14})` }, etiqueta));
+    });
+    const puntos = filas.map((f, i) => `${(g.ml + i * ancho + ancho / 2).toFixed(1)},${Yp(f.acumulado).toFixed(1)}`);
+    s.append(svg('polyline', { points: puntos.join(' '), fill: 'none', stroke: 'var(--c-prep)', 'stroke-width': 2.5 }));
+    filas.forEach((f, i) => s.append(svg('circle', { cx: g.ml + i * ancho + ancho / 2, cy: Yp(f.acumulado), r: 3.5, fill: 'var(--c-prep)' })));
+    $('grafico').replaceChildren(s);
+    void total;
+  }
+
+  function calcular() {
+    const { items, malas } = leer(form.datos.value);
+    if (malas.length) return mensaje(`La línea ${malas[0]} no tiene una cantidad al final: escribe «Causa; cantidad».`);
+    const r = pareto(items);
+    if (!r || items.length < 2) return mensaje('Pega las causas con su cantidad (al menos 2).');
+    $('mensaje').hidden = true;
+    $('resultado').hidden = false;
+    $('total').textContent = formato(r.total, 0);
+    $('vitales').textContent = String(r.vitales);
+    $('vitales-nota').textContent = `de ${r.filas.length} causas explican el ${formato(r.filas[r.vitales - 1].acumulado, 0)} %`;
+    $('principal').textContent = r.filas[0].nombre;
+    $('principal-nota').textContent = `${formato(r.filas[0].cantidad, 0)} casos (${formato(r.filas[0].pct, 1)} %)`;
+    let mostrar = r.filas;
+    if (r.filas.length > 12) {
+      const cola = r.filas.slice(11);
+      const suma = cola.reduce((s, f) => s + f.cantidad, 0);
+      mostrar = [...r.filas.slice(0, 11), { nombre: 'Otras', cantidad: suma, pct: (suma / r.total) * 100, acumulado: 100 }];
+    }
+    dibujar(mostrar, r.total);
+    $('filas').replaceChildren(
+      ...r.filas.map((f, i) => {
+        const tr = document.createElement('tr');
+        [f.nombre + (i < r.vitales ? ' ★' : ''), formato(f.cantidad, 0), formato(f.pct, 1) + ' %', formato(f.acumulado, 1) + ' %'].forEach((t) => {
+          const td = document.createElement('td');
+          td.textContent = t;
+          tr.appendChild(td);
+        });
+        return tr;
+      }),
+    );
+    const aviso = $('aviso');
+    const otros = r.filas.find((f) => /^otros?$|^otras?$/i.test(f.nombre));
+    aviso.textContent = otros && otros.pct > r.filas[0].pct ? '«Otros» pesa más que la causa principal: conviene revisar la clasificación.' : '';
+    aviso.hidden = !aviso.textContent;
+  }
+
+  form.querySelector('[data-ejemplo]')!.addEventListener('click', () => {
+    form.datos.value = ['Hemólisis; 42', 'Volumen insuficiente; 25', 'Sin identificar; 12', 'Coágulo; 9', 'Tubo incorrecto; 7', 'Muestra derramada; 3', 'Otros; 2'].join('\n');
+    calcular();
+  });
+  form.addEventListener('input', calcular);
+  form.addEventListener('submit', (e) => e.preventDefault());
+  calcular();
+</script>

@@ -1,0 +1,134 @@
+---
+import PaginaCalculadora from '../../componentes/PaginaCalculadora.astro';
+import { url } from '../../lib/rutas';
+---
+
+<PaginaCalculadora id="amef-npr">
+  <form class="calc" id="calc" novalidate>
+    <p class="calc-ayuda">
+      <button type="button" class="boton boton-secundario calc-ejemplo" data-ejemplo>Cargar un ejemplo</button>
+    </p>
+    <div class="calc-campos">
+      <label class="calc-campo calc-ancho">
+        <span>Modos de falla</span>
+        <textarea class="campo" name="datos" rows="9" placeholder="Muestra mal identificada; 9; 3; 4&#10;Falla del refrigerador de reactivos; 7; 4; 3"></textarea>
+        <small>Una línea por modo de falla: descripción, severidad, ocurrencia y detección (de 1 a 10), separadas por punto y coma.</small>
+      </label>
+      <label class="calc-campo">
+        <span>NPR desde el cual priorizar</span>
+        <input class="campo" name="umbral" inputmode="numeric" value="100" />
+        <small>Lo fija tu procedimiento de gestión de riesgos.</small>
+      </label>
+    </div>
+  </form>
+
+  <section class="calc-resultado" aria-live="polite">
+    <p class="calc-mensaje" data-mensaje>Pega los modos de falla con su severidad, ocurrencia y detección.</p>
+    <div data-resultado hidden>
+      <div class="calc-cifras">
+        <div><span>Modos evaluados</span><strong data-n></strong></div>
+        <div><span>Con NPR alto</span><strong data-altos></strong><small data-altos-nota></small></div>
+        <div><span>Severidad 9 o 10</span><strong data-criticos></strong><small>Se atienden siempre</small></div>
+      </div>
+      <div class="calc-tabla-envoltura">
+        <table class="calc-tabla">
+          <thead><tr><th>Prioridad</th><th>Modo de falla</th><th>S</th><th>O</th><th>D</th><th>NPR</th><th>Señal</th></tr></thead>
+          <tbody data-filas></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <div slot="explicacion">
+    <h2>Cómo se calcula</h2>
+    <ul>
+      <li><strong>NPR</strong> = severidad (S) × ocurrencia (O) × detección (D), cada una de 1 a 10; va de 1 a 1.000.</li>
+      <li>Escalas: <strong>S</strong>, 1 = sin efecto y 10 = daño grave o resultado erróneo que llega al paciente; <strong>O</strong>, 1 = muy improbable y 10 = casi seguro; <strong>D</strong>, 1 = la falla se detecta siempre antes de causar daño y 10 = no se detecta.</li>
+      <li>Los modos se ordenan de mayor a menor NPR; a igual NPR va primero el de mayor severidad.</li>
+    </ul>
+    <h2>Cómo usarlo</h2>
+    <ul>
+      <li>Define las escalas por escrito y califica en equipo, con quienes hacen el proceso: la misma falla calificada por una persona sola suele dar un NPR distinto.</li>
+      <li>El NPR tiene límites conocidos: combinaciones muy distintas dan el mismo número (S 9 × O 1 × D 2 = 18; S 2 × O 3 × D 3 = 18). Por eso se atienden siempre los modos de severidad alta, aunque el NPR sea bajo.</li>
+      <li>El umbral de 100 es una referencia habitual, no una regla: úsalo según tu procedimiento.</li>
+      <li>Para cada modo prioritario, define una acción, un responsable y una fecha; vuelve a calificar después de aplicarla y comprueba que bajó el NPR.</li>
+    </ul>
+    <p>
+      Para registrar riesgos y acciones, mira la ficha <a href={url('herramientas/gestion-de-riesgos/')}>Gestión de riesgos</a>;
+      para los modos de falla de equipos, <a href={url('calculadoras/disponibilidad-y-oee-de-equipos/')}>Disponibilidad y OEE</a>.
+      Para ordenar causas por frecuencia, <a href={url('calculadoras/pareto-de-causas/')}>Diagrama de Pareto</a>.
+    </p>
+  </div>
+</PaginaCalculadora>
+
+<script>
+  import { numero } from '../../lib/calidad.js';
+  import { amef } from '../../lib/estadistica.js';
+
+  const form = document.getElementById('calc') as HTMLFormElement;
+  const $ = (s: string) => document.querySelector(`[data-${s}]`) as HTMLElement;
+
+  function mensaje(t: string) {
+    $('mensaje').textContent = t;
+    $('mensaje').hidden = false;
+    $('resultado').hidden = true;
+  }
+
+  function leer(texto: string) {
+    const modos: { nombre: string; s: number; o: number; d: number }[] = [];
+    const malas: number[] = [];
+    texto.split(/\r?\n/).forEach((l, i) => {
+      const t = l.trim();
+      if (!t) return;
+      const partes = t.split(/[;\t]+/).map((x) => x.trim()).filter(Boolean);
+      const [s, o, d] = partes.slice(-3).map(numero);
+      if (partes.length < 4 || [s, o, d].some((x) => !Number.isInteger(x) || x < 1 || x > 10)) malas.push(i + 1);
+      else modos.push({ nombre: partes.slice(0, -3).join('; '), s, o, d });
+    });
+    return { modos, malas };
+  }
+
+  function calcular() {
+    const { modos, malas } = leer(form.datos.value);
+    if (malas.length) return mensaje(`La línea ${malas[0]} necesita «descripción; S; O; D» con valores enteros de 1 a 10.`);
+    if (!modos.length) return mensaje('Pega los modos de falla con su severidad, ocurrencia y detección.');
+    const umbral = numero(form.umbral.value);
+    const u = Number.isNaN(umbral) || umbral <= 0 ? 100 : umbral;
+    const r = amef(modos, u);
+    if (!r) return mensaje('No se pudo calcular: revisa los valores.');
+    $('mensaje').hidden = true;
+    $('resultado').hidden = false;
+    const altos = r.filter((m) => m.alto).length;
+    const criticos = r.filter((m) => m.critico).length;
+    $('n').textContent = String(r.length);
+    $('altos').textContent = String(altos);
+    $('altos-nota').textContent = `NPR de ${u} o más`;
+    $('criticos').textContent = String(criticos);
+    $('filas').replaceChildren(
+      ...r.map((m, i) => {
+        const tr = document.createElement('tr');
+        [String(i + 1), m.nombre, String(m.s), String(m.o), String(m.d), String(m.npr), m.critico && m.alto ? 'Severidad alta y NPR alto' : m.critico ? 'Severidad alta' : m.alto ? 'NPR alto' : '—'].forEach((t) => {
+          const td = document.createElement('td');
+          td.textContent = t;
+          tr.appendChild(td);
+        });
+        return tr;
+      }),
+    );
+  }
+
+  form.querySelector('[data-ejemplo]')!.addEventListener('click', () => {
+    form.datos.value = [
+      'Muestra mal identificada; 9; 3; 4',
+      'Falla del refrigerador de reactivos; 7; 4; 3',
+      'Reactivo vencido en uso; 7; 3; 3',
+      'Resultado transcrito con error; 8; 4; 5',
+      'Corte de energía eléctrica; 6; 3; 2',
+      'Control de calidad omitido; 8; 3; 6',
+    ].join('\n');
+    calcular();
+  });
+  form.addEventListener('input', calcular);
+  form.addEventListener('submit', (e) => e.preventDefault());
+  calcular();
+</script>

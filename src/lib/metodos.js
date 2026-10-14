@@ -113,6 +113,12 @@ export function tAcumulada(t, gl) {
   return t >= 0 ? 1 - cola : cola;
 }
 
+/** Probabilidad acumulada de la F de Snedecor con gl1 y gl2 grados de libertad. */
+export function fAcumulada(f, gl1, gl2) {
+  if (!(f > 0)) return 0;
+  return betaI((gl1 * f) / (gl1 * f + gl2), gl1 / 2, gl2 / 2);
+}
+
 /** Cuantil de la t de Student. */
 export function tCuantil(p, gl) {
   let bajo = -1000;

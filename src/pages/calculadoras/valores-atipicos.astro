@@ -1,0 +1,134 @@
+---
+import PaginaCalculadora from '../../componentes/PaginaCalculadora.astro';
+import { url } from '../../lib/rutas';
+---
+
+<PaginaCalculadora id="valores-atipicos">
+  <form class="calc" id="calc" novalidate>
+    <div class="calc-campos">
+      <label class="calc-campo calc-ancho">
+        <span>Resultados</span>
+        <textarea class="campo" name="datos" rows="9" placeholder="100,2&#10;99,8&#10;101,0&#10;..."></textarea>
+        <small>Un valor por línea: resultados de un control, réplicas de una verificación o mediciones de una misma magnitud.</small>
+      </label>
+      <label class="calc-campo">
+        <span>Nivel de significancia (Grubbs)</span>
+        <select class="campo" name="alfa">
+          <option value="0.05">5 % (α = 0,05)</option>
+          <option value="0.01">1 % (α = 0,01)</option>
+        </select>
+      </label>
+    </div>
+    <p class="calc-ayuda"><button type="button" class="boton boton-secundario calc-ejemplo" data-ejemplo>Cargar un ejemplo</button></p>
+  </form>
+
+  <section class="calc-resultado" aria-live="polite">
+    <p class="calc-mensaje" data-mensaje>Pega los resultados (al menos 3 para Grubbs y 4 para Tukey).</p>
+    <div data-resultado hidden>
+      <div class="calc-cifras">
+        <div><span>Grubbs</span><strong data-g></strong><small data-g-nota></small></div>
+        <div><span>Valor más alejado</span><strong data-valor></strong><small data-valor-nota></small></div>
+        <div><span>Tukey</span><strong data-tukey></strong><small data-tukey-nota></small></div>
+      </div>
+      <p class="calc-lectura" data-lectura></p>
+      <div class="calc-tabla-envoltura">
+        <table class="calc-tabla">
+          <thead><tr><th>Medida</th><th>Con todos los datos</th><th>Sin el valor más alejado</th></tr></thead>
+          <tbody data-filas></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <div slot="explicacion">
+    <h2>Cómo se calcula</h2>
+    <ul>
+      <li><strong>Grubbs</strong> (bilateral): G = |valor más alejado − media| / DE. Es atípico si G supera el valor crítico (n − 1)/√n · √(t² / (n − 2 + t²)), con t = t(1 − α/(2n); n − 2). Supone una distribución aproximadamente normal y busca <em>un</em> valor atípico.</li>
+      <li><strong>Tukey</strong>: valores fuera de Q1 − 1,5 · RIC o Q3 + 1,5 · RIC (RIC = Q3 − Q1); extremos con 3 · RIC. No supone normalidad, pero con pocos datos es poco sensible.</li>
+    </ul>
+    <h2>Cómo usarlo</h2>
+    <ul>
+      <li>Un valor señalado es una sospecha, no una condena: busca primero una causa (error de pipeteo, burbuja, identificación, contaminación, error de transcripción).</li>
+      <li>Solo se excluye un dato con una causa asignable y registrada. Descartar valores solo porque «se ven raros» sesga la media y la DE hacia lo que esperabas.</li>
+      <li>Aplicar Grubbs una y otra vez hasta que no queden atípicos aumenta los falsos positivos: con más de un sospechoso, usa una prueba para varios atípicos o revisa el proceso.</li>
+      <li>En un control interno, un resultado fuera de rango es una señal que se evalúa con las reglas de Westgard, no un dato que se «depura».</li>
+    </ul>
+    <p>
+      Para evaluar controles con las reglas de Westgard, usa <a href={url('calculadoras/levey-jennings/')}>Gráfico de Levey-Jennings</a>.
+      Para comparar dos series, <a href={url('calculadoras/comparacion-de-lotes/')}>Comparación de dos series</a>.
+    </p>
+    <h2>Referencias</h2>
+    <p>Grubbs FE. Procedures for detecting outlying observations in samples. <em>Technometrics</em> 1969;11:1-21. Tukey JW. <em>Exploratory Data Analysis</em>, 1977.</p>
+  </div>
+</PaginaCalculadora>
+
+<script>
+  import { formato, valores } from '../../lib/calidad.js';
+  import { grubbs, resumenSerie, vallasTukey } from '../../lib/estadistica.js';
+
+  const form = document.getElementById('calc') as HTMLFormElement;
+  const $ = (s: string) => document.querySelector(`[data-${s}]`) as HTMLElement;
+
+  function mensaje(t: string) {
+    $('mensaje').textContent = t;
+    $('mensaje').hidden = false;
+    $('resultado').hidden = true;
+  }
+
+  function fila(celdas: string[]) {
+    const tr = document.createElement('tr');
+    celdas.forEach((c) => {
+      const td = document.createElement('td');
+      td.textContent = c;
+      tr.appendChild(td);
+    });
+    return tr;
+  }
+
+  function calcular() {
+    const datos = valores(form.datos.value);
+    if (datos.some(Number.isNaN)) return mensaje('Hay valores que no son números: revisa los datos.');
+    if (datos.length < 3) return mensaje('Pega los resultados (al menos 3 para Grubbs y 4 para Tukey).');
+    const g = grubbs(datos, Number(form.alfa.value));
+    if (!g) return mensaje('No se pudo calcular: los valores deben variar.');
+    $('mensaje').hidden = true;
+    $('resultado').hidden = false;
+    const t = vallasTukey(datos);
+    $('g').textContent = g.atipico ? 'Hay un atípico' : 'Sin atípico';
+    $('g-nota').textContent = `G = ${formato(g.g, 3)} · crítico = ${formato(g.critico, 3)}`;
+    $('g-nota').dataset.nivel = g.atipico ? 'advertencia' : 'ok';
+    $('valor').textContent = formato(g.valor, 3);
+    $('valor-nota').textContent = `Resultado n.º ${g.indice + 1} (${g.lado})`;
+    const marcados = t ? t.puntos.filter((p) => p.atipico) : [];
+    $('tukey').textContent = t ? (marcados.length ? `${marcados.length} fuera de las vallas` : 'Sin valores fuera') : '—';
+    $('tukey-nota').textContent = t
+      ? marcados.length
+        ? 'N.º ' + marcados.map((p) => `${p.indice}${p.extremo ? ' (extremo)' : ''}`).join(', ')
+        : `Vallas: ${formato(t.inferior, 2)} a ${formato(t.superior, 2)}`
+      : 'Necesita al menos 4 datos';
+    $('tukey-nota').dataset.nivel = marcados.length ? 'advertencia' : 'ok';
+    const sin = datos.filter((_, i) => i !== g.indice);
+    const a = resumenSerie(datos);
+    const b = resumenSerie(sin);
+    $('filas').replaceChildren(
+      fila(['n', String(a.n), String(b.n)]),
+      fila(['Media', formato(a.media, 3), formato(b.media, 3)]),
+      fila(['DE', formato(a.de, 3), formato(b.de, 3)]),
+      fila(['CV', formato(a.cv, 2) + ' %', formato(b.cv, 2) + ' %']),
+    );
+    const lectura = $('lectura');
+    lectura.textContent = g.atipico
+      ? `El resultado n.º ${g.indice + 1} (${formato(g.valor, 3)}) es atípico según Grubbs. Busca primero una causa y regístrala antes de excluirlo.`
+      : 'No hay evidencia de un valor atípico con Grubbs. Eso no descarta errores: revisa los datos de todos modos.';
+    lectura.dataset.nivel = g.atipico ? 'advertencia' : 'ok';
+  }
+
+  form.querySelector('[data-ejemplo]')!.addEventListener('click', () => {
+    form.datos.value = ['199,31', '199,53', '200,19', '200,82', '201,92', '201,95', '202,18', '245,57'].join('\n');
+    calcular();
+  });
+  form.addEventListener('input', calcular);
+  form.addEventListener('change', calcular);
+  form.addEventListener('submit', (e) => e.preventDefault());
+  calcular();
+</script>

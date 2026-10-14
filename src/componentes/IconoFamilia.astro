@@ -42,10 +42,26 @@ const { familia } = Astro.props;
     )
   }
   {
-    familia === 'formulas' && (
+    familia === 'indicadores' && (
+      <>
+        <path d="M4 20V10M10 20V4M16 20v-7M22 20H2" />
+        <path d="M3 20h19" />
+      </>
+    )
+  }
+  {
+    familia === 'resultados' && (
       <>
         <rect x="4" y="3" width="16" height="18" rx="2" />
         <path d="M8 7.5h8M8 12h2M12 12h2M16 12h0M8 16h2M12 16h2M16 16h0" />
+      </>
+    )
+  }
+  {
+    familia === 'banco' && (
+      <>
+        <circle cx="12" cy="12" r="3" />
+        <path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1" />
       </>
     )
   }

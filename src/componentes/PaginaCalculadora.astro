@@ -52,7 +52,7 @@ const otras = CALCULADORAS.filter((o) => o.id !== c.id).sort(
       <article class="ficha-cuerpo">
         <div class="aviso aviso-info">
           {
-            c.familia === 'formulas' ? (
+            c.familia === 'resultados' ? (
               <p>
                 El cálculo se hace en tu navegador: no se envía ni se guarda nada. Ingresa solo valores numéricos, sin
                 nombres, RUT ni otros identificadores. Es una herramienta de verificación y apoyo: no reemplaza el
@@ -99,7 +99,16 @@ const otras = CALCULADORAS.filter((o) => o.id !== c.id).sort(
               </p>
               <p><a class="boton boton-primario boton-ancho" href={url('consensus-qc/')}>Conocer Consensus QC</a></p>
             </section>
-          ) : c.familia === 'formulas' ? (
+          ) : c.familia === 'indicadores' ? (
+            <section class="caja caja-app">
+              <h2>Del cálculo al informe mensual</h2>
+              <p>
+                Informes mensuales automáticos reúne producción, consumo, costos e indicadores, y los envía por correo
+                al jefe o a la dirección.
+              </p>
+              <p><a class="boton boton-primario boton-ancho" href={url('herramientas/informes-mensuales-automaticos/')}>Ver la ficha</a></p>
+            </section>
+          ) : c.familia === 'resultados' ? (
             <section class="caja caja-app">
               <h2>Verifica y deja registro</h2>
               <p>

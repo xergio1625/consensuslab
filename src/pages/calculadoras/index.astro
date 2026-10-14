@@ -10,7 +10,7 @@ import { url } from '../../lib/rutas';
 <Base
   titulo="Calculadoras para laboratorio clínico: costos, rendimiento y control de calidad"
   seccion="calculadoras"
-  descripcion="Calculadoras gratuitas para laboratorio clínico: costo por determinación, rendimiento de reactivos, estadística del control, error total, sigma, sesgo y SDI."
+  descripcion="Calculadoras gratuitas para laboratorio clínico: costos, control de calidad, verificación de métodos, indicadores, resultados calculados y trabajo en el banco."
 >
   <div class="contenedor seccion">
     <h1>Calculadoras</h1>
@@ -18,17 +18,22 @@ import { url } from '../../lib/rutas';
       Para decidir con números: cuánto cuesta cada examen, cuánto rinde un reactivo, qué límites tiene un control o
       cuánto error total tiene un método. Gratuitas, sin registrarte, y el cálculo ocurre en tu navegador.
     </p>
+    <label class="calc-buscador">
+      <span class="visualmente-oculto">Buscar una calculadora</span>
+      <input class="campo" type="search" id="buscar-calc" placeholder={`Buscar entre las ${CALCULADORAS.length} calculadoras (por ejemplo: sigma, LDL, licitación)`} autocomplete="off" />
+    </label>
     <nav class="calc-familias" aria-label="Familias de calculadoras">
       {FAMILIAS.map((f) => <a href={`#${f.id}`}><IconoFamilia familia={f.id} />{f.titulo}</a>)}
     </nav>
+    <p class="texto-suave" id="calc-sin-resultados" hidden>No hay calculadoras que coincidan con tu búsqueda.</p>
     {
       FAMILIAS.map((f) => (
-        <section class="calc-familia" id={f.id}>
+        <section class="calc-familia" id={f.id} data-familia>
           <h2><IconoFamilia familia={f.id} />{f.titulo}</h2>
           <p class="texto-suave">{f.descripcion}</p>
           <div class="rejilla">
             {CALCULADORAS.filter((c) => c.familia === f.id).map((c) => (
-              <article class="tarjeta">
+              <article class="tarjeta" data-calc data-texto={`${c.titulo} ${c.resumen}`.toLowerCase()}>
                 <h3>
                   <a href={url(`calculadoras/${c.id}/`)}>{c.titulo}</a>
                 </h3>
@@ -46,3 +51,29 @@ import { url } from '../../lib/rutas';
   </div>
   <PedirDemo />
 </Base>
+
+<script>
+  const caja = document.getElementById('buscar-calc') as HTMLInputElement | null;
+  const quitarTildes = (t: string) => t.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+
+  function filtrar() {
+    const consulta = quitarTildes(caja?.value.trim() ?? '');
+    const palabras = consulta.split(/\s+/).filter(Boolean);
+    let visibles = 0;
+    document.querySelectorAll<HTMLElement>('[data-familia]').forEach((fam) => {
+      let enFamilia = 0;
+      fam.querySelectorAll<HTMLElement>('[data-calc]').forEach((tarjeta) => {
+        const texto = quitarTildes(tarjeta.dataset.texto ?? '');
+        const coincide = palabras.every((p) => texto.includes(p));
+        tarjeta.hidden = !coincide;
+        if (coincide) enFamilia++;
+      });
+      fam.hidden = enFamilia === 0;
+      visibles += enFamilia;
+    });
+    const aviso = document.getElementById('calc-sin-resultados');
+    if (aviso) aviso.hidden = visibles > 0;
+  }
+
+  caja?.addEventListener('input', filtrar);
+</script>
