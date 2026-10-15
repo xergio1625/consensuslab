@@ -1,7 +1,7 @@
 ---
-titulo: "El N=20 que estrechó las gráficas"
+titulo: "El N20 que estrechó las gráficas"
 fecha: 2026-10-14
-resumen: "Una anécdota de laboratorio: llegó escoba nueva con orden de cambiarlo todo, rehicieron las gráficas con un N=20 a la rápida, la jefatura aplaudió y a las pocas semanas las alarmas saltaban todos los días. Yo miraba con palomitas."
+resumen: "Una anécdota de laboratorio: llegó escoba nueva con orden de cambiarlo todo, rehicieron las gráficas con un N20 a la rápida, la jefatura aplaudió y a las pocas semanas las alarmas saltaban todos los días. Yo miraba con palomitas."
 temas: ["Laboratorio clínico", "Control de calidad", "Gestión"]
 imagen: "opinion/el-n20-que-estrecho-las-graficas/imagen-2.jpg"
 ---
@@ -18,7 +18,7 @@ Lo que vino después fue menos elegante. La estrategia era trabajar solo con una
 
 En un laboratorio el control de calidad se corre todos los días, a su hora, como un reloj, y esas gráficas llevaban meses acumulando historia. A los recién llegados les bastó mirarlas un par de veces para dar el diagnóstico, rápido y sin dudas: "esto es horrible, esto se cambia mañana, yo lo haré de esta forma". Conversación corta con la jefatura, visto bueno y a trabajar. Meses de datos descartados en una frase.
 
-La solución milagrosa era el **N=20**, sí, ese que todos en el laboratorio conocemos: veinte mediciones del control, media y desviación estándar nuevas, límites nuevos y a otra cosa. Las gráficas quedaron preciosas: todo ordenadito, todo apretadito, todo muy profesional. La jefatura quedó feliz, y es lógico: un cambio visible, con números y con método. Lo que nadie preguntó fue cómo, cuándo y en qué condiciones habían sacado esos veinte datos. Pero bueno, para qué arruinar una buena presentación.
+La solución milagrosa era el **N20**, sí, ese que todos en el laboratorio conocemos: veinte mediciones del control, media y desviación estándar nuevas, límites nuevos y a otra cosa. Las gráficas quedaron preciosas: todo ordenadito, todo apretadito, todo muy profesional. La jefatura quedó feliz, y es lógico: un cambio visible, con números y con método. Lo que nadie preguntó fue cómo, cuándo y en qué condiciones habían sacado esos veinte datos. Pero bueno, para qué arruinar una buena presentación.
 
 ## El show de las alarmas
 
@@ -36,15 +36,15 @@ Hasta que un día la humildad les entró al corazón. Entendieron que estaban me
 
 ## Qué había pasado
 
-Nada raro, en realidad. Ese N=20 se había hecho a la carrera y en condiciones demasiado ideales, de esas en que no cambia nada entre una medición y la siguiente. Eso sirve para calcular la imprecisión **intraserial**, o sea, cuánto varía el método en su mejor día, con todo cuadrado. Un CV hermoso, sí. Pero el laboratorio no trabaja en su mejor día.
+Nada raro, en realidad. Ese N20 se había hecho a la carrera y en condiciones demasiado ideales, de esas en que no cambia nada entre una medición y la siguiente. Eso sirve para calcular la imprecisión **intraserial**, o sea, cuánto varía el método en su mejor día, con todo cuadrado. Un CV hermoso, sí. Pero el laboratorio no trabaja en su mejor día.
 
 El laboratorio trabaja con otra calibración, otro lote, otras manos y un equipo que hoy amaneció con carácter. Toda esa variación entre días no estaba en esos veinte datos, así que la desviación estándar salió chica, los límites quedaron estrechísimos y el proceso real, que se movía como siempre, empezó a "violar" las reglas todos los días. Un proceso normal, juzgado con una vara de un día perfecto.
 
-Dicho en simple: usaron un N=20 pensado para medir repetibilidad para controlar un proceso que no se parece en nada a esas condiciones.
+Dicho en simple: usaron un N20 pensado para medir repetibilidad para controlar un proceso que no se parece en nada a esas condiciones.
 
 ## La moraleja (que no es tan moraleja)
 
-Si las alarmas saltan todos los días y no hay ningún otro síntoma, sospecha primero de los límites antes de culpar al equipo. Calcúlalos con datos de varios días, con las calibraciones, lotes y manos reales, y revísalos cuando tengas más información. Un N=20 sirve para partir, pero no tomado en una tarde. Y no, 1-2s no es una regla de rechazo: las reglas se eligen según el [sigma del examen](/calculadoras/error-total-y-sigma/).
+Si las alarmas saltan todos los días y no hay ningún otro síntoma, sospecha primero de los límites antes de culpar al equipo. Calcúlalos con datos de varios días, con las calibraciones, lotes y manos reales, y revísalos cuando tengas más información. Un N20 sirve para partir, pero no tomado en una tarde. Y no, 1-2s no es una regla de rechazo: las reglas se eligen según el [sigma del examen](/calculadoras/error-total-y-sigma/).
 
 Si quieres comprobarlo con tus datos, pega los resultados de un control en [Estadística del control](/calculadoras/estadistica-del-control/) y calcula la DE de un solo día y la de un mes entero. La diferencia suele ser bastante elocuente. Después mira ambos en un [gráfico de Levey-Jennings](/calculadoras/levey-jennings/) y cuenta cuántas alarmas aparecen con cada una. Y si lo que quieres es saber cuánto varía tu método de verdad, la [verificación de precisión 5 × 5](/calculadoras/verificacion-de-precision/) separa la variación dentro de la serie de la variación entre días, que es justo la que faltó en esta historia.
 
@@ -56,6 +56,6 @@ Los colegas de la historia aprendieron rápido, para ser justos, y yo también a
 
 ## Y ahí entra Consensus QC
 
-Esta historia es la razón por la que armé [Consensus QC](/consensus-qc/), el software de control de calidad analítico que forma parte de ConsensusLab. No es una escoba nueva, es un sistema para no depender de ninguna. El N=20 queda registrado por lote, las reglas de Westgard se evalúan al instante en cada corrida, el Levey-Jennings muestra cada nivel con sus límites y cada no conformidad queda con nombre y motivo. Además, el desempeño mes a mes por analizador muestra el CV, el sesgo, el error total frente al permitido y el sigma, o sea, el CV real del laboratorio y no el de su mejor día.
+Esta historia es la razón por la que armé [Consensus QC](/consensus-qc/), el software de control de calidad analítico que forma parte de ConsensusLab. No es una escoba nueva, es un sistema para no depender de ninguna. El N20 queda registrado por lote, las reglas de Westgard se evalúan al instante en cada corrida, el Levey-Jennings muestra cada nivel con sus límites y cada no conformidad queda con nombre y motivo. Además, el desempeño mes a mes por analizador muestra el CV, el sesgo, el error total frente al permitido y el sigma, o sea, el CV real del laboratorio y no el de su mejor día.
 
 Así, la próxima vez que alguien llegue diciendo "esto es horrible, se cambia mañana", la conversación con la jefatura tiene datos de meses a la vista y no depende de quién tiene más labia. Y uno se ahorra las palomitas.
