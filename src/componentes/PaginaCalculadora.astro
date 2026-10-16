@@ -20,7 +20,7 @@ const otras = CALCULADORAS.filter((o) => o.id !== c.id).sort(
 ---
 
 <Base
-  titulo={`${c.titulo}: calculadora para laboratorio clínico`}
+  titulo={`${c.titulo.split(":")[0]}: calculadora`}
   seccion="calculadoras"
   descripcion={`Calculadora gratuita para laboratorio clínico. ${c.resumen}`}
   datos={[

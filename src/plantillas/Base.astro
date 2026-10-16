@@ -23,10 +23,12 @@ interface Props {
 
 const {
   titulo,
-  descripcion = 'Herramientas de gestión, calidad y coordinación para profesionales de laboratorio clínico. Planillas y plantillas gratuitas.',
+  descripcion: descripcionCompleta = 'Herramientas de gestión, calidad y coordinación para profesionales de laboratorio clínico. Planillas y plantillas gratuitas.',
   seccion,
 } = Astro.props;
 
+// Google corta las descripciones sobre ~160 caracteres: se recortan en un límite de palabra.
+const descripcion = descripcionCompleta.length > 160 ? descripcionCompleta.slice(0, 157).replace(/\s+\S*$/, '') + '…' : descripcionCompleta;
 const tituloCompleto = titulo.startsWith('ConsensusLab') ? titulo : `${titulo} · ConsensusLab`;
 const indexable = INDEXAR && Astro.props.indexar !== false;
 const datos = Astro.props.datos ? [].concat(Astro.props.datos as never) : [];

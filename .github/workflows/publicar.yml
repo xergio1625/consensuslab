@@ -28,8 +28,12 @@ jobs:
           cache: npm
       - name: Instalar dependencias
         run: npm ci
+      - name: Probar las fórmulas
+        run: npm test
       - name: Compilar el sitio (valida las fichas)
         run: npm run build
+      - name: Revisar enlaces y metadatos
+        run: npm run enlaces
       - name: Empaquetar para Pages
         uses: actions/upload-pages-artifact@v5
         with:
