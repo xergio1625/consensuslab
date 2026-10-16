@@ -3,6 +3,7 @@ titulo: "Los tres hermanos del control de calidad"
 fecha: 2026-10-19
 imagen: "opinion/los-tres-hermanos-del-control-de-calidad/imagen-1.jpg"
 resumen: "Silvio Rodríguez, un blog sobre la fe y un laboratorio: uno mira solo el suelo, otro solo el horizonte y el tercero lo mira todo y ya no sabe qué ve. Con una historia real de informes mensuales llenos de magulladuras y una reflexión sobre lo que de verdad importa: el paciente."
+serie: "Fábulas de laboratorio"
 temas: ["Laboratorio clínico", "Control de calidad", "Gestión"]
 ---
 

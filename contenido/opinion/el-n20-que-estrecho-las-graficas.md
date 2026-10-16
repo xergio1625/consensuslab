@@ -2,6 +2,7 @@
 titulo: "El N20 que estrechó las gráficas"
 fecha: 2026-10-14
 resumen: "Una anécdota de laboratorio: llegó escoba nueva con orden de cambiarlo todo, rehicieron las gráficas con un N20 a la rápida, la jefatura aplaudió y a las pocas semanas las alarmas saltaban todos los días. Yo miraba con palomitas."
+serie: "Fábulas de laboratorio"
 temas: ["Laboratorio clínico", "Control de calidad", "Gestión"]
 imagen: "opinion/el-n20-que-estrecho-las-graficas/imagen-2.jpg"
 ---
@@ -59,3 +60,7 @@ Los colegas de la historia aprendieron rápido, para ser justos, y yo también a
 Esta historia es la razón por la que armé [Consensus QC](/consensus-qc/), el software de control de calidad analítico que forma parte de ConsensusLab. No es una escoba nueva, es un sistema para no depender de ninguna. El N20 queda registrado por lote, las reglas de Westgard se evalúan al instante en cada corrida, el Levey-Jennings muestra cada nivel con sus límites y cada no conformidad queda con nombre y motivo. Además, el desempeño mes a mes por analizador muestra el CV, el sesgo, el error total frente al permitido y el sigma, o sea, el CV real del laboratorio y no el de su mejor día.
 
 Así, la próxima vez que alguien llegue diciendo "esto es horrible, se cambia mañana", la conversación con la jefatura tiene datos de meses a la vista y no depende de quién tiene más labia. Y uno se ahorra las palomitas.
+
+---
+
+*Esta anécdota abre la serie «Fábulas de laboratorio». Sigue: [Los tres hermanos del control de calidad](/opinion/los-tres-hermanos-del-control-de-calidad/).*
