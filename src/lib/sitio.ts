@@ -7,9 +7,8 @@
  */
 export const INDEXAR = true;
 
-/** App ConsensusLab (Google Apps Script). Las fichas con `app_modulo` enlazan aquí. */
-export const URL_APP =
-  'https://script.google.com/macros/s/AKfycbwWAred69irGUQa6kaso6sMGK32cmnKMraR-MMscJ3_moX3XG3nv5RvYU_cKgU7dss5iQ/exec';
+/** App ConsensusLab (Google Cloud, Santiago; Consensus QC en /qc/). Las fichas con `app_modulo` enlazan aquí. */
+export const URL_APP = 'https://app.consensuslab.cl/';
 
 /** Enlace que abre la app directamente en un módulo (tras ingresar con el código). */
 export function urlModulo(modulo: string): string {
@@ -39,4 +38,4 @@ export const CORREO_CONTACTO = 'contacto@consensuslab.cl';
 export const VIGENCIA_LEGAL = '11 de octubre de 2026';
 
 /** Fecha de la versión vigente de la política de privacidad (Google Analytics con consentimiento, formulario de cotización, suscripción a novedades y avisos por WhatsApp futuros). */
-export const VIGENCIA_PRIVACIDAD = '15 de octubre de 2026';
+export const VIGENCIA_PRIVACIDAD = 'FECHA_DEL_CORTE';

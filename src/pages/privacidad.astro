@@ -69,9 +69,10 @@ const correo = `mailto:${CORREO_CONTACTO}`;
           <li>
             <strong>Suscripción a las novedades.</strong> Si te suscribes con el formulario del pie de página, recibimos tu
             correo, el rol que elijas (opcional), la página desde donde te suscribiste y la fecha en que aceptaste. Los usamos
-            solo para enviarte nuestros análisis y novedades, con tu consentimiento. Guardamos una copia en nuestra hoja de
-            cálculo y te registramos como contacto en HubSpot, desde donde se envían los correos. Cada correo trae un enlace
-            para darte de baja, y también puedes pedirlo en <a href={correo}>{CORREO_CONTACTO}</a>.
+            solo para enviarte nuestros análisis y novedades, con tu consentimiento. Guardamos la suscripción en nuestra
+            base de datos y registramos <strong>solo tu correo</strong> en una lista de Brevo, desde donde se envían los
+            correos (ver la sección 5). Cada correo trae un enlace para darte de baja, y también puedes pedirlo en{' '}
+            <a href={correo}>{CORREO_CONTACTO}</a>.
           </li>
         </ul>
       ) : (
@@ -167,34 +168,50 @@ const correo = `mailto:${CORREO_CONTACTO}`;
         </li>
         {GA_ID && <li><strong>Con tu consentimiento</strong>, para medir el uso del sitio con Google Analytics.</li>}
         <li><strong>Por interés legítimo</strong>, para la seguridad de la app y la prevención de abusos.</li>
+        <li>
+          <strong>Por interés legítimo</strong>, para llevar un seguimiento comercial interno de quienes prueban la demo o
+          piden información: tu nombre, correo, institución y cargo, qué herramientas probaste y cuándo, y las notas de
+          nuestras conversaciones. Este seguimiento no sale de nuestra base de datos y no lo usamos para escribirte con
+          fines comerciales, salvo que lo hayas pedido (cotización o Consensus QC) o hayas aceptado los correos
+          informativos. Puedes oponerte escribiendo a <a href={correo}>{CORREO_CONTACTO}</a>.
+        </li>
         <li><strong>Por obligación legal</strong>, para cumplir obligaciones tributarias y contables.</li>
       </ul>
 
       <h2>5. Dónde se guardan y quién más interviene</h2>
+      <h3>Los datos de la app quedan en Chile</h3>
       <p>
-        La app funciona sobre Google Apps Script y Google Sheets. Los correos se envían con Gmail. Por eso, los datos
-        se almacenan en servidores de Google LLC, que pueden estar fuera de Chile, incluso en Estados Unidos. Google
-        actúa como proveedor de infraestructura y aplica sus propias medidas de seguridad.
+        La app (ConsensusLab y Consensus QC) funciona en Google Cloud, en la <strong>región de Santiago de Chile</strong>:
+        la base de datos, los servidores de la app, las copias de seguridad y las claves secretas se guardan en Chile.
+        Google LLC actúa como proveedor de infraestructura, no accede a los datos para fines propios y aplica sus propias
+        medidas de seguridad. La dirección <code>app.consensuslab.cl</code> pasa por la red de entrega de Google (Firebase
+        Hosting), que cifra la conexión y entrega las páginas desde el punto más cercano, sin guardar los datos de la app;
+        esa red, como la tarea que activa los procesos programados, puede operar fuera de Chile.
       </p>
+      <h3>Correos</h3>
       <p>
-        Usamos HubSpot (HubSpot, Inc., con servidores que pueden estar en Estados Unidos o Europa) como sistema de gestión
-        de contactos. Allí registramos:
+        Los correos (códigos de acceso, avisos del servicio, novedades e informativos) se envían con Brevo (Sendinblue SAS,
+        Francia, Unión Europea, sujeta al Reglamento General de Protección de Datos europeo). Para entregar cada correo,
+        Brevo recibe la dirección de destino y el contenido del mensaje, y conserva un registro del envío.
       </p>
       <ul>
         <li>
-          Las solicitudes de contacto comercial («Quiero Consensus QC» y las solicitudes de cotización de la página
-          Planes), solo para responderte y hacer seguimiento de tu solicitud.
+          Si te suscribiste a las novedades del sitio, tu correo queda en la lista «Novedades» de Brevo.
         </li>
         <li>
-          Si te suscribiste a las novedades del sitio: tu correo y el rol que elegiste, para enviarte los correos que
-          aceptaste. Puedes darte de baja desde el enlace de cualquier correo.
+          Si aceptaste correos informativos, tu correo queda en la lista «Correos informativos» de Brevo. Si retiras el
+          consentimiento, lo quitamos de esa lista.
         </li>
         <li>
-          Si aceptaste correos informativos: tu nombre, correo, institución, cargo, la fecha de creación de tu cuenta, tu
-          último ingreso y qué herramientas probaste. Si retiras el consentimiento, lo marcamos también en HubSpot y dejamos
-          de enviarte esos correos. Quien no acepta correos informativos no se registra en HubSpot.
+          En esas listas guardamos <strong>solo tu correo</strong>: ni tu nombre, ni tu institución, ni cómo usas la app.
+          Cada correo trae un enlace para darte de baja.
         </li>
       </ul>
+      <h3>Seguimiento comercial</h3>
+      <p>
+        Las solicitudes de cotización, las de Consensus QC y el uso de la demo los seguimos en nuestra propia base de
+        datos, en Chile. No usamos sistemas externos de gestión de clientes (CRM).
+      </p>
       <h3>Avisos por WhatsApp (próximamente)</h3>
       <p>
         Después del lanzamiento de la suscripción incorporaremos avisos por WhatsApp de vencimientos, alertas y
@@ -235,7 +252,8 @@ const correo = `mailto:${CORREO_CONTACTO}`;
         <li>
           <strong>Cuenta:</strong> mientras la uses. Puedes eliminarla tú mismo en cualquier momento desde «Mi cuenta», o
           pedírnoslo por correo. Al eliminarla borramos tus datos de prueba y tu contraseña, cerramos tus sesiones,
-          reemplazamos tu nombre y tu correo (también en la bitácora) y quitamos tus datos de ConsensusLab en HubSpot.
+          reemplazamos tu nombre y tu correo (también en la bitácora), borramos tu seguimiento comercial y borramos tu
+          contacto de Brevo.
           Si perteneces a un laboratorio suscrito, tus registros siguen siendo del laboratorio y conservan su
           trazabilidad, pero aparecen a nombre de «Cuenta eliminada». El administrador de un laboratorio con
           suscripción vigente debe traspasar antes la administración.
@@ -248,8 +266,8 @@ const correo = `mailto:${CORREO_CONTACTO}`;
         <li><strong>Bitácora de seguridad:</strong> 24 meses; los eventos más antiguos se eliminan automáticamente.</li>
         <li>
           <strong>Copias de seguridad:</strong> las mantenemos para que ningún error ni falla técnica haga perder la
-          información de los laboratorios. Se guardan cifradas o con acceso restringido y se eliminan solas en un plazo
-          máximo de 90 días; por eso, un dato que ya borramos puede seguir en ellas hasta que se cumpla ese plazo.
+          información de los laboratorios. Se guardan en Chile, cifradas y con acceso restringido, y se eliminan solas en
+          un plazo máximo de 90 días; por eso, un dato que ya borramos puede seguir en ellas hasta que se cumpla ese plazo.
         </li>
         <li><strong>Datos de facturación:</strong> el plazo que exija la ley tributaria.</li>
       </ul>
@@ -258,12 +276,16 @@ const correo = `mailto:${CORREO_CONTACTO}`;
       <ul>
         <li>Las contraseñas y los códigos se guardan como huellas irreversibles.</li>
         <li>El ingreso tiene límites de intentos y bloqueos temporales.</li>
-        <li>Cada laboratorio ve solo sus propios registros; la separación la aplica el servidor.</li>
+        <li>
+          Cada laboratorio ve solo sus propios registros: la separación la aplica la propia base de datos, que rechaza
+          cualquier lectura o escritura de otro laboratorio.
+        </li>
+        <li>Las conexiones van cifradas, y la base de datos y las copias de seguridad están cifradas en reposo.</li>
         <li>
           Mientras la suscripción está vigente, la app no borra registros de un laboratorio: las correcciones quedan
           como anulaciones con motivo.
         </li>
-        <li>Las planillas de datos no son públicas y solo el responsable del servicio tiene acceso a ellas.</li>
+        <li>La base de datos no es pública y solo el responsable del servicio tiene acceso a ella.</li>
       </ul>
 
       <h2>8. Tus derechos</h2>
