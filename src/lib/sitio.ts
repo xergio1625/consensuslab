@@ -31,11 +31,11 @@ export const GA_ID = 'G-PBCF6HZRHZ';
 /** Fin de la preventa fundadores (desde este día rige el precio normal). Hasta entonces se ven la franja y la imagen de preventa. */
 export const FIN_PREVENTA = '2026-12-01';
 
-/** Correo de contacto para privacidad, términos y soporte (Cloudflare Email Routing lo reenvía al Gmail que envía los correos de la app). */
+/** Correo de contacto para privacidad, términos y soporte (Cloudflare Email Routing lo reenvía a Gmail; la app envía con Brevo desde esta dirección). */
 export const CORREO_CONTACTO = 'contacto@consensuslab.cl';
 
 /** Fecha de la versión vigente de los términos de uso. */
 export const VIGENCIA_LEGAL = '11 de octubre de 2026';
 
 /** Fecha de la versión vigente de la política de privacidad (Google Analytics con consentimiento, formulario de cotización, suscripción a novedades y avisos por WhatsApp futuros). */
-export const VIGENCIA_PRIVACIDAD = 'FECHA_DEL_CORTE';
+export const VIGENCIA_PRIVACIDAD = '16 de octubre de 2026';
