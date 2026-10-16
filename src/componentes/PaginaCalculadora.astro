@@ -3,15 +3,19 @@
 // (slot por defecto), la explicación (slot «explicacion») y el lateral con otras calculadoras.
 import Base from '../plantillas/Base.astro';
 import PedirDemo from './PedirDemo.astro';
-import { CALCULADORAS, calculadora, type IdCalculadora } from '../lib/calculadoras';
+import { CALCULADORAS, GRUPOS_ESTADISTICA, calculadora, type IdCalculadora } from '../lib/calculadoras';
 import { migasLd, url } from '../lib/rutas';
 
 interface Props {
   id: IdCalculadora;
 }
 const c = calculadora(Astro.props.id);
+const grupoDe = (x: { grupo?: string }) => x.grupo;
+const grupoEst = c.familia === 'estadistica' ? GRUPOS_ESTADISTICA.find((g) => g.id === grupoDe(c)) : undefined;
 const otras = CALCULADORAS.filter((o) => o.id !== c.id).sort(
-  (a, b) => Number(b.familia === c.familia) - Number(a.familia === c.familia),
+  (a, b) =>
+    Number(b.familia === c.familia) - Number(a.familia === c.familia) ||
+    Number(c.familia === 'estadistica' && grupoDe(b) === grupoDe(c)) - Number(c.familia === 'estadistica' && grupoDe(a) === grupoDe(c)),
 );
 ---
 
@@ -44,6 +48,13 @@ const otras = CALCULADORAS.filter((o) => o.id !== c.id).sort(
     </nav>
 
     <header class="ficha-cabeza">
+      {
+        grupoEst && (
+          <p class="calc-kicker">
+            <a href={url('calculadoras/pruebas-estadisticas/')}>Pruebas estadísticas</a> · {grupoEst.titulo}: <em>{grupoEst.pregunta}</em>
+          </p>
+        )
+      }
       <h1>{c.titulo}</h1>
       <p>{c.resumen}</p>
     </header>
@@ -98,6 +109,15 @@ const otras = CALCULADORAS.filter((o) => o.id !== c.id).sort(
                 y tu control externo, y los compara con el plan de calidad.
               </p>
               <p><a class="boton boton-primario boton-ancho" href={url('consensus-qc/')}>Conocer Consensus QC</a></p>
+            </section>
+          ) : c.familia === 'estadistica' ? (
+            <section class="caja caja-app">
+              <h2>¿Qué prueba uso?</h2>
+              <p>
+                Cada prueba responde una pregunta distinta. La guía las ordena por la decisión que quieres tomar y
+                explica en qué se parecen y en qué se confunden.
+              </p>
+              <p><a class="boton boton-primario boton-ancho" href={url('calculadoras/pruebas-estadisticas/')}>Ver la guía de pruebas</a></p>
             </section>
           ) : c.familia === 'indicadores' ? (
             <section class="caja caja-app">

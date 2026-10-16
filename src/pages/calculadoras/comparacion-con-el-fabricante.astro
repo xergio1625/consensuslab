@@ -1,0 +1,188 @@
+---
+import PaginaCalculadora from '../../componentes/PaginaCalculadora.astro';
+import { url } from '../../lib/rutas';
+---
+
+<PaginaCalculadora id="comparacion-con-el-fabricante">
+  <form class="calc" id="calc" novalidate>
+    <div class="calc-campos">
+      <label class="calc-campo calc-ancho">
+        <span>Tus resultados</span>
+        <textarea class="campo" name="datos" rows="9" placeholder="100,2&#10;99,8&#10;101,0&#10;..."></textarea>
+        <small>Un valor por línea (al menos 3): replicados de un mismo material de control o de una muestra con valor asignado.</small>
+      </label>
+      <label class="calc-campo">
+        <span>Valor asignado (media declarada)</span>
+        <input class="campo" name="asignado" inputmode="decimal" placeholder="100" />
+        <small>El de la hoja de datos del control o del inserto.</small>
+      </label>
+      <label class="calc-campo">
+        <span>DE declarada</span>
+        <input class="campo" name="de" inputmode="decimal" placeholder="1,5" />
+        <small>O el CV declarado, abajo: basta uno de los dos.</small>
+      </label>
+      <label class="calc-campo">
+        <span>CV declarado (%)</span>
+        <input class="campo" name="cv" inputmode="decimal" placeholder="1,5" />
+      </label>
+      <label class="calc-campo">
+        <span>Sesgo permitido (%)</span>
+        <input class="campo" name="permitido" inputmode="decimal" placeholder="opcional" />
+        <small>Si lo dejas en blanco, el sesgo se informa sin compararlo.</small>
+      </label>
+      <label class="calc-campo">
+        <span>Nivel de confianza</span>
+        <select class="campo" name="confianza">
+          <option value="0.95">95 %</option>
+          <option value="0.99">99 %</option>
+          <option value="0.9">90 %</option>
+        </select>
+      </label>
+    </div>
+    <p class="calc-ayuda"><button type="button" class="boton boton-secundario calc-ejemplo" data-ejemplo>Cargar un ejemplo</button></p>
+  </form>
+
+  <section class="calc-resultado" aria-live="polite">
+    <p class="calc-mensaje" data-mensaje>Pega tus resultados e indica el valor asignado.</p>
+    <div data-resultado hidden>
+      <p class="calc-lectura" data-lectura></p>
+      <div class="calc-cifras">
+        <div><span>Tu media</span><strong data-media></strong><small data-media-nota></small></div>
+        <div><span>Sesgo</span><strong data-sesgo></strong><small data-sesgo-nota></small></div>
+        <div><span>Tu DE</span><strong data-de></strong><small data-de-nota></small></div>
+        <div><span>Tu CV</span><strong data-cv></strong><small data-cv-nota></small></div>
+      </div>
+      <div class="calc-tabla-envoltura">
+        <table class="calc-tabla calc-tabla-texto">
+          <thead><tr><th>Prueba</th><th>Estadístico</th><th>Valor p</th><th>Lectura</th></tr></thead>
+          <tbody data-filas></tbody>
+        </table>
+      </div>
+      <p class="calc-nota" data-aviso></p>
+    </div>
+  </section>
+
+  <div slot="explicacion">
+    <h2>Cómo se calcula</h2>
+    <ul>
+      <li><strong>t de una muestra</strong>: t = (tu media − valor asignado) / (tu DE / √n), con n − 1 gl. Si el valor p es pequeño, tu media difiere del valor asignado. Usa <em>tu</em> DE.</li>
+      <li><strong>Intervalo de verificación de la media</strong> (sin prueba de hipótesis): valor asignado ± z · DE declarada / √n. Si tu media cae dentro, es coherente con lo declarado. Usa la DE <em>del fabricante</em>, no la tuya.</li>
+      <li><strong>Chi cuadrado para la DE o el CV</strong>: χ² = (n − 1) s² / σ₀², con σ₀ la DE declarada (o el CV × valor asignado). El valor p unilateral responde si eres <em>más imprecisa</em> que lo declarado; el bilateral, si eres distinta. Se informa el intervalo de confianza de tu DE y el límite superior de verificación.</li>
+      <li><strong>Sesgo respecto del valor asignado</strong>: (media − asignado) / asignado en %, con su intervalo de confianza. Si das un sesgo permitido, se compara el sesgo y su intervalo con él.</li>
+    </ul>
+    <h2>Cómo usarlo</h2>
+    <ul>
+      <li>Son preguntas distintas: la prueba t y el intervalo de verificación miran la <em>media</em>; el chi cuadrado, la <em>dispersión</em>. Un método puede tener la media bien y la DE mal, o al revés.</li>
+      <li>Para una verificación formal de precisión con varios días, usa <a href={url('calculadoras/verificacion-de-precision/')}>verificación de precisión 5 × 5</a>: separa repetibilidad e intralaboratorio.</li>
+      <li>El valor asignado de un control tiene su propia incertidumbre y rangos que dependen del método y del equipo: usa el que corresponde a tu método.</li>
+      <li>Un sesgo estadísticamente significativo puede ser clínicamente irrelevante (y uno no significativo con pocos datos puede ocultar un sesgo importante): compara siempre con el sesgo permitido.</li>
+    </ul>
+    <h2>Referencias</h2>
+    <p>CLSI EP15-A3: <em>User Verification of Precision and Estimation of Bias</em>. Snedecor GW, Cochran WG. <em>Statistical Methods</em>, 8.ª ed.</p>
+  </div>
+</PaginaCalculadora>
+
+<script>
+  import { formato, numero, valores } from '../../lib/calidad.js';
+  import { chiDesviacion, intervaloVerificacion, sesgoAsignado, tUnaMuestra } from '../../lib/pruebas.js';
+  import { pintarPruebas, textoSerie, type FilaPrueba } from '../../lib/pruebas_ui';
+
+  const form = document.getElementById('calc') as HTMLFormElement;
+  const $ = (s: string) => document.querySelector(`[data-${s}]`) as HTMLElement;
+
+  function mensaje(t: string) {
+    $('mensaje').textContent = t;
+    $('mensaje').hidden = false;
+    $('resultado').hidden = true;
+  }
+
+  function calcular() {
+    const datos = valores(form.datos.value);
+    if (datos.some(Number.isNaN)) return mensaje('Hay valores que no son números: revisa los datos.');
+    const asignado = numero(form.asignado.value);
+    if (datos.length < 3 || !Number.isFinite(asignado) || asignado === 0) return mensaje('Pega tus resultados (al menos 3) e indica el valor asignado.');
+    const confianza = Number(form.confianza.value);
+    const alfa = 1 - confianza;
+    const deDecl = numero(form.de.value);
+    const cvDecl = numero(form.cv.value);
+    const sigma0 = Number.isFinite(deDecl) && deDecl > 0 ? deDecl : Number.isFinite(cvDecl) && cvDecl > 0 ? (cvDecl / 100) * Math.abs(asignado) : NaN;
+    const permitido = numero(form.permitido.value);
+    const t = tUnaMuestra(datos, asignado, confianza);
+    if (!t) return mensaje('No se pudo calcular: los valores deben variar.');
+    const sesgo = sesgoAsignado(datos, asignado, { sesgoPermitidoPct: permitido, deAsignada: sigma0, confianza })!;
+    const iv = Number.isFinite(sigma0) ? intervaloVerificacion(datos, asignado, sigma0, confianza) : null;
+    const chi = Number.isFinite(sigma0) ? chiDesviacion(datos, sigma0, confianza) : null;
+    $('mensaje').hidden = true;
+    $('resultado').hidden = false;
+
+    const nivel = (p: number) => (p < alfa ? 'advertencia' : 'ok') as FilaPrueba['nivel'];
+    const filas: FilaPrueba[] = [
+      { prueba: 't de una muestra', que: 'Tu media contra el valor asignado', estadistico: `t = ${formato(t.t, 3)} (${t.gl} gl) · IC de la media ${formato(t.ci[0], 3)} a ${formato(t.ci[1], 3)}`, p: t.p, lectura: t.p < alfa ? 'La media difiere del asignado' : 'Media compatible', nivel: nivel(t.p) },
+    ];
+    if (iv)
+      filas.push({
+        prueba: 'Intervalo de verificación', que: 'Valor asignado ± z · DE declarada / √n',
+        estadistico: `${formato(iv.bajo, 3)} a ${formato(iv.alto, 3)} (tu media ${formato(iv.media, 3)})`,
+        lectura: iv.dentro ? 'Dentro del intervalo' : 'Fuera del intervalo', nivel: iv.dentro ? 'ok' : 'advertencia',
+      });
+    if (chi) {
+      filas.push({
+        prueba: 'χ² de la DE: ¿más imprecisa?', que: 'Unilateral contra la DE declarada',
+        estadistico: `χ² = ${formato(chi.chi2, 2)} (${chi.gl} gl) · límite de tu DE ${formato(chi.limite, 3)}`, p: chi.pMayor,
+        lectura: chi.pMayor < alfa ? 'Más imprecisa que lo declarado' : 'No más imprecisa', nivel: nivel(chi.pMayor),
+      });
+      filas.push({
+        prueba: 'χ² de la DE: ¿distinta?', que: 'Bilateral; IC de tu DE',
+        estadistico: `IC de tu DE ${formato(chi.ciDe[0], 3)} a ${formato(chi.ciDe[1], 3)}`, p: chi.pBilateral,
+        lectura: chi.pBilateral < alfa ? 'Distinta de lo declarado' : 'Compatible', nivel: nivel(chi.pBilateral),
+      });
+    }
+    filas.push({
+      prueba: 'Sesgo respecto del asignado', que: Number.isFinite(permitido) ? `Contra un sesgo permitido de ${formato(permitido, 2)} %` : 'Informado, sin comparar',
+      estadistico: `${formato(sesgo.sesgoPct, 2)} % (IC ${formato(sesgo.ciPct[0], 2)} a ${formato(sesgo.ciPct[1], 2)} %)${Number.isFinite(sesgo.sdi) ? ` · SDI ${formato(sesgo.sdi, 2)}` : ''}`,
+      lectura: sesgo.dentroDePermitido === null ? 'Sin sesgo permitido' : !sesgo.dentroDePermitido ? 'Sesgo sobre lo permitido' : sesgo.ciDentroDePermitido ? 'Dentro de lo permitido' : 'Dentro, pero el IC lo supera',
+      nivel: sesgo.dentroDePermitido === null ? 'ok' : !sesgo.dentroDePermitido ? 'error' : sesgo.ciDentroDePermitido ? 'ok' : 'advertencia',
+    });
+    pintarPruebas($('filas'), filas);
+
+    $('media').textContent = formato(t.media, 3);
+    $('media-nota').textContent = `Valor asignado ${formato(asignado, 3)}`;
+    $('sesgo').textContent = formato(sesgo.sesgoPct, 2) + ' %';
+    $('sesgo-nota').textContent = `Absoluto ${formato(sesgo.sesgo, 3)}`;
+    $('de').textContent = formato(t.de, 3);
+    $('de-nota').textContent = Number.isFinite(sigma0) ? `Declarada ${formato(sigma0, 3)}` : 'Sin DE declarada';
+    $('cv').textContent = formato((t.de / Math.abs(t.media)) * 100, 2) + ' %';
+    $('cv-nota').textContent = Number.isFinite(sigma0) ? `Declarado ${formato((sigma0 / Math.abs(asignado)) * 100, 2)} %` : 'Sin CV declarado';
+
+    const mediaDiferente = t.p < alfa || (iv !== null && !iv.dentro);
+    const sesgoFuera = sesgo.dentroDePermitido === false;
+    const conPermitido = sesgo.dentroDePermitido !== null;
+    const deMala = chi ? chi.pMayor < alfa : false;
+    const frases: string[] = [];
+    if (sesgoFuera) frases.push('El sesgo supera el permitido.');
+    else if (mediaDiferente && conPermitido) frases.push('Tu media difiere estadísticamente del valor asignado, pero el sesgo está dentro del permitido: la diferencia no tiene relevancia práctica.');
+    else if (mediaDiferente) frases.push('Tu media difiere del valor asignado. Indica un sesgo permitido para juzgar si la diferencia importa.');
+    if (deMala) frases.push('Tu dispersión es mayor que la declarada.');
+    const lectura = $('lectura');
+    lectura.textContent = frases.length
+      ? frases.join(' ') + (sesgoFuera || deMala ? ' Revisa calibración, reactivo, material de control y técnica antes de concluir.' : '')
+      : `Tu media y${chi ? ' tu dispersión son compatibles con lo declarado' : ' el sesgo son compatibles con el valor asignado (sin DE declarada no se evalúa la dispersión)'}.`;
+    lectura.dataset.nivel = sesgoFuera || deMala || (mediaDiferente && !conPermitido) ? 'advertencia' : 'ok';
+    $('aviso').textContent = !chi
+      ? 'Indica la DE o el CV declarado para sumar el intervalo de verificación y el chi cuadrado.'
+      : `Con ${datos.length} datos, solo se detectan desvíos importantes: un resultado «compatible» no prueba que coincidas con el fabricante.`;
+  }
+
+  form.querySelector('[data-ejemplo]')!.addEventListener('click', () => {
+    form.datos.value = textoSerie([100.8, 101.3, 99.9, 100.6, 101.1, 100.2, 99.7, 101.5, 100.9, 100.4, 101.0, 100.1, 100.7, 101.2, 100.5, 99.9, 100.8, 101.4, 100.3, 100.6], 1);
+    form.asignado.value = '100';
+    form.de.value = '';
+    form.cv.value = '0,8';
+    form.permitido.value = '1,5';
+    calcular();
+  });
+  form.addEventListener('input', calcular);
+  form.addEventListener('change', calcular);
+  form.addEventListener('submit', (e) => e.preventDefault());
+  calcular();
+</script>

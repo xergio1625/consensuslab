@@ -8,63 +8,89 @@ import { url } from '../../lib/rutas';
     <div class="calc-campos">
       <label class="calc-campo calc-ancho">
         <span>Resultados</span>
-        <textarea class="campo" name="datos" rows="9" placeholder="100,2&#10;99,8&#10;101,0&#10;..."></textarea>
-        <small>Un valor por línea: resultados de un control, réplicas de una verificación o mediciones de una misma magnitud.</small>
+        <textarea class="campo" name="datos" rows="10" placeholder="100,2&#10;99,8&#10;101,0&#10;..."></textarea>
+        <small>Un valor por línea (de 3 a 30 para Dixon): resultados de un control, réplicas de una verificación o mediciones de una misma magnitud.</small>
       </label>
       <label class="calc-campo">
-        <span>Nivel de significancia (Grubbs)</span>
+        <span>Nivel de significancia (Dixon, Grubbs, Tietjen-Moore)</span>
         <select class="campo" name="alfa">
           <option value="0.05">5 % (α = 0,05)</option>
           <option value="0.01">1 % (α = 0,01)</option>
+          <option value="0.1">10 % (α = 0,10)</option>
         </select>
+      </label>
+      <label class="calc-campo">
+        <span>Atípicos que busca Tietjen-Moore</span>
+        <select class="campo" name="k">
+          <option value="2">2 (Grubbs doble)</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+        </select>
+        <small>Para un solo atípico usa Dixon o Grubbs.</small>
       </label>
     </div>
     <p class="calc-ayuda"><button type="button" class="boton boton-secundario calc-ejemplo" data-ejemplo>Cargar un ejemplo</button></p>
   </form>
 
   <section class="calc-resultado" aria-live="polite">
-    <p class="calc-mensaje" data-mensaje>Pega los resultados (al menos 3 para Grubbs y 4 para Tukey).</p>
+    <p class="calc-mensaje" data-mensaje>Pega los resultados (al menos 4).</p>
     <div data-resultado hidden>
-      <div class="calc-cifras">
-        <div><span>Grubbs</span><strong data-g></strong><small data-g-nota></small></div>
-        <div><span>Valor más alejado</span><strong data-valor></strong><small data-valor-nota></small></div>
-        <div><span>Tukey</span><strong data-tukey></strong><small data-tukey-nota></small></div>
-      </div>
       <p class="calc-lectura" data-lectura></p>
       <div class="calc-tabla-envoltura">
-        <table class="calc-tabla">
-          <thead><tr><th>Medida</th><th>Con todos los datos</th><th>Sin el valor más alejado</th></tr></thead>
+        <table class="calc-tabla calc-tabla-texto">
+          <thead><tr><th>Criterio</th><th>Estadístico</th><th>Valor p</th><th>Lectura</th></tr></thead>
           <tbody data-filas></tbody>
+        </table>
+      </div>
+      <p class="calc-nota" data-aviso></p>
+      <h2>Con y sin el dato más señalado</h2>
+      <div class="calc-tabla-envoltura">
+        <table class="calc-tabla">
+          <thead><tr><th>Medida</th><th>Con todos los datos</th><th data-sin-titulo>Sin el dato señalado</th></tr></thead>
+          <tbody data-comparacion></tbody>
         </table>
       </div>
     </div>
   </section>
 
   <div slot="explicacion">
-    <h2>Cómo se calcula</h2>
+    <h2>Cómo elegir entre los seis criterios</h2>
     <ul>
-      <li><strong>Grubbs</strong> (bilateral): G = |valor más alejado − media| / DE. Es atípico si G supera el valor crítico (n − 1)/√n · √(t² / (n − 2 + t²)), con t = t(1 − α/(2n); n − 2). Supone una distribución aproximadamente normal y busca <em>un</em> valor atípico.</li>
-      <li><strong>Tukey</strong>: valores fuera de Q1 − 1,5 · RIC o Q3 + 1,5 · RIC (RIC = Q3 − Q1); extremos con 3 · RIC. No supone normalidad, pero con pocos datos es poco sensible.</li>
+      <li><strong>Dixon</strong> usa <em>rangos</em>: compara la distancia del extremo a su vecino con el rango de la muestra. Con n = 20 se usa la variante r22 (no la Q clásica, que es para n ≤ 10). No usa la media ni la DE.</li>
+      <li><strong>Grubbs</strong> usa la <em>media y la DE</em>: G = |valor más alejado − media| / DE. Se parecen en el uso, pero no son la misma prueba y pueden discrepar.</li>
+      <li><strong>Tietjen-Moore</strong> (con k = 2, Grubbs doble) busca <em>varios</em> atípicos a la vez. Sirve cuando dos atípicos se «tapan» entre sí y Grubbs no ve ninguno. Su valor crítico se simula (muestras normales, semilla fija). Prueba la hipótesis conjunta de k atípicos: si un solo dato es muy extremo, puede arrastrar al segundo a la lista. En ese caso, apártalo y vuelve a probar el resto.</li>
+      <li><strong>Tukey</strong> (1,5 × RIC) no supone normalidad, pero con 20 datos es poco sensible.</li>
+      <li><strong>Chauvenet</strong> rechaza un dato si se esperan menos de 0,5 datos tan lejanos en n datos. Es un criterio de sospecha, no una prueba con α fijo: con 20 datos normales marca al menos un punto en cerca de 3 de cada 10 series (simulación).</li>
+      <li><strong>Hampel</strong> (mediana ± 3 · 1,4826 · MAD) es robusta: los atípicos casi no mueven la mediana ni la MAD. Con n = 20 también es liberal: marca al menos un punto en cerca de 2 de cada 10 series normales (simulación).</li>
     </ul>
     <h2>Cómo usarlo</h2>
     <ul>
+      <li>Un dato que varios criterios señalan merece revisarse; uno señalado solo por Chauvenet o Hampel, probablemente no.</li>
       <li>Un valor señalado es una sospecha, no una condena: busca primero una causa (error de pipeteo, burbuja, identificación, contaminación, error de transcripción).</li>
       <li>Solo se excluye un dato con una causa asignable y registrada. Descartar valores solo porque «se ven raros» sesga la media y la DE hacia lo que esperabas.</li>
-      <li>Aplicar Grubbs una y otra vez hasta que no queden atípicos aumenta los falsos positivos: con más de un sospechoso, usa una prueba para varios atípicos o revisa el proceso.</li>
+      <li>Aplicar una prueba de un solo atípico una y otra vez hasta que no quede ninguno aumenta los falsos positivos. Con más de un sospechoso, usa Tietjen-Moore.</li>
+      <li>Dixon, Grubbs y Chauvenet suponen normalidad: verifícala con <a href={url('calculadoras/prueba-de-normalidad/')}>las pruebas de normalidad</a>. Los atípicos pueden hacer fracasar la prueba de normalidad por sí solos.</li>
       <li>En un control interno, un resultado fuera de rango es una señal que se evalúa con las reglas de Westgard, no un dato que se «depura».</li>
+      <li>Si tienes réplicas por día y sospechas de un día completo, mira la <a href={url('calculadoras/homogeneidad-entre-corridas/')}>prueba de Cochran</a>.</li>
     </ul>
     <p>
       Para evaluar controles con las reglas de Westgard, usa <a href={url('calculadoras/levey-jennings/')}>Gráfico de Levey-Jennings</a>.
-      Para comparar dos series, <a href={url('calculadoras/comparacion-de-lotes/')}>Comparación de dos series</a>.
+      Para elegir la prueba según la pregunta, la <a href={url('calculadoras/pruebas-estadisticas/')}>guía de pruebas estadísticas</a>.
     </p>
     <h2>Referencias</h2>
-    <p>Grubbs FE. Procedures for detecting outlying observations in samples. <em>Technometrics</em> 1969;11:1-21. Tukey JW. <em>Exploratory Data Analysis</em>, 1977.</p>
+    <p>
+      Dixon WJ. Processing data for outliers. <em>Biometrics</em> 1953;9:74-89. Rorabacher DB. Statistical treatment for rejection of deviant values. <em>Anal Chem</em> 1991;63:139-146 (variantes r10, r11, r21 y r22; valores críticos de esta página calculados por simulación y contrastados con esa tabla).
+      Grubbs FE. Procedures for detecting outlying observations in samples. <em>Technometrics</em> 1969;11:1-21. Tietjen GL, Moore RH. Some Grubbs-type statistics for the detection of several outliers. <em>Technometrics</em> 1972;14:583-597.
+      Tukey JW. <em>Exploratory Data Analysis</em>, 1977. Hampel FR. The influence curve and its role in robust estimation. <em>J Am Stat Assoc</em> 1974;69:383-393.
+    </p>
   </div>
 </PaginaCalculadora>
 
 <script>
   import { formato, valores } from '../../lib/calidad.js';
   import { grubbs, resumenSerie, vallasTukey } from '../../lib/estadistica.js';
+  import { chauvenet, dixon, hampel, tietjenMoore } from '../../lib/pruebas.js';
+  import { listaPuntos, pintarPruebas, filaTexto, textoSerie, type FilaPrueba } from '../../lib/pruebas_ui';
 
   const form = document.getElementById('calc') as HTMLFormElement;
   const $ = (s: string) => document.querySelector(`[data-${s}]`) as HTMLElement;
@@ -75,56 +101,111 @@ import { url } from '../../lib/rutas';
     $('resultado').hidden = true;
   }
 
-  function fila(celdas: string[]) {
-    const tr = document.createElement('tr');
-    celdas.forEach((c) => {
-      const td = document.createElement('td');
-      td.textContent = c;
-      tr.appendChild(td);
-    });
-    return tr;
-  }
-
   function calcular() {
     const datos = valores(form.datos.value);
     if (datos.some(Number.isNaN)) return mensaje('Hay valores que no son números: revisa los datos.');
-    if (datos.length < 3) return mensaje('Pega los resultados (al menos 3 para Grubbs y 4 para Tukey).');
-    const g = grubbs(datos, Number(form.alfa.value));
-    if (!g) return mensaje('No se pudo calcular: los valores deben variar.');
+    if (datos.length < 4) return mensaje('Pega los resultados (al menos 4).');
+    const alfa = Number(form.alfa.value);
+    const k = Number(form.k.value);
+    const f = (i: number) => `n.º ${i + 1} (${formato(datos[i], 2)})`;
+    const filas: FilaPrueba[] = [];
+    const votos = new Map<number, number>();
+    const marcar = (indices: number[]) => indices.forEach((i) => votos.set(i, (votos.get(i) ?? 0) + 1));
+
+    const d = dixon(datos, alfa);
+    filas.push(
+      d
+        ? { prueba: 'Dixon', que: `Rangos (${d.variante})`, estadistico: `Q = ${formato(d.q, 3)} · crítico ${formato(d.critico, 3)}`, lectura: d.atipico ? `Atípico: ${f(d.indice)}` : 'Sin atípico', nivel: d.atipico ? 'advertencia' : 'ok' }
+        : { prueba: 'Dixon', que: 'Rangos', estadistico: '—', lectura: datos.length > 30 ? 'No aplica (n > 30)' : 'No se pudo calcular', nivel: 'ok' },
+    );
+    if (d?.atipico) marcar([d.indice]);
+
+    const g = grubbs(datos, alfa);
+    filas.push(
+      g
+        ? { prueba: 'Grubbs', que: 'Media y DE, un atípico', estadistico: `G = ${formato(g.g, 3)} · crítico ${formato(g.critico, 3)}`, lectura: g.atipico ? `Atípico: ${f(g.indice)}` : 'Sin atípico', nivel: g.atipico ? 'advertencia' : 'ok' }
+        : { prueba: 'Grubbs', que: 'Media y DE, un atípico', estadistico: '—', lectura: 'Los valores deben variar', nivel: 'ok' },
+    );
+    if (g?.atipico) marcar([g.indice]);
+
+    const tm = datos.length >= k + 3 ? tietjenMoore(datos, k, alfa) : null;
+    filas.push(
+      tm
+        ? {
+            prueba: `Tietjen-Moore (k = ${k})`, que: 'Varios atípicos a la vez',
+            estadistico: `L = ${formato(tm.l, 3)} · crítico ${formato(tm.critico, 3)}`, p: tm.p,
+            lectura: tm.atipico ? `${k} atípicos: ${tm.sospechosos.map((s) => `n.º ${s.indice + 1}`).join(' y ')}` : 'Sin atípicos', nivel: tm.atipico ? 'advertencia' : 'ok',
+          }
+        : { prueba: `Tietjen-Moore (k = ${k})`, que: 'Varios atípicos a la vez', estadistico: '—', lectura: `Necesita al menos ${k + 3} datos`, nivel: 'ok' },
+    );
+    if (tm?.atipico) marcar(tm.sospechosos.map((s) => s.indice));
+
+    const t = vallasTukey(datos);
+    const fuera = t ? t.puntos.filter((p) => p.atipico).map((p) => p.indice - 1) : [];
+    filas.push({
+      prueba: 'Tukey (1,5 × RIC)', que: 'Cuartiles, sin suponer normalidad',
+      estadistico: t ? `Vallas ${formato(t.inferior, 2)} a ${formato(t.superior, 2)}` : '—',
+      lectura: fuera.length ? `Fuera: ${listaPuntos(fuera)}` : 'Sin valores fuera', nivel: fuera.length ? 'advertencia' : 'ok',
+    });
+    marcar(fuera);
+
+    const c = chauvenet(datos);
+    const cf = c ? c.atipicos.map((p) => p.indice) : [];
+    filas.push({
+      prueba: 'Chauvenet', que: 'Criterio de sospecha: n · P(|Z| > z) < 0,5',
+      estadistico: c ? `z crítico ${formato(c.zCritico, 2)}` : '—',
+      lectura: cf.length ? `Rechaza: ${listaPuntos(cf)}` : 'Sin rechazos', nivel: cf.length ? 'advertencia' : 'ok',
+    });
+    marcar(cf);
+
+    const h = hampel(datos);
+    const hf = h ? h.atipicos.map((p) => p.indice) : [];
+    filas.push({
+      prueba: 'Hampel (mediana ± 3 MAD)', que: 'Robusta',
+      estadistico: h ? `${formato(h.inferior, 2)} a ${formato(h.superior, 2)}` : '—',
+      lectura: h ? (hf.length ? `Fuera: ${listaPuntos(hf)}` : 'Sin valores fuera') : 'MAD = 0: no aplica', nivel: hf.length ? 'advertencia' : 'ok',
+    });
+    marcar(hf);
+
     $('mensaje').hidden = true;
     $('resultado').hidden = false;
-    const t = vallasTukey(datos);
-    $('g').textContent = g.atipico ? 'Hay un atípico' : 'Sin atípico';
-    $('g-nota').textContent = `G = ${formato(g.g, 3)} · crítico = ${formato(g.critico, 3)}`;
-    $('g-nota').dataset.nivel = g.atipico ? 'advertencia' : 'ok';
-    $('valor').textContent = formato(g.valor, 3);
-    $('valor-nota').textContent = `Resultado n.º ${g.indice + 1} (${g.lado})`;
-    const marcados = t ? t.puntos.filter((p) => p.atipico) : [];
-    $('tukey').textContent = t ? (marcados.length ? `${marcados.length} fuera de las vallas` : 'Sin valores fuera') : '—';
-    $('tukey-nota').textContent = t
-      ? marcados.length
-        ? 'N.º ' + marcados.map((p) => `${p.indice}${p.extremo ? ' (extremo)' : ''}`).join(', ')
-        : `Vallas: ${formato(t.inferior, 2)} a ${formato(t.superior, 2)}`
-      : 'Necesita al menos 4 datos';
-    $('tukey-nota').dataset.nivel = marcados.length ? 'advertencia' : 'ok';
-    const sin = datos.filter((_, i) => i !== g.indice);
-    const a = resumenSerie(datos);
-    const b = resumenSerie(sin);
-    $('filas').replaceChildren(
-      fila(['n', String(a.n), String(b.n)]),
-      fila(['Media', formato(a.media, 3), formato(b.media, 3)]),
-      fila(['DE', formato(a.de, 3), formato(b.de, 3)]),
-      fila(['CV', formato(a.cv, 2) + ' %', formato(b.cv, 2) + ' %']),
-    );
+    pintarPruebas($('filas'), filas);
+
+    // Lectura global: el dato que más criterios señalan.
     const lectura = $('lectura');
-    lectura.textContent = g.atipico
-      ? `El resultado n.º ${g.indice + 1} (${formato(g.valor, 3)}) es atípico según Grubbs. Busca primero una causa y regístrala antes de excluirlo.`
-      : 'No hay evidencia de un valor atípico con Grubbs. Eso no descarta errores: revisa los datos de todos modos.';
-    lectura.dataset.nivel = g.atipico ? 'advertencia' : 'ok';
+    const ranking = [...votos.entries()].sort((a, b) => b[1] - a[1] || a[0] - b[0]);
+    if (!ranking.length) {
+      lectura.textContent = 'Ningún criterio señala un valor atípico. Eso no descarta errores: revisa los datos de todos modos.';
+      lectura.dataset.nivel = 'ok';
+    } else {
+      const [mejor, cuantos] = ranking[0];
+      lectura.textContent =
+        cuantos >= 2
+          ? `El dato ${f(mejor)} lo señalan ${cuantos} de 6 criterios. Busca primero una causa y regístrala antes de excluirlo.`
+          : `Solo un criterio señala el dato ${f(mejor)}: es una sospecha débil. Revisa si hay una causa asignable antes de tocarlo.`;
+      lectura.dataset.nivel = 'advertencia';
+    }
+    $('aviso').textContent = `Dixon, Grubbs y Chauvenet suponen normalidad. Con ${datos.length} datos, Chauvenet y Hampel señalan más puntos de los que corresponderían a un α del ${formato(alfa * 100, 0)} %: úsalos como orientación.`;
+
+    const cuerpo = $('comparacion');
+    if (ranking.length) {
+      const sin = datos.filter((_, i) => i !== ranking[0][0]);
+      const a = resumenSerie(datos);
+      const b = resumenSerie(sin);
+      $('sin-titulo').textContent = `Sin el dato ${f(ranking[0][0])}`;
+      cuerpo.replaceChildren(
+        filaTexto(['n', String(a.n), String(b.n)]),
+        filaTexto(['Media', formato(a.media, 3), formato(b.media, 3)]),
+        filaTexto(['DE', formato(a.de, 3), formato(b.de, 3)]),
+        filaTexto(['CV', formato(a.cv, 2) + ' %', formato(b.cv, 2) + ' %']),
+      );
+    } else {
+      cuerpo.replaceChildren(filaTexto(['Sin dato señalado', '', '']));
+    }
   }
 
   form.querySelector('[data-ejemplo]')!.addEventListener('click', () => {
-    form.datos.value = ['199,31', '199,53', '200,19', '200,82', '201,92', '201,95', '202,18', '245,57'].join('\n');
+    form.datos.value = textoSerie([99.2, 100.4, 101.1, 98.7, 100.0, 99.5, 100.8, 101.3, 99.9, 100.2, 98.9, 100.6, 99.6, 100.1, 101.0, 99.3, 100.5, 99.8, 100.3, 106.8], 1);
     calcular();
   });
   form.addEventListener('input', calcular);

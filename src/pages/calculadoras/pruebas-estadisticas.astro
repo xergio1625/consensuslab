@@ -1,0 +1,183 @@
+---
+// Guía de las pruebas estadísticas: qué pregunta responde cada una, en qué orden usarlas y cuáles se confunden.
+import Base from '../../plantillas/Base.astro';
+import PedirDemo from '../../componentes/PedirDemo.astro';
+import { CALCULADORAS, GRUPOS_ESTADISTICA, calculadora, type IdCalculadora } from '../../lib/calculadoras';
+import { migasLd, url } from '../../lib/rutas';
+
+const enlace = (id: IdCalculadora) => url(`calculadoras/${id}/`);
+const pruebasPorGrupo: Record<string, { prueba: string; sirve: string; id: IdCalculadora }[]> = {
+  atipicos: [
+    { prueba: 'Dixon (Q)', sirve: 'Un atípico, con rangos. Con n = 20 usa la variante r22, no la Q clásica.', id: 'valores-atipicos' },
+    { prueba: 'Grubbs', sirve: 'Un atípico, con media y DE.', id: 'valores-atipicos' },
+    { prueba: 'Grubbs doble / Tietjen-Moore', sirve: 'Más de un atípico a la vez.', id: 'valores-atipicos' },
+    { prueba: 'Vallas de Tukey', sirve: 'Atípicos por cuartiles, sin suponer normalidad.', id: 'valores-atipicos' },
+    { prueba: 'Chauvenet', sirve: 'Criterio de sospecha: menos de 0,5 datos esperados tan lejos.', id: 'valores-atipicos' },
+    { prueba: 'Mediana ± 3 MAD (Hampel)', sirve: 'Atípicos con un criterio robusto.', id: 'valores-atipicos' },
+    { prueba: 'Cochran', sirve: 'Un día con varianza anormal (necesita réplicas).', id: 'homogeneidad-entre-corridas' },
+  ],
+  normalidad: [
+    { prueba: 'Shapiro-Wilk', sirve: 'La más potente con n pequeño.', id: 'prueba-de-normalidad' },
+    { prueba: 'Anderson-Darling', sirve: 'Sensible a las colas.', id: 'prueba-de-normalidad' },
+    { prueba: 'D’Agostino-Pearson', sirve: 'Separa asimetría y curtosis.', id: 'prueba-de-normalidad' },
+    { prueba: 'Lilliefors', sirve: 'Kolmogorov-Smirnov corregida; la menos potente.', id: 'prueba-de-normalidad' },
+    { prueba: 'Gráfico Q-Q', sirve: 'Inspección visual de la forma de la distribución.', id: 'prueba-de-normalidad' },
+  ],
+  tendencia: [
+    { prueba: 'Rachas (Wald-Wolfowitz)', sirve: 'Aleatoriedad respecto de la mediana.', id: 'tendencia-y-aleatoriedad' },
+    { prueba: 'Mann-Kendall', sirve: 'Tendencia monótona sin normalidad (con pendiente de Sen).', id: 'tendencia-y-aleatoriedad' },
+    { prueba: 'Cox-Stuart', sirve: 'Tendencia por comparación de mitades por pares.', id: 'tendencia-y-aleatoriedad' },
+    { prueba: 'Razón de von Neumann', sirve: 'Deriva o dependencia entre datos consecutivos.', id: 'tendencia-y-aleatoriedad' },
+    { prueba: 'Pendiente contra el tiempo (t)', sirve: 'Cuánto cambia por medición, si la tendencia es recta.', id: 'tendencia-y-aleatoriedad' },
+    { prueba: 'Autocorrelación de orden 1 / Durbin-Watson', sirve: '¿Cada dato se parece al anterior?', id: 'tendencia-y-aleatoriedad' },
+  ],
+  homogeneidad: [
+    { prueba: 'Prueba F entre mitades', sirve: 'Cambio de dispersión entre primera y segunda mitad.', id: 'homogeneidad-entre-mitades' },
+    { prueba: 't de dos muestras entre mitades', sirve: 'Cambio de media entre mitades (Student y Welch).', id: 'homogeneidad-entre-mitades' },
+    { prueba: 'Bartlett', sirve: 'Varianzas iguales entre días (exige normalidad).', id: 'homogeneidad-entre-corridas' },
+    { prueba: 'Levene / Brown-Forsythe', sirve: 'Varianzas iguales, robustas.', id: 'homogeneidad-entre-corridas' },
+    { prueba: 'ANOVA de un factor', sirve: 'Medias entre días; intraserial e interserial.', id: 'homogeneidad-entre-corridas' },
+  ],
+  fabricante: [
+    { prueba: 't de una muestra', sirve: 'Tu media contra el valor asignado.', id: 'comparacion-con-el-fabricante' },
+    { prueba: 'Intervalo de verificación de la media', sirve: 'Coherencia con lo declarado, sin prueba de hipótesis.', id: 'comparacion-con-el-fabricante' },
+    { prueba: 'Chi cuadrado para la DE o el CV', sirve: 'Tu dispersión contra la declarada.', id: 'comparacion-con-el-fabricante' },
+    { prueba: 'Sesgo respecto del valor asignado', sirve: 'Cuánto te apartas del asignado, con IC y SDI.', id: 'comparacion-con-el-fabricante' },
+  ],
+  precision: [
+    { prueba: 'CV interserial contra el histórico', sirve: 'Si el lote nuevo es más imprecisa que los anteriores.', id: 'precision-del-lote' },
+    { prueba: 'Repetibilidad e intralaboratorio por ANOVA', sirve: 'Componentes de la precisión con réplicas por día.', id: 'precision-del-lote' },
+    { prueba: 'Error total permitido y sigma de partida', sirve: 'Si la precisión alcanza para el requisito.', id: 'precision-del-lote' },
+    { prueba: 'Verificación 5 × 5 contra el CV declarado', sirve: 'Verificación formal según CLSI EP15.', id: 'verificacion-de-precision' },
+  ],
+  lotes: [
+    { prueba: 'Prueba F de varianzas', sirve: 'Cambio de dispersión entre lotes.', id: 'comparacion-de-lotes' },
+    { prueba: 't entre medias de dos lotes', sirve: 'Cambio de media entre lotes (Welch).', id: 'comparacion-de-lotes' },
+  ],
+};
+const cuantas = CALCULADORAS.filter((c) => c.familia === 'estadistica').length;
+const titulo = 'Pruebas estadísticas para el laboratorio: qué prueba usar según la pregunta';
+const descripcion =
+  'Guía de las pruebas estadísticas para series de resultados del laboratorio: atípicos, normalidad, tendencia, homogeneidad, comparación con el fabricante y precisión del lote. Qué responde cada una y cuáles se confunden.';
+---
+
+<Base
+  titulo={titulo}
+  seccion="calculadoras"
+  descripcion={descripcion}
+  datos={[migasLd(Astro.site, [['Calculadoras', 'calculadoras/'], ['Pruebas estadísticas', 'calculadoras/pruebas-estadisticas/']])]}
+>
+  <div class="contenedor">
+    <nav class="migas" aria-label="Ruta de navegación">
+      <ol>
+        <li><a href={url('calculadoras/')}>Calculadoras</a></li>
+        <li aria-current="page">Pruebas estadísticas</li>
+      </ol>
+    </nav>
+
+    <header class="ficha-cabeza">
+      <h1>Pruebas estadísticas: qué prueba usar</h1>
+      <p>
+        {cuantas} calculadoras para decidir sobre una serie de resultados, como los 20 datos de un lote de control nuevo. Cada
+        prueba responde una pregunta distinta: elige primero la pregunta, después la prueba.
+      </p>
+    </header>
+
+    <div class="ficha">
+      <article class="ficha-cuerpo">
+        <div class="aviso aviso-info">
+          <p>
+            El cálculo se hace en tu navegador: no se envía ni se guarda nada. Usa resultados de control o de control externo,
+            nunca datos de pacientes.
+          </p>
+        </div>
+
+        <h2>El orden recomendado para 20 datos de un lote nuevo</h2>
+        <ol>
+          <li><strong>Atípicos</strong>: ¿algún dato tiene una causa que lo saca de la serie? Excluye solo con causa asignable y registrada.</li>
+          <li><strong>Normalidad</strong>: ¿son válidas la media y la DE como resumen? Decide si usar pruebas paramétricas o robustas.</li>
+          <li><strong>Tendencia y aleatoriedad</strong>: ¿la serie se está moviendo? Si hay deriva, la media y la DE no describen un proceso estable.</li>
+          <li><strong>Homogeneidad</strong>: ¿la media y la varianza son estables entre mitades, días o corridas?</li>
+          <li><strong>Precisión y comparación con el fabricante</strong>: con la serie limpia y estable, ¿qué CV tiene el lote y es compatible con lo declarado?</li>
+          <li><strong>Lote anterior</strong>: ¿el lote nuevo se comporta como el que reemplaza?</li>
+        </ol>
+
+        <h2>Las pruebas, por la pregunta que responden</h2>
+        {
+          GRUPOS_ESTADISTICA.map((g) => (
+            <section>
+              <h3 class="calc-subgrupo">{g.titulo}</h3>
+              <p class="texto-suave">{g.pregunta}</p>
+              <div class="calc-tabla-envoltura">
+                <table class="calc-tabla calc-tabla-texto guia-tabla">
+                  <thead><tr><th>Prueba</th><th>Para qué sirve</th><th>Calculadora</th></tr></thead>
+                  <tbody>
+                    {pruebasPorGrupo[g.id].map((p) => (
+                      <tr>
+                        <td>{p.prueba}</td>
+                        <td>{p.sirve}</td>
+                        <td><a href={enlace(p.id)}>{calculadora(p.id).titulo.split(':')[0]}</a></td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          ))
+        }
+
+        <h2>Pruebas que se confunden</h2>
+        <div class="guia-confusion">
+          <p><strong>Dixon y Grubbs.</strong> Se usan igual (un atípico) pero no son la misma prueba: Dixon usa rangos (la distancia del extremo a su vecino frente al rango de la muestra) y Grubbs usa la media y la DE. Pueden discrepar. Con n = 20, Dixon requiere una variante extendida (r22); la Q clásica de n ≤ 10 no corresponde.</p>
+        </div>
+        <div class="guia-confusion">
+          <p><strong>Grubbs, Grubbs doble y Tietjen-Moore.</strong> Grubbs busca un solo atípico. Si hay dos, pueden «taparse» entre sí y Grubbs no ve ninguno: ahí se usa Tietjen-Moore (con k = 2 es el Grubbs doble).</p>
+        </div>
+        <div class="guia-confusion">
+          <p><strong>Shapiro-Wilk, Anderson-Darling, D’Agostino-Pearson y Lilliefors.</strong> Todas responden «¿es normal?», pero con distinta sensibilidad: Shapiro-Wilk es la más potente con pocos datos, Anderson-Darling mira las colas, D’Agostino-Pearson separa asimetría y curtosis, y Lilliefors es la menos potente. Un valor p alto no prueba normalidad.</p>
+        </div>
+        <div class="guia-confusion">
+          <p><strong>Bartlett, Levene, Brown-Forsythe y Cochran.</strong> Bartlett exige normalidad; Levene y Brown-Forsythe no, pero con pocas réplicas por día (3 a 5) están mal calibradas: Levene da falsas alarmas y Brown-Forsythe casi no detecta. Las tres dicen «alguna varianza difiere»; Cochran identifica <em>cuál</em> día tiene la varianza más alta. Y ninguna de las cuatro compara medias: eso lo hace el ANOVA.</p>
+        </div>
+        <div class="guia-confusion">
+          <p><strong>Mann-Kendall, Cox-Stuart, pendiente y rachas.</strong> Mann-Kendall y Cox-Stuart buscan tendencia sin suponer normalidad; la pendiente con su prueba t sí supone una recta y errores normales. Las rachas y von Neumann detectan falta de aleatoriedad en general, no solo tendencia.</p>
+        </div>
+        <div class="guia-confusion">
+          <p><strong>t de una muestra e intervalo de verificación.</strong> La t usa <em>tu</em> DE y entrega un valor p; el intervalo de verificación usa la DE <em>del fabricante</em> y no hace prueba de hipótesis: solo dice si tu media cae dentro de lo esperable.</p>
+        </div>
+        <div class="guia-confusion">
+          <p><strong>Repetibilidad, interserial e intralaboratorio.</strong> La repetibilidad es la variación dentro de una corrida; la interserial, entre corridas o días; la intralaboratorio combina ambas. Con un solo resultado por día solo se estima el CV interserial.</p>
+        </div>
+        <div class="guia-confusion">
+          <p><strong>t de Student y t de Welch.</strong> Student supone varianzas iguales; Welch no. Si la prueba F ya muestra varianzas distintas, usa Welch (en comparación de lotes se usa siempre).</p>
+        </div>
+
+        <h2>Límites que conviene recordar</h2>
+        <ul>
+          <li>Con 20 datos, todas las pruebas tienen poca potencia: un resultado «sin diferencia» no demuestra estabilidad, normalidad ni ausencia de atípicos.</li>
+          <li>Probar muchas cosas sobre la misma serie aumenta las falsas alarmas: una señal aislada entre varias pruebas puede ser azar. Si varias pruebas apuntan al mismo hallazgo, es una señal.</li>
+          <li>Un valor p pequeño no dice cuán importante es el hallazgo. Compara siempre con tu error total permitido y con la clínica.</li>
+          <li>Las herramientas apoyan la decisión del laboratorio; los criterios de aceptación los define tu plan de calidad.</li>
+        </ul>
+      </article>
+
+      <aside class="ficha-lateral" aria-label="Más calculadoras">
+        <section class="caja caja-app">
+          <h2>Automático en Consensus QC</h2>
+          <p>
+            Consensus QC calcula cada mes el CV, el sesgo, el error total y la sigma de cada analizador con tus controles y
+            tu control externo, y los compara con el plan de calidad.
+          </p>
+          <p><a class="boton boton-primario boton-ancho" href={url('consensus-qc/')}>Conocer Consensus QC</a></p>
+        </section>
+        <PedirDemo variante="caja" />
+        <section class="caja">
+          <h2>Las calculadoras</h2>
+          <ul class="lista-simple">
+            {CALCULADORAS.filter((c) => c.familia === 'estadistica').map((c) => <li><a href={enlace(c.id)}>{c.titulo.split(':')[0]}</a></li>)}
+          </ul>
+        </section>
+      </aside>
+    </div>
+  </div>
+</Base>

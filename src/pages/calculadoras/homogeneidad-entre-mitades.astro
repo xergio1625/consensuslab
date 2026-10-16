@@ -1,0 +1,130 @@
+---
+import PaginaCalculadora from '../../componentes/PaginaCalculadora.astro';
+import { url } from '../../lib/rutas';
+---
+
+<PaginaCalculadora id="homogeneidad-entre-mitades">
+  <form class="calc" id="calc" novalidate>
+    <div class="calc-campos">
+      <label class="calc-campo calc-ancho">
+        <span>Resultados en el orden en que se midieron</span>
+        <textarea class="campo" name="datos" rows="10" placeholder="100,2&#10;99,8&#10;101,0&#10;..."></textarea>
+        <small>Un valor por línea. La serie se parte por la mitad: los primeros n/2 datos contra los últimos n/2 (con n impar se omite el dato central).</small>
+      </label>
+      <label class="calc-campo">
+        <span>Nivel de confianza</span>
+        <select class="campo" name="confianza">
+          <option value="0.95">95 %</option>
+          <option value="0.99">99 %</option>
+          <option value="0.9">90 %</option>
+        </select>
+      </label>
+    </div>
+    <p class="calc-ayuda">
+      <button type="button" class="boton boton-secundario calc-ejemplo" data-ejemplo="estable">Ejemplo estable</button>
+      <button type="button" class="boton boton-secundario calc-ejemplo" data-ejemplo="cambio">Ejemplo con cambio</button>
+    </p>
+  </form>
+
+  <section class="calc-resultado" aria-live="polite">
+    <p class="calc-mensaje" data-mensaje>Pega los resultados en orden (al menos 8).</p>
+    <div data-resultado hidden>
+      <p class="calc-lectura" data-lectura></p>
+      <div class="calc-tabla-envoltura">
+        <table class="calc-tabla calc-tabla-texto">
+          <thead><tr><th>Prueba</th><th>Estadístico</th><th>Valor p</th><th>Lectura</th></tr></thead>
+          <tbody data-filas></tbody>
+        </table>
+      </div>
+      <h2>Las dos mitades</h2>
+      <div class="calc-tabla-envoltura">
+        <table class="calc-tabla">
+          <thead><tr><th>Mitad</th><th>n</th><th>Media</th><th>DE</th><th>CV</th></tr></thead>
+          <tbody data-mitades></tbody>
+        </table>
+      </div>
+      <p class="calc-nota" data-diferencia></p>
+    </div>
+  </section>
+
+  <div slot="explicacion">
+    <h2>Cómo se calcula</h2>
+    <ul>
+      <li><strong>Prueba F</strong>: cociente de varianzas de la segunda mitad sobre la primera, con valor p bilateral. Responde si la dispersión cambió. Supone normalidad y es sensible a los datos que no la cumplen.</li>
+      <li><strong>t de Student</strong> (varianzas iguales): diferencia de medias dividida por el error estándar combinado. Es la prueba de dos muestras clásica.</li>
+      <li><strong>t de Welch</strong>: igual, pero sin suponer varianzas iguales (grados de libertad de Welch-Satterthwaite). Con mitades de igual tamaño da casi lo mismo que Student; si la prueba F ya muestra varianzas distintas, usa Welch.</li>
+    </ul>
+    <h2>Cómo usarlo</h2>
+    <ul>
+      <li>Primero la prueba F; después la t. Si las varianzas difieren, la comparación de medias solo se interpreta con Welch.</li>
+      <li>Es la prueba que sigue a «¿hay tendencia?»: una deriva hace que las mitades difieran. Mira <a href={url('calculadoras/tendencia-y-aleatoriedad/')}>tendencia y aleatoriedad</a> para saber si hay un movimiento gradual o un salto.</li>
+      <li>Con 10 datos por mitad, solo se detectan cambios grandes (una razón de varianzas de alrededor de 4 o una diferencia de más de 1 DE). Un resultado «sin diferencia» no demuestra estabilidad.</li>
+      <li>Para comparar dos lotes distintos (no dos mitades de la misma serie) usa <a href={url('calculadoras/comparacion-de-lotes/')}>comparación de dos series</a>. Para comparar varios días o corridas, <a href={url('calculadoras/homogeneidad-entre-corridas/')}>homogeneidad entre corridas</a>.</li>
+    </ul>
+    <h2>Referencias</h2>
+    <p>Snedecor GW, Cochran WG. <em>Statistical Methods</em>, 8.ª ed. Welch BL. <em>Biometrika</em> 1947;34:28-35.</p>
+  </div>
+</PaginaCalculadora>
+
+<script>
+  import { formato, valores } from '../../lib/calidad.js';
+  import { mitades } from '../../lib/pruebas.js';
+  import { filaTexto, pintarPruebas, textoSerie, type FilaPrueba } from '../../lib/pruebas_ui';
+
+  const form = document.getElementById('calc') as HTMLFormElement;
+  const $ = (s: string) => document.querySelector(`[data-${s}]`) as HTMLElement;
+
+  function mensaje(t: string) {
+    $('mensaje').textContent = t;
+    $('mensaje').hidden = false;
+    $('resultado').hidden = true;
+  }
+
+  function calcular() {
+    const datos = valores(form.datos.value);
+    if (datos.some(Number.isNaN)) return mensaje('Hay valores que no son números: revisa los datos.');
+    if (datos.length < 8) return mensaje('Pega los resultados en orden (al menos 8).');
+    const confianza = Number(form.confianza.value);
+    const alfa = 1 - confianza;
+    const r = mitades(datos, confianza);
+    if (!r) return mensaje('No se pudo calcular: los valores deben variar.');
+    $('mensaje').hidden = true;
+    $('resultado').hidden = false;
+    const nivel = (p: number) => (p < alfa ? 'advertencia' : 'ok') as FilaPrueba['nivel'];
+    const filas: FilaPrueba[] = [
+      { prueba: 'Prueba F', que: 'Varianzas (dispersión)', estadistico: `F = ${formato(r.f, 3)} (${r.h - 1} y ${r.h - 1} gl)`, p: r.pVarianzas, lectura: r.pVarianzas < alfa ? (r.f > 1 ? 'Más dispersión en la 2.ª mitad' : 'Menos dispersión en la 2.ª mitad') : 'Dispersión similar', nivel: nivel(r.pVarianzas) },
+      { prueba: 't de Student', que: 'Medias, varianzas iguales', estadistico: `t = ${formato(r.tStudent, 3)} (${r.glStudent} gl)`, p: r.pStudent, lectura: r.pStudent < alfa ? 'Medias distintas' : 'Medias similares', nivel: nivel(r.pStudent) },
+      { prueba: 't de Welch', que: 'Medias, varianzas distintas', estadistico: `t = ${formato(r.t, 3)} (${formato(r.gl, 1)} gl)`, p: r.pMedias, lectura: r.pMedias < alfa ? 'Medias distintas' : 'Medias similares', nivel: nivel(r.pMedias) },
+    ];
+    pintarPruebas($('filas'), filas);
+    $('mitades').replaceChildren(
+      filaTexto(['1.ª mitad', String(r.primera.n), formato(r.primera.media, 3), formato(r.primera.de, 3), formato(r.primera.cv, 2) + ' %']),
+      filaTexto(['2.ª mitad', String(r.segunda.n), formato(r.segunda.media, 3), formato(r.segunda.de, 3), formato(r.segunda.cv, 2) + ' %']),
+    );
+    $('diferencia').textContent = `Diferencia de medias (2.ª − 1.ª): ${formato(r.diferencia, 3)} (${formato(r.diferenciaPct, 2)} %), intervalo de confianza del ${formato(confianza * 100, 0)} %: ${formato(r.ciDiferencia[0], 3)} a ${formato(r.ciDiferencia[1], 3)}.`;
+    const mala = filas.filter((f) => f.nivel === 'advertencia').length;
+    const lectura = $('lectura');
+    lectura.textContent =
+      mala === 0
+        ? 'Las dos mitades son compatibles en media y dispersión: no hay evidencia de que la serie haya cambiado.'
+        : r.pVarianzas < alfa
+          ? 'La dispersión cambió entre las mitades. Interpreta la diferencia de medias con Welch y busca la causa del cambio (reactivo, calibración, operador).'
+          : 'La media cambió entre las mitades. Revisa si hubo una deriva o un salto (calibración, cambio de lote, mantención).';
+    lectura.dataset.nivel = mala === 0 ? 'ok' : 'advertencia';
+  }
+
+  const EJEMPLOS: Record<string, number[]> = {
+    estable: [99.2, 100.4, 101.1, 98.7, 100.0, 99.5, 100.8, 101.3, 99.9, 100.2, 98.9, 100.6, 99.6, 100.1, 101.0, 99.3, 100.5, 99.8, 100.3, 100.9],
+    cambio: [99.2, 100.4, 99.1, 99.7, 100.0, 99.5, 99.8, 100.3, 99.9, 100.2, 101.9, 103.1, 100.6, 104.1, 102.0, 99.3, 103.5, 101.8, 100.3, 102.9],
+  };
+  form.querySelectorAll<HTMLElement>('[data-ejemplo]').forEach((b) =>
+    b.addEventListener('click', () => {
+      form.datos.value = textoSerie(EJEMPLOS[b.dataset.ejemplo ?? 'estable'], 1);
+      calcular();
+    }),
+  );
+  form.addEventListener('input', calcular);
+  form.addEventListener('change', calcular);
+  form.addEventListener('submit', (e) => e.preventDefault());
+  calcular();
+</script>

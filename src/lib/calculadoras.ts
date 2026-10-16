@@ -22,7 +22,13 @@ export const FAMILIAS = [
   {
     id: 'calidad',
     titulo: 'Control de calidad',
-    descripcion: 'Límites del control, error total, sigma, sesgo, verificación y comparación de métodos, y detección de desvíos.',
+    descripcion: 'Límites del control, error total, sigma, sesgo, incertidumbre, comparación de métodos y detección de desvíos.',
+  },
+  {
+    id: 'estadistica',
+    titulo: 'Pruebas estadísticas',
+    descripcion:
+      'Las pruebas para decidir sobre una serie de resultados (por ejemplo, 20 datos de un lote de control): atípicos, normalidad, tendencia, homogeneidad, comparación con el fabricante y precisión. Cada grupo responde una pregunta distinta.',
   },
   {
     id: 'indicadores',
@@ -42,6 +48,19 @@ export const FAMILIAS = [
 ] as const;
 
 export type IdFamilia = (typeof FAMILIAS)[number]['id'];
+
+/** Grupos de la familia «Pruebas estadísticas»: cada uno responde una pregunta distinta sobre la serie. */
+export const GRUPOS_ESTADISTICA = [
+  { id: 'atipicos', titulo: 'Valores atípicos', pregunta: '¿Hay un dato que no pertenece a la serie y se puede excluir?' },
+  { id: 'normalidad', titulo: 'Normalidad', pregunta: '¿Son válidas la media y la DE para describir estos datos?' },
+  { id: 'tendencia', titulo: 'Tendencia y aleatoriedad', pregunta: '¿La serie se está moviendo con el tiempo?' },
+  { id: 'homogeneidad', titulo: 'Homogeneidad', pregunta: '¿La media y la varianza son estables entre mitades, días o corridas?' },
+  { id: 'fabricante', titulo: 'Comparación con el fabricante', pregunta: '¿Mi media y mi dispersión son compatibles con lo declarado?' },
+  { id: 'precision', titulo: 'Precisión y partida del lote', pregunta: '¿Cuánta imprecisión tiene el lote y alcanza para partir?' },
+  { id: 'lotes', titulo: 'Comparar con el lote anterior', pregunta: '¿El lote nuevo se comporta como el anterior?' },
+] as const;
+
+export type IdGrupoEstadistica = (typeof GRUPOS_ESTADISTICA)[number]['id'];
 
 export const CALCULADORAS = [
   {
@@ -178,7 +197,8 @@ export const CALCULADORAS = [
   },
   {
     id: 'verificacion-de-precision',
-    familia: 'calidad',
+    familia: 'estadistica',
+    grupo: 'precision',
     titulo: 'Verificación de precisión (5 × 5)',
     resumen: 'Pega los resultados de 5 días con 5 réplicas: repetibilidad e intralaboratorio por ANOVA, comparados con el CV declarado por el fabricante.',
     herramientas: ['control-de-calidad-interno-y-externo', 'acreditacion-y-autorizacion-sanitaria'],
@@ -255,17 +275,67 @@ export const CALCULADORAS = [
   },
   {
     id: 'comparacion-de-lotes',
-    familia: 'calidad',
+    familia: 'estadistica',
+    grupo: 'lotes',
     titulo: 'Comparación de dos series (cambio de lote)',
     resumen: 'Prueba t de Welch y prueba F entre el lote anterior y el nuevo de un control o un reactivo: diferencia con intervalo de confianza y cambio en la dispersión.',
     herramientas: ['control-de-calidad-interno-y-externo', 'inventario-y-lotes-de-reactivos'],
   },
   {
     id: 'valores-atipicos',
-    familia: 'calidad',
-    titulo: 'Valores atípicos (Grubbs y Tukey)',
-    resumen: 'Detecta un valor atípico en una serie de resultados del control o de una verificación con la prueba de Grubbs y las vallas de Tukey.',
+    familia: 'estadistica',
+    grupo: 'atipicos',
+    titulo: 'Valores atípicos: Dixon, Grubbs, Tietjen-Moore, Tukey, Chauvenet y Hampel',
+    resumen: 'Seis criterios sobre la misma serie para decidir si un dato se puede excluir: con rangos (Dixon), con la media y la DE (Grubbs, Chauvenet), para varios atípicos (Tietjen-Moore) y robustos (Tukey, Hampel).',
     herramientas: ['control-de-calidad-interno-y-externo'],
+  },
+  {
+    id: 'prueba-de-normalidad',
+    familia: 'estadistica',
+    grupo: 'normalidad',
+    titulo: 'Normalidad: Shapiro-Wilk, Anderson-Darling, D’Agostino-Pearson y Lilliefors',
+    resumen: 'Cuatro pruebas de normalidad y el gráfico Q-Q para decidir si la media y la DE describen bien tus datos.',
+    herramientas: ['control-de-calidad-interno-y-externo'],
+  },
+  {
+    id: 'tendencia-y-aleatoriedad',
+    familia: 'estadistica',
+    grupo: 'tendencia',
+    titulo: 'Tendencia y aleatoriedad: rachas, Mann-Kendall, Cox-Stuart y von Neumann',
+    resumen: 'Detecta si la serie se mueve con el tiempo: rachas, Mann-Kendall, Cox-Stuart, razón de von Neumann, pendiente contra el orden y autocorrelación (Durbin-Watson).',
+    herramientas: ['control-de-calidad-interno-y-externo'],
+  },
+  {
+    id: 'homogeneidad-entre-mitades',
+    familia: 'estadistica',
+    grupo: 'homogeneidad',
+    titulo: 'Homogeneidad entre mitades: prueba F y prueba t',
+    resumen: 'Compara la primera y la segunda mitad de una serie: ¿cambiaron la dispersión (prueba F) o la media (t de Student y de Welch)?',
+    herramientas: ['control-de-calidad-interno-y-externo'],
+  },
+  {
+    id: 'homogeneidad-entre-corridas',
+    familia: 'estadistica',
+    grupo: 'homogeneidad',
+    titulo: 'Homogeneidad entre días o corridas: ANOVA, Bartlett, Levene y Cochran',
+    resumen: 'Con varias réplicas por día o corrida: ANOVA de un factor con la descomposición intraserial e interserial, y las pruebas de igualdad de varianzas de Bartlett, Levene, Brown-Forsythe y Cochran.',
+    herramientas: ['control-de-calidad-interno-y-externo'],
+  },
+  {
+    id: 'comparacion-con-el-fabricante',
+    familia: 'estadistica',
+    grupo: 'fabricante',
+    titulo: 'Comparación con el fabricante: media, DE y sesgo',
+    resumen: 'Tu media contra el valor asignado (prueba t e intervalo de verificación), tu DE o CV contra el declarado (chi cuadrado) y el sesgo respecto del valor asignado.',
+    herramientas: ['control-de-calidad-interno-y-externo', 'acreditacion-y-autorizacion-sanitaria'],
+  },
+  {
+    id: 'precision-del-lote',
+    familia: 'estadistica',
+    grupo: 'precision',
+    titulo: 'Precisión y partida de un lote de control',
+    resumen: 'CV de repetibilidad, interserial e intralaboratorio por ANOVA, comparado con el CV histórico, y la sigma de partida con el error total permitido.',
+    herramientas: ['control-de-calidad-interno-y-externo', 'inventario-y-lotes-de-reactivos'],
   },
   {
     id: 'pareto-de-causas',

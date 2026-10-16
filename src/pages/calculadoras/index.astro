@@ -3,7 +3,7 @@
 import Base from '../../plantillas/Base.astro';
 import IconoFamilia from '../../componentes/IconoFamilia.astro';
 import PedirDemo from '../../componentes/PedirDemo.astro';
-import { CALCULADORAS, FAMILIAS } from '../../lib/calculadoras';
+import { CALCULADORAS, FAMILIAS, GRUPOS_ESTADISTICA } from '../../lib/calculadoras';
 import { url } from '../../lib/rutas';
 ---
 
@@ -31,16 +31,42 @@ import { url } from '../../lib/rutas';
         <section class="calc-familia" id={f.id} data-familia>
           <h2><IconoFamilia familia={f.id} />{f.titulo}</h2>
           <p class="texto-suave">{f.descripcion}</p>
-          <div class="rejilla">
-            {CALCULADORAS.filter((c) => c.familia === f.id).map((c) => (
-              <article class="tarjeta" data-calc data-texto={`${c.titulo} ${c.resumen}`.toLowerCase()}>
-                <h3>
-                  <a href={url(`calculadoras/${c.id}/`)}>{c.titulo}</a>
-                </h3>
-                <p>{c.resumen}</p>
-              </article>
-            ))}
-          </div>
+          {
+            f.id === 'estadistica' ? (
+              <>
+                <p>
+                  <a class="boton boton-secundario" href={url('calculadoras/pruebas-estadisticas/')}>Guía: ¿qué prueba uso?</a>
+                </p>
+                {GRUPOS_ESTADISTICA.map((g) => (
+                  <div data-subgrupo>
+                    <h3 class="calc-subgrupo">{g.titulo}</h3>
+                    <p class="texto-suave">{g.pregunta}</p>
+                    <div class="rejilla">
+                      {CALCULADORAS.filter((c) => c.familia === f.id && (c as { grupo?: string }).grupo === g.id).map((c) => (
+                        <article class="tarjeta" data-calc data-texto={`${c.titulo} ${c.resumen} ${g.titulo}`.toLowerCase()}>
+                          <h4>
+                            <a href={url(`calculadoras/${c.id}/`)}>{c.titulo}</a>
+                          </h4>
+                          <p>{c.resumen}</p>
+                        </article>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </>
+            ) : (
+              <div class="rejilla">
+                {CALCULADORAS.filter((c) => c.familia === f.id).map((c) => (
+                  <article class="tarjeta" data-calc data-texto={`${c.titulo} ${c.resumen}`.toLowerCase()}>
+                    <h3>
+                      <a href={url(`calculadoras/${c.id}/`)}>{c.titulo}</a>
+                    </h3>
+                    <p>{c.resumen}</p>
+                  </article>
+                ))}
+              </div>
+            )
+          }
         </section>
       ))
     }
@@ -67,6 +93,9 @@ import { url } from '../../lib/rutas';
         const coincide = palabras.every((p) => texto.includes(p));
         tarjeta.hidden = !coincide;
         if (coincide) enFamilia++;
+      });
+      fam.querySelectorAll<HTMLElement>('[data-subgrupo]').forEach((sub) => {
+        sub.hidden = sub.querySelectorAll('[data-calc]:not([hidden])').length === 0;
       });
       fam.hidden = enFamilia === 0;
       visibles += enFamilia;

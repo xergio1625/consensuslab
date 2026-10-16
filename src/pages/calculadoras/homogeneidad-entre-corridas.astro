@@ -1,0 +1,177 @@
+---
+import PaginaCalculadora from '../../componentes/PaginaCalculadora.astro';
+import { url } from '../../lib/rutas';
+---
+
+<PaginaCalculadora id="homogeneidad-entre-corridas">
+  <form class="calc" id="calc" novalidate>
+    <div class="calc-campos">
+      <label class="calc-campo calc-ancho">
+        <span>Resultados por día o corrida</span>
+        <textarea class="campo" name="datos" rows="10" placeholder="100,2 99,8 101,0 100,5&#10;99,6 100,9 100,1 99,9&#10;..."></textarea>
+        <small>Una corrida (o día) por línea, con las réplicas separadas por espacios. Se necesitan al menos 3 corridas con 2 o más réplicas (Cochran exige el mismo número de réplicas en todas).</small>
+      </label>
+      <label class="calc-campo">
+        <span>Nivel de significancia</span>
+        <select class="campo" name="alfa">
+          <option value="0.05">5 % (α = 0,05)</option>
+          <option value="0.01">1 % (α = 0,01)</option>
+          <option value="0.1">10 % (α = 0,10)</option>
+        </select>
+      </label>
+    </div>
+    <p class="calc-ayuda">
+      <button type="button" class="boton boton-secundario calc-ejemplo" data-ejemplo="homogeneo">Ejemplo homogéneo</button>
+      <button type="button" class="boton boton-secundario calc-ejemplo" data-ejemplo="anormal">Ejemplo con un día anormal</button>
+    </p>
+  </form>
+
+  <section class="calc-resultado" aria-live="polite">
+    <p class="calc-mensaje" data-mensaje>Pega las corridas, una por línea (al menos 3).</p>
+    <div data-resultado hidden>
+      <p class="calc-lectura" data-lectura></p>
+      <div class="calc-tabla-envoltura">
+        <table class="calc-tabla calc-tabla-texto">
+          <thead><tr><th>Prueba</th><th>Estadístico</th><th>Valor p</th><th>Lectura</th></tr></thead>
+          <tbody data-filas></tbody>
+        </table>
+      </div>
+      <p class="calc-nota" data-aviso></p>
+      <h2>Descomposición de la variabilidad (ANOVA)</h2>
+      <div class="calc-cifras">
+        <div><span>Repetibilidad (intraserial)</span><strong data-cv-r></strong><small data-de-r></small></div>
+        <div><span>Entre corridas (interserial)</span><strong data-cv-e></strong><small data-de-e></small></div>
+        <div><span>Intralaboratorio</span><strong data-cv-w></strong><small data-de-w></small></div>
+      </div>
+      <p class="calc-nota" data-nota-comp></p>
+      <h2>Tabla ANOVA</h2>
+      <div class="calc-tabla-envoltura">
+        <table class="calc-tabla">
+          <thead><tr><th>Fuente</th><th>Suma de cuadrados</th><th>gl</th><th>Cuadrado medio</th></tr></thead>
+          <tbody data-anova></tbody>
+        </table>
+      </div>
+      <h2>Cada corrida</h2>
+      <div class="calc-tabla-envoltura">
+        <table class="calc-tabla">
+          <thead><tr><th>Corrida</th><th>n</th><th>Media</th><th>DE</th><th>CV</th></tr></thead>
+          <tbody data-corridas></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <div slot="explicacion">
+    <h2>Cómo elegir entre las pruebas</h2>
+    <ul>
+      <li><strong>ANOVA de un factor</strong>: ¿difieren las <em>medias</em> entre días o corridas? Descompone la variabilidad en intraserial (repetibilidad: dentro de una corrida) e interserial (entre corridas). La DE intralaboratorio es √(intraserial² + interserial²).</li>
+      <li><strong>Bartlett</strong>: ¿son iguales las <em>varianzas</em> de todos los días? Es la más potente, pero solo si los datos son normales: con datos no normales da falsas alarmas.</li>
+      <li><strong>Levene</strong> y <strong>Brown-Forsythe</strong>: la misma pregunta, más robustas ante la falta de normalidad. Levene usa las desviaciones respecto de la media; Brown-Forsythe, respecto de la mediana. Ojo con las pocas réplicas: en simulaciones con 3 a 5 réplicas por día, Levene da falsas alarmas (cerca del 10 % cuando debería dar 5 %) y Brown-Forsythe casi no detecta (entre 0 y 5 %). Con 4 o 5 réplicas por día y datos razonablemente normales, Bartlett es la mejor calibrada; Levene y Brown-Forsythe se vuelven confiables con unas 10 réplicas o más por día.</li>
+      <li><strong>Cochran</strong>: ¿es <em>un</em> día el que tiene una varianza anormalmente alta? Compara la mayor varianza con la suma de todas. Es la prueba para señalar el día culpable; las de Bartlett y Levene dicen solo que hay diferencias en algún lugar.</li>
+    </ul>
+    <h2>Cómo usarlo</h2>
+    <ul>
+      <li>Primero revisa si las varianzas son homogéneas (Bartlett o Brown-Forsythe, y Cochran para identificar el día). El ANOVA y los CV de precisión suponen varianzas similares entre corridas.</li>
+      <li>Un ANOVA significativo no es un problema por sí mismo: indica que existe variabilidad entre corridas, que es normal. Lo que interesa es cuánto pesa respecto de la repetibilidad y del CV declarado.</li>
+      <li>Un día con varianza anormal merece revisarse antes de calcular la precisión: puede ser un error de pipeteo o una mala corrida. Excluir solo con una causa asignable y registrada.</li>
+      <li>Para comparar los CV con lo declarado por el fabricante, usa <a href={url('calculadoras/comparacion-con-el-fabricante/')}>comparación con el fabricante</a> o la <a href={url('calculadoras/verificacion-de-precision/')}>verificación de precisión 5 × 5</a>. Para la precisión del lote y la sigma de partida, <a href={url('calculadoras/precision-del-lote/')}>precisión del lote</a>.</li>
+    </ul>
+    <h2>Referencias</h2>
+    <p>
+      Bartlett MS. <em>Proc R Soc Lond A</em> 1937;160:268-282. Levene H. En: <em>Contributions to Probability and Statistics</em>, 1960. Brown MB, Forsythe AB. <em>J Am Stat Assoc</em> 1974;69:364-367. Cochran WG. <em>Ann Eugen</em> 1941;11:47-52.
+      CLSI EP15-A3 y EP05-A3 (diseños y componentes de varianza).
+    </p>
+  </div>
+</PaginaCalculadora>
+
+<script>
+  import { formato } from '../../lib/calidad.js';
+  import { anovaGrupos, bartlett, cochran, de, leerGrupos, levene, media } from '../../lib/pruebas.js';
+  import { filaTexto, pintarPruebas, type FilaPrueba } from '../../lib/pruebas_ui';
+
+  const form = document.getElementById('calc') as HTMLFormElement;
+  const $ = (s: string) => document.querySelector(`[data-${s}]`) as HTMLElement;
+
+  function mensaje(t: string) {
+    $('mensaje').textContent = t;
+    $('mensaje').hidden = false;
+    $('resultado').hidden = true;
+  }
+
+  function calcular() {
+    const grupos = leerGrupos(form.datos.value);
+    if (grupos.flat().some(Number.isNaN)) return mensaje('Hay valores que no son números: revisa los datos.');
+    if (grupos.length < 3) return mensaje('Pega las corridas, una por línea (al menos 3).');
+    if (grupos.some((g) => g.length < 2)) return mensaje('Cada corrida necesita al menos 2 réplicas.');
+    const alfa = Number(form.alfa.value);
+    const a = anovaGrupos(grupos);
+    if (!a || !(a.gran !== 0)) return mensaje('No se pudo calcular: los valores deben variar.');
+    const ba = bartlett(grupos);
+    const le = levene(grupos, 'media');
+    const bf = levene(grupos, 'mediana');
+    const co = cochran(grupos, alfa);
+    $('mensaje').hidden = true;
+    $('resultado').hidden = false;
+
+    const nivel = (p: number | undefined) => (p !== undefined && p < alfa ? 'advertencia' : 'ok') as FilaPrueba['nivel'];
+    const filas: FilaPrueba[] = [
+      { prueba: 'ANOVA de un factor', que: 'Medias entre corridas', estadistico: `F = ${formato(a.f, 3)} (${a.glB} y ${a.glW} gl)`, p: a.p, lectura: a.p < alfa ? 'Las medias difieren entre corridas' : 'Medias similares', nivel: nivel(a.p) },
+      ba
+        ? { prueba: 'Bartlett', que: 'Varianzas iguales (exige normalidad)', estadistico: `χ² = ${formato(ba.chi2, 3)} (${ba.gl} gl)`, p: ba.p, lectura: ba.p < alfa ? 'Varianzas distintas' : 'Varianzas homogéneas', nivel: nivel(ba.p) }
+        : { prueba: 'Bartlett', que: 'Varianzas iguales (exige normalidad)', estadistico: '—', lectura: 'Una corrida no varía', nivel: 'ok' },
+      le
+        ? { prueba: 'Levene (media)', que: 'Varianzas iguales, más robusta', estadistico: `F = ${formato(le.f, 3)} (${le.gl1} y ${le.gl2} gl)`, p: le.p, lectura: le.p < alfa ? 'Varianzas distintas' : 'Varianzas homogéneas', nivel: nivel(le.p) }
+        : { prueba: 'Levene (media)', que: 'Varianzas iguales, más robusta', estadistico: '—', lectura: 'No se pudo calcular', nivel: 'ok' },
+      bf
+        ? { prueba: 'Brown-Forsythe (mediana)', que: 'Varianzas iguales, la más robusta', estadistico: `F = ${formato(bf.f, 3)} (${bf.gl1} y ${bf.gl2} gl)`, p: bf.p, lectura: bf.p < alfa ? 'Varianzas distintas' : 'Varianzas homogéneas', nivel: nivel(bf.p) }
+        : { prueba: 'Brown-Forsythe (mediana)', que: 'Varianzas iguales, la más robusta', estadistico: '—', lectura: 'No se pudo calcular', nivel: 'ok' },
+      co
+        ? { prueba: 'Cochran', que: '¿Una corrida con varianza anormal?', estadistico: `C = ${formato(co.c, 3)} · crítico ${formato(co.critico, 3)}`, p: co.p, lectura: co.c > co.critico ? `Varianza anormal: corrida ${co.indice + 1}` : 'Sin varianza anormal', nivel: co.c > co.critico ? 'advertencia' : 'ok' }
+        : { prueba: 'Cochran', que: '¿Una corrida con varianza anormal?', estadistico: '—', lectura: grupos.some((g) => g.length !== grupos[0].length) ? 'Exige las mismas réplicas en cada corrida' : 'No se pudo calcular', nivel: 'ok' },
+    ];
+    pintarPruebas($('filas'), filas);
+
+    const lectura = $('lectura');
+    const varDistintas = [ba, le, bf].some((t) => t && t.p < alfa) || (co && co.c > co.critico);
+    lectura.textContent = varDistintas
+      ? `Las varianzas no son homogéneas${co && co.c > co.critico ? `: Cochran señala la corrida ${co.indice + 1}` : ''}. Revisa esa corrida antes de calcular la precisión.`
+      : 'Las varianzas son homogéneas entre corridas: los CV de precisión son interpretables.';
+    lectura.dataset.nivel = varDistintas ? 'advertencia' : 'ok';
+    $('aviso').textContent =
+      ba && bf && (ba.p < alfa) !== (bf.p < alfa)
+        ? 'Bartlett y Brown-Forsythe discrepan: con pocas réplicas por día ninguna de las dos es fiable: contrasta con Cochran y mira las DE de cada corrida.'
+        : 'Con pocas réplicas por corrida, todas estas pruebas detectan solo diferencias grandes de varianza, y Levene y Brown-Forsythe no están bien calibradas (con 5 réplicas, Levene da más falsas alarmas y Brown-Forsythe casi ninguna).';
+
+    $('cv-r').textContent = formato(a.cvR, 2) + ' %';
+    $('de-r').textContent = `DE ${formato(a.sr, 3)} · ${a.glW} gl`;
+    $('cv-e').textContent = formato(a.cvEntre, 2) + ' %';
+    $('de-e').textContent = `DE ${formato(a.entre, 3)} · ${formato(a.pctEntre, 0)} % de la varianza`;
+    $('cv-w').textContent = formato(a.cvWl, 2) + ' %';
+    $('de-w').textContent = `DE ${formato(a.swl, 3)} · ${formato(a.glWl, 1)} gl`;
+    $('nota-comp').textContent =
+      a.entre === 0 ? 'El cuadrado medio entre corridas no supera al de dentro: la componente interserial se toma como 0.' : `Media general ${formato(a.gran, 3)}.`;
+    $('anova').replaceChildren(
+      filaTexto(['Entre corridas', formato(a.ssB, 4), String(a.glB), formato(a.msB, 4)]),
+      filaTexto(['Dentro de las corridas', formato(a.ssW, 4), String(a.glW), formato(a.msW, 4)]),
+      filaTexto(['Total', formato(a.ssB + a.ssW, 4), String(a.glB + a.glW), '']),
+    );
+    $('corridas').replaceChildren(
+      ...grupos.map((g, i) => filaTexto([String(i + 1), String(g.length), formato(media(g), 3), formato(de(g), 3), formato((de(g) / Math.abs(media(g))) * 100, 2) + ' %'])),
+    );
+  }
+
+  const EJEMPLOS: Record<string, string> = {
+    homogeneo: ['100,2 99,8 101,0 100,5', '99,6 100,9 100,1 99,9', '101,2 100,4 99,7 100,8', '100,0 99,5 100,6 100,3', '99,4 100,7 100,2 99,9', '100,9 100,1 99,8 100,4'].join('\n'),
+    anormal: ['100,2 99,8 101,0 100,5', '99,6 100,9 100,1 99,9', '101,2 100,4 99,7 100,8', '97,5 103,6 99,0 102,9', '99,4 100,7 100,2 99,9', '100,9 100,1 99,8 100,4'].join('\n'),
+  };
+  form.querySelectorAll<HTMLElement>('[data-ejemplo]').forEach((b) =>
+    b.addEventListener('click', () => {
+      form.datos.value = EJEMPLOS[b.dataset.ejemplo ?? 'homogeneo'];
+      calcular();
+    }),
+  );
+  form.addEventListener('input', calcular);
+  form.addEventListener('change', calcular);
+  form.addEventListener('submit', (e) => e.preventDefault());
+  calcular();
+</script>

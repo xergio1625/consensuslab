@@ -1,0 +1,170 @@
+---
+import PaginaCalculadora from '../../componentes/PaginaCalculadora.astro';
+import { url } from '../../lib/rutas';
+---
+
+<PaginaCalculadora id="tendencia-y-aleatoriedad">
+  <form class="calc" id="calc" novalidate>
+    <div class="calc-campos">
+      <label class="calc-campo calc-ancho">
+        <span>Resultados en el orden en que se midieron</span>
+        <textarea class="campo" name="datos" rows="10" placeholder="100,2&#10;99,8&#10;101,0&#10;..."></textarea>
+        <small>Un valor por línea, del primero al último. El orden importa: no ordenes los datos de menor a mayor.</small>
+      </label>
+      <label class="calc-campo">
+        <span>Nivel de significancia</span>
+        <select class="campo" name="alfa">
+          <option value="0.05">5 % (α = 0,05)</option>
+          <option value="0.01">1 % (α = 0,01)</option>
+          <option value="0.1">10 % (α = 0,10)</option>
+        </select>
+      </label>
+    </div>
+    <p class="calc-ayuda">
+      <button type="button" class="boton boton-secundario calc-ejemplo" data-ejemplo="estable">Ejemplo estable</button>
+      <button type="button" class="boton boton-secundario calc-ejemplo" data-ejemplo="deriva">Ejemplo con deriva</button>
+    </p>
+  </form>
+
+  <section class="calc-resultado" aria-live="polite">
+    <p class="calc-mensaje" data-mensaje>Pega los resultados en orden (al menos 8).</p>
+    <div data-resultado hidden>
+      <p class="calc-lectura" data-lectura></p>
+      <div class="calc-tabla-envoltura">
+        <table class="calc-tabla calc-tabla-texto">
+          <thead><tr><th>Prueba</th><th>Estadístico</th><th>Valor p</th><th>Lectura</th></tr></thead>
+          <tbody data-filas></tbody>
+        </table>
+      </div>
+      <p class="calc-nota" data-aviso></p>
+      <h2>La serie en el tiempo</h2>
+      <div class="lj-envoltura" data-grafico></div>
+      <p class="lj-leyenda">
+        <span><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="4.5" class="lj-ok"></circle></svg>Resultado</span>
+        <span>Línea gris: mediana</span>
+        <span>Línea de color: tendencia lineal</span>
+      </p>
+    </div>
+  </section>
+
+  <div slot="explicacion">
+    <h2>Cómo elegir entre las pruebas</h2>
+    <ul>
+      <li><strong>Prueba de rachas</strong> (Wald-Wolfowitz): cuenta las rachas de datos sobre y bajo la mediana. Pocas rachas, tendencia o cambio de nivel; demasiadas, alternancia. Detecta cualquier falta de aleatoriedad, no solo tendencias.</li>
+      <li><strong>Mann-Kendall</strong>: tendencia monótona sin suponer normalidad ni linealidad, con la pendiente de Sen. Es la prueba de tendencia más robusta de la lista.</li>
+      <li><strong>Cox-Stuart</strong>: compara cada dato de la primera mitad con su par de la segunda mitad y cuenta cuántos suben. Muy simple, pero menos potente que Mann-Kendall.</li>
+      <li><strong>Razón de von Neumann</strong>: compara las diferencias entre datos consecutivos con la dispersión total. Valores bajos indican deriva o dependencia entre datos vecinos.</li>
+      <li><strong>Pendiente contra el orden</strong>: regresión lineal con su prueba t. Da cuánto cambia el resultado por medición y en total, pero supone una tendencia recta y errores normales.</li>
+      <li><strong>Autocorrelación y Durbin-Watson</strong>: ¿cada dato se parece al anterior? r₁ cerca de 0 y d cerca de 2 indican datos independientes. d bajo 2 sugiere autocorrelación positiva (deriva lenta) y sobre 2, negativa (alternancia); el valor p de d es aproximado (normal), y por eso se decide con él y no con un corte fijo.</li>
+    </ul>
+    <h2>Cómo usarlo</h2>
+    <ul>
+      <li>Si varias pruebas coinciden, hay una señal. Si solo una la ve, puede ser azar: con seis pruebas sobre una serie aleatoria, es esperable que alguna salga marginal.</li>
+      <li>Una tendencia estadísticamente significativa no siempre importa clínicamente: mira el cambio total en % frente a tu error permitido.</li>
+      <li>Una tendencia sostenida en un control es una señal de desvío: contrástala con <a href={url('calculadoras/cusum-y-ewma/')}>CUSUM y EWMA</a> y las reglas de <a href={url('calculadoras/levey-jennings/')}>Levey-Jennings</a>.</li>
+      <li>Si la serie tiene tendencia, la media y la DE de toda la serie no describen un proceso estable: no las uses como valores de partida del lote.</li>
+    </ul>
+    <h2>Referencias</h2>
+    <p>
+      Wald A, Wolfowitz J. <em>Ann Math Stat</em> 1940;11:147-162. Mann HB. <em>Econometrica</em> 1945;13:245-259. Kendall MG. <em>Rank Correlation Methods</em>, 1975. Sen PK. <em>J Am Stat Assoc</em> 1968;63:1379-1389.
+      Cox DR, Stuart A. <em>Biometrika</em> 1955;42:80-95. von Neumann J. <em>Ann Math Stat</em> 1941;12:367-395. Durbin J, Watson GS. <em>Biometrika</em> 1950;37:409-428.
+    </p>
+  </div>
+</PaginaCalculadora>
+
+<script>
+  import { formato, valores } from '../../lib/calidad.js';
+  import { escala, GEOMETRIA, ejes, lienzo, svg } from '../../lib/graficos.js';
+  import { autocorrelacion, coxStuart, mannKendall, pendienteTiempo, rachas, vonNeumann } from '../../lib/pruebas.js';
+  import { pintarPruebas, textoSerie, type FilaPrueba } from '../../lib/pruebas_ui';
+
+  const form = document.getElementById('calc') as HTMLFormElement;
+  const $ = (s: string) => document.querySelector(`[data-${s}]`) as HTMLElement;
+
+  function mensaje(t: string) {
+    $('mensaje').textContent = t;
+    $('mensaje').hidden = false;
+    $('resultado').hidden = true;
+  }
+
+  function grafico(datos: number[], mediana: number, reg: NonNullable<ReturnType<typeof pendienteTiempo>>) {
+    const s = lienzo(`Serie de ${datos.length} resultados en orden de medición, con la mediana y la recta de tendencia.`);
+    const ex = escala(1, datos.length, Math.min(datos.length - 1, 8));
+    const lo = Math.min(...datos);
+    const hi = Math.max(...datos);
+    const ey = escala(lo - (hi - lo) * 0.05, hi + (hi - lo) * 0.05, 5);
+    const { X, Y } = ejes(s, { ...ex, ini: Math.min(ex.ini, 1), fin: Math.max(ex.fin, datos.length) }, ey, 'Orden de medición', 'Resultado', GEOMETRIA);
+    s.append(svg('line', { x1: X(1), x2: X(datos.length), y1: Y(mediana), y2: Y(mediana), class: 'lj-media' }));
+    s.append(svg('polyline', { points: datos.map((v, i) => `${X(i + 1)},${Y(v)}`).join(' '), class: 'lj-linea' }));
+    s.append(svg('line', { x1: X(1), x2: X(datos.length), y1: Y(reg.ordenada + reg.pendiente), y2: Y(reg.ordenada + reg.pendiente * datos.length), stroke: 'var(--c-prep)', 'stroke-width': 2 }));
+    datos.forEach((v, i) => s.append(svg('circle', { cx: X(i + 1), cy: Y(v), r: 3.5, class: 'lj-ok' })));
+    $('grafico').replaceChildren(s);
+  }
+
+  function calcular() {
+    const datos = valores(form.datos.value);
+    if (datos.some(Number.isNaN)) return mensaje('Hay valores que no son números: revisa los datos.');
+    if (datos.length < 8) return mensaje('Pega los resultados en orden (al menos 8).');
+    const alfa = Number(form.alfa.value);
+    const ra = rachas(datos);
+    const mk = mannKendall(datos);
+    const cs = coxStuart(datos);
+    const vn = vonNeumann(datos);
+    const reg = pendienteTiempo(datos);
+    const ac = autocorrelacion(datos);
+    if (!reg || !ra) return mensaje('No se pudo calcular: los valores deben variar.');
+    $('mensaje').hidden = true;
+    $('resultado').hidden = false;
+
+    const nivel = (p: number | undefined) => (p !== undefined && p < alfa ? 'advertencia' : 'ok') as FilaPrueba['nivel'];
+    const sentido = (x: number) => (x > 0 ? 'ascendente' : 'descendente');
+    const nd: Pick<FilaPrueba, 'estadistico' | 'lectura' | 'nivel'> = { estadistico: '—', lectura: 'No se pudo calcular', nivel: 'ok' };
+    const filas: FilaPrueba[] = [
+      { prueba: 'Rachas (Wald-Wolfowitz)', que: 'Aleatoriedad respecto de la mediana', estadistico: `${ra.rachas} rachas (esperadas ${formato(ra.esperadas, 1)})`, p: ra.p, lectura: ra.p < alfa ? (ra.rachas < ra.esperadas ? 'Pocas rachas: no aleatoria' : 'Demasiadas rachas: alternancia') : 'Sin evidencia de patrón', nivel: nivel(ra.p) },
+      mk
+        ? { prueba: 'Mann-Kendall', que: 'Tendencia monótona, sin normalidad', estadistico: `S = ${mk.s} · Z = ${formato(mk.z, 2)} · Sen ${formato(mk.pendienteSen, 4)}/medición`, p: mk.p, lectura: mk.p < alfa ? `Tendencia ${sentido(mk.s)}` : 'Sin tendencia', nivel: nivel(mk.p) }
+        : { prueba: 'Mann-Kendall', que: 'Tendencia monótona, sin normalidad', ...nd },
+      cs
+        ? { prueba: 'Cox-Stuart', que: 'Compara mitades por pares (signos)', estadistico: `${cs.suben} suben · ${cs.bajan} bajan (${cs.pares} pares)`, p: cs.p, lectura: cs.p < alfa ? `Tendencia ${sentido(cs.suben - cs.bajan)}` : 'Sin tendencia', nivel: nivel(cs.p) }
+        : { prueba: 'Cox-Stuart', que: 'Compara mitades por pares (signos)', ...nd },
+      vn
+        ? { prueba: 'Razón de von Neumann', que: 'Diferencias entre datos consecutivos', estadistico: `η = ${formato(vn.eta, 3)} (esperada 2) · Z = ${formato(vn.z, 2)}`, p: vn.p, lectura: vn.p < alfa ? (vn.eta < 2 ? 'Deriva o dependencia' : 'Alternancia') : 'Sin dependencia', nivel: nivel(vn.p) }
+        : { prueba: 'Razón de von Neumann', que: 'Diferencias entre datos consecutivos', ...nd },
+      { prueba: 'Pendiente contra el orden', que: 'Regresión lineal con prueba t', estadistico: `${formato(reg.pendiente, 4)} por medición · t = ${formato(reg.t, 2)} (${reg.gl} gl)`, p: reg.p, lectura: reg.p < alfa ? `Pendiente ${sentido(reg.pendiente)}` : 'Pendiente nula', nivel: nivel(reg.p) },
+      ac
+        ? { prueba: 'Autocorrelación de orden 1', que: '¿Cada dato se parece al anterior?', estadistico: `r₁ = ${formato(ac.r1, 3)} · z = ${formato(ac.z, 2)}`, p: ac.p, lectura: ac.p < alfa ? (ac.r1 > 0 ? 'Autocorrelación positiva' : 'Autocorrelación negativa') : 'Datos independientes', nivel: nivel(ac.p) }
+        : { prueba: 'Autocorrelación de orden 1', que: '¿Cada dato se parece al anterior?', ...nd },
+      ac
+        ? { prueba: 'Durbin-Watson', que: 'Autocorrelación de los residuos de la tendencia', estadistico: `d = ${formato(ac.durbinWatson, 3)} (sin autocorrelación ≈ 2)`, p: ac.pDurbinWatson, lectura: ac.pDurbinWatson < alfa ? (ac.durbinWatson < 2 ? 'Autocorrelación positiva de los residuos' : 'Autocorrelación negativa de los residuos') : 'Sin autocorrelación de los residuos', nivel: nivel(ac.pDurbinWatson) }
+        : { prueba: 'Durbin-Watson', que: 'Autocorrelación de los residuos de la tendencia', ...nd },
+    ];
+    pintarPruebas($('filas'), filas);
+
+    const senales = filas.filter((f) => f.nivel === 'advertencia').length;
+    const lectura = $('lectura');
+    lectura.textContent =
+      senales === 0
+        ? 'Ninguna prueba ve tendencia ni dependencia: la serie es compatible con datos aleatorios y estables.'
+        : senales === 1
+          ? '1 de 7 pruebas da una señal. Con tantas pruebas, una señal aislada puede ser azar: mira el gráfico antes de concluir.'
+          : `${senales} de 7 pruebas dan una señal: la serie probablemente se está moviendo. Cambio estimado en toda la serie: ${formato(reg.cambioTotal, 3)} (${formato(reg.cambioTotalPct, 2)} % de la media).`;
+    lectura.dataset.nivel = senales >= 2 ? 'advertencia' : 'ok';
+    $('aviso').textContent = 'Las pruebas miden cosas parecidas pero no idénticas, y no son independientes entre sí: no sumes sus valores p. Todas usan el orden en que pegaste los datos.';
+    grafico(datos, ra.mediana, reg);
+  }
+
+  const EJEMPLOS: Record<string, number[]> = {
+    estable: [99.2, 100.4, 101.1, 98.7, 100.0, 99.5, 100.8, 101.3, 99.9, 100.2, 98.9, 100.6, 99.6, 100.1, 101.0, 99.3, 100.5, 99.8, 100.3, 100.9],
+    deriva: [98.9, 99.4, 99.2, 99.8, 99.7, 100.1, 99.9, 100.5, 100.2, 100.8, 100.6, 101.0, 100.9, 101.3, 101.2, 101.7, 101.5, 102.0, 101.8, 102.3],
+  };
+  form.querySelectorAll<HTMLElement>('[data-ejemplo]').forEach((b) =>
+    b.addEventListener('click', () => {
+      form.datos.value = textoSerie(EJEMPLOS[b.dataset.ejemplo ?? 'estable'], 1);
+      calcular();
+    }),
+  );
+  form.addEventListener('input', calcular);
+  form.addEventListener('change', calcular);
+  form.addEventListener('submit', (e) => e.preventDefault());
+  calcular();
+</script>

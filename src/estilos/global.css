@@ -741,6 +741,18 @@ img, svg { max-width: 100%; }
 .calc-grupo { border: 1px solid var(--c-borde); border-radius: var(--radio); padding: 14px 16px 18px; margin: 0 0 16px; }
 .calc-grupo legend { font-weight: 650; padding: 0 8px; }
 .calc-ejemplo { margin-left: 8px; padding: 4px 12px; font-size: .88rem; }
+.calc-kicker { margin: 0 0 6px; font-size: .92rem; color: var(--c-texto-suave); }
+.calc-kicker a { font-weight: 650; }
+.calc-kicker em { font-style: normal; }
+.calc-que { display: block; font-weight: 400; color: var(--c-texto-suave); font-size: .82rem; }
+.calc-veredicto { display: inline-block; padding: 2px 10px; border-radius: 999px; border: 1px solid var(--c-borde); font-size: .85rem; font-weight: 600; background: var(--c-panel-alt); }
+.calc-veredicto[data-nivel="ok"] { background: var(--c-ok-fondo); border-color: var(--c-ok); }
+.calc-veredicto[data-nivel="advertencia"] { background: var(--c-prep-fondo); border-color: var(--c-prep); }
+.calc-veredicto[data-nivel="error"] { background: var(--c-error-fondo); border-color: var(--c-error); }
+.calc-subgrupo { margin: 22px 0 4px; font-size: 1.05rem; }
+.calc-subgrupo + p { margin: 0 0 12px; }
+.guia-tabla td:first-child { font-weight: 650; }
+.guia-confusion { margin: 0 0 14px; padding: 12px 14px; border-radius: var(--radio-s); border-left: 4px solid var(--c-prep); background: var(--c-prep-fondo); }
 .calc-subtitulo { font-size: 1.05rem; margin: 20px 0 10px; }
 .calc-lectura { margin: 0 0 6px; padding: 10px 14px; border-radius: var(--radio-s); border-left: 4px solid var(--c-borde); background: var(--c-panel-alt); }
 .calc-lectura[data-nivel="ok"] { background: var(--c-ok-fondo); border-color: var(--c-ok); }
@@ -757,6 +769,8 @@ img, svg { max-width: 100%; }
 .calc-seg-6 { background: var(--c-acento-texto); opacity: .6; }
 .calc-muestra { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 8px; vertical-align: -1px; }
 .calc-tabla td:not(:first-child), .calc-tabla th:not(:first-child) { text-align: right; white-space: nowrap; }
+.calc-tabla.calc-tabla-texto td:not(:first-child), .calc-tabla.calc-tabla-texto th:not(:first-child) { text-align: left; white-space: normal; }
+.calc-tabla-texto td { vertical-align: top; }
 .calc-bloque { margin-top: 28px; scroll-margin-top: 80px; }
 .calc-bloque > h2 { font-size: 1.2rem; margin-bottom: 10px; }
 .calc-lectura:empty { display: none; }
