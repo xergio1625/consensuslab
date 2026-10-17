@@ -37,6 +37,25 @@
         "CLAVE_PASE": "abababababababababababababababababababababababababababababababab"
       },
       "port": 8766
+    },
+    {
+      "name": "consensuslab-nube-local",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "C:/Users/xergi/Desktop/2.0_software_laboratorio/consensuslab-sheets/servidor/local.js"
+      ],
+      "port": 8768
+    },
+    {
+      "name": "consensusqc-abierto",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "C:/Users/xergi/Desktop/2.0_software_laboratorio/cclab-sheets/tools/servidor_local.js"
+      ],
+      "env": {
+        "PUERTO": "8769"
+      },
+      "port": 8769
     }
   ]
 }
