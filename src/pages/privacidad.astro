@@ -105,7 +105,7 @@ const correo = `mailto:${CORREO_CONTACTO}`;
           <tr>
             <td>Contraseña (si la creas)</td>
             <td>
-              Ingresar sin código. Se guarda solo como huella irreversible (PBKDF2-SHA256 con sal y clave secreta); la
+              Ingresar sin código. Se guarda solo como huella irreversible (Argon2id, el algoritmo recomendado por OWASP, con sal y clave secreta); la
               contraseña original no se almacena en ninguna parte.
             </td>
           </tr>
