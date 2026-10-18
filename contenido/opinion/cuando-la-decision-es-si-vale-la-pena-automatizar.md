@@ -25,7 +25,7 @@ Es fácil reducir «automatizar» a una línea de presupuesto: un equipo que hac
 
 Esa última parte es la que casi nadie pone en la licitación. El tiempo que la automatización libera no se traduce automáticamente en ahorro ni en mejor atención: se traduce en ahorro solo si hay un plan concreto para usar ese tiempo en algo que antes no se podía hacer. Sin ese plan, la automatización no libera horas, las vuelve ambiguas, y el personal con horas ambiguas rara vez las gana.
 
-> **Para el rediseño del proceso:** [Plan de contingencia](/herramientas/plan-de-contingencia/) (qué pasa cuando el equipo falla) · [Mantención preventiva y calibraciones](/herramientas/mantencion-preventiva-y-calibraciones/) · [Contratos y comodatos](/herramientas/contratos-y-comodatos/) · [Derivaciones a laboratorios externos](/herramientas/derivaciones-a-laboratorios-externos/)
+> **Para el rediseño del proceso:** [Plan de contingencia](/herramientas/plan-de-contingencia/) (qué pasa cuando el equipo falla) · [Plan de mantención](/herramientas/mantencion-preventiva-y-calibraciones/) · [Contratos y comodatos](/herramientas/contratos-y-comodatos/) · [Derivaciones a laboratorios externos](/herramientas/derivaciones-a-laboratorios-externos/)
 
 ## El número que vende el proveedor no es el número que importa
 
