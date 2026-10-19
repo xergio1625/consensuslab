@@ -75,7 +75,6 @@ actualizado: 2026-10-05
 
 ## Gratis y con suscripción
 
-- **Gratis:** esta guía y la demo en línea: con un botón se cargan ejemplos de todas las herramientas y se ve el
-  informe completo.
+- **Gratis:** esta guía. La herramienta en línea se prueba 15 días gratis con los datos de tu laboratorio, sin tarjeta.
 - **Con suscripción:** el informe real de tu laboratorio con los datos de todas las herramientas, comentario de la
   coordinación, historial de 12 meses y envío automático por correo el primer día hábil.

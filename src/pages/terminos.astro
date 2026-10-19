@@ -1,5 +1,5 @@
 ---
-// Términos de uso del sitio y de la app ConsensusLab (demo y suscripción).
+// Términos de uso del sitio y de la app ConsensusLab (prueba gratuita y suscripción).
 import Base from '../plantillas/Base.astro';
 import { url } from '../lib/rutas';
 import { CORREO_CONTACTO, VIGENCIA_LEGAL } from '../lib/sitio';
@@ -8,7 +8,7 @@ const correo = `mailto:${CORREO_CONTACTO}`;
 
 <Base
   titulo="Términos de uso"
-  descripcion="Condiciones para usar el sitio y la app ConsensusLab: cuentas, demo, suscripción, datos permitidos y responsabilidades."
+  descripcion="Condiciones para usar el sitio y la app ConsensusLab: cuentas, prueba gratuita, suscripción, datos permitidos y responsabilidades."
 >
   <div class="contenedor">
     <article class="prosa">
@@ -19,7 +19,7 @@ const correo = `mailto:${CORREO_CONTACTO}`;
         <p>
           <strong>En breve:</strong> ConsensusLab ofrece herramientas de apoyo a la gestión del laboratorio. Tú (o tu
           laboratorio) eres dueño de tus registros y responsable de lo que ingresas. <strong>Nunca ingreses datos de
-          pacientes.</strong> La demo es gratuita y se borra sola; la suscripción es anual, por laboratorio.
+          pacientes.</strong> La prueba de 15 días es gratuita; la suscripción es anual, por laboratorio.
         </p>
       </div>
 
@@ -31,8 +31,8 @@ const correo = `mailto:${CORREO_CONTACTO}`;
           <a href={url('licencia/')}>licencia CC BY-NC-SA 4.0 con permiso de uso en laboratorios</a>.
         </li>
         <li>
-          <strong>La app</strong>, una aplicación web con herramientas de registro y seguimiento. Se usa como demo
-          gratuita o con suscripción anual por laboratorio.
+          <strong>La app</strong>, una aplicación web con herramientas de registro y seguimiento. Se usa en una prueba
+          gratuita de 15 días o con suscripción anual por laboratorio.
         </li>
       </ul>
       <p>
@@ -69,14 +69,18 @@ const correo = `mailto:${CORREO_CONTACTO}`;
       </ul>
       <p>Si no cumples estas reglas, podemos suspender la cuenta. Te avisaremos cuando sea posible.</p>
 
-      <h2>4. Demo gratuita</h2>
+      <h2>4. Prueba gratuita</h2>
       <ul>
-        <li>Requiere una cuenta. Está pensada para conocer las herramientas, no para uso real.</li>
+        <li>Al crear tu cuenta se abre un laboratorio con 15 días de prueba, con todas las herramientas y los datos reales de tu laboratorio. No pedimos tarjeta.</li>
         <li>
-          Los registros de prueba se borran al terminar la demo, al salir de la app, al cerrar sesión o tras 60 minutos sin actividad.
-          Cada tabla admite un máximo de registros.
+          Los registros que hagas son tuyos y quedan guardados, con las mismas reglas de trazabilidad que la suscripción. Si
+          contratas, sigues en la misma cuenta con todos tus registros.
         </li>
-        <li>Podemos cambiar o retirar la demo en cualquier momento.</li>
+        <li>
+          Al terminar la prueba la cuenta queda en solo lectura: puedes consultar y descargar tus registros, que conservamos
+          90 días. Pasado ese plazo los eliminamos, como se explica en la política de privacidad.
+        </li>
+        <li>Podemos extender la prueba a 30 días si estás evaluando una cotización, y cambiar o retirar la prueba gratuita en cualquier momento.</li>
       </ul>
 
       <h2>5. Suscripción</h2>
@@ -106,14 +110,14 @@ const correo = `mailto:${CORREO_CONTACTO}`;
         </li>
         <li>
           <strong>Término anticipado.</strong> Si decides terminar antes del vencimiento, no devolvemos los meses o el año ya
-          iniciados, salvo la devolución del piloto descrita a continuación y lo que la ley establezca. Mantienes el acceso hasta el
+          iniciados, salvo la devolución de la prueba descrita a continuación y lo que la ley establezca. Mantienes el acceso hasta el
           final del periodo pagado.
         </li>
         <li>
-          <strong>Piloto y preventa.</strong> Puedes probar la app 30 días con los datos de tu laboratorio; si contratas,
-          tus registros se mantienen. El descuento de fundador (40 %) aplica solo al primer año pagado por adelantado, o con
+          <strong>Prueba y preventa.</strong> Puedes probar la app 15 días con los datos de tu laboratorio (30 días si
+          la extendemos mientras evalúas una cotización); si contratas, tus registros se mantienen. El descuento de fundador (40 %) aplica solo al primer año pagado por adelantado, o con
           orden de compra enviada, antes del 1 de diciembre de 2026, y el año pagado corre desde esa fecha. Si decides no
-          continuar dentro de los 30 días del piloto, te devolvemos el pago completo. Desde el 1 de diciembre de 2026 rigen
+          continuar dentro de los 30 días de tu prueba, te devolvemos el pago completo. Desde el 1 de diciembre de 2026 rigen
           los precios normales.
         </li>
         <li>

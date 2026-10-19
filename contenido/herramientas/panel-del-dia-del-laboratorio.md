@@ -63,5 +63,5 @@ Los controles de calidad y las corridas rechazadas se revisan en Consensus QC, e
 
 ## Gratis y con suscripción
 
-- **Gratis:** esta guía y la demo en línea con datos de prueba, que se borran al salir.
+- **Gratis:** esta guía. La herramienta en línea se prueba 15 días gratis con los datos de tu laboratorio, sin tarjeta.
 - **Con suscripción:** el panel con los datos reales de tu laboratorio, con las herramientas que contrataste.

@@ -52,7 +52,7 @@ actualizado: 2026-10-05
 
 ## Gratis y con suscripción
 
-- **Gratis:** esta guía y la demo en línea con datos ficticios, que se borran al salir.
+- **Gratis:** esta guía. La herramienta en línea se prueba 15 días gratis con los datos de tu laboratorio, sin tarjeta.
 - **Con suscripción:** los programas y las inducciones de tu equipo con lista de chequeo, plazos y firmas, constancia
   imprimible, temas enlazados a documentos y competencias, plazos en el resumen semanal de vencimientos, el área en
   el panel del día e indicadores en el informe mensual.

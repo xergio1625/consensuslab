@@ -53,7 +53,7 @@ actualizado: 2026-10-05
 
 ## Gratis y con suscripción
 
-- **Gratis:** esta guía y la demo en línea con datos ficticios, que se borran al salir.
+- **Gratis:** esta guía. La herramienta en línea se prueba 15 días gratis con los datos de tu laboratorio, sin tarjeta.
 - **Con suscripción:** la matriz de tu laboratorio con versiones aprobadas, cambios trazables, alertas, cobertura
   diaria con las ausencias de Turnos, planilla imprimible, revisión anual en el resumen de vencimientos, el área en el
   panel del día e indicadores en el informe mensual.

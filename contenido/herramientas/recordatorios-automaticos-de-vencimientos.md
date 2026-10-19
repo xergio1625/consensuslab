@@ -53,6 +53,6 @@ actualizado: 2026-10-05
 
 ## Gratis y con suscripción
 
-- **Gratis:** esta guía y la demo en línea con datos de prueba, con vista previa del correo semanal.
+- **Gratis:** esta guía. La herramienta en línea se prueba 15 días gratis con los datos de tu laboratorio, sin tarjeta.
 - **Con suscripción:** la agenda real de tu laboratorio, el resumen semanal automático por correo, el historial de
   renovaciones y la integración con el Control documental.

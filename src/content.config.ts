@@ -60,7 +60,7 @@ const herramientas = defineCollection({
       // Descripción del recurso que se prepara (útil mientras la ficha está «en preparación»)
       recurso_previsto: z.string().optional(),
       recursos: z.array(recurso).default([]),
-      // Módulo de la app ConsensusLab que implementa la herramienta (demo gratis + suscripción).
+      // Módulo de la app ConsensusLab que implementa la herramienta (prueba gratis + suscripción).
       app_modulo: z.string().regex(/^[a-z]{3,30}$/).optional(),
       // Video de la herramienta (opcional): ID de YouTube. Si falta, la ficha no muestra espacio de video.
       video: z.string().regex(/^[\w-]{6,20}$/).optional(),

@@ -52,6 +52,6 @@ actualizado: 2026-10-03
 
 ## Gratis y con suscripción
 
-- **Gratis:** esta guía y la demo en línea con datos de prueba, que se borran al salir.
+- **Gratis:** esta guía. La herramienta en línea se prueba 15 días gratis con los datos de tu laboratorio, sin tarjeta.
 - **Con suscripción:** el registro real de tus derivaciones, con varios usuarios, alerta de atrasos en el panel del
   día, registro mensual imprimible con la evaluación de cada laboratorio y los indicadores en el informe mensual.

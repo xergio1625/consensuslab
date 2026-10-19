@@ -9,7 +9,7 @@ import { VIDEOS } from '../lib/videos';
 import { obtenerCatalogo, obtenerHerramientas, obtenerPrompts } from '../lib/datos';
 import { url } from '../lib/rutas';
 import { CALCULADORAS } from '../lib/calculadoras';
-import { CORREO_CONTACTO } from '../lib/sitio';
+import { CORREO_CONTACTO, URL_APP } from '../lib/sitio';
 
 const catalogo = await obtenerCatalogo();
 const nombreGrupo = new Map(catalogo.map(({ grupo }) => [grupo.id, grupo.data.nombre_corto]));
@@ -65,11 +65,11 @@ const pasos = [
         <p class="antetitulo">Consensus QC · laboratorio clínico</p>
         <h1>Control de calidad del laboratorio, sin planillas</h1>
         <p class="portada-lema">
-          Westgard, Levey-Jennings, sigma y control externo en una sola plataforma. Pruébalo 30 días gratis con los
+          Westgard, Levey-Jennings, sigma y control externo en una sola plataforma. Pruébalo 15 días gratis con los
           datos de tu laboratorio, hecho por un tecnólogo médico.
         </p>
         <div class="acciones-portada">
-          <a class="boton boton-primario" href={url('planes/#cotizar')}>Pedir demo</a>
+          <a class="boton boton-primario" href={URL_APP}>Probar 15 días gratis</a>
           <a class="boton boton-secundario boton-claro" href={url('consensus-qc/')}>Conocer Consensus QC</a>
         </div>
         <p class="nota-portada">

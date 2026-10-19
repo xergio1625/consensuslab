@@ -73,7 +73,7 @@ actualizado: 2026-10-05
 
 ## Gratis y con suscripción
 
-- **Gratis:** esta guía y la demo en línea con datos ficticios, que se borran al salir.
+- **Gratis:** esta guía. La herramienta en línea se prueba 15 días gratis con los datos de tu laboratorio, sin tarjeta.
 - **Con suscripción:** los cuadrantes de tu equipo con versiones publicadas, cambios y ausencias trazables, alertas
   de dotación y descanso, horas del mes por persona, planilla imprimible, la dotación de hoy en el panel del día e
   indicadores en el informe mensual.

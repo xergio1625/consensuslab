@@ -67,7 +67,7 @@ const planes = [
 <Base
   titulo="Planes para laboratorios clínicos"
   seccion="planes"
-  descripcion="Planes de ConsensusLab para laboratorios clínicos: Esencial, Gestión, Gestión + Consensus QC e Institucional. Preventa fundadores con 40 % de descuento y piloto gratis de 30 días."
+  descripcion="Planes de ConsensusLab para laboratorios clínicos: Esencial, Gestión, Gestión + Consensus QC e Institucional. Preventa fundadores con 40 % de descuento y prueba gratis de 15 días con tus datos reales."
 >
   <section class="portada">
     <div class="contenedor">
@@ -80,7 +80,7 @@ const planes = [
       </p>
       <div class="acciones-portada">
         <a class="boton boton-dorado" href="#cotizar" data-plan="gestion_qc">Pedir cotización</a>
-        <a class="boton boton-secundario boton-claro" href="#cotizar" data-piloto>Probar gratis 30 días</a>
+        <a class="boton boton-secundario boton-claro" href={URL_APP}>Probar gratis 15 días</a>
       </div>
       <p class="nota-portada">Precios por laboratorio, anuales, con IVA incluido. Factura electrónica.</p>
     </div>
@@ -120,7 +120,8 @@ const planes = [
       <p class="texto-suave">
         Todos los planes incluyen registros trazables (nada se borra: las correcciones quedan con nombre y motivo),
         actualizaciones, soporte por correo y una copia de tus registros cuando la pidas. La app no admite datos de
-        pacientes. Prueba cualquier herramienta gratis en la <a href={url('herramientas/')}>demo de cada ficha</a>.
+        pacientes. Prueba cualquier herramienta <strong>15 días gratis</strong> con los datos de tu laboratorio:
+        <a href={URL_APP}>crea tu cuenta</a> y empieza.
       </p>
       <div class="aviso aviso-info">
         <p>
@@ -136,10 +137,13 @@ const planes = [
     <div class="contenedor">
       <h2>Cómo funciona la preventa</h2>
       <ol class="pasos-preventa">
-        <li><strong>Pide tu cotización</strong> con el formulario. Te la enviamos por correo en un día hábil.</li>
         <li>
-          <strong>Prueba gratis 30 días</strong> con los datos reales de tu laboratorio, sin compromiso. Si contratas, tus
-          registros se mantienen.
+          <strong>Prueba gratis 15 días</strong> con los datos reales de tu laboratorio: <a href={URL_APP}>crea tu cuenta</a>,
+          sin tarjeta ni compromiso. Si contratas, sigues en la misma cuenta y tus registros se mantienen.
+        </li>
+        <li>
+          <strong>Pide tu cotización</strong> con el formulario. Te la enviamos por correo en un día hábil y, si necesitas más
+          tiempo para evaluar, extendemos tu prueba a 30 días.
         </li>
         <li>
           <strong>Paga el año por adelantado antes del 1 de diciembre de 2026</strong> y obtienes el 40 % de descuento en el
@@ -149,9 +153,9 @@ const planes = [
       </ol>
       <div class="aviso aviso-info">
         <p>
-          <strong>¿Tu piloto termina después del 1 de diciembre?</strong> Igual accedes al precio de fundador: paga o envía
-          la orden de compra antes del 1 de diciembre y sigue probando. Si decides no continuar dentro de los 30 días del
-          piloto, te devolvemos el pago completo.
+          <strong>¿Tu prueba termina después del 1 de diciembre?</strong> Igual accedes al precio de fundador: paga o envía
+          la orden de compra antes del 1 de diciembre y sigue probando. Si decides no continuar dentro de los 30 días de
+          tu prueba, te devolvemos el pago completo.
         </p>
       </div>
       <p class="texto-suave">
@@ -197,7 +201,7 @@ const planes = [
             </div>
           </details>
         </div>
-        <label class="casilla-sitio"><input type="checkbox" name="piloto" id="cotizar-piloto" /> <span>Quiero el piloto gratis de 30 días con los datos de mi laboratorio.</span></label>
+        <label class="casilla-sitio"><input type="checkbox" name="piloto" id="cotizar-piloto" /> <span>Quiero extender mi prueba a 30 días con los datos de mi laboratorio mientras evalúo la cotización.</span></label>
         <label class="casilla-sitio"><input type="checkbox" name="marketing" /> <span>Acepto recibir novedades y guías de ConsensusLab por correo (opcional; puedes darte de baja cuando quieras).</span></label>
         <div class="campo-trampa" aria-hidden="true">
           <label>Sitio web <input name="sitio_web" tabindex="-1" autocomplete="off" /></label>
@@ -221,10 +225,15 @@ const planes = [
       </p>
       <h3>¿Qué pasa después del 1 de diciembre de 2026?</h3>
       <p>Se cobra el precio normal. El descuento de fundador aplica solo al primer año pagado por adelantado antes de esa fecha.</p>
-      <h3>Empecé el piloto en noviembre: ¿alcanzo el precio de fundador?</h3>
+      <h3>Empecé mi prueba en noviembre: ¿alcanzo el precio de fundador?</h3>
       <p>
-        Sí. Paga o envía la orden de compra antes del 1 de diciembre y termina tu piloto tranquilo: si decides no continuar
+        Sí. Paga o envía la orden de compra antes del 1 de diciembre y termina tu prueba tranquilo: si decides no continuar
         dentro de sus 30 días, te devolvemos el pago completo.
+      </p>
+      <h3>¿Qué pasa cuando terminan los 15 días?</h3>
+      <p>
+        Tu cuenta queda en solo lectura: puedes consultar y descargar tus registros, que conservamos 90 días. Si contratas,
+        la misma cuenta pasa al plan pagado, sin perder nada.
       </p>
       <h3>¿Sirve para hospitales y servicios públicos?</h3>
       <p>Sí. Cotizamos con los datos de la institución y aceptamos orden de compra. Indícalo en el mensaje.</p>
@@ -237,7 +246,7 @@ const planes = [
       </p>
       <h3>¿Puedo seguir usando lo gratuito?</h3>
       <p>
-        Sí. Las fichas, guías, prompts y calculadoras siguen siendo gratuitas, y la demo de cada herramienta también.
+        Sí. Las fichas, guías, prompts y calculadoras siguen siendo gratuitas, y cada herramienta de la app se puede probar 15 días gratis.
       </p>
     </div>
   </section>

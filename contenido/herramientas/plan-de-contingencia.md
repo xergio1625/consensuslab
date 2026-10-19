@@ -52,6 +52,6 @@ actualizado: 2026-10-03
 
 ## Gratis y con suscripción
 
-- **Gratis:** esta guía y la demo en línea con datos de prueba, que se borran al salir.
+- **Gratis:** esta guía. La herramienta en línea se prueba 15 días gratis con los datos de tu laboratorio, sin tarjeta.
 - **Con suscripción:** los planes reales de tu laboratorio, con aviso por correo al activarlos, registro anual de
   activaciones y simulacros para imprimir, y el resumen en el panel del día y el informe mensual.

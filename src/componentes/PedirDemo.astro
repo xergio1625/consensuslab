@@ -1,5 +1,5 @@
 ---
-// Formulario corto para pedir cotización o piloto desde cualquier página (mismo destino que /planes/).
+// Invitación a la prueba gratuita (cuenta real, 15 días) y formulario corto para pedir cotización desde cualquier página (mismo destino que /planes/).
 // variante «caja»: columna lateral · «franja»: ancho completo entre secciones.
 import { url } from '../lib/rutas';
 import { CORREO_CONTACTO, URL_APP } from '../lib/sitio';
@@ -16,11 +16,14 @@ const caja = variante === 'caja';
     <div class={caja ? '' : 'demo-franja-cuerpo'}>
       <div class="demo-texto">
         {!caja && <p class="antetitulo">Para tu laboratorio</p>}
-        {caja ? <h2>Pide una demo</h2> : <h2>¿Quieres esto en tu laboratorio?</h2>}
+        {caja ? <h2>Pruébala en tu laboratorio</h2> : <h2>¿Quieres esto en tu laboratorio?</h2>}
         <p>
-          Prueba la app <strong>30 días gratis</strong> con tus datos reales. Preventa fundadores: <strong>40 % de descuento</strong>
+          Crea tu cuenta y prueba la app <strong>15 días gratis</strong> con los datos reales de tu laboratorio, sin tarjeta. Si
+          contratas, sigues en la misma cuenta con tus registros. Preventa fundadores: <strong>40 % de descuento</strong>
           pagando antes del 1 de diciembre de 2026.
         </p>
+        <p><a class="boton boton-primario" href={URL_APP}>Probar 15 días gratis</a></p>
+        <p class="texto-suave">¿Prefieres una cotización? Déjanos tus datos y te la enviamos; si necesitas más tiempo, extendemos tu prueba a 30 días.</p>
       </div>
       <form class="form-demo" novalidate data-url={URL_APP} data-correo={CORREO_CONTACTO}>
         <label class="calc-campo"><span>Nombre y apellido</span><input class="campo" name="nombre" required maxlength="120" autocomplete="name" autocapitalize="words" enterkeyhint="next" /></label>
@@ -29,7 +32,7 @@ const caja = variante === 'caja';
         <div class="campo-trampa" aria-hidden="true">
           <label>Sitio web <input name="sitio_web" tabindex="-1" autocomplete="off" /></label>
         </div>
-        <button type="submit" class="boton boton-primario boton-ancho">Pedir demo y cotización</button>
+        <button type="submit" class="boton boton-secundario boton-ancho">Pedir cotización</button>
         <p class="texto-suave demo-nota">
           Solo datos de contacto, nunca de pacientes. <a href={url('privacidad/')}>Privacidad</a> ·
           <a href={url('planes/')}>Ver planes y precio</a>

@@ -85,7 +85,7 @@ exige.
 
 ## Gratis y con suscripción
 
-- **Gratis:** esta guía y la demo en línea con datos de prueba, que se borran al salir.
+- **Gratis:** esta guía. La herramienta en línea se prueba 15 días gratis con los datos de tu laboratorio, sin tarjeta.
 - **Con suscripción:** el programa real de tus equipos, con varios usuarios, las rutinas con lista de verificación por
   equipo y por área, avisos del servicio técnico en el resumen semanal por correo, hoja mensual y programa anual para
   imprimir, y el cumplimiento de las mantenciones programadas en el informe mensual.

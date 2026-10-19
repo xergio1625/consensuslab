@@ -63,6 +63,6 @@ actualizado: 2026-10-02
 
 ## Gratis y con suscripción
 
-- **Gratis:** esta guía y la demo en línea con datos de prueba, que se borran al salir.
+- **Gratis:** esta guía. La herramienta en línea se prueba 15 días gratis con los datos de tu laboratorio, sin tarjeta.
 - **Con suscripción:** la bitácora real de tus equipos, con varios usuarios, aviso por correo cuando un equipo queda
   detenido, bitácora mensual para imprimir y la disponibilidad en el informe mensual.

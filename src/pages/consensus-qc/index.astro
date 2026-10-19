@@ -10,8 +10,8 @@ import { urlModulo } from '../../lib/sitio';
 
 const relacionadas = (await obtenerHerramientas()).filter((h) => h.data.consensus_qc !== 'no');
 
-// Módulos de la versión web (la oficial desde octubre de 2026). Todos se pueden probar en la demo.
-// Mantener alineado con los módulos reales de cclab-sheets: no anunciar lo que la demo no tiene.
+// Módulos de la versión web (la oficial desde octubre de 2026). Todos se pueden probar en la prueba gratuita.
+// Mantener alineado con los módulos reales de cclab-sheets: no anunciar lo que la app no tiene.
 const modulos = [
   ['Configuración', 'Analizadores con su ciclo de vida (instalado, operativo, detenido, en mantención, retirado), analitos, materiales de control y lotes con las metas del fabricante.'],
   ['Plan de calidad', 'Un plan por analito con su requisito de calidad (error total permitido de CLIA 2024 o variabilidad biológica), una táctica de control por analizador y versiones con aprobación e historial.'],
@@ -52,11 +52,11 @@ const modulos = [
         del sitio depende de él.
       </p>
       <div class="acciones-portada">
-        <a class="boton boton-dorado" href={urlModulo('consensusqc')} target="_blank" rel="noopener">Probar la demo en línea</a>
+        <a class="boton boton-dorado" href={urlModulo('consensusqc')} target="_blank" rel="noopener">Probar 15 días gratis</a>
       </div>
       <p class="nota-portada">
-        Gratis, con tu cuenta de ConsensusLab (te llega un código al correo). La demo es compartida, usa datos ficticios
-        y se restablece cada noche.
+        15 días gratis con los datos reales de tu laboratorio, sin tarjeta: creas tu cuenta de ConsensusLab (te llega un
+        código al correo) y la prueba incluye Consensus QC. Si contratas, sigues en la misma cuenta.
       </p>
     </div>
   </section>
@@ -65,7 +65,7 @@ const modulos = [
     <div class="contenedor">
       <EspacioVideo titulo="Consensus QC en funcionamiento" texto="Recorrido por la versión web de Consensus QC." {...VIDEOS['consensus-qc']} />
       <h2>Qué incluye</h2>
-      <p class="texto-suave">Estos son los módulos de la versión web. Todos se pueden probar en la demo en línea.</p>
+      <p class="texto-suave">Estos son los módulos de la versión web. Todos se pueden probar en la prueba gratuita.</p>
       <ul class="lista-modulos">
         {
           modulos.map(([nombre, texto]) => (
@@ -92,7 +92,7 @@ const modulos = [
         </li>
       </ul>
       <p class="texto-suave">
-        En desarrollo: suscripción por laboratorio con datos propios (hoy la demo es compartida), registro de
+        En desarrollo: registro de
         calibraciones, monitor por analizador, inventario de reactivos y registro de mantenciones.
       </p>
     </div>

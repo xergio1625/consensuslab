@@ -51,6 +51,6 @@ actualizado: 2026-10-03
 
 ## Gratis y con suscripción
 
-- **Gratis:** esta guía y la demo en línea con datos ficticios, que se borran al salir.
+- **Gratis:** esta guía. La herramienta en línea se prueba 15 días gratis con los datos de tu laboratorio, sin tarjeta.
 - **Con suscripción:** tus cargas mensuales del LIS con sus resultados guardados, metas por examen y el TAT en el
   informe mensual.

@@ -69,6 +69,6 @@ En el encabezado o pie de cada página: código, versión, fecha de vigencia y n
 
 ## Gratis y con suscripción
 
-- **Gratis:** esta guía, la estructura de procedimiento y la demo en línea con datos de prueba, que se borran al salir.
+- **Gratis:** esta guía. La herramienta en línea se prueba 15 días gratis con los datos de tu laboratorio, sin tarjeta.
 - **Con suscripción:** el listado maestro real de tu laboratorio, acuse de lectura de todo el equipo, alertas de
   revisión y listado imprimible.

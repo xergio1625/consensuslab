@@ -57,7 +57,7 @@ actualizado: 2026-10-03
 
 ## Gratis y con suscripción
 
-- **Gratis:** esta guía y la demo en línea con datos ficticios, que se borran al salir.
+- **Gratis:** esta guía. La herramienta en línea se prueba 15 días gratis con los datos de tu laboratorio, sin tarjeta.
 - **Con suscripción:** tus contratos con avisos de renovación, consumo comprometido medido con el inventario,
   cumplimiento del servicio técnico con la bitácora de equipos, planilla imprimible, plazos en el resumen semanal de
   vencimientos e indicadores en el informe mensual.
