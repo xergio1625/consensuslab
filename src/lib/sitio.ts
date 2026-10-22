@@ -21,6 +21,9 @@ export function urlModulo(modulo: string): string {
  */
 export const MEDIUM_PERFIL = 'https://medium.com/@xergio.1625';
 
+/** Perfil de LinkedIn de la persona autora (se usa como `sameAs` en los datos estructurados). */
+export const LINKEDIN_PERFIL = 'https://www.linkedin.com/in/sergio-inostroza-riffo-409964123';
+
 /**
  * ID de medición de Google Analytics 4 (formato 'G-XXXXXXXXXX'; es público, aparece en el código de cada página).
  * Vacío = sin analítica: no se carga nada ni se muestra el aviso de cookies.

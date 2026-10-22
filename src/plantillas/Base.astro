@@ -23,13 +23,14 @@ interface Props {
 
 const {
   titulo,
-  descripcion: descripcionCompleta = 'Herramientas de gestión, calidad y coordinación para profesionales de laboratorio clínico. Planillas y plantillas gratuitas.',
+  descripcion: descripcionCompleta = 'Calculadoras gratuitas, guías y software de control de calidad y gestión para el laboratorio clínico, con prueba gratis de 15 días.',
   seccion,
 } = Astro.props;
 
 // Google corta las descripciones sobre ~160 caracteres: se recortan en un límite de palabra.
 const descripcion = descripcionCompleta.length > 160 ? descripcionCompleta.slice(0, 157).replace(/\s+\S*$/, '') + '…' : descripcionCompleta;
-const tituloCompleto = titulo.startsWith('ConsensusLab') ? titulo : `${titulo} · ConsensusLab`;
+// Google corta los títulos sobre ~60 caracteres: la marca va al final solo si el título cabe con ella.
+const tituloCompleto = titulo.startsWith('ConsensusLab') || titulo.length + ' · ConsensusLab'.length > 70 ? titulo : `${titulo} · ConsensusLab`;
 const indexable = INDEXAR && Astro.props.indexar !== false;
 const datos = Astro.props.datos ? [].concat(Astro.props.datos as never) : [];
 const jsonLd = (d: unknown) => JSON.stringify(d).replace(/</g, '\\u003c');

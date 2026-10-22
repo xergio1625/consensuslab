@@ -2,29 +2,56 @@
 // Acerca de ConsensusLab.
 import Base from '../plantillas/Base.astro';
 import { url } from '../lib/rutas';
+import { LINKEDIN_PERFIL, MEDIUM_PERFIL } from '../lib/sitio';
+
+const persona = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Sergio Inostroza Riffo',
+  jobTitle: 'Tecnólogo médico',
+  url: new URL(url('acerca/'), Astro.site).href,
+  sameAs: [LINKEDIN_PERFIL, MEDIUM_PERFIL],
+  worksFor: { '@type': 'Organization', name: 'ConsensusLab', url: Astro.site?.href },
+};
 ---
 
-<Base titulo="Acerca" seccion="acerca" descripcion="Quién está detrás de ConsensusLab y con qué criterios se preparan las herramientas.">
+<Base
+  titulo="Acerca de ConsensusLab y de quien lo prepara"
+  seccion="acerca"
+  descripcion="ConsensusLab lo prepara Sergio Inostroza, tecnólogo médico con más de 10 años en laboratorio clínico: calculadoras, guías y software de calidad y gestión."
+  datos={[persona]}
+>
   <div class="contenedor">
     <article class="prosa">
       <h1>Acerca de ConsensusLab</h1>
       <p>
-        ConsensusLab reúne herramientas administrativas y de gestión para los profesionales que trabajan en
-        laboratorio clínico y quieren mejorar la coordinación, la calidad y la administración de su servicio.
+        ConsensusLab reúne calculadoras, guías y herramientas de gestión para los profesionales que trabajan en
+        laboratorio clínico y quieren mejorar la coordinación, la calidad y la administración de su servicio. Incluye
+        <a href={url('consensus-qc/')}>Consensus QC</a>, un software de control de calidad analítico.
+      </p>
+
+      <h2>Quién lo prepara</h2>
+      <p>
+        Lo prepara <strong>Sergio Inostroza Riffo</strong>, tecnólogo médico con más de 10 años en laboratorio clínico y
+        formación de postgrado en gestión en salud. Las herramientas parten de necesidades reales del día a día: turnos,
+        registros, controles de calidad, auditorías, insumos, informes y personal. También escribe sobre calidad y
+        gestión en la sección <a href={url('opinion/')}>Opinión</a>.
       </p>
       <p>
-        Las prepara un tecnólogo médico con más de 10 años en laboratorio clínico, a partir de las necesidades reales del día a día:
-        turnos, registros, auditorías, insumos, informes y personal.
+        Puedes seguirlo en <a href={LINKEDIN_PERFIL} rel="me noopener" target="_blank">LinkedIn</a> y en
+        <a href={MEDIUM_PERFIL} rel="me noopener" target="_blank">Medium</a>, o escribirle a
+        <a href="mailto:contacto@consensuslab.cl">contacto@consensuslab.cl</a>.
       </p>
 
       <h2>Criterios</h2>
       <ul>
-        <li><strong>Sin datos de pacientes.</strong> Todos los recursos son plantillas en blanco o con datos de ejemplo.</li>
-        <li><strong>Simples.</strong> Se usan con Excel, Google Sheets, Word o un formulario, sin instalar nada.</li>
-        <li><strong>Independientes.</strong> Ninguna herramienta gratuita necesita el software Consensus QC.</li>
+        <li><strong>Sin datos de pacientes.</strong> Las herramientas no piden datos que identifiquen a pacientes.</li>
+        <li><strong>Gratis para aprender y calcular.</strong> Las calculadoras, las guías y los prompts son de acceso libre y las calculadoras no piden registro.</li>
+        <li><strong>Trazables.</strong> En la app los registros no se borran: cada corrección queda con nombre y motivo.</li>
+        <li><strong>Independientes.</strong> Sin comisiones de proveedores. Ninguna herramienta gratuita necesita el software Consensus QC.</li>
         <li>
-          <strong>De uso libre en laboratorios.</strong> Puedes usarlas y adaptarlas en cualquier laboratorio; revisa la
-          <a href={url('licencia/')}>licencia</a>.
+          <strong>De uso libre en laboratorios.</strong> Puedes usar y adaptar los recursos gratuitos en cualquier laboratorio;
+          revisa la <a href={url('licencia/')}>licencia</a>.
         </li>
       </ul>
 

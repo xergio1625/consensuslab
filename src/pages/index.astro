@@ -9,7 +9,7 @@ import { VIDEOS } from '../lib/videos';
 import { obtenerCatalogo, obtenerHerramientas, obtenerPrompts } from '../lib/datos';
 import { url } from '../lib/rutas';
 import { CALCULADORAS } from '../lib/calculadoras';
-import { CORREO_CONTACTO, URL_APP } from '../lib/sitio';
+import { CORREO_CONTACTO, LINKEDIN_PERFIL, MEDIUM_PERFIL, URL_APP } from '../lib/sitio';
 
 const catalogo = await obtenerCatalogo();
 const nombreGrupo = new Map(catalogo.map(({ grupo }) => [grupo.id, grupo.data.nombre_corto]));
@@ -31,7 +31,8 @@ const pasos = [
 ---
 
 <Base
-  titulo="ConsensusLab: herramientas de gestión para el laboratorio clínico"
+  titulo="ConsensusLab: calidad y gestión para el laboratorio clínico"
+  descripcion="Calculadoras gratuitas, guías y Consensus QC: software de control de calidad y gestión para el laboratorio clínico. Prueba gratis 15 días con tus datos."
   seccion="inicio"
   datos={[
     {
@@ -42,7 +43,14 @@ const pasos = [
       logo: new URL('logo.png', Astro.site).href,
       email: CORREO_CONTACTO,
       areaServed: 'CL',
-      description: 'Herramientas de gestión, calidad y coordinación para profesionales de laboratorio clínico.',
+      description: 'Calculadoras, guías y software de control de calidad y gestión para profesionales de laboratorio clínico.',
+      founder: {
+        '@type': 'Person',
+        name: 'Sergio Inostroza Riffo',
+        jobTitle: 'Tecnólogo médico',
+        url: new URL('acerca/', Astro.site).href,
+        sameAs: [LINKEDIN_PERFIL, MEDIUM_PERFIL],
+      },
     },
     {
       '@context': 'https://schema.org',

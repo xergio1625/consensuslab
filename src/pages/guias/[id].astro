@@ -1,4 +1,5 @@
 ---
+import { LINKEDIN_PERFIL, MEDIUM_PERFIL } from '../../lib/sitio';
 // Guía publicada en el sitio. Si adapta una obra ajena (campo `fuente`), muestra la atribución arriba y al final.
 import { render } from 'astro:content';
 import Base from '../../plantillas/Base.astro';
@@ -34,7 +35,7 @@ const enlaceDoi = f?.doi ? `https://doi.org/${f.doi}` : undefined;
       description: g.resumen,
       datePublished: g.fecha.toISOString().slice(0, 10),
       ...(g.actualizado ? { dateModified: g.actualizado.toISOString().slice(0, 10) } : {}),
-      author: { '@type': 'Person', name: 'Sergio Inostroza', url: new URL(url('acerca/'), Astro.site).href },
+      author: { '@type': 'Person', name: 'Sergio Inostroza Riffo', jobTitle: 'Tecnólogo médico', url: new URL(url('acerca/'), Astro.site).href, sameAs: [LINKEDIN_PERFIL, MEDIUM_PERFIL] },
       publisher: { '@type': 'Organization', name: 'ConsensusLab', url: Astro.site?.href, logo: new URL(url('logo.png'), Astro.site).href },
       mainEntityOfPage: direccion,
       inLanguage: 'es',
