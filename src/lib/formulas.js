@@ -96,6 +96,57 @@ export function ckdEpi2021(scr, edad, sexo) {
   return 142 * Math.min(r, 1) ** alfa * Math.max(r, 1) ** -1.2 * 0.9938 ** edad * (mujer ? 1.012 : 1);
 }
 
+/**
+ * CKD-EPI 2009 (creatinina; Levey et al., Ann Intern Med 2009): mL/min/1,73 m². Incluye el coeficiente de raza
+ * original (`negra`), solo para comparar con sistemas que aún lo usan.
+ */
+export function ckdEpi2009(scr, edad, sexo, negra = false) {
+  const mujer = sexo === 'F';
+  const r = scr / (mujer ? 0.7 : 0.9);
+  const alfa = mujer ? -0.329 : -0.411;
+  return 141 * Math.min(r, 1) ** alfa * Math.max(r, 1) ** -1.209 * 0.993 ** edad * (mujer ? 1.018 : 1) * (negra ? 1.159 : 1);
+}
+
+/** MDRD de 4 variables con creatinina trazable a IDMS (Levey et al., 2006): mL/min/1,73 m². */
+export function mdrd(scr, edad, sexo, negra = false) {
+  return 175 * scr ** -1.154 * edad ** -0.203 * (sexo === 'F' ? 0.742 : 1) * (negra ? 1.212 : 1);
+}
+
+/** Cockcroft-Gault (1976): depuración de creatinina en mL/min (no indexada). peso en kg, scr en mg/dL. */
+export function cockcroftGault(scr, edad, sexo, peso) {
+  return (((140 - edad) * peso) / (72 * scr)) * (sexo === 'F' ? 0.85 : 1);
+}
+
+/** CKD-EPI 2012 con cistatina C sola (Inker et al., N Engl J Med 2012): scys en mg/L. mL/min/1,73 m². */
+export function ckdEpiCistatina(scys, edad, sexo) {
+  const r = scys / 0.8;
+  return 133 * Math.min(r, 1) ** -0.499 * Math.max(r, 1) ** -1.328 * 0.996 ** edad * (sexo === 'F' ? 0.932 : 1);
+}
+
+/** CKD-EPI 2021 con creatinina y cistatina C, sin raza (Inker et al., N Engl J Med 2021). mL/min/1,73 m². */
+export function ckdEpiCrCis2021(scr, scys, edad, sexo) {
+  const mujer = sexo === 'F';
+  const rCr = scr / (mujer ? 0.7 : 0.9);
+  const rCis = scys / 0.8;
+  return (
+    135 * Math.min(rCr, 1) ** (mujer ? -0.219 : -0.144) * Math.max(rCr, 1) ** -0.544 *
+    Math.min(rCis, 1) ** -0.323 * Math.max(rCis, 1) ** -0.778 * 0.9961 ** edad * (mujer ? 0.963 : 1)
+  );
+}
+
+/** Superficie corporal de Mosteller (m²): talla en cm, peso en kg. */
+export const superficieMosteller = (tallaCm, pesoKg) => Math.sqrt((tallaCm * pesoKg) / 3600);
+
+/** Categoría de filtrado glomerular de KDIGO (G1 a G5) para un valor en mL/min/1,73 m². */
+export function categoriaGfr(v) {
+  if (v >= 90) return 'G1';
+  if (v >= 60) return 'G2';
+  if (v >= 45) return 'G3a';
+  if (v >= 30) return 'G3b';
+  if (v >= 15) return 'G4';
+  return 'G5';
+}
+
 /** LDL-C de Friedewald (mg/dL): CT − HDL − TG/5. Válido con TG < 400 mg/dL. */
 export function ldlFriedewald(ct, hdl, tg) {
   return ct - hdl - tg / 5;

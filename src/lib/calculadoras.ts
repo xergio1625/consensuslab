@@ -178,7 +178,7 @@ export const CALCULADORAS = [
     id: 'filtrado-glomerular-ckd-epi',
     familia: 'resultados',
     titulo: 'Filtrado glomerular CKD-EPI 2021',
-    resumen: 'Ecuación de creatinina sin raza para verificar el cálculo de tu sistema, con casos de prueba y su resultado esperado.',
+    resumen: 'Filtrado glomerular con CKD-EPI 2021, comparado con cistatina C, CKD-EPI 2009, MDRD y Cockcroft-Gault, con cuándo usar cada ecuación y cuándo no aplica.',
     herramientas: ['acreditacion-y-autorizacion-sanitaria'],
   },
   {

@@ -30,6 +30,29 @@ import { VECTORES } from '../../lib/formulas.js';
           <option value="F">Femenino</option>
         </select>
       </label>
+      <label class="calc-campo">
+        <span>Cistatina C <em class="opcional">(opcional)</em></span>
+        <span class="calc-entrada"><input class="campo" name="cis" inputmode="decimal" placeholder="0,9" /><em>mg/L</em></span>
+        <small>Agrega las ecuaciones con cistatina C.</small>
+      </label>
+      <label class="calc-campo">
+        <span>Peso <em class="opcional">(opcional)</em></span>
+        <span class="calc-entrada"><input class="campo" name="peso" inputmode="decimal" placeholder="70" /><em>kg</em></span>
+        <small>Para Cockcroft-Gault.</small>
+      </label>
+      <label class="calc-campo">
+        <span>Talla <em class="opcional">(opcional)</em></span>
+        <span class="calc-entrada"><input class="campo" name="talla" inputmode="decimal" placeholder="170" /><em>cm</em></span>
+        <small>Con peso y talla se obtiene el filtrado en mL/min, sin indexar.</small>
+      </label>
+      <label class="calc-campo">
+        <span>Coeficiente de raza en las ecuaciones antiguas</span>
+        <select class="campo" name="negra">
+          <option value="no">No aplicar</option>
+          <option value="si">Aplicar (solo para comparar con un sistema antiguo)</option>
+        </select>
+        <small>Afecta solo a CKD-EPI 2009 y MDRD. La ecuación de 2021 no usa raza.</small>
+      </label>
     </div>
   </form>
 
@@ -37,8 +60,17 @@ import { VECTORES } from '../../lib/formulas.js';
     <p class="calc-mensaje" data-mensaje>Ingresa la creatinina y la edad.</p>
     <div data-resultado hidden>
       <div class="calc-cifras">
-        <div><span>eGFR</span><strong data-egfr></strong><small>mL/min/1,73 m²</small></div>
+        <div><span>eGFR CKD-EPI 2021</span><strong data-egfr></strong><small>mL/min/1,73 m²</small></div>
+        <div><span>Categoría KDIGO</span><strong data-cat></strong><small data-cat-texto></small></div>
       </div>
+      <h2>Comparación con otras ecuaciones</h2>
+      <div class="calc-tabla-envoltura">
+        <table class="calc-tabla">
+          <thead><tr><th>Ecuación</th><th>Resultado</th><th>Unidad</th><th>Diferencia con CKD-EPI 2021</th></tr></thead>
+          <tbody data-comparacion></tbody>
+        </table>
+      </div>
+      <p class="calc-nota" data-avisos></p>
     </div>
   </section>
 
@@ -51,6 +83,15 @@ import { VECTORES } from '../../lib/formulas.js';
     <ul>
       <li>Scr: creatinina sérica en mg/dL (µmol/L ÷ 88,4).</li>
       <li>κ = 0,7 (mujer) o 0,9 (hombre). α = −0,241 (mujer) o −0,302 (hombre).</li>
+    </ul>
+    <h2>Las otras ecuaciones de la comparación</h2>
+    <ul>
+      <li><strong>CKD-EPI 2021 con creatinina y cistatina C:</strong> 135 × mín(Scr/κ, 1)<sup>α</sup> × máx(Scr/κ, 1)<sup>−0,544</sup> × mín(Scis/0,8, 1)<sup>−0,323</sup> × máx(Scis/0,8, 1)<sup>−0,778</sup> × 0,9961<sup>edad</sup> × 0,963 [mujer]. α = −0,219 (mujer) o −0,144 (hombre).</li>
+      <li><strong>CKD-EPI 2012 con cistatina C sola:</strong> 133 × mín(Scis/0,8, 1)<sup>−0,499</sup> × máx(Scis/0,8, 1)<sup>−1,328</sup> × 0,996<sup>edad</sup> × 0,932 [mujer].</li>
+      <li><strong>CKD-EPI 2009:</strong> 141 × mín(Scr/κ, 1)<sup>α</sup> × máx(Scr/κ, 1)<sup>−1,209</sup> × 0,993<sup>edad</sup> × 1,018 [mujer] × 1,159 [raza negra]. α = −0,329 (mujer) o −0,411 (hombre).</li>
+      <li><strong>MDRD de 4 variables (IDMS):</strong> 175 × Scr<sup>−1,154</sup> × edad<sup>−0,203</sup> × 0,742 [mujer] × 1,212 [raza negra].</li>
+      <li><strong>Cockcroft-Gault:</strong> (140 − edad) × peso / (72 × Scr) × 0,85 [mujer]. Da mL/min, no se ajusta a 1,73 m².</li>
+      <li><strong>Sin indexar:</strong> filtrado CKD-EPI 2021 × superficie corporal de Mosteller (√(talla × peso / 3600)) / 1,73, en mL/min.</li>
     </ul>
     <h2>Casos de prueba para verificar tu sistema</h2>
     <p>
@@ -67,10 +108,49 @@ import { VECTORES } from '../../lib/formulas.js';
         </tbody>
       </table>
     </div>
+    <h2>Cuándo usar cada ecuación</h2>
+    <div class="calc-tabla-envoltura">
+      <table class="calc-tabla">
+        <thead><tr><th>Ecuación</th><th>Se recomienda</th><th>No se recomienda</th></tr></thead>
+        <tbody>
+          <tr><td><strong>CKD-EPI 2021 con creatinina</strong></td><td>Primera elección para informar el filtrado en adultos. Es la que recomiendan las guías KDIGO.</td><td>Cuando la creatinina no refleja el filtrado (ver más abajo) o el paciente no está en estado estable.</td></tr>
+          <tr><td><strong>CKD-EPI 2021 con creatinina y cistatina C</strong></td><td>Para confirmar la enfermedad renal crónica cuando la estimación con creatinina es dudosa, o cuando una decisión importante depende del valor (trasplante, fármacos nefrotóxicos, quimioterapia).</td><td>Como estudio de rutina: la cistatina C es más cara, no está en todos los laboratorios y la afectan factores ajenos al riñón.</td></tr>
+          <tr><td><strong>CKD-EPI 2012 con cistatina C sola</strong></td><td>Cuando la creatinina es poco fiable: masa muscular muy baja o muy alta, amputados, enfermedad muscular, dietas extremas.</td><td>Con obesidad importante, enfermedad tiroidea no controlada, corticoides en dosis altas, inflamación activa o cáncer.</td></tr>
+          <tr><td><strong>Cockcroft-Gault</strong></td><td>Dosificación de fármacos cuya ficha técnica lo exige (por ejemplo, varios anticoagulantes orales directos). Confirma siempre la ficha vigente de cada fármaco.</td><td>Para clasificar la enfermedad renal crónica. Con obesidad o edema sobreestima el filtrado si se usa el peso real.</td></tr>
+          <tr><td><strong>CKD-EPI 2009</strong></td><td>Solo para comparar con informes históricos o con un sistema que no se ha actualizado.</td><td>Como ecuación vigente: incorpora un coeficiente de raza que ya no se recomienda.</td></tr>
+          <tr><td><strong>MDRD</strong></td><td>Solo para comparar con informes históricos.</td><td>Con filtrado sobre 60 mL/min/1,73 m², donde subestima de manera sistemática. CKD-EPI la reemplazó.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Cuándo la estimación no aplica desde el punto de vista clínico</h2>
+    <ul>
+      <li><strong>Insuficiencia renal aguda o creatinina que cambia rápido.</strong> Las ecuaciones suponen estado estable. En una lesión aguda el valor calculado no representa el filtrado real, porque la creatinina tarda en reflejar los cambios.</li>
+      <li><strong>Menores de 18 años.</strong> Se usan ecuaciones pediátricas (Schwartz a la cabecera del paciente, CKiD U25).</li>
+      <li><strong>Embarazo.</strong> Cambia la creatinina y estas ecuaciones no están validadas.</li>
+      <li><strong>Diálisis.</strong> No corresponde estimar el filtrado con estas ecuaciones.</li>
+      <li><strong>Masa muscular muy baja o muy alta</strong> (sarcopenia, amputación, desnutrición, fisicoculturismo, suplementos de creatina) y dieta vegetariana estricta o con mucha carne cocida: la creatinina no refleja el filtrado. Se prefiere la cistatina C.</li>
+      <li><strong>Cirrosis, ascitis y edema importante.</strong> La creatinina y el peso se distorsionan y las ecuaciones tienden a sobreestimar el filtrado.</li>
+      <li><strong>Fármacos que bloquean la secreción tubular de creatinina</strong> (trimetoprim, cimetidina, dolutegravir, cobicistat): suben la creatinina sin que baje el filtrado real.</li>
+      <li><strong>Interferencias analíticas.</strong> En el método de Jaffe interfieren cetonas y algunas cefalosporinas, y la creatinina debe tener trazabilidad IDMS. Sin ella, la estimación pierde validez.</li>
+      <li><strong>Extremos de edad y tamaño corporal.</strong> En personas muy mayores, muy delgadas o con obesidad severa, el valor indexado a 1,73 m² puede inducir a error al dosificar fármacos.</li>
+    </ul>
+
+    <h2>Qué considerar al interpretar el resultado</h2>
+    <ul>
+      <li><strong>Discordancia entre creatinina y cistatina C.</strong> Una diferencia de 30 % o más entre ambas estimaciones sugiere que algo ajeno al filtrado altera una de las dos. La calculadora lo avisa.</li>
+      <li><strong>Un solo valor no diagnostica enfermedad renal crónica.</strong> Se requiere un filtrado menor de 60 mL/min/1,73 m² o marcadores de daño por más de 3 meses. La albuminuria completa la clasificación de riesgo de KDIGO.</li>
+      <li><strong>Cistatina C.</strong> Aumenta con obesidad, tabaquismo, inflamación, hipertiroidismo y corticoides, y baja con el hipotiroidismo. No es un filtrado «puro».</li>
+      <li><strong>Dosificación de fármacos.</strong> En fármacos de margen terapéutico estrecho o en pacientes de tamaño muy distinto a 1,73 m², conviene el filtrado en mL/min (sin indexar). La calculadora lo entrega cuando ingresas peso y talla.</li>
+      <li><strong>Error propio de la estimación.</strong> Incluso en buenas condiciones, cerca de 85 % de las estimaciones caen dentro de ±30 % del filtrado medido. Las diferencias pequeñas entre ecuaciones no tienen relevancia clínica.</li>
+      <li><strong>Misma ecuación en el seguimiento.</strong> Al comparar controles de un mismo paciente, usa siempre la misma ecuación y el mismo método de creatinina.</li>
+    </ul>
+    <p class="calc-nota">
+      Esta herramienta apoya al laboratorio. No reemplaza el juicio del médico tratante ni la ficha técnica de cada fármaco.
+    </p>
     <h2>Límites de uso</h2>
     <ul>
-      <li>Solo adultos. En niños se usan otras ecuaciones.</li>
-      <li>Es una estimación con creatinina en estado estable: no aplica en insuficiencia renal aguda, embarazo, masa muscular extrema ni algunas dietas.</li>
+      <li>Solo adultos (18 años o más).</li>
       <li>La versión de 2021 no usa raza. Si tu sistema todavía calcula con la ecuación de 2009, esta es la comparación que justifica la actualización.</li>
     </ul>
     <h2>Referencia</h2>
@@ -78,15 +158,31 @@ import { VECTORES } from '../../lib/formulas.js';
       Inker LA, et al. New creatinine- and cystatin C–based equations to estimate GFR without race. <em>N Engl J
       Med</em> 2021;385:1737-1749. Ecuación publicada por la National Kidney Foundation.
     </p>
+    <p>
+      Levey AS, et al. A new equation to estimate glomerular filtration rate. <em>Ann Intern Med</em> 2009;150:604-612.
+      Inker LA, et al. Estimating GFR from serum creatinine and cystatin C. <em>N Engl J Med</em> 2012;367:20-29.
+      KDIGO 2024 Clinical Practice Guideline for the Evaluation and Management of CKD. <em>Kidney Int</em> 2024;105(4S):S117-S314.
+    </p>
   </div>
 </PaginaCalculadora>
 
 <script>
   import { formato, numero } from '../../lib/calidad.js';
-  import { ckdEpi2021, umolAMgdl } from '../../lib/formulas.js';
+  import {
+    categoriaGfr, ckdEpi2009, ckdEpi2021, ckdEpiCistatina, ckdEpiCrCis2021, cockcroftGault, mdrd, superficieMosteller, umolAMgdl,
+  } from '../../lib/formulas.js';
 
   const form = document.getElementById('calc') as HTMLFormElement;
   const $ = (s: string) => document.querySelector(`[data-${s}]`) as HTMLElement;
+  const TEXTO_CAT: Record<string, string> = {
+    G1: 'Normal o alto', G2: 'Levemente disminuido', G3a: 'Leve a moderadamente disminuido',
+    G3b: 'Moderada a gravemente disminuido', G4: 'Gravemente disminuido', G5: 'Falla renal',
+  };
+
+  const opcional = (nombre: string) => {
+    const v = numero((form.elements.namedItem(nombre) as HTMLInputElement).value);
+    return Number.isNaN(v) || v <= 0 ? null : v;
+  };
 
   function calcular() {
     let scr = numero(form.scr.value);
@@ -98,12 +194,66 @@ import { VECTORES } from '../../lib/formulas.js';
       return;
     }
     if (form.unidad.value === 'umol') scr = umolAMgdl(scr);
+    const sexo = form.sexo.value;
+    const negra = form.negra.value === 'si';
+    const cis = opcional('cis');
+    const peso = opcional('peso');
+    const talla = opcional('talla');
+
+    const base = ckdEpi2021(scr, edad, sexo);
+    const cat = categoriaGfr(base);
     $('mensaje').hidden = true;
     $('resultado').hidden = false;
-    $('egfr').textContent = formato(ckdEpi2021(scr, edad, form.sexo.value), 1);
+    $('egfr').textContent = formato(base, 1);
+    $('cat').textContent = cat;
+    $('cat-texto').textContent = TEXTO_CAT[cat];
+
+    const mixta = cis ? ckdEpiCrCis2021(scr, cis, edad, sexo) : null;
+    const sola = cis ? ckdEpiCistatina(cis, edad, sexo) : null;
+    const filas: { nombre: string; valor: number | null; unidad: string; falta?: string }[] = [
+      { nombre: 'CKD-EPI 2021 (creatinina)', valor: base, unidad: 'mL/min/1,73 m²' },
+      { nombre: 'CKD-EPI 2021 (creatinina y cistatina C)', valor: mixta, unidad: 'mL/min/1,73 m²', falta: 'Falta la cistatina C' },
+      { nombre: 'CKD-EPI 2012 (cistatina C)', valor: sola, unidad: 'mL/min/1,73 m²', falta: 'Falta la cistatina C' },
+      { nombre: 'CKD-EPI 2009 (creatinina)', valor: ckdEpi2009(scr, edad, sexo, negra), unidad: 'mL/min/1,73 m²' },
+      { nombre: 'MDRD (4 variables)', valor: mdrd(scr, edad, sexo, negra), unidad: 'mL/min/1,73 m²' },
+      { nombre: 'Cockcroft-Gault', valor: peso ? cockcroftGault(scr, edad, sexo, peso) : null, unidad: 'mL/min', falta: 'Falta el peso' },
+      { nombre: 'CKD-EPI 2021 sin indexar', valor: peso && talla ? (base * superficieMosteller(talla, peso)) / 1.73 : null, unidad: 'mL/min', falta: 'Faltan peso y talla' },
+    ];
+    const tbody = $('comparacion');
+    tbody.replaceChildren();
+    filas.forEach((f, i) => {
+      const tr = document.createElement('tr');
+      const celdas = [f.nombre, f.valor === null ? '—' : formato(f.valor, 1), f.unidad];
+      for (const t of celdas) {
+        const td = document.createElement('td');
+        td.textContent = t;
+        tr.append(td);
+      }
+      const td = document.createElement('td');
+      if (f.valor === null) td.textContent = f.falta ?? '—';
+      else if (i === 0) td.textContent = 'Referencia';
+      else if (f.unidad === 'mL/min') td.textContent = 'No comparable: no está indexado a 1,73 m²';
+      else {
+        const d = ((f.valor - base) / base) * 100;
+        td.textContent = `${d > 0 ? '+' : ''}${formato(d, 1)} %`;
+      }
+      tr.append(td);
+      tbody.append(tr);
+    });
+
+    const avisos: string[] = [];
+    if (sola !== null && mixta !== null) {
+      if (Math.abs(sola - base) / base >= 0.3) avisos.push('La estimación con cistatina C difiere en 30 % o más de la de creatinina: revisa masa muscular, inflamación, tiroides, corticoides o fármacos antes de elegir un valor.');
+      if (categoriaGfr(mixta) !== cat) avisos.push(`La ecuación combinada cambia la categoría de ${cat} a ${categoriaGfr(mixta)}.`);
+    }
+    if (peso && !talla) avisos.push('Agrega la talla para ver el filtrado sin indexar.');
+    if (edad >= 75) avisos.push('En mayores de 75 años la estimación es menos precisa: interprétala junto al cuadro clínico.');
+    $('avisos').textContent = avisos.join(' ');
+    $('avisos').hidden = avisos.length === 0;
   }
 
   form.addEventListener('input', calcular);
+  form.addEventListener('change', calcular);
   form.addEventListener('submit', (e) => e.preventDefault());
   calcular();
 </script>

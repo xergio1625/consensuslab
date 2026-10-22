@@ -51,6 +51,22 @@ test('percentil como PERCENTILE.INC y resumen de TAT', () => {
   cerca(r.mediana, 60, 1e-9);
 });
 
+test('Otras ecuaciones de filtrado glomerular: valores de referencia y punto de quiebre', () => {
+  cerca(F.ckdEpi2009(1.0, 50, 'M'), 87.4, 0.05);
+  cerca(F.ckdEpi2009(1.0, 50, 'M', true), 87.4 * 1.159, 0.05);
+  cerca(F.mdrd(1.0, 50, 'M'), 79.1, 0.05);
+  cerca(F.cockcroftGault(1.0, 50, 'M', 80), 100, 1e-9);
+  cerca(F.cockcroftGault(1.0, 50, 'F', 80), 85, 1e-9);
+  cerca(F.ckdEpiCistatina(0.9, 50, 'M'), 93.1, 0.05);
+  cerca(F.ckdEpiCrCis2021(1.0, 0.9, 50, 'M'), 95.7, 0.05);
+  // Con cistatina en el quiebre (0,8) el factor de cistatina vale 1.
+  cerca(F.ckdEpiCistatina(0.8, 40, 'M'), 133 * 0.996 ** 40, 1e-9);
+  cerca(F.superficieMosteller(180, 80), 2, 1e-9);
+  assert.equal(F.categoriaGfr(90), 'G1');
+  assert.equal(F.categoriaGfr(59.9), 'G3a');
+  assert.equal(F.categoriaGfr(14.9), 'G5');
+});
+
 test('CKD-EPI 2021: vectores de prueba', () => {
   for (const v of F.VECTORES.ckdEpi2021) cerca(F.ckdEpi2021(v.scr, v.edad, v.sexo), v.esperado, 0.05);
   // Creatinina en el punto de quiebre κ: ambas ramas valen 1.
