@@ -83,11 +83,15 @@ import { CORREO_CONTACTO, URL_APP } from '../lib/sitio';
         const j = await r.json();
         if (j.ok) {
           form.reset();
-          mostrar('¡Listo! Te escribiremos cuando haya novedades. Revisa tu correo: te enviamos una bienvenida.', false);
+          mostrar(j.repetida
+            ? 'Si ese correo aún no está suscrito, te enviamos un mensaje para confirmarlo. Revisa tu bandeja (y el spam).'
+            : 'Casi listo: te enviamos un correo para confirmar tu suscripción. Ábrelo y pulsa «Confirmar». Si no llega, revisa el spam.', false);
           const w = window as unknown as { gtag?: (...a: unknown[]) => void };
           if (typeof w.gtag === 'function') w.gtag('event', 'sign_up', { metodo: 'boletin', pagina: location.pathname });
         } else if (j.error === 'validacion') {
           mostrar('Revisa tu correo y marca la casilla de aceptación.', true);
+        } else if (j.error === 'limite') {
+          mostrar('Hemos recibido muchas solicitudes. Inténtalo de nuevo en un rato.', true);
         } else {
           mostrar('No pudimos registrarte. Inténtalo de nuevo o escríbenos a ' + form.dataset.correo + '.', true);
         }
