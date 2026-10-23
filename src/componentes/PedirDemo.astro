@@ -2,7 +2,7 @@
 // Invitación a la prueba gratuita (cuenta real, 15 días) y formulario corto para pedir cotización desde cualquier página (mismo destino que /planes/).
 // variante «caja»: columna lateral · «franja»: ancho completo entre secciones.
 import { url } from '../lib/rutas';
-import { CORREO_CONTACTO, URL_APP } from '../lib/sitio';
+import { CORREO_CONTACTO, URL_APP, URL_REGISTRO } from '../lib/sitio';
 
 interface Props {
   variante?: 'caja' | 'franja';
@@ -22,7 +22,7 @@ const caja = variante === 'caja';
           contratas, sigues en la misma cuenta con tus registros. Preventa fundadores: <strong>40 % de descuento</strong>
           pagando antes del 1 de diciembre de 2026.
         </p>
-        <p><a class="boton boton-primario" href={URL_APP}>Probar 15 días gratis</a></p>
+        <p><a class="boton boton-primario" href={URL_REGISTRO}>Probar 15 días gratis</a></p>
         <p class="texto-suave">¿Prefieres una cotización? Déjanos tus datos y te la enviamos; si necesitas más tiempo, extendemos tu prueba a 30 días.</p>
       </div>
       <form class="form-demo" novalidate data-url={URL_APP} data-correo={CORREO_CONTACTO}>

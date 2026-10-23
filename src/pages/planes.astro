@@ -6,7 +6,7 @@ import EspacioVideo from '../componentes/EspacioVideo.astro';
 import { VIDEOS } from '../lib/videos';
 import { obtenerHerramientas } from '../lib/datos';
 import { url } from '../lib/rutas';
-import { CORREO_CONTACTO, URL_APP } from '../lib/sitio';
+import { CORREO_CONTACTO, URL_APP, URL_REGISTRO } from '../lib/sitio';
 
 const herramientas = await obtenerHerramientas();
 const enApp = herramientas.filter((h) => h.data.estado === 'disponible' && h.data.app_modulo);
@@ -80,7 +80,7 @@ const planes = [
       </p>
       <div class="acciones-portada">
         <a class="boton boton-dorado" href="#cotizar" data-plan="gestion_qc">Pedir cotización</a>
-        <a class="boton boton-secundario boton-claro" href={URL_APP}>Probar gratis 15 días</a>
+        <a class="boton boton-secundario boton-claro" href={URL_REGISTRO}>Probar gratis 15 días</a>
       </div>
       <p class="nota-portada">Precios por laboratorio, anuales, con IVA incluido. Factura electrónica.</p>
     </div>
@@ -121,7 +121,7 @@ const planes = [
         Todos los planes incluyen registros trazables (nada se borra: las correcciones quedan con nombre y motivo),
         actualizaciones, soporte por correo y una copia de tus registros cuando la pidas. La app no admite datos de
         pacientes. Prueba cualquier herramienta <strong>15 días gratis</strong> con los datos de tu laboratorio:
-        <a href={URL_APP}>crea tu cuenta</a> y empieza.
+        <a href={URL_REGISTRO}>crea tu cuenta</a> y empieza.
       </p>
       <div class="aviso aviso-info">
         <p>
@@ -138,7 +138,7 @@ const planes = [
       <h2>Cómo funciona la preventa</h2>
       <ol class="pasos-preventa">
         <li>
-          <strong>Prueba gratis 15 días</strong> con los datos reales de tu laboratorio: <a href={URL_APP}>crea tu cuenta</a>,
+          <strong>Prueba gratis 15 días</strong> con los datos reales de tu laboratorio: <a href={URL_REGISTRO}>crea tu cuenta</a>,
           sin tarjeta ni compromiso. Si contratas, sigues en la misma cuenta y tus registros se mantienen.
         </li>
         <li>

@@ -9,6 +9,8 @@ export const INDEXAR = true;
 
 /** App ConsensusLab (Google Cloud, Santiago; Consensus QC en /qc/). Las fichas con `app_modulo` enlazan aquí. */
 export const URL_APP = 'https://app.consensuslab.cl/';
+// Página de «Crear cuenta» (prueba gratuita) de la app: los botones «Probar gratis» van aquí; «Ingresar» va a URL_APP.
+export const URL_REGISTRO = URL_APP + '?registro=1';
 
 /** Enlace que abre la app directamente en un módulo (tras ingresar con el código). */
 export function urlModulo(modulo: string): string {

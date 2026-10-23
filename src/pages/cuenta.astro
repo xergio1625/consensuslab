@@ -3,7 +3,7 @@
 // viven en la app: este sitio estático no guarda datos de usuarios.
 import Base from '../plantillas/Base.astro';
 import { url } from '../lib/rutas';
-import { URL_APP } from '../lib/sitio';
+import { URL_APP, URL_REGISTRO } from '../lib/sitio';
 ---
 
 <Base titulo="Ingresar" seccion="cuenta" indexar={false} descripcion="Ingresa a la app ConsensusLab para probar las herramientas 15 días gratis o usarlas con tu suscripción.">
@@ -14,16 +14,20 @@ import { URL_APP } from '../lib/sitio';
         Las herramientas funcionan en la app ConsensusLab. Al crear tu cuenta tienes 15 días gratis con los datos reales de
         tu laboratorio; si contratas, sigues en la misma cuenta y tus registros se mantienen.
       </p>
-      <p><a class="boton boton-primario" href={URL_APP}>Ir a la app</a></p>
+      <p>
+        <a class="boton boton-primario" href={URL_APP}>Ingresar</a>
+        <a class="boton boton-secundario" href={URL_REGISTRO}>Crear cuenta gratis</a>
+      </p>
 
       <h2>Cómo se ingresa</h2>
       <ul>
         <li>
-          <strong>La primera vez:</strong> escribe tu correo y pide un código. Te llega un código de 6 dígitos; con él
-          creas tu cuenta en un minuto.
+          <strong>La primera vez:</strong> pulsa «Crear cuenta gratis», completa tu nombre, el de tu laboratorio y tu
+          correo, y confirma con el código de 6 dígitos que te llega. Si tu laboratorio ya te dio acceso, se activa esa
+          misma cuenta: nunca se crea una segunda.
         </li>
         <li>
-          <strong>Después:</strong> crea una contraseña en «Mi cuenta» y entra con tu correo y contraseña, sin esperar
+          <strong>Después:</strong> entra con tu correo y un código, o crea una contraseña en «Mi cuenta» y entra con tu correo y contraseña, sin esperar
           correos. Si la olvidas, vuelve a entrar con un código.
         </li>
         <li>

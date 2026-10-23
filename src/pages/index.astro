@@ -9,7 +9,7 @@ import { VIDEOS } from '../lib/videos';
 import { obtenerCatalogo, obtenerHerramientas, obtenerPrompts } from '../lib/datos';
 import { url } from '../lib/rutas';
 import { CALCULADORAS } from '../lib/calculadoras';
-import { CORREO_CONTACTO, LINKEDIN_PERFIL, MEDIUM_PERFIL, URL_APP } from '../lib/sitio';
+import { CORREO_CONTACTO, LINKEDIN_PERFIL, MEDIUM_PERFIL, URL_APP, URL_REGISTRO } from '../lib/sitio';
 
 const catalogo = await obtenerCatalogo();
 const nombreGrupo = new Map(catalogo.map(({ grupo }) => [grupo.id, grupo.data.nombre_corto]));
@@ -77,7 +77,7 @@ const pasos = [
           datos de tu laboratorio, hecho por un tecnólogo médico.
         </p>
         <div class="acciones-portada">
-          <a class="boton boton-primario" href={URL_APP}>Probar 15 días gratis</a>
+          <a class="boton boton-primario" href={URL_REGISTRO}>Probar 15 días gratis</a>
           <a class="boton boton-secundario boton-claro" href={url('consensus-qc/')}>Conocer Consensus QC</a>
         </div>
         <p class="nota-portada">
