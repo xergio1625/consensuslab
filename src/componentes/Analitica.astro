@@ -4,8 +4,13 @@
 // La decisión se guarda en este navegador por 12 meses y se puede cambiar desde el pie («Preferencias de cookies»).
 // Sin GA_ID (src/lib/sitio.ts) este componente no agrega nada a la página.
 import { url } from '../lib/rutas';
-import { GA_ID, URL_APP } from '../lib/sitio';
+import { CF_BEACON_TOKEN, GA_ID, URL_APP } from '../lib/sitio';
 ---
+
+{/* Cloudflare Web Analytics: sin cookies ni identificadores, por eso carga sin pedir consentimiento. */}
+{CF_BEACON_TOKEN && (
+  <script is:inline type="module" defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon={JSON.stringify({ token: CF_BEACON_TOKEN })}></script>
+)}
 
 {GA_ID && (
   <>

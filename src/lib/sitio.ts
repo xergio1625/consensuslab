@@ -33,6 +33,13 @@ export const LINKEDIN_PERFIL = 'https://www.linkedin.com/in/sergio-inostroza-rif
  */
 export const GA_ID = 'G-PBCF6HZRHZ';
 
+/**
+ * Token de Cloudflare Web Analytics (público, aparece en el código de cada página).
+ * Mide visitas sin cookies ni identificadores personales, por eso no pide consentimiento.
+ * Vacío = no se carga el script. Instalación manual: el sitio va en «solo DNS», sin proxy de Cloudflare.
+ */
+export const CF_BEACON_TOKEN = '7e9e0f16cb3340449babcf2f2d15304f';
+
 /** Fin de la preventa fundadores (desde este día rige el precio normal). Hasta entonces se ven la franja y la imagen de preventa. */
 export const FIN_PREVENTA = '2026-12-01';
 
@@ -42,5 +49,5 @@ export const CORREO_CONTACTO = 'contacto@consensuslab.cl';
 /** Fecha de la versión vigente de los términos de uso. */
 export const VIGENCIA_LEGAL = '11 de octubre de 2026';
 
-/** Fecha de la versión vigente de la política de privacidad (Google Analytics con consentimiento, formulario de cotización, suscripción a novedades y avisos por WhatsApp futuros). */
-export const VIGENCIA_PRIVACIDAD = '16 de octubre de 2026';
+/** Fecha de la versión vigente de la política de privacidad (Google Analytics con consentimiento, Cloudflare Web Analytics sin cookies, formulario de cotización, suscripción a novedades y avisos por WhatsApp futuros). */
+export const VIGENCIA_PRIVACIDAD = '24 de octubre de 2026';
