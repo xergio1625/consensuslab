@@ -17,7 +17,7 @@ Yo no esperaba encontrarme con esa pregunta en una cubeta de proteínas totales.
 
 ## El reactivo que duraba lo que dura un lunes
 
-Las proteínas totales por biuret son una técnica noble, vieja y bien portada. Con una salvedad: el reactivo, a bordo del analizador, se cansa. A los 3 o 4 días empieza a caer, y esa caída es peligrosa porque, si se deja más tiempo del necesario, el error puede pasar el máximo que el laboratorio tolera. Para proteínas totales ese error total permitido ronda el 8 %, y el CV de la técnica no debería pasar del 1 o 1,5 %. [Validar: fuente del 8 % y del CV objetivo.]
+Las proteínas totales por biuret son una técnica noble, vieja y bien portada. Con una salvedad: el reactivo, a bordo del analizador, se cansa. A los 3 o 4 días empieza a caer, y esa caída es peligrosa porque, si se deja más tiempo del necesario, el error puede pasar el máximo que el laboratorio tolera. Para proteínas totales ese error total permitido ronda el 8 %, y el CV de la técnica no debería pasar del 1 o 1,5 %.
 
 En nuestro laboratorio se procesaban 10 o 20 proteínas al día, no más. Con ese volumen el frasco se quedaba a bordo más tiempo del que le convenía, y al tercer o cuarto día el CV de la serie andaba por el 3 o 4 %.
 
@@ -29,7 +29,7 @@ Levey-Jennings y las reglas de Westgard suponen una forma: la campana de Gauss. 
 
 Un reactivo que se deteriora a bordo no dibuja una campana. Los primeros días el control cae cerca de la media. Al tercero o cuarto empieza a bajar, y el resultado es una distribución con muchos valores altos al comienzo, una cola larga hacia abajo y una dispersión que crece. Es una campana con cola.
 
-Y esa cola trae una consecuencia incómoda. Si calculas la media y la desviación con todos esos días mezclados, **la DS ya incluye el deterioro**. Los límites quedan más anchos de lo que un método sano justificaría, y la gráfica "aprende" que la caída es normal. Por eso en el N20 todo se veía adentro y, aun así, no cumplíamos el error total máximo permitido. [Validar: es lo que suele pasar; confírmalo con tus propios datos.]
+Y esa cola trae una consecuencia incómoda. Si calculas la media y la desviación con todos esos días mezclados, **la DS ya incluye el deterioro**. Los límites quedan más anchos de lo que un método sano justificaría, y la gráfica "aprende" que la caída es normal. Por eso en el N20 todo se veía adentro y, aun así, no cumplíamos el error total máximo permitido.
 
 ## ¿Sesgo o imprecisión? La pregunta que ordena todo
 
@@ -51,9 +51,9 @@ Un ejemplo **sintético**, con error total permitido de 8 % y un CV intradía de
 | Error total | 2,0 % | 9,0 % |
 | Sigma | 6,7 | 0,8 |
 
-La precisión es idéntica y el método pasó de excelente a inaceptable solo por el sesgo. Si juntas los cuatro días en una serie, sale un CV aparente de alrededor de 3 %, que es justo el número que mirábamos. No describe qué tan bien repite el método: describe cuánto se movió la media. [Validar: ejemplo sintético, no son datos reales.]
+La precisión es idéntica y el método pasó de excelente a inaceptable solo por el sesgo. Si juntas los cuatro días en una serie, sale un CV aparente de alrededor de 3 %, que es justo el número que mirábamos. No describe qué tan bien repite el método: describe cuánto se movió la media.
 
-¿Y el paciente? Con −7 %, quien de verdad tiene 6,5 g/dL recibe 6,0. Si el límite inferior de referencia ronda los 6,4 [Validar con tu intervalo], queda catalogado como hipoproteinémico por culpa del reactivo, no de su suero.
+¿Y el paciente? Con −7 %, quien de verdad tiene 6,5 g/dL recibe 6,0. Si el límite inferior de referencia ronda los 6,4, queda catalogado como hipoproteinémico por culpa del reactivo, no de su suero.
 
 Para deducir cuál de los dos sospechosos tienes, en este orden:
 
@@ -122,7 +122,7 @@ Cuando llegaron los resultados del control externo, el cuadro fue claro: en las 
 
 Nuestro reactivo estaba calibrado. Estaba dentro de las instrucciones del fabricante. El control interno se veía hermoso. Y aun así el externo decía que no. Recalibrar no ayudaba: el método estaba bien calibrado respecto de sí mismo. El problema no era el ajuste, era la identidad.
 
-Mi sospecha, y lo digo como sospecha porque no conozco la fórmula, es que los cambios que le dieron estabilidad al reactivo también le cambiaron el comportamiento ante ciertas muestras. En la práctica era un **biuret modificado** que se informaba como biuret. [Validar: hipótesis, no hay confirmación del fabricante.]
+Mi sospecha, y lo digo como sospecha porque no conozco la fórmula, es que los cambios que le dieron estabilidad al reactivo también le cambiaron el comportamiento ante ciertas muestras. En la práctica era un **biuret modificado** que se informaba como biuret.
 
 ## Entonces, ¿es el mismo barco?
 
