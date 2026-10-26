@@ -62,6 +62,23 @@ Ese es el centro de esta historia. Un resultado razonable y un resultado verific
 
 Un laboratorio puede informar resultados correctos durante años sin saber que lo son. Y el día que cambia el reactivo, el analizador o la persona que calibra, los errores dejan de apuntar en sentidos opuestos, y el reloj marca otra hora.
 
+## Cómo quedó la técnica
+
+Después de meses de desarmar piezas, la solución fue más simple que el problema, que suele ser la señal de que está bien resuelta. Esto fue lo que cambió:
+
+| | Antes | Después |
+|---|---|---|
+| Creatinina en orina | Un factor en el middleware que nadie podía corroborar, y la misma ecuación que el suero | Dilución de 25 configurada en el analizador, sin factor ni pendiente ni ecuación entre la calibración y la dilución |
+| Controles | Procesados como suero, por otro camino | Procesados igual que las muestras |
+| Reactivo de albúmina | Sin homogenizar, calibrado con el frasco recién cargado | Se homogeniza todos los días y se calibra con el reactivo homogenizado |
+| Ajustes manuales | Un −5 puesto a mano en la ecuación | Eliminadas todas las pendientes y ecuaciones intermedias |
+| Arrastre | La albúmina contaminada por el picrato de la creatinina | Un lavado entre cada albúmina y cada creatinina |
+| Resultados | Primera muestra negativa y las demás infladas | Sin negativos, y resultados más bajos |
+
+Con los factores manuales fuera, desaparecieron los resultados negativos. Con el lavado entre cada albúmina y cada creatinina, desapareció la contaminación por arrastre, y por eso los resultados bajaron.
+
+También se probó, sin éxito, cambiar la longitud de onda: el equipo permitía leer a 340 o a 600 nanómetros, y se calibró en los dos casos. Ninguno eliminó el arrastre. Peor: confundió aún más, porque sumó una variable más a un problema que ya tenía demasiadas. Fue una de las tantas pruebas que se hicieron para descartar y que, al final, solo dejaron claro cuál no era la causa.
+
 ## La jefatura que no sabía a quién creerle
 
 Lo que hizo tan difícil el proceso es que no fue un hallazgo, fue una **sucesión** de hallazgos, y cada uno cambiaba la respuesta del anterior. Primero las muestras estaban bien. Después, mal. Después, de otra manera mal. La jefatura recibía versiones que no se parecían entre sí: la de ayer decía una cosa, la de hoy la contraria, y la de mañana prometía aclarar las dos. Una persona que dice «las muestras estaban mal» seis veces seguidas con matices distintos empieza a sonar a alguien que no sabe lo que dice.
@@ -87,6 +104,7 @@ Hasta donde se sabe, aquí no hubo daño. Pero «hasta donde se sabe» es la par
 - **Pregunta si tu resultado es razonable o verificado.** Si no puedes explicar con qué se comprobó, es un reloj parado.
 - **Una calibración que siempre da mal es un dato, no una molestia.** Algo en el reactivo, el procedimiento o el equipo la está empujando.
 - **Cuando arreglas un error y aparece otro de signo contrario, no te asustes:** ya estaban los dos. El segundo estaba compensado.
+- **Una técnica bien arreglada queda más simple, no más compleja.** Si para que funcione hacen falta factores y ecuaciones entre la calibración y el resultado, sospecha de que algo de fondo sigue sin resolverse.
 - **Un factor puesto a mano es un parche.** Haz el inventario: quién lo puso, por qué y cuándo se revisó. Si nadie puede explicarlo, quítalo en una configuración de prueba y mira qué se rompe.
 - **Lee el inserto buscando lo que cambia el uso:** homogenizar, tiempos a bordo, temperatura. Lo que no está destacado también es parte del método.
 - **Exige que el control recorra el mismo camino que el paciente**, o que se deje constancia de qué parte no está cubierta.
