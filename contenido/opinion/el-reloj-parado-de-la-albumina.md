@@ -17,23 +17,27 @@ Yo no esperaba encontrar ese reloj en una albúmina en orina. Pero ahí estaba. 
 
 Resuelto el arrastre con más lavados, mi colega esperaba tranquilidad. Y los resultados cambiaron, pero no como esperaba. Las albúminas en orina **empezaron a dar negativo**. No bajas. Negativas. Una concentración por debajo de cero, que no existe, informada con la solemnidad de un número cualquiera.
 
-Ahí entendió algo incómodo: el arrastre no solo contaminaba. **Estaba tapando algo.** Al limpiar el sistema, el error que quedaba a la vista apuntaba hacia el otro lado. Los resultados habían estado inflados por la contaminación, y esa inflación compensaba una calibración que venía corrida hacia abajo desde el comienzo. Se había arreglado un error, y el error arreglado dejó al descubierto el que escondía.
+Ahí entendió algo incómodo: el arrastre no solo contaminaba. **Estaba tapando algo.** Y al mirar la ecuación de la técnica lo encontró: en el término *b*, el que no depende de la señal, alguien había puesto a mano un valor que **restaba 5 a todas las albúminas** de los pacientes. Un parche. Lo había puesto quien estaba antes, de buena fe, porque veía resultados inflados y no sabía de dónde venían ni cómo arreglarlo de otra forma. Nadie dejó escrito por qué.
 
-Un ejemplo **sintético** (no son datos reales) con una calibración que resta 8 mg/L a todo y un arrastre que suma 8 mg/L a todo:
+Eso explicaba la primera muestra: la única sin arrastre, que además perdía 5 y quedaba por debajo de cero. Y explicaba por qué los resultados «decentes» no lo eran tanto: el parche restaba parejo a todo, el arrastre sumaba de forma irregular, y ninguno de los dos era el error de fondo. El parche **tapó mucho y confundió más**, porque había otras variables que nadie había considerado. Al resolver el arrastre, el parche quedó restando sin nada que compensar. Se había arreglado un error, y el error arreglado dejó al descubierto el que escondía.
 
-| Valor real | Con calibración sesgada + arrastre | Con solo calibración sesgada |
+Un ejemplo **sintético** (no son datos reales) con un parche que resta 5 mg/L a todo y un arrastre que suma 5 mg/L a todo:
+
+| Valor real | Con parche + arrastre | Solo con el parche |
 |---|---|---|
-| 6 mg/L | 6 mg/L | **−2 mg/L** |
-| 25 mg/L | 25 mg/L | **17 mg/L** |
-| 60 mg/L | 60 mg/L | **52 mg/L** |
+| 3 mg/L | 3 mg/L | **−2 mg/L** |
+| 25 mg/L | 25 mg/L | **20 mg/L** |
+| 60 mg/L | 60 mg/L | **55 mg/L** |
 
-En la segunda columna todo está perfecto: los dos errores se cancelan. En la tercera, al quitar el arrastre, queda desnudo el sesgo de la calibración. (La vida real compensa a medias, nunca tan limpio, pero la lógica es esta.) Lo inquietante es que **la segunda columna es, en esencia, la que informaba el laboratorio.** Y se veía de maravilla.
+En la segunda columna todo está perfecto: los dos errores se cancelan. En la tercera, al quitar el arrastre, el parche queda restando solo, y una muestra baja da negativo. (En la realidad el arrastre pesaba más que el parche y las muestras salían altas: el parche no lo cancelaba, solo lo disfrazaba. Pero la lógica es esta.) Lo inquietante es que **la segunda columna es, en esencia, lo que el laboratorio creía estar informando.** Y se veía de maravilla.
 
 Los errores que se compensan son los más traicioneros de la calidad analítica porque producen la apariencia de un método sano. La planilla se ve ordenada, el informe sale a tiempo, a nadie le llama la atención nada. Hasta que alguien arregla uno de los dos.
 
 ## La calibración que siempre daba mal
 
 Entonces mi colega entró a mirar la calibración. Y las calibraciones, recordó, **siempre habían dado mal**. Era una de esas molestias con las que se aprende a convivir: un ajuste que se repite, una curva que se rehace «porque es así este método». Se atribuía al analizador, a la curva, a la mala suerte.
+
+Y el parche no ayudaba: cada vez que se calibraba, ese factor puesto a mano quedaba ahí, entre la curva y el resultado, y entorpecía el análisis. No había forma de saber qué era calibración y qué era ajuste manual. Por eso una de las primeras cosas que se hicieron, en la configuración de prueba, fue **eliminar todo factor hecho a mano** para ver la técnica desnuda.
 
 La causa apareció en un lugar inesperado: el **reactivo**.
 
@@ -83,6 +87,7 @@ Hasta donde se sabe, aquí no hubo daño. Pero «hasta donde se sabe» es la par
 - **Pregunta si tu resultado es razonable o verificado.** Si no puedes explicar con qué se comprobó, es un reloj parado.
 - **Una calibración que siempre da mal es un dato, no una molestia.** Algo en el reactivo, el procedimiento o el equipo la está empujando.
 - **Cuando arreglas un error y aparece otro de signo contrario, no te asustes:** ya estaban los dos. El segundo estaba compensado.
+- **Un factor puesto a mano es un parche.** Haz el inventario: quién lo puso, por qué y cuándo se revisó. Si nadie puede explicarlo, quítalo en una configuración de prueba y mira qué se rompe.
 - **Lee el inserto buscando lo que cambia el uso:** homogenizar, tiempos a bordo, temperatura. Lo que no está destacado también es parte del método.
 - **Exige que el control recorra el mismo camino que el paciente**, o que se deje constancia de qué parte no está cubierta.
 - **Pregunta quién puede explicar, en una frase, cómo está configurada cada técnica y por qué.** Si nadie puede, es una herencia, no un procedimiento.

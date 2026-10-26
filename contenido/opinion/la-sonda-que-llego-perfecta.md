@@ -144,7 +144,7 @@ Hay una pregunta que casi nadie hace cuando un cambio funciona: **¿quién decid
 
 Para llevar estas ideas a tus datos hay calculadoras gratuitas en el sitio: la [curva de calibración](/calculadoras/curva-de-calibracion/) para ver cómo una recta recupera cada estándar, las [diluciones y soluciones](/calculadoras/diluciones-y-soluciones/) para comprobar un factor, la [comparación con el fabricante](/calculadoras/comparacion-con-el-fabricante/) para tu media contra el valor asignado con prueba t, y la [homogeneidad entre mitades](/calculadoras/homogeneidad-entre-mitades/) para ver si la media cambió entre dos períodos.
 
-Y el lavado extra dejó algo más a la vista. La primera muestra, la que salía baja, tenía razón en una cosa: no estaba contaminada. En otra, no tanto. Salía baja, a veces negativa, y eso era la pista de otro error escondido detrás del primero. Cuando el arrastre se resolvió, los resultados de albúmina empezaron a dar negativo.
+Y el lavado extra dejó algo más a la vista. La primera muestra, la que salía baja, tenía razón en una cosa: no estaba contaminada. En otra, no tanto. Salía baja, a veces negativa, y eso era la pista de algo escondido detrás del primer error: un ajuste que alguien había puesto a mano. Cuando el arrastre se resolvió, los resultados de albúmina empezaron a dar negativo.
 
 Esa es la segunda parte: [El reloj parado de la albúmina](/opinion/el-reloj-parado-de-la-albumina/).
 
