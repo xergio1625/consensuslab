@@ -56,6 +56,8 @@ const herramientas = defineCollection({
       // Relación con el software Consensus QC
       consensus_qc: z.enum(['existente', 'parcial', 'previsto', 'no']).default('no'),
       que_es: z.string(),
+      seo_titulo: z.string().optional(),
+      seo_descripcion: z.string().optional(),
       problema: z.string(),
       // Descripción del recurso que se prepara (útil mientras la ficha está «en preparación»)
       recurso_previsto: z.string().optional(),

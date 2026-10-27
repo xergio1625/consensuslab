@@ -3,13 +3,18 @@
 // (slot por defecto), la explicación (slot «explicacion») y el lateral con otras calculadoras.
 import Base from '../plantillas/Base.astro';
 import PedirDemo from './PedirDemo.astro';
-import { CALCULADORAS, GRUPOS_ESTADISTICA, calculadora, type IdCalculadora } from '../lib/calculadoras';
+import { CALCULADORAS, GRUPOS_ESTADISTICA, SEO_CALCULADORAS, calculadora, type IdCalculadora } from '../lib/calculadoras';
 import { migasLd, url } from '../lib/rutas';
+import { PUENTES } from '../lib/puentes';
+import { URL_REGISTRO } from '../lib/sitio';
 
 interface Props {
   id: IdCalculadora;
 }
 const c = calculadora(Astro.props.id);
+const seo = SEO_CALCULADORAS[Astro.props.id];
+const puente = PUENTES[Astro.props.id];
+const registro = `${URL_REGISTRO}&utm_source=sitio&utm_medium=calculadora&utm_campaign=${Astro.props.id}`;
 const grupoDe = (x: { grupo?: string }) => x.grupo;
 const grupoEst = c.familia === 'estadistica' ? GRUPOS_ESTADISTICA.find((g) => g.id === grupoDe(c)) : undefined;
 const otras = CALCULADORAS.filter((o) => o.id !== c.id).sort(
@@ -20,9 +25,9 @@ const otras = CALCULADORAS.filter((o) => o.id !== c.id).sort(
 ---
 
 <Base
-  titulo={c.titulo.includes(':') && c.titulo.length <= 52 ? `${c.titulo} (calculadora)` : `${c.titulo.split(':')[0]}: calculadora`}
+  titulo={seo?.titulo ?? (c.titulo.includes(':') && c.titulo.length <= 52 ? `${c.titulo} (calculadora)` : `${c.titulo.split(':')[0]}: calculadora`)}
   seccion="calculadoras"
-  descripcion={`Calculadora gratuita para laboratorio clínico. ${c.resumen}`}
+  descripcion={seo?.descripcion ?? `Calculadora gratuita para laboratorio clínico. ${c.resumen}`}
   datos={[
     {
       '@context': 'https://schema.org',
@@ -78,6 +83,18 @@ const otras = CALCULADORAS.filter((o) => o.id !== c.id).sort(
           }
         </div>
         <slot />
+        {
+          puente && (
+            <section class="caja caja-app puente" aria-label="De la calculadora a la app">
+              <h2>{puente.titulo}</h2>
+              <p>{puente.texto}</p>
+              <p class="puente-acciones">
+                <a class="boton boton-primario" href={url(puente.enlace)}>{puente.boton}</a>
+                <a class="boton boton-secundario" href={registro}>Probar 15 días gratis</a>
+              </p>
+            </section>
+          )
+        }
         <slot name="explicacion" />
       </article>
 

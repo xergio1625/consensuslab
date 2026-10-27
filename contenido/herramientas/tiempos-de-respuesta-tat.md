@@ -7,6 +7,8 @@ acceso: suscripcion
 app_modulo: tat
 etiquetas: []
 consensus_qc: "no"
+seo_titulo: "Qué es el TAT en el laboratorio y cómo medirlo"
+seo_descripcion: "El TAT es el tiempo entre la recepción de la muestra y el informe. Calcula la mediana, el percentil 90 y el % dentro de la meta por examen, área y urgencia."
 que_es: "Medición del tiempo desde la toma o recepción de la muestra hasta el informe, por examen, área y urgencia, con el porcentaje que cumple la meta."
 problema: "El TAT es el indicador que más perciben médicos y pacientes; medirlo permite detectar cuellos de botella."
 recurso_previsto: "Planilla de cálculo de TAT (mediana y percentil 90) a partir de una exportación del LIS."

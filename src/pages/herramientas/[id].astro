@@ -37,9 +37,9 @@ const siglas = { excel: 'XLS', sheets: 'GS', word: 'DOC', pdf: 'PDF', formulario
 ---
 
 <Base
-  titulo={tituloSeo(h.titulo)}
+  titulo={h.seo_titulo ?? tituloSeo(h.titulo)}
   seccion="herramientas"
-  descripcion={`${h.que_es} ${h.problema}`}
+  descripcion={h.seo_descripcion ?? `${h.que_es} ${h.problema}`}
   indexar={h.estado === 'disponible'}
   datos={migasLd(Astro.site, [['Herramientas', 'herramientas/'], [grupo.data.nombre_corto, `grupos/${grupo.id}/`], [h.titulo, `herramientas/${herramienta.id}/`]])}
 >

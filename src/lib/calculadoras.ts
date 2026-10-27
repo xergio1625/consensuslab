@@ -377,3 +377,17 @@ export function calculadora(id: IdCalculadora) {
 export function calculadorasDe(idHerramienta: string) {
   return CALCULADORAS.filter((c) => (c.herramientas as readonly string[]).includes(idHerramienta));
 }
+
+/** Título y descripción para buscadores de las calculadoras que ya aparecen en Google; el resto usa los generados. */
+export const SEO_CALCULADORAS: Partial<Record<IdCalculadora, { titulo: string; descripcion: string }>> = {
+  'temperatura-cinetica-media': {
+    titulo: 'Temperatura cinética media (MKT): cálculo con tu registro',
+    descripcion:
+      'Calcula la temperatura cinética media (MKT) de un refrigerador o una bodega con tu registro de temperaturas. Gratis, en tu navegador y con la fórmula explicada.',
+  },
+  'delta-check': {
+    titulo: 'Delta check: cómo calcular el cambio entre dos resultados',
+    descripcion:
+      'Compara un resultado con el anterior de la misma persona y marca si el cambio supera tu límite porcentual o absoluto. Gratis; ingresa solo valores numéricos.',
+  },
+};
