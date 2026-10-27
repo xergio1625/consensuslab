@@ -3,6 +3,7 @@
 import Base from '../../plantillas/Base.astro';
 import TarjetaHerramienta from '../../componentes/TarjetaHerramienta.astro';
 import EspacioVideo from '../../componentes/EspacioVideo.astro';
+import Capturas from '../../componentes/Capturas.astro';
 import { VIDEOS } from '../../lib/videos';
 import { obtenerHerramientas } from '../../lib/datos';
 import { RELACION_CONSENSUS_QC, url } from '../../lib/rutas';
@@ -63,7 +64,11 @@ const modulos = [
 
   <section class="seccion">
     <div class="contenedor">
-      <EspacioVideo titulo="Consensus QC en funcionamiento" texto="Recorrido por la versión web de Consensus QC." {...VIDEOS['consensus-qc']} />
+      {VIDEOS['consensus-qc'] ? (
+        <EspacioVideo titulo="Consensus QC en funcionamiento" texto="Recorrido por la versión web de Consensus QC." {...VIDEOS['consensus-qc']} />
+      ) : (
+        <Capturas titulo="Consensus QC en funcionamiento" />
+      )}
       <h2>Qué incluye</h2>
       <p class="texto-suave">Estos son los módulos de la versión web. Todos se pueden probar en la prueba gratuita.</p>
       <ul class="lista-modulos">

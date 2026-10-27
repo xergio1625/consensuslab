@@ -2,11 +2,10 @@
 // Planes de suscripción. Solo el plan Esencial muestra precio (decisión del 9-10-2026); los demás se cotizan
 // (llega a la app por doPost) y su lista de precios vive en el repositorio privado de la app.
 import Base from '../plantillas/Base.astro';
-import EspacioVideo from '../componentes/EspacioVideo.astro';
-import { VIDEOS } from '../lib/videos';
+import Capturas from '../componentes/Capturas.astro';
 import { obtenerHerramientas } from '../lib/datos';
 import { url } from '../lib/rutas';
-import { CORREO_CONTACTO, URL_APP, URL_REGISTRO } from '../lib/sitio';
+import { CORREO_COTIZACION, URL_APP, URL_REGISTRO } from '../lib/sitio';
 
 const herramientas = await obtenerHerramientas();
 const enApp = herramientas.filter((h) => h.data.estado === 'disponible' && h.data.app_modulo);
@@ -18,6 +17,8 @@ const planes = [
     id: 'esencial',
     nombre: 'Esencial',
     para: 'Laboratorios pequeños que quieren ordenar lo básico.',
+    sirve: 'Para dejar las planillas sueltas: saber qué toca hoy, registrar las temperaturas con alarma, entregar el turno, tener los documentos vigentes y recibir avisos antes de los vencimientos.',
+    elige: 'Eres un laboratorio pequeño y quieres empezar por lo básico y dejar evidencia para las auditorías.',
     usuarios: 'Hasta 5 usuarios',
     precio: { normal: '$199.900', fundador: '$119.940' },
     incluye: esencial.map((h) => h!.data.titulo),
@@ -26,6 +27,8 @@ const planes = [
     id: 'gestion',
     nombre: 'Gestión',
     para: 'La gestión completa del laboratorio en un solo lugar.',
+    sirve: 'Para llevar toda la operación en un solo lugar: equipos y su mantención, contingencia, derivaciones, inventario de reactivos, compras, recepción, proveedores y contratos.',
+    elige: 'Tu problema es la operación (equipos, insumos, compras) y no el control de calidad analítico.',
     usuarios: 'Hasta 15 usuarios',
     incluye: [
       `Las ${enApp.length} herramientas disponibles en la app`,
@@ -39,6 +42,8 @@ const planes = [
     nombre: 'Gestión + Consensus QC',
     destacado: 'El más completo',
     para: 'Gestión y control de calidad analítico, con mejor precio que por separado.',
+    sirve: 'Para llevar la operación y la calidad analítica juntas: todo lo de Gestión más el control diario con Westgard, el plan de calidad, los estudios N20, el control externo y las no conformidades.',
+    elige: 'Quieres un solo sistema para el laboratorio completo o te preparas para una acreditación.',
     usuarios: 'Hasta 15 usuarios',
     incluye: [
       'Todo lo del plan Gestión',
@@ -51,6 +56,8 @@ const planes = [
     id: 'qc',
     nombre: 'Consensus QC',
     para: 'Solo el control de calidad analítico.',
+    sirve: 'Para el control de calidad de cada día: reglas de Westgard, gráficos de Levey-Jennings, desempeño y sigma, control externo y plan de calidad por analito.',
+    elige: 'Ya tienes ordenada tu gestión, o la llevas en otro sistema, y necesitas el control de calidad.',
     usuarios: 'Hasta 15 usuarios',
     incluye: ['Controles diarios con reglas de Westgard', 'Gráficos de Levey-Jennings', 'Desempeño, sigma y control externo', 'Plan de calidad por analito'],
   },
@@ -58,6 +65,8 @@ const planes = [
     id: 'institucional',
     nombre: 'Institucional',
     para: 'Redes de salud, varias sedes o más usuarios.',
+    sirve: 'Para redes y laboratorios con varias sedes: una licencia por sede y condiciones de compra a convenir.',
+    elige: 'Tienes más de un laboratorio o necesitas más de 15 usuarios.',
     usuarios: 'Usuarios y sedes a convenir',
     incluye: ['Todos los módulos y Consensus QC', 'Una licencia por sede', 'Condiciones y forma de compra a convenir'],
   },
@@ -75,12 +84,12 @@ const planes = [
       <h1>Ordena tu laboratorio con registros trazables</h1>
       <p class="portada-lema">
         <strong>40 % de descuento en el primer año</strong> para los laboratorios que paguen por adelantado antes del{' '}
-        <strong>1 de diciembre de 2026</strong>, fecha en que comienza el servicio. Pide tu cotización: la respondemos en un
+        <strong>1 de diciembre de 2026</strong>, fecha en que comienza el servicio. Pruébalo 15 días con los datos de tu laboratorio, sin tarjeta, y si prefieres una cotización la respondemos en un
         día hábil.
       </p>
       <div class="acciones-portada">
-        <a class="boton boton-dorado" href="#cotizar" data-plan="gestion_qc">Pedir cotización</a>
-        <a class="boton boton-secundario boton-claro" href={URL_REGISTRO}>Probar gratis 15 días</a>
+        <a class="boton boton-dorado" href={URL_REGISTRO}>Probar gratis 15 días</a>
+        <a class="boton boton-secundario boton-claro" href="#cotizar" data-plan="gestion_qc">Pedir cotización</a>
       </div>
       <p class="nota-portada">Precios por laboratorio, anuales, con IVA incluido. Factura electrónica.</p>
     </div>
@@ -89,17 +98,28 @@ const planes = [
   <section class="seccion">
     <div class="contenedor">
       <h2>Planes</h2>
-      <div class="video-planes">
-        <EspacioVideo titulo="Cómo funcionan los planes" texto="Presentación breve de los planes y de la preventa." {...VIDEOS.planes} />
+      <div class="guia-planes">
+        <h3>¿Qué quieres resolver primero?</h3>
+        <ul>
+          <li><strong>Ordenar el día a día</strong> (temperaturas, turnos, documentos, vencimientos): <a href="#plan-esencial">Esencial</a>.</li>
+          <li><strong>Controlar equipos, reactivos y compras:</strong> <a href="#plan-gestion">Gestión</a>.</li>
+          <li><strong>Vigilar la calidad de tus resultados cada día:</strong> <a href="#plan-qc">Consensus QC</a>.</li>
+          <li><strong>Todo lo anterior en un solo sistema:</strong> <a href="#plan-gestion_qc">Gestión + Consensus QC</a>.</li>
+          <li><strong>Varias sedes o una red:</strong> <a href="#plan-institucional">Institucional</a>.</li>
+        </ul>
+        <p class="texto-suave">¿No sabes cuál? Empieza la prueba gratis: durante 15 días pruebas las herramientas que quieras y después eliges.</p>
       </div>
+      <Capturas titulo="Así se ve la plataforma por dentro" />
       <div class="planes">
         {
           planes.map((p) => (
-            <article class={'plan' + (p.destacado ? ' plan-destacado' : '')}>
+            <article class={'plan' + (p.destacado ? ' plan-destacado' : '')} id={`plan-${p.id}`}>
               {p.destacado && <span class="plan-cinta">{p.destacado}</span>}
               <h3>{p.nombre}</h3>
               <p class="plan-para">{p.para}</p>
               <p class="plan-usuarios">{p.usuarios}</p>
+              <p class="plan-sirve">{p.sirve}</p>
+              <p class="plan-elige"><strong>Elígelo si:</strong> {p.elige}</p>
               {p.precio && (
                 <p class="plan-precio">
                   <span class="plan-precio-fundador">{p.precio.fundador}</span>
@@ -110,9 +130,8 @@ const planes = [
               <ul class="plan-incluye">
                 {p.incluye.map((x) => <li>{x}</li>)}
               </ul>
-              <a class={'boton ' + (p.destacado ? 'boton-primario' : 'boton-secundario') + ' boton-ancho'} href="#cotizar" data-plan={p.id}>
-                Cotizar
-              </a>
+              <a class="boton boton-primario boton-ancho" href={URL_REGISTRO}>Probar 15 días gratis</a>
+              <a class="boton boton-secundario boton-ancho" href="#cotizar" data-plan={p.id}>Pedir cotización</a>
             </article>
           ))
         }
@@ -123,6 +142,12 @@ const planes = [
         pacientes. Prueba cualquier herramienta <strong>15 días gratis</strong> con los datos de tu laboratorio:
         <a href={URL_REGISTRO}>crea tu cuenta</a> y empieza.
       </p>
+      <div class="aviso aviso-info">
+        <p>
+          <strong>Sin riesgo:</strong> si pagas antes del 1 de diciembre para asegurar el precio de fundador y, dentro de los
+          30 días de tu prueba, decides no continuar, te devolvemos el pago completo.
+        </p>
+      </div>
       <div class="aviso aviso-info">
         <p>
           <strong>Próximamente: avisos por WhatsApp.</strong> Después del lanzamiento del 1 de diciembre sumaremos avisos
@@ -168,8 +193,11 @@ const planes = [
   <section class="seccion" id="cotizar">
     <div class="contenedor">
       <h2>Pide tu cotización</h2>
-      <p class="texto-suave">Solo datos de contacto del laboratorio: nunca datos de pacientes.</p>
-      <form class="form-cotizacion" id="form-cotizacion" novalidate data-url={URL_APP} data-correo={CORREO_CONTACTO}>
+      <p class="texto-suave">
+        Solo datos de contacto del laboratorio: nunca datos de pacientes. Si prefieres escribirnos, envía tu consulta a
+        <a href={`mailto:${CORREO_COTIZACION}?subject=${encodeURIComponent('Cotización ConsensusLab')}`}>{CORREO_COTIZACION}</a>.
+      </p>
+      <form class="form-cotizacion" id="form-cotizacion" novalidate data-url={URL_APP} data-correo={CORREO_COTIZACION}>
         <div class="calc-campos">
           <label class="calc-campo"><span>Nombre y apellido</span><input class="campo" name="nombre" required maxlength="120" autocomplete="name" autocapitalize="words" enterkeyhint="next" /></label>
           <label class="calc-campo"><span>Correo</span><input class="campo" name="correo" type="email" required maxlength="254" autocomplete="email" inputmode="email" autocapitalize="none" spellcheck="false" enterkeyhint="next" /></label>

@@ -1,8 +1,7 @@
 ---
-// Invitación a la prueba gratuita (cuenta real, 15 días) y formulario corto para pedir cotización desde cualquier página (mismo destino que /planes/).
+// Invitación a la prueba gratuita (cuenta real, 15 días) desde cualquier página. La cotización vive solo en /planes/.
 // variante «caja»: columna lateral · «franja»: ancho completo entre secciones.
-import { url } from '../lib/rutas';
-import { CORREO_CONTACTO, URL_APP, URL_REGISTRO } from '../lib/sitio';
+import { URL_REGISTRO } from '../lib/sitio';
 
 interface Props {
   variante?: 'caja' | 'franja';
@@ -13,7 +12,7 @@ const caja = variante === 'caja';
 
 <section class={caja ? 'caja demo-caja' : 'demo-franja'}>
   <div class={caja ? '' : 'contenedor'}>
-    <div class={caja ? '' : 'demo-franja-cuerpo'}>
+    <div class={caja ? '' : 'demo-franja-cuerpo demo-franja-sola'}>
       <div class="demo-texto">
         {!caja && <p class="antetitulo">Para tu laboratorio</p>}
         {caja ? <h2>Pruébala en tu laboratorio</h2> : <h2>¿Quieres esto en tu laboratorio?</h2>}
@@ -23,74 +22,7 @@ const caja = variante === 'caja';
           pagando antes del 1 de diciembre de 2026.
         </p>
         <p><a class="boton boton-primario" href={URL_REGISTRO}>Probar 15 días gratis</a></p>
-        <p class="texto-suave">¿Prefieres una cotización? Déjanos tus datos y te la enviamos; si necesitas más tiempo, extendemos tu prueba a 30 días.</p>
       </div>
-      <form class="form-demo" novalidate data-url={URL_APP} data-correo={CORREO_CONTACTO}>
-        <label class="calc-campo"><span>Nombre y apellido</span><input class="campo" name="nombre" required maxlength="120" autocomplete="name" autocapitalize="words" enterkeyhint="next" /></label>
-        <label class="calc-campo"><span>Correo</span><input class="campo" name="correo" type="email" required maxlength="254" autocomplete="email" inputmode="email" autocapitalize="none" spellcheck="false" enterkeyhint="next" /></label>
-        <label class="calc-campo"><span>Laboratorio o institución</span><input class="campo" name="laboratorio" required maxlength="200" autocomplete="organization" autocapitalize="words" enterkeyhint="send" /></label>
-        <div class="campo-trampa" aria-hidden="true">
-          <label>Sitio web <input name="sitio_web" tabindex="-1" autocomplete="off" /></label>
-        </div>
-        <button type="submit" class="boton boton-secundario boton-ancho">Pedir cotización</button>
-        <p class="texto-suave demo-nota">
-          Solo datos de contacto, nunca de pacientes. <a href={url('privacidad/')}>Privacidad</a> ·
-          <a href={url('planes/')}>Ver planes y precio</a>
-        </p>
-        <p class="estado-cotizacion" role="status" hidden></p>
-      </form>
     </div>
   </div>
 </section>
-
-<script>
-  document.querySelectorAll<HTMLFormElement>('.form-demo').forEach((form) => {
-    const estado = form.querySelector('.estado-cotizacion') as HTMLElement;
-    const abierto = Date.now();
-    const mostrar = (texto: string, error: boolean) => {
-      estado.hidden = false;
-      estado.textContent = texto;
-      estado.classList.toggle('estado-error', error);
-      estado.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-    };
-
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const datos: Record<string, unknown> = {};
-      new FormData(form).forEach((v, k) => { datos[k] = String(v); });
-      datos.plan = 'no_se';
-      datos.sedes = '1';
-      datos.piloto = true;
-      datos.marketing = false;
-      datos.mensaje = 'Pedido desde ' + location.pathname;
-      datos.t = Date.now() - abierto;
-      try { datos.origen = sessionStorage.getItem('origen') || (document.referrer ? 'referido/' + new URL(document.referrer).hostname : 'directo/'); } catch { datos.origen = ''; }
-      if (!String(datos.nombre).trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(datos.correo).trim()) || !String(datos.laboratorio).trim()) {
-        mostrar('Completa tu nombre, un correo válido y el laboratorio.', true);
-        return;
-      }
-      const boton = form.querySelector('button[type=submit]') as HTMLButtonElement;
-      boton.disabled = true;
-      mostrar('Enviando…', false);
-      try {
-        // Sin cabecera JSON: evita la consulta previa de CORS; la app responde JSON.
-        const r = await fetch(form.dataset.url!, { method: 'POST', body: JSON.stringify({ accion: 'cotizacion', datos }) });
-        const j = await r.json();
-        if (j.ok) {
-          form.reset();
-          mostrar('¡Listo! Recibimos tu solicitud' + (j.numero ? ' (N° ' + j.numero + ')' : '') + '. Te escribiremos dentro de un día hábil.', false);
-          const w = window as unknown as { gtag?: (...a: unknown[]) => void };
-          if (typeof w.gtag === 'function') w.gtag('event', 'generate_lead', { plan: 'no_se', pagina: location.pathname });
-        } else if (j.error === 'validacion') {
-          mostrar('Revisa tu nombre, correo y laboratorio.', true);
-        } else {
-          mostrar('No pudimos recibir la solicitud. Inténtalo de nuevo o escríbenos a ' + form.dataset.correo + '.', true);
-        }
-      } catch {
-        mostrar('No pudimos conectar. Revisa tu conexión o escríbenos a ' + form.dataset.correo + '.', true);
-      } finally {
-        boton.disabled = false;
-      }
-    });
-  });
-</script>

@@ -2,7 +2,14 @@
 // Acerca de ConsensusLab.
 import Base from '../plantillas/Base.astro';
 import { url } from '../lib/rutas';
-import { LINKEDIN_PERFIL, MEDIUM_PERFIL } from '../lib/sitio';
+import { CALCULADORAS } from '../lib/calculadoras';
+import { obtenerHerramientas, obtenerOpinion, obtenerPrompts } from '../lib/datos';
+import { LINKEDIN_PERFIL, MEDIUM_PERFIL, URL_REGISTRO } from '../lib/sitio';
+
+const herramientas = await obtenerHerramientas();
+const enApp = herramientas.filter((h) => h.data.estado === 'disponible' && h.data.app_modulo).length;
+const totalPrompts = (await obtenerPrompts()).length;
+const totalOpinion = (await obtenerOpinion()).length;
 
 const persona = {
   '@context': 'https://schema.org',
@@ -12,6 +19,10 @@ const persona = {
   url: new URL(url('acerca/'), Astro.site).href,
   sameAs: [LINKEDIN_PERFIL, MEDIUM_PERFIL],
   worksFor: { '@type': 'Organization', name: 'ConsensusLab', url: Astro.site?.href },
+  alumniOf: [
+    { '@type': 'CollegeOrUniversity', name: 'Universidad de Concepción' },
+    { '@type': 'CollegeOrUniversity', name: 'Universidad Central de Chile' },
+  ],
 };
 ---
 
@@ -32,11 +43,51 @@ const persona = {
 
       <h2>Quién lo prepara</h2>
       <p>
-        Lo prepara <strong>Sergio Inostroza Riffo</strong>, tecnólogo médico con más de 10 años en laboratorio clínico y
-        formación de postgrado en gestión en salud. Las herramientas parten de necesidades reales del día a día: turnos,
-        registros, controles de calidad, auditorías, insumos, informes y personal. También escribe sobre calidad y
-        gestión en la sección <a href={url('opinion/')}>Opinión</a>.
+        Lo prepara <strong>Sergio Inostroza Riffo</strong>, tecnólogo médico de la Universidad de Concepción, mención
+        Laboratorio Clínico, Hematología y Banco de Sangre. Trabaja desde hace más de 10 años en un laboratorio clínico
+        de atención primaria, donde ha estado a cargo de las secciones de Bacteriología y Uroanálisis y de Química, y ha
+        subrogado la jefatura del laboratorio.
       </p>
+      <p>
+        Entre 2016 y 2018 tuvo su propio laboratorio clínico veterinario. Ahí conoció el lado administrativo: costos,
+        proveedores, contratos y la responsabilidad de que todo funcione cada día. Eso lo llevó a estudiar un Diplomado en
+        Administración y Gestión de Empresas en la Universidad Adolfo Ibáñez y, después, el Magíster en Gerencia y Gestión
+        en Salud de la Universidad Central. Su trabajo de graduación comparó los costos de un laboratorio comunal y uno
+        hospitalario a partir de sus compras públicas y estandarizó el costo por determinación.
+      </p>
+
+      <h2>Por qué existe ConsensusLab</h2>
+      <p>
+        Muchos problemas del laboratorio no aparecen en el resultado, sino antes: en un control que se acepta por
+        costumbre, en un reactivo que vence en la bodega, en un equipo que falla sin un plan de contingencia. Para ordenar
+        ese trabajo empezó a armar sus propias herramientas: primero planillas y calculadoras, después guías, y al final
+        una app con registros que dejan evidencia para las auditorías. Es un proyecto independiente, desarrollado fuera de
+        su jornada laboral.
+      </p>
+
+      <h2>Qué hay detrás</h2>
+      <ul>
+        <li>
+          <strong>{CALCULADORAS.length} calculadoras gratuitas</strong> de calidad analítica, estadística del control,
+          costos, insumos y resultados calculados. Las de resultados incluyen casos de prueba para verificar tu sistema.
+        </li>
+        <li>
+          <strong>{herramientas.length} herramientas de gestión</strong> descritas paso a paso, {enApp} de ellas ya disponibles
+          en la app, y <strong>{totalPrompts} prompts</strong> para trabajar con IA sin exponer datos de pacientes.
+        </li>
+        <li>
+          <strong><a href={url('consensus-qc/')}>Consensus QC</a></strong>: plan de calidad por analito, funciones de
+          poder, reglas de Westgard, gráficos de Levey-Jennings, sigma, control externo y no conformidades.
+        </li>
+        <li>
+          <strong>Registros trazables</strong>: nada se borra, cada corrección queda con nombre y motivo, y los datos se
+          guardan en Chile.
+        </li>
+        <li>
+          <strong>{totalOpinion} artículos de <a href={url('opinion/')}>Opinión</a></strong> sobre calidad y gestión, con
+          casos reales contados sin identificar laboratorios ni personas.
+        </li>
+      </ul>
       <p>
         Puedes seguirlo en <a href={LINKEDIN_PERFIL} rel="me noopener" target="_blank">LinkedIn</a> y en
         <a href={MEDIUM_PERFIL} rel="me noopener" target="_blank">Medium</a>, o escribirle a
@@ -54,6 +105,8 @@ const persona = {
           revisa la <a href={url('licencia/')}>licencia</a>.
         </li>
       </ul>
+
+      <p><a class="boton boton-primario" href={URL_REGISTRO}>Probar la app 15 días gratis</a></p>
 
       <div class="aviso aviso-info">
         <p>

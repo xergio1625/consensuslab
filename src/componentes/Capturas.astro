@@ -1,0 +1,50 @@
+---
+// Carrusel de capturas de la plataforma (datos de prueba). Se desliza con el dedo o con los botones;
+// sin JavaScript sigue siendo una tira que se puede desplazar. Si no hay capturas, no muestra nada.
+import { CAPTURAS } from '../lib/capturas';
+import { url } from '../lib/rutas';
+
+interface Props {
+  titulo: string;
+}
+const { titulo } = Astro.props;
+---
+
+{
+  CAPTURAS.length > 0 && (
+    <section class="capturas" aria-roledescription="carrusel" aria-label={titulo} data-capturas>
+      <div class="capturas-cabeza">
+        <h3>{titulo}</h3>
+        <div class="capturas-botones">
+          <button type="button" data-prev aria-label="Captura anterior">‹</button>
+          <button type="button" data-sig aria-label="Captura siguiente">›</button>
+        </div>
+      </div>
+      <ul class="capturas-pista" tabindex="0" aria-label="Capturas de la plataforma">
+        {CAPTURAS.map((c, i) => (
+          <li class="captura">
+            <figure>
+              <img src={url(c.archivo)} alt={c.alt} width={c.ancho} height={c.alto} loading={i === 0 ? 'eager' : 'lazy'} decoding="async" />
+              <figcaption>
+                <strong>{c.titulo}</strong> {c.texto}
+              </figcaption>
+            </figure>
+          </li>
+        ))}
+      </ul>
+      <p class="texto-suave capturas-nota">Capturas con datos de prueba.</p>
+    </section>
+  )
+}
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-capturas]').forEach((c) => {
+    const pista = c.querySelector<HTMLElement>('.capturas-pista')!;
+    const mover = (d: number) => {
+      const reducir = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      pista.scrollBy({ left: d * pista.clientWidth * 0.9, behavior: reducir ? 'auto' : 'smooth' });
+    };
+    c.querySelector('[data-prev]')!.addEventListener('click', () => mover(-1));
+    c.querySelector('[data-sig]')!.addEventListener('click', () => mover(1));
+  });
+</script>

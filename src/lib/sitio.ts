@@ -45,6 +45,8 @@ export const FIN_PREVENTA = '2026-12-01';
 
 /** Correo de contacto para privacidad, términos y soporte (Cloudflare Email Routing lo reenvía a Gmail; la app envía con Brevo desde esta dirección). */
 export const CORREO_CONTACTO = 'contacto@consensuslab.cl';
+/** Correo para pedir cotizaciones (solo se muestra en /planes/). Cambia esta línea cuando exista cotizaciones@consensuslab.cl. */
+export const CORREO_COTIZACION = CORREO_CONTACTO;
 
 /** Fecha de la versión vigente de los términos de uso. */
 export const VIGENCIA_LEGAL = '11 de octubre de 2026';
