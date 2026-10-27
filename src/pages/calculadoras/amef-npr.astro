@@ -40,6 +40,15 @@ import { url } from '../../lib/rutas';
   </section>
 
   <div slot="explicacion">
+    <div class="respuesta">
+      <p>
+        <strong>El NPR (número de prioridad de riesgo) se calcula multiplicando tres notas de 1 a 10: severidad × ocurrencia × detección.</strong>
+        El resultado va de 1 a 1.000 y se atiende primero el más alto.
+      </p>
+      <p>
+        Ejemplo: una falla con severidad 8, ocurrencia 4 y detección 3 tiene NPR 8 × 4 × 3 = 96.
+      </p>
+    </div>
     <h2>Cómo se calcula</h2>
     <ul>
       <li><strong>NPR</strong> = severidad (S) × ocurrencia (O) × detección (D), cada una de 1 a 10; va de 1 a 1.000.</li>

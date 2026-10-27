@@ -60,4 +60,74 @@ export const PUENTES: Partial<Record<IdCalculadora, Puente>> = {
     boton: 'Ver el plan de mantención',
     enlace: 'herramientas/mantencion-preventiva-y-calibraciones/',
   },
+  'levey-jennings': {
+    titulo: 'Dibujarlo a mano es el trabajo que sobra',
+    texto:
+      'Consensus QC arma el gráfico de Levey-Jennings de cada analito y nivel con tus controles reales, aplica las reglas de Westgard y deja registrado qué se hizo cuando una regla se rompe.',
+    boton: 'Ver cómo funciona',
+    enlace: 'consensus-qc/',
+  },
+  'estadistica-del-control': {
+    titulo: 'La media y la DE no se calculan una vez',
+    texto:
+      'Cada mes cambian con los controles nuevos. Consensus QC lleva la media, la DE y el CV de cada analizador y nivel actualizados, sin volver a pegar la serie.',
+    boton: 'Ver cómo funciona',
+    enlace: 'consensus-qc/',
+  },
+  'valores-atipicos': {
+    titulo: 'Antes de excluir un dato, mira toda la serie',
+    texto:
+      'Con tus controles ya registrados en Consensus QC ves cada punto en su gráfico, junto a las reglas de Westgard, y decides con la serie completa a la vista.',
+    boton: 'Ver cómo funciona',
+    enlace: 'consensus-qc/',
+  },
+  'comparacion-de-lotes': {
+    titulo: 'El lote nuevo se compara con lo que ya tienes',
+    texto:
+      'Si llevas los controles en Consensus QC, las series de cada analizador y nivel ya están guardadas. No hay que reunirlas a mano cada vez que cambia el lote.',
+    boton: 'Ver cómo funciona',
+    enlace: 'consensus-qc/',
+  },
+  'tendencia-y-aleatoriedad': {
+    titulo: 'Una tendencia se ve mejor en el gráfico',
+    texto:
+      'Consensus QC marca sobre el gráfico de Levey-Jennings las corridas de puntos hacia un mismo lado con las reglas de Westgard, antes de que el control salga de límites.',
+    boton: 'Ver cómo funciona',
+    enlace: 'consensus-qc/',
+  },
+  'tea-variabilidad-biologica': {
+    titulo: 'El TEa es el punto de partida del plan',
+    texto:
+      'Consensus QC define el plan de calidad por analito: con tu error total permitido compara cada mes el error total y la sigma de cada analizador.',
+    boton: 'Ver cómo funciona',
+    enlace: 'consensus-qc/',
+  },
+  'cambio-critico-rcv': {
+    titulo: 'El cambio crítico de cada analizador, en un solo lugar',
+    texto:
+      'Consensus QC lleva el control de calidad y el cambio crítico de cada analizador, para que lo que defines aquí quede asociado a tus controles reales.',
+    boton: 'Ver cómo funciona',
+    enlace: 'consensus-qc/',
+  },
+  'disponibilidad-y-oee-de-equipos': {
+    titulo: 'La disponibilidad sale de lo que registras',
+    texto:
+      'Estado y bitácora de equipos guarda cada falla, el tiempo detenido, las visitas técnicas y los tickets al proveedor: los datos que necesitas para esta cuenta, sin reconstruirlos al final del mes.',
+    boton: 'Ver la bitácora de equipos',
+    enlace: 'herramientas/estado-y-bitacora-de-equipos/',
+  },
+  'stock-y-punto-de-pedido': {
+    titulo: 'El mínimo solo sirve si el stock está al día',
+    texto:
+      'Inventario y lotes de reactivos lleva el stock por lote con su mínimo, avisa los vencimientos y las alertas de quiebre.',
+    boton: 'Ver el inventario de reactivos',
+    enlace: 'herramientas/inventario-y-lotes-de-reactivos/',
+  },
+  'rendimiento-de-reactivos': {
+    titulo: 'El rendimiento de un kit exige saber cuándo se abrió',
+    texto:
+      'Inventario y lotes de reactivos registra los reactivos en uso con su estabilidad y el lote usado cada día, que es el dato que falta para medir el rendimiento real.',
+    boton: 'Ver el inventario de reactivos',
+    enlace: 'herramientas/inventario-y-lotes-de-reactivos/',
+  },
 };

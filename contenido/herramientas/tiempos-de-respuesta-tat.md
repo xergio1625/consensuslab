@@ -16,6 +16,13 @@ relacionadas: [indicadores-de-calidad, derivaciones-a-laboratorios-externos, pan
 actualizado: 2026-10-03
 ---
 
+## Qué es el TAT
+
+El TAT (turnaround time) es el tiempo entre la recepción de la muestra en el laboratorio, o su toma, y el informe del
+resultado. Se mide por examen, por área y por urgencia. Para resumirlo se usan la **mediana** (el tiempo típico) y el
+**percentil 90** (cuánto esperan los más atrasados), porque el promedio esconde esa cola. Se compara con una meta
+acordada con los servicios clínicos: una para urgencias y otra para rutina.
+
 ## Cómo usarla
 
 1. **Define tus metas.** Una general para urgencias y otra para rutina (si no las defines, se usan 60 minutos y
