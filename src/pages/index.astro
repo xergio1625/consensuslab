@@ -21,18 +21,25 @@ const prioritarias = todas.filter((h) => h.data.etiquetas.includes('prioridad-co
 const totalHerramientas = catalogo.reduce((n, { herramientas }) => n + herramientas.length, 0);
 const totalPrompts = (await obtenerPrompts()).length;
 
-// Pasos de «cómo funciona» Consensus QC (portada)
+// El problema que resuelve (portada)
+const problemas = [
+  ['El criterio depende de quién está de turno', 'Frente al mismo resultado de control, dos tecnólogos pueden decidir distinto: repetir, recalibrar, avisar o liberar.'],
+  ['El plan está escrito, pero no se ejecuta', 'La decisión se tomó arriba y quedó en un documento. En el mesón cada uno la interpreta a su manera.'],
+  ['Se decide sin la información del laboratorio', 'Los controles, los reactivos y las compras se manejan por costumbre y no con lo que realmente pasa en tu laboratorio.'],
+];
+
+// Cómo funciona (portada)
 const pasos = [
-  ['Registra tus controles', 'Ingresa los resultados de control interno y de control externo de cada analizador.'],
-  ['Se evalúan las reglas', 'Westgard y Levey-Jennings revisan cada resultado frente a la media y la desviación estándar.'],
-  ['Mide el desempeño', 'CV, sesgo, error total y sigma, comparados con el plan de calidad de tu laboratorio.'],
-  ['Decide con respaldo', 'Queda el registro de cada control para la revisión mensual y las auditorías.'],
+  ['Defines el plan', 'Por analito: el error total permitido, las reglas de aceptación y qué hacer ante cada alarma.'],
+  ['Se aplica igual en cada turno', 'Westgard y Levey-Jennings evalúan cada control con tus reglas, y la acción a seguir ya está decidida.'],
+  ['Ves si se cumple', 'Cumplimiento diario, CV, sesgo, error total y sigma, comparados con tu plan, y cada desvío con su responsable.'],
+  ['Decides con respaldo', 'Los equipos, las temperaturas y los insumos están en el mismo lugar que tus controles, y todo queda trazable.'],
 ];
 ---
 
 <Base
-  titulo="ConsensusLab: calidad y gestión para el laboratorio clínico"
-  descripcion="Calculadoras gratuitas, guías y Consensus QC: software de control de calidad y gestión para el laboratorio clínico. Prueba gratis 15 días con tus datos."
+  titulo="ConsensusLab: tu plan de calidad, cumplido en cada turno"
+  descripcion="Software de calidad y gestión para laboratorios clínicos, independiente de proveedores: lleva tu plan de calidad al trabajo de cada turno. Prueba gratis 15 días."
   seccion="inicio"
   datos={[
     {
@@ -43,7 +50,7 @@ const pasos = [
       logo: new URL('logo.png', Astro.site).href,
       email: CORREO_CONTACTO,
       areaServed: 'CL',
-      description: 'Calculadoras, guías y software de control de calidad y gestión para profesionales de laboratorio clínico.',
+      description: 'Software de calidad y gestión para laboratorios clínicos, independiente de proveedores de controles, equipos y reactivos, con calculadoras y guías gratuitas.',
       founder: {
         '@type': 'Person',
         name: 'Sergio Inostroza Riffo',
@@ -70,18 +77,19 @@ const pasos = [
     <div class="portada-fondo" aria-hidden="true"></div>
     <div class="contenedor portada-rejilla">
       <div class="portada-texto">
-        <p class="antetitulo">Consensus QC · laboratorio clínico</p>
-        <h1>Control de calidad del laboratorio, sin planillas</h1>
+        <p class="antetitulo">Para directores técnicos de laboratorio clínico</p>
+        <h1>Tu plan de calidad, aplicado igual en cada turno</h1>
         <p class="portada-lema">
-          Westgard, Levey-Jennings, sigma y control externo en una sola plataforma. Pruébalo 15 días gratis con los
-          datos de tu laboratorio, hecho por un tecnólogo médico.
+          Tú decides qué controlar, con qué reglas y qué hacer cuando un control falla. ConsensusLab lleva esa decisión al
+          trabajo de cada día y te muestra si se cumple. No vendemos controles, analizadores, equipos ni reactivos:
+          solo gestión, sin conflicto de interés.
         </p>
         <div class="acciones-portada">
           <a class="boton boton-primario" href={URL_REGISTRO}>Probar 15 días gratis</a>
-          <a class="boton boton-secundario boton-claro" href={url('consensus-qc/')}>Conocer Consensus QC</a>
+          <a class="boton boton-secundario boton-claro" href={url('diagnostico/')}>Haz el diagnóstico de tu laboratorio</a>
         </div>
         <p class="nota-portada">
-          <a class="enlace-portada" href={url('herramientas/')}>Ver planillas y guías gratuitas →</a>
+          Hecho por un tecnólogo médico. <a class="enlace-portada" href={url('herramientas/')}>Ver planillas y guías gratuitas →</a>
         </p>
       </div>
       {VIDEOS.portada ? (
@@ -127,10 +135,35 @@ const pasos = [
     <div class="contenedor">
       <div class="seccion-cabeza">
         <div>
-          <p class="antetitulo">Consensus QC</p>
-          <h2>Del resultado de control a la decisión</h2>
+          <p class="antetitulo">El problema</p>
+          <h2>El laboratorio no trabaja con una sola decisión</h2>
         </div>
-        <a href={url('consensus-qc/')}>Ver cómo funciona</a>
+      </div>
+      <ul class="problemas">
+        {
+          problemas.map(([titulo, texto]) => (
+            <li class="problema">
+              <h3>{titulo}</h3>
+              <p>{texto}</p>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="problemas-cierre">
+        No se arregla registrando más. Se arregla decidiendo el plan una vez, arriba, y llevándolo al mesón, para que
+        el criterio profesional del tecnólogo quede para las excepciones y no para cada resultado de rutina.
+      </p>
+    </div>
+  </section>
+
+  <section class="seccion seccion-alt">
+    <div class="contenedor">
+      <div class="seccion-cabeza">
+        <div>
+          <p class="antetitulo">Cómo funciona</p>
+          <h2>Del plan de calidad al trabajo de cada día</h2>
+        </div>
+        <a href={url('consensus-qc/')}>Ver Consensus QC</a>
       </div>
       <ol class="pasos">
         {
@@ -143,6 +176,23 @@ const pasos = [
           ))
         }
       </ol>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="contenedor">
+      <div class="independencia">
+        <div>
+          <p class="antetitulo">Independencia</p>
+          <h2>Sin conflicto de interés</h2>
+          <p>
+            Un software que vende controles de calidad no es neutro frente a esos controles. ConsensusLab no vende controles,
+            analizadores, equipos ni reactivos, y no cobra comisiones de proveedores. Solo vende herramientas de gestión, así
+            que ninguna decisión del plan te empuja hacia una marca.
+          </p>
+        </div>
+        <a class="boton" href={url('acerca/')}>Quién lo prepara</a>
+      </div>
     </div>
   </section>
 
@@ -243,10 +293,10 @@ const pasos = [
     <div class="contenedor">
       <div class="franja-qc">
         <div>
-          <h2>Consensus QC automatiza parte de estas herramientas</h2>
+          <h2>Consensus QC es donde el plan se ejecuta</h2>
           <p>
-            El software de control de calidad para laboratorio clínico: Westgard, Levey-Jennings, sigma, control externo
-            y plan de calidad en una sola plataforma. Las herramientas de este sitio funcionan sin él.
+            Plan de calidad por analito, reglas de Westgard, Levey-Jennings, sigma, control externo y no conformidades en una
+            sola plataforma. Las herramientas gratuitas de este sitio funcionan sin él.
           </p>
         </div>
         <a class="boton" href={url('consensus-qc/')}>Conocer Consensus QC</a>

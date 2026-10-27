@@ -1,4 +1,5 @@
 // Autodiagnóstico del laboratorio: preguntas, puntaje por bloque y plan sugerido. Funciones puras (se prueban con `npm test`).
+// Mide si el plan de calidad está definido, si se aplica igual en cada turno, qué lo sostiene y si la dirección lo ve.
 // Es una autoevaluación orientativa: no es una auditoría ni una certificación.
 
 /** Respuestas: «si» = 2, «aveces» = 1, «no» = 0. */
@@ -7,64 +8,66 @@ export const PUNTOS = { si: 2, aveces: 1, no: 0 };
 export const BLOQUES = [
   {
     id: 'a',
-    titulo: 'Registros del día',
+    titulo: 'El plan de calidad',
     preguntas: [
-      '¿Sabes al comenzar el turno qué tareas del día están pendientes?',
-      '¿Tus registros de temperatura quedan con fecha, hora y quién los hizo, y exigen una acción cuando algo sale de rango?',
-      '¿Los documentos y las capacitaciones se avisan antes de vencer?',
+      '¿Tienes por escrito, para cada analito principal, el error total permitido y las reglas con que se aceptan o rechazan los controles?',
+      '¿Está definido qué hace el tecnólogo ante cada alarma: repetir, recalibrar, avisar, liberar o no liberar resultados?',
+      '¿Alguien con autoridad revisa y actualiza ese plan cuando cambia un lote, un equipo o un método?',
     ],
     acciones: [
-      { texto: 'Define qué tareas del turno son obligatorias y quién las firma, y empieza a dejarlas en un libro de novedades.', ruta: 'herramientas/libro-de-novedades-de-turno/' },
-      { texto: 'Revisa cómo debería quedar un registro de temperaturas que un auditor acepte.', ruta: 'herramientas/registro-de-temperaturas/' },
+      { texto: 'Lee la guía para armar un plan de control interno de calidad.', ruta: 'guias/plan-de-control-interno-de-calidad/' },
+      { texto: 'Define el error total permitido de un analito con la variabilidad biológica.', ruta: 'calculadoras/tea-variabilidad-biologica/' },
+      { texto: 'Calcula el error total y la sigma de uno de tus analitos principales.', ruta: 'calculadoras/error-total-y-sigma/' },
     ],
   },
   {
     id: 'b',
-    titulo: 'Control de calidad analítico',
+    titulo: 'Aplicación en cada turno',
     preguntas: [
-      '¿Evalúas los controles con reglas definidas (por ejemplo Westgard) y no solo a ojo?',
-      '¿Conoces el sesgo, el CV y la sigma de tus analitos principales?',
-      '¿Cada desvío del control queda con su causa, su acción y quién lo cerró?',
+      '¿Dos tecnólogos distintos toman la misma decisión frente al mismo resultado de control?',
+      '¿Puedes ver cada día si se procesaron todos los controles que exige el plan?',
+      '¿Cada desvío queda con su causa, su acción y quién lo cerró?',
     ],
     acciones: [
-      { texto: 'Calcula el error total y la sigma de uno de tus analitos principales.', ruta: 'calculadoras/error-total-y-sigma/' },
+      { texto: 'Revisa en un gráfico de Levey-Jennings cómo se ve un control con sus reglas.', ruta: 'calculadoras/levey-jennings/' },
       { texto: 'Compara tu resultado del control externo con el valor asignado.', ruta: 'calculadoras/sesgo-y-sdi/' },
-      { texto: 'Lee la guía para armar un plan de control interno de calidad.', ruta: 'guias/plan-de-control-interno-de-calidad/' },
+      { texto: 'Calcula la media, la DE y el CV de una serie de controles.', ruta: 'calculadoras/estadistica-del-control/' },
     ],
   },
   {
     id: 'c',
-    titulo: 'Equipos e insumos',
+    titulo: 'Lo que sostiene el plan',
     preguntas: [
-      '¿Cada equipo tiene su bitácora de fallas y mantenciones, con la fecha de la próxima?',
-      '¿Sabes qué lote de reactivo se usó cada día y cuándo vence?',
-      '¿Pides los reactivos con un mínimo definido y no cuando «se acaba»?',
+      '¿Sabes cuánto te durará cada lote de control y de reactivo con tu consumo real?',
+      '¿Compras controles y reactivos según tu consumo y tu plan, y no por costumbre?',
+      '¿Cada equipo tiene su bitácora de fallas, mantenciones y temperaturas, con una acción cuando algo sale de rango?',
     ],
     acciones: [
       { texto: 'Calcula el punto de pedido y el stock de seguridad de un reactivo clave.', ruta: 'calculadoras/stock-y-punto-de-pedido/' },
       { texto: 'Revisa cómo llevar la bitácora de fallas y el tiempo detenido de tus equipos.', ruta: 'herramientas/estado-y-bitacora-de-equipos/' },
+      { texto: 'Mira cómo debería quedar un registro de temperaturas que un auditor acepte.', ruta: 'herramientas/registro-de-temperaturas/' },
     ],
   },
   {
     id: 'd',
-    titulo: 'Evidencia y auditoría',
+    titulo: 'Dirección y evidencia',
     preguntas: [
-      '¿Podrías mostrarle a un auditor, en menos de 10 minutos, los registros de un mes cualquiera?',
+      '¿La dirección ve, sin pedirlo, si el plan se está cumpliendo (un informe mensual, por ejemplo)?',
+      '¿Podrías mostrarle a un auditor, en menos de 10 minutos, los registros y las decisiones de un mes cualquiera?',
       '¿Las correcciones quedan con nombre y motivo, y no se sobrescriben?',
-      '¿Tu jefatura recibe un informe mensual sin que alguien lo arme a mano?',
     ],
     acciones: [
-      { texto: 'Ordena tus documentos con versión, responsable y fecha de revisión.', ruta: 'herramientas/control-documental/' },
       { texto: 'Mira cómo sería un informe mensual que se arma solo.', ruta: 'herramientas/informes-mensuales-automaticos/' },
+      { texto: 'Ordena tus documentos con versión, responsable y fecha de revisión.', ruta: 'herramientas/control-documental/' },
     ],
   },
 ];
 
 export const PLANES = {
-  esencial: { nombre: 'Esencial', motivo: 'tu desafío está en ordenar los registros del día y la evidencia' },
-  gestion: { nombre: 'Gestión', motivo: 'tu desafío está en los equipos, los reactivos y las compras' },
-  qc: { nombre: 'Consensus QC', motivo: 'tu desafío está en el control de calidad analítico' },
-  gestion_qc: { nombre: 'Gestión + Consensus QC', motivo: 'tienes varias áreas por ordenar y conviene un solo sistema' },
+  esencial: { nombre: 'Esencial', motivo: 'tu mayor brecha está en los registros del día y en que la dirección tenga evidencia de lo que se hace' },
+  gestion: { nombre: 'Gestión', motivo: 'lo que sostiene tu plan (equipos, reactivos y compras) está sin ordenar' },
+  qc: { nombre: 'Consensus QC', motivo: 'tu desafío está en definir el plan de calidad y en que se aplique igual en cada turno' },
+  gestion_qc: { nombre: 'Gestión + Consensus QC', motivo: 'varias áreas necesitan ordenarse y conviene que usen la misma información' },
   institucional: { nombre: 'Institucional', motivo: 'tienes varias sedes o más de 15 personas registrando' },
 };
 
@@ -76,6 +79,7 @@ export function semaforo(puntaje) {
 }
 
 /**
+ * Los bloques A y B (el plan y su aplicación) los resuelve Consensus QC; el C, Gestión; el D, el plan Esencial.
  * @param {Record<string, number[]>} respuestas puntos (0 a 2) de cada pregunta, por bloque (`a` a `d`).
  * @param {{ usuarios?: string, sedes?: string }} contexto `usuarios`: «hasta5» | «6a15» | «mas15»; `sedes`: «1» | «2omas».
  */
@@ -86,15 +90,16 @@ export function evaluar(respuestas, contexto = {}) {
   });
   const debil = Object.fromEntries(bloques.map((b) => [b.id, b.debil]));
   const cuantos = bloques.filter((b) => b.debil).length;
-  const masDebil = [...bloques].sort((x, y) => x.puntaje - y.puntaje)[0].id;
+  const calidadDebil = debil.a || debil.b;
+  const masDebil = [...bloques].sort((x, y) => x.puntaje - y.puntaje || x.id.localeCompare(y.id))[0].id;
 
   let plan;
   if (contexto.sedes === '2omas' || contexto.usuarios === 'mas15') plan = 'institucional';
-  else if (cuantos >= 3 || (debil.b && (debil.a || debil.c || debil.d))) plan = 'gestion_qc';
-  else if (debil.b) plan = 'qc';
+  else if (cuantos >= 3 || (calidadDebil && (debil.c || debil.d))) plan = 'gestion_qc';
+  else if (calidadDebil) plan = 'qc';
   else if (debil.c) plan = 'gestion';
-  else if (debil.a || debil.d) plan = 'esencial';
-  else plan = masDebil === 'b' ? 'qc' : masDebil === 'c' ? 'gestion' : 'esencial';
+  else if (debil.d) plan = 'esencial';
+  else plan = masDebil === 'a' || masDebil === 'b' ? 'qc' : masDebil === 'c' ? 'gestion' : 'esencial';
 
   // Tres acciones de esta semana: primero las del bloque más débil, luego las del siguiente.
   const orden = [...bloques].sort((x, y) => x.puntaje - y.puntaje || x.id.localeCompare(y.id));

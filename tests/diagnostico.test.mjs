@@ -19,14 +19,19 @@ test('semáforo por bloque', () => {
   assert.equal(semaforo(0), 'rojo');
 });
 
-test('plan según los bloques débiles', () => {
-  assert.equal(evaluar(todo(0, 2, 2, 2)).plan, 'esencial');
-  assert.equal(evaluar(todo(2, 2, 2, 0)).plan, 'esencial');
-  assert.equal(evaluar(todo(2, 2, 0, 2)).plan, 'gestion');
+test('plan según los bloques débiles: el plan y su aplicación van a Consensus QC', () => {
+  assert.equal(evaluar(todo(0, 2, 2, 2)).plan, 'qc');
   assert.equal(evaluar(todo(2, 0, 2, 2)).plan, 'qc');
-  assert.equal(evaluar(todo(2, 0, 0, 2)).plan, 'gestion_qc');
-  assert.equal(evaluar(todo(0, 0, 2, 2)).plan, 'gestion_qc');
-  assert.equal(evaluar(todo(0, 2, 0, 0)).plan, 'gestion_qc');
+  assert.equal(evaluar(todo(0, 0, 2, 2)).plan, 'qc');
+  assert.equal(evaluar(todo(2, 2, 0, 2)).plan, 'gestion');
+  assert.equal(evaluar(todo(2, 2, 2, 0)).plan, 'esencial');
+});
+
+test('calidad débil junto con operación o dirección débil: Gestión + Consensus QC', () => {
+  assert.equal(evaluar(todo(0, 2, 0, 2)).plan, 'gestion_qc');
+  assert.equal(evaluar(todo(2, 0, 2, 0)).plan, 'gestion_qc');
+  assert.equal(evaluar(todo(0, 0, 2, 0)).plan, 'gestion_qc');
+  assert.equal(evaluar(todo(2, 2, 0, 0)).plan, 'gestion');
 });
 
 test('una sola respuesta «a veces» por bloque no lo vuelve débil', () => {
@@ -36,14 +41,15 @@ test('una sola respuesta «a veces» por bloque no lo vuelve débil', () => {
 });
 
 test('con todo sólido se sugiere según el bloque más bajo', () => {
-  assert.equal(evaluar({ a: [2, 2, 2], b: [2, 2, 1], c: [2, 2, 2], d: [2, 2, 2] }).plan, 'qc');
+  assert.equal(evaluar({ a: [2, 2, 1], b: [2, 2, 2], c: [2, 2, 2], d: [2, 2, 2] }).plan, 'qc');
   assert.equal(evaluar({ a: [2, 2, 2], b: [2, 2, 2], c: [2, 2, 1], d: [2, 2, 2] }).plan, 'gestion');
+  assert.equal(evaluar({ a: [2, 2, 2], b: [2, 2, 2], c: [2, 2, 2], d: [2, 2, 1] }).plan, 'esencial');
 });
 
 test('varias sedes o más de 15 personas dan Institucional sin importar el puntaje', () => {
   assert.equal(evaluar(todo(2, 2, 2, 2), { sedes: '2omas' }).plan, 'institucional');
   assert.equal(evaluar(todo(0, 0, 0, 0), { usuarios: 'mas15' }).plan, 'institucional');
-  assert.equal(evaluar(todo(0, 2, 2, 2), { usuarios: '6a15', sedes: '1' }).plan, 'esencial');
+  assert.equal(evaluar(todo(0, 2, 2, 2), { usuarios: '6a15', sedes: '1' }).plan, 'qc');
 });
 
 test('tres acciones, empezando por el bloque más débil', () => {
@@ -51,4 +57,8 @@ test('tres acciones, empezando por el bloque más débil', () => {
   assert.equal(r.acciones.length, 3);
   assert.equal(r.acciones[0].ruta, BLOQUES[1].acciones[0].ruta);
   assert.equal(r.total, 6 + 0 + 3 + 6);
+});
+
+test('las rutas de las acciones son rutas internas con barra final', () => {
+  for (const b of BLOQUES) for (const a of b.acciones) assert.match(a.ruta, /^[a-z-]+\/[a-z0-9-]+\/$/);
 });

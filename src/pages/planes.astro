@@ -16,9 +16,9 @@ const planes = [
   {
     id: 'esencial',
     nombre: 'Esencial',
-    para: 'Laboratorios pequeños que quieren ordenar lo básico.',
-    sirve: 'Para dejar las planillas sueltas: saber qué toca hoy, registrar las temperaturas con alarma, entregar el turno, tener los documentos vigentes y recibir avisos antes de los vencimientos.',
-    elige: 'Eres un laboratorio pequeño y quieres empezar por lo básico y dejar evidencia para las auditorías.',
+    para: 'La base del día a día, sobre la que se apoya cualquier plan de calidad.',
+    sirve: 'Para ordenar los registros que sostienen el plan: saber qué toca hoy, dejar las temperaturas con alarma, entregar el turno, tener los documentos vigentes y que la dirección reciba un informe mensual.',
+    elige: 'Quieres partir por lo básico y dejar evidencia para las auditorías antes de sumar el control de calidad analítico.',
     usuarios: 'Hasta 5 usuarios',
     precio: { normal: '$199.900', fundador: '$119.940' },
     incluye: esencial.map((h) => h!.data.titulo),
@@ -26,9 +26,9 @@ const planes = [
   {
     id: 'gestion',
     nombre: 'Gestión',
-    para: 'La gestión completa del laboratorio en un solo lugar.',
-    sirve: 'Para llevar toda la operación en un solo lugar: equipos y su mantención, contingencia, derivaciones, inventario de reactivos, compras, recepción, proveedores y contratos.',
-    elige: 'Tu problema es la operación (equipos, insumos, compras) y no el control de calidad analítico.',
+    para: 'Lo que sostiene el plan: equipos, reactivos y compras.',
+    sirve: 'Para que lo administrativo trabaje para lo técnico: equipos y su mantención, contingencia, derivaciones, inventario de reactivos, compras, recepción, proveedores y contratos.',
+    elige: 'Tu plan de calidad ya existe y lo que falla es lo que lo rodea: equipos, insumos y compras.',
     usuarios: 'Hasta 15 usuarios',
     incluye: [
       `Las ${enApp.length} herramientas disponibles en la app`,
@@ -41,9 +41,9 @@ const planes = [
     id: 'gestion_qc',
     nombre: 'Gestión + Consensus QC',
     destacado: 'El más completo',
-    para: 'Gestión y control de calidad analítico, con mejor precio que por separado.',
-    sirve: 'Para llevar la operación y la calidad analítica juntas: todo lo de Gestión más el control diario con Westgard, el plan de calidad, los estudios N20, el control externo y las no conformidades.',
-    elige: 'Quieres un solo sistema para el laboratorio completo o te preparas para una acreditación.',
+    para: 'El plan de calidad y lo que lo sostiene, con la misma información.',
+    sirve: 'Para decidir y ejecutar en un solo sistema: todo lo de Gestión más el plan de calidad por analito, las reglas de Westgard, el control externo, los estudios N20 y las no conformidades.',
+    elige: 'Diriges el laboratorio y quieres ver en un solo lugar si el plan se cumple, junto con los equipos, reactivos y compras que lo sostienen.',
     usuarios: 'Hasta 15 usuarios',
     incluye: [
       'Todo lo del plan Gestión',
@@ -55,9 +55,9 @@ const planes = [
   {
     id: 'qc',
     nombre: 'Consensus QC',
-    para: 'Solo el control de calidad analítico.',
-    sirve: 'Para el control de calidad de cada día: reglas de Westgard, gráficos de Levey-Jennings, desempeño y sigma, control externo y plan de calidad por analito.',
-    elige: 'Ya tienes ordenada tu gestión, o la llevas en otro sistema, y necesitas el control de calidad.',
+    para: 'Que tu plan de calidad analítico se cumpla igual en cada turno.',
+    sirve: 'Para llevar el plan al mesón: plan de calidad por analito, reglas de Westgard, gráficos de Levey-Jennings, desempeño y sigma, control externo y no conformidades.',
+    elige: 'Quieres definir o ajustar tu plan de calidad y que todo el equipo lo aplique igual.',
     usuarios: 'Hasta 15 usuarios',
     incluye: ['Controles diarios con reglas de Westgard', 'Gráficos de Levey-Jennings', 'Desempeño, sigma y control externo', 'Plan de calidad por analito'],
   },
@@ -81,9 +81,9 @@ const planes = [
   <section class="portada">
     <div class="contenedor">
       <p class="antetitulo">Preventa fundadores</p>
-      <h1>Ordena tu laboratorio con registros trazables</h1>
+      <h1>Tu plan de calidad, aplicado igual en cada turno</h1>
       <p class="portada-lema">
-        <strong>40 % de descuento en el primer año</strong> para los laboratorios que paguen por adelantado antes del{' '}
+        Elige según la parte de tu plan de calidad que quieras resolver. <strong>40 % de descuento en el primer año</strong> para los laboratorios que paguen por adelantado antes del{' '}
         <strong>1 de diciembre de 2026</strong>, fecha en que comienza el servicio. Pruébalo 15 días con los datos de tu laboratorio, sin tarjeta, y si prefieres una cotización la respondemos en un
         día hábil.
       </p>
@@ -91,7 +91,7 @@ const planes = [
         <a class="boton boton-dorado" href={URL_REGISTRO}>Probar gratis 15 días</a>
         <a class="boton boton-secundario boton-claro" href="#cotizar" data-plan="gestion_qc">Pedir cotización</a>
       </div>
-      <p class="nota-portada">Precios por laboratorio, anuales, con IVA incluido. Factura electrónica.</p>
+      <p class="nota-portada">Precios por laboratorio, anuales, con IVA incluido. Factura electrónica. No vendemos controles, analizadores, equipos ni reactivos: solo gestión.</p>
     </div>
   </section>
 
@@ -101,10 +101,10 @@ const planes = [
       <div class="guia-planes">
         <h3>¿Qué quieres resolver primero?</h3>
         <ul>
-          <li><strong>Ordenar el día a día</strong> (temperaturas, turnos, documentos, vencimientos): <a href="#plan-esencial">Esencial</a>.</li>
-          <li><strong>Controlar equipos, reactivos y compras:</strong> <a href="#plan-gestion">Gestión</a>.</li>
-          <li><strong>Vigilar la calidad de tus resultados cada día:</strong> <a href="#plan-qc">Consensus QC</a>.</li>
-          <li><strong>Todo lo anterior en un solo sistema:</strong> <a href="#plan-gestion_qc">Gestión + Consensus QC</a>.</li>
+          <li><strong>Que tu plan de calidad se aplique igual en cada turno:</strong> <a href="#plan-qc">Consensus QC</a>.</li>
+          <li><strong>Ordenar equipos, reactivos y compras que sostienen el plan:</strong> <a href="#plan-gestion">Gestión</a>.</li>
+          <li><strong>Las dos cosas, con la misma información:</strong> <a href="#plan-gestion_qc">Gestión + Consensus QC</a>.</li>
+          <li><strong>Partir por los registros básicos del día:</strong> <a href="#plan-esencial">Esencial</a>.</li>
           <li><strong>Varias sedes o una red:</strong> <a href="#plan-institucional">Institucional</a>.</li>
         </ul>
         <p class="texto-suave">

@@ -16,14 +16,15 @@ const opciones = [
 <Base
   titulo="Diagnóstico de tu laboratorio: 12 preguntas, 10 minutos"
   seccion="diagnostico"
-  descripcion="Autodiagnóstico gratuito y sin cuenta: 12 preguntas sobre registros, control de calidad, equipos y evidencia. Resultado al instante, plan sugerido y tres acciones para esta semana."
+  descripcion="Autodiagnóstico gratuito y sin cuenta para directores técnicos: ¿tu plan de calidad se cumple igual en cada turno? 12 preguntas, resultado al instante, plan sugerido y tres acciones."
 >
   <div class="contenedor">
     <article class="prosa diag">
       <h1>Diagnóstico de tu laboratorio</h1>
       <p class="diag-lema">
-        Doce preguntas, unos 10 minutos, sin crear cuenta. Al final ves cómo estás en cuatro áreas, qué plan te
-        convendría y tres cosas que puedes hacer esta semana, sin pagar nada.
+        Pensado para quien dirige un laboratorio clínico. Doce preguntas, unos 10 minutos, sin crear cuenta: miden si
+        tu plan de calidad está definido, si se aplica igual en cada turno, qué lo sostiene y si la dirección lo ve. Al
+        final recibes tu resultado, el plan que te convendría y tres cosas que puedes hacer esta semana, sin pagar nada.
       </p>
       <div class="aviso aviso-info">
         <p>
@@ -41,6 +42,7 @@ const opciones = [
               <span>Tu cargo</span>
               <select class="campo" name="cargo">
                 <option value="">Prefiero no decirlo</option>
+                <option value="director">Director(a) técnico</option>
                 <option value="jefatura">Jefatura o coordinación</option>
                 <option value="calidad">Calidad o acreditación</option>
                 <option value="tecnologo">Tecnología médica o clínico</option>
@@ -162,7 +164,7 @@ const opciones = [
   });
 
   const etiqueta = { verde: 'Bien encaminado', amarillo: 'Por mejorar', rojo: 'Prioridad' } as const;
-  const cargos: Record<string, string> = { jefatura: 'jefatura o coordinación', calidad: 'calidad o acreditación', tecnologo: 'tecnología médica o clínico', direccion: 'dirección o gerencia', estudiante: 'estudiante o docente', otro: 'otro' };
+  const cargos: Record<string, string> = { director: 'director técnico', jefatura: 'jefatura o coordinación', calidad: 'calidad o acreditación', tecnologo: 'tecnología médica o clínico', direccion: 'dirección o gerencia', estudiante: 'estudiante o docente', otro: 'otro' };
 
   form.addEventListener('submit', (e) => {
     e.preventDefault();
