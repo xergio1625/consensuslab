@@ -52,4 +52,4 @@ export const CORREO_COTIZACION = CORREO_CONTACTO;
 export const VIGENCIA_LEGAL = '11 de octubre de 2026';
 
 /** Fecha de la versión vigente de la política de privacidad (Google Analytics con consentimiento, Cloudflare Web Analytics sin cookies, formulario de cotización, suscripción a novedades y avisos por WhatsApp futuros). */
-export const VIGENCIA_PRIVACIDAD = '24 de octubre de 2026';
+export const VIGENCIA_PRIVACIDAD = '27 de octubre de 2026';

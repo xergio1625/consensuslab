@@ -6,12 +6,14 @@ import { url } from '../lib/rutas';
 
 interface Props {
   titulo: string;
+  grupo?: 'gestion' | 'qc';
 }
-const { titulo } = Astro.props;
+const { titulo, grupo } = Astro.props;
+const capturas = CAPTURAS.filter((c) => !grupo || c.grupo === grupo);
 ---
 
 {
-  CAPTURAS.length > 0 && (
+  capturas.length > 0 && (
     <section class="capturas" aria-roledescription="carrusel" aria-label={titulo} data-capturas>
       <div class="capturas-cabeza">
         <h3>{titulo}</h3>
@@ -21,10 +23,12 @@ const { titulo } = Astro.props;
         </div>
       </div>
       <ul class="capturas-pista" tabindex="0" aria-label="Capturas de la plataforma">
-        {CAPTURAS.map((c, i) => (
+        {capturas.map((c, i) => (
           <li class="captura">
             <figure>
-              <img src={url(c.archivo)} alt={c.alt} width={c.ancho} height={c.alto} loading={i === 0 ? 'eager' : 'lazy'} decoding="async" />
+              <a href={url(c.archivo)} target="_blank" rel="noopener" aria-label={`Abrir la captura «${c.titulo}» en tamaño completo`}>
+                <img src={url(c.archivo)} alt={c.alt} width={c.ancho} height={c.alto} loading={i === 0 ? 'eager' : 'lazy'} decoding="async" />
+              </a>
               <figcaption>
                 <strong>{c.titulo}</strong> {c.texto}
               </figcaption>

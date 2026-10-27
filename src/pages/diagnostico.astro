@@ -1,0 +1,286 @@
+---
+// Autodiagnóstico del laboratorio: 12 preguntas, resultado inmediato con semáforo por bloque, plan sugerido y tres acciones.
+// El cálculo se hace en el navegador (src/lib/diagnostico.js). Solo se envía algo si la persona pide la conversación.
+import Base from '../plantillas/Base.astro';
+import { BLOQUES } from '../lib/diagnostico.js';
+import { url } from '../lib/rutas';
+import { CORREO_CONTACTO, URL_APP, URL_REGISTRO } from '../lib/sitio';
+
+const opciones = [
+  ['si', 'Sí'],
+  ['aveces', 'A veces'],
+  ['no', 'No'],
+];
+---
+
+<Base
+  titulo="Diagnóstico de tu laboratorio: 12 preguntas, 10 minutos"
+  seccion="diagnostico"
+  descripcion="Autodiagnóstico gratuito y sin cuenta: 12 preguntas sobre registros, control de calidad, equipos y evidencia. Resultado al instante, plan sugerido y tres acciones para esta semana."
+>
+  <div class="contenedor">
+    <article class="prosa diag">
+      <h1>Diagnóstico de tu laboratorio</h1>
+      <p class="diag-lema">
+        Doce preguntas, unos 10 minutos, sin crear cuenta. Al final ves cómo estás en cuatro áreas, qué plan te
+        convendría y tres cosas que puedes hacer esta semana, sin pagar nada.
+      </p>
+      <div class="aviso aviso-info">
+        <p>
+          Es una <strong>autoevaluación orientativa</strong>: no es una auditoría ni una certificación. Tus respuestas se
+          calculan en tu navegador y no se envían a ninguna parte. No escribas datos de pacientes.
+        </p>
+      </div>
+
+      <form id="diag-form" class="diag-form" novalidate data-base={url()}>
+        <fieldset class="diag-bloque">
+          <legend>Sobre tu laboratorio</legend>
+          <p class="texto-suave">Estas tres respuestas no cambian el puntaje.</p>
+          <div class="calc-campos">
+            <label class="calc-campo">
+              <span>Tu cargo</span>
+              <select class="campo" name="cargo">
+                <option value="">Prefiero no decirlo</option>
+                <option value="jefatura">Jefatura o coordinación</option>
+                <option value="calidad">Calidad o acreditación</option>
+                <option value="tecnologo">Tecnología médica o clínico</option>
+                <option value="direccion">Dirección o gerencia</option>
+                <option value="estudiante">Estudiante o docente</option>
+                <option value="otro">Otro</option>
+              </select>
+            </label>
+            <label class="calc-campo">
+              <span>Personas que registran</span>
+              <select class="campo" name="usuarios">
+                <option value="hasta5">Hasta 5</option>
+                <option value="6a15">De 6 a 15</option>
+                <option value="mas15">Más de 15</option>
+              </select>
+            </label>
+            <label class="calc-campo">
+              <span>Sedes</span>
+              <select class="campo" name="sedes">
+                <option value="1">Una</option>
+                <option value="2omas">Dos o más</option>
+              </select>
+            </label>
+          </div>
+        </fieldset>
+
+        {
+          BLOQUES.map((b) => (
+            <fieldset class="diag-bloque" data-bloque={b.id}>
+              <legend>{b.titulo}</legend>
+              {b.preguntas.map((p, i) => (
+                <div class="diag-pregunta" role="radiogroup" aria-labelledby={`q-${b.id}${i}`} data-pregunta={`${b.id}${i}`}>
+                  <p id={`q-${b.id}${i}`}>{p}</p>
+                  <div class="diag-opciones">
+                    {opciones.map(([valor, texto]) => (
+                      <label class="diag-opcion">
+                        <input type="radio" name={`${b.id}${i}`} value={valor} required />
+                        <span>{texto}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </fieldset>
+          ))
+        }
+
+        <p class="diag-avance" id="diag-avance" aria-live="polite">Respondidas 0 de 12</p>
+        <p class="estado-cotizacion estado-error" id="diag-error" role="alert" hidden></p>
+        <button type="submit" class="boton boton-primario">Ver mi resultado</button>
+      </form>
+
+      <section id="diag-resultado" class="diag-resultado" hidden aria-labelledby="diag-resultado-titulo">
+        <h2 id="diag-resultado-titulo" tabindex="-1">Tu resultado</h2>
+        <p id="diag-resumen"></p>
+        <div class="diag-tarjetas" id="diag-tarjetas"></div>
+
+        <div class="caja caja-app diag-plan">
+          <h3>Plan que te convendría: <span id="diag-plan-nombre"></span></h3>
+          <p id="diag-plan-motivo"></p>
+          <p>
+            <a class="boton boton-primario" id="diag-prueba" href={URL_REGISTRO}>Probar 15 días gratis</a>
+            <a class="boton boton-secundario" id="diag-plan-enlace" href={url('planes/')}>Ver este plan</a>
+          </p>
+        </div>
+
+        <h3>Tres cosas que puedes hacer esta semana</h3>
+        <ol id="diag-acciones"></ol>
+        <p class="texto-suave">Son gratuitas y no necesitan la app.</p>
+        <p class="diag-imprimir"><button type="button" class="boton boton-secundario" id="diag-imprimir">Imprimir o guardar en PDF</button></p>
+
+        <div class="caja diag-contacto" id="diag-contacto">
+          <h3>¿Quieres que te ayude a partir?</h3>
+          <p>
+            Agenda una conversación de 30 minutos, sin costo: revisamos este resultado, eliges <strong>un</strong> problema
+            por donde empezar y dejamos tu cuenta de prueba preparada para eso.
+          </p>
+          <form id="diag-contacto-form" novalidate data-url={URL_APP} data-correo={CORREO_CONTACTO}>
+            <div class="calc-campos">
+              <label class="calc-campo"><span>Nombre y apellido</span><input class="campo" name="nombre" required maxlength="120" autocomplete="name" autocapitalize="words" enterkeyhint="next" /></label>
+              <label class="calc-campo"><span>Correo</span><input class="campo" name="correo" type="email" required maxlength="254" autocomplete="email" inputmode="email" autocapitalize="none" spellcheck="false" enterkeyhint="next" /></label>
+              <label class="calc-campo"><span>Laboratorio o institución</span><input class="campo" name="laboratorio" required maxlength="200" autocomplete="organization" autocapitalize="words" enterkeyhint="send" /></label>
+            </div>
+            <div class="campo-trampa" aria-hidden="true">
+              <label>Sitio web <input name="sitio_web" tabindex="-1" autocomplete="off" /></label>
+            </div>
+            <p class="texto-suave">
+              Enviaremos tu nombre, correo, laboratorio y el resumen de tu resultado solo para coordinar la conversación, como
+              explica la <a href={url('privacidad/')}>política de privacidad</a>.
+            </p>
+            <button type="submit" class="boton boton-primario">Quiero la conversación</button>
+            <p class="estado-cotizacion" id="diag-contacto-estado" role="status" hidden></p>
+          </form>
+        </div>
+      </section>
+    </article>
+  </div>
+</Base>
+
+<script>
+  import { BLOQUES, PLANES, PUNTOS, evaluar } from '../lib/diagnostico.js';
+  import { URL_REGISTRO } from '../lib/sitio';
+
+  const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
+  const form = $<HTMLFormElement>('diag-form');
+  const resultado = $('diag-resultado');
+  const avance = $('diag-avance');
+  const error = $('diag-error');
+  const total = BLOQUES.reduce((s, b) => s + b.preguntas.length, 0);
+  const ruta = (r: string) => (form.dataset.base ?? '/') + r;
+  let resumenParaEnvio = '';
+
+  const respuestaDe = (nombre: string) => (form.elements.namedItem(nombre) as RadioNodeList).value as keyof typeof PUNTOS | '';
+  const contestadas = () => BLOQUES.flatMap((b) => b.preguntas.map((_, i) => `${b.id}${i}`)).filter((n) => respuestaDe(n) !== '').length;
+
+  form.addEventListener('change', () => {
+    avance.textContent = `Respondidas ${contestadas()} de ${total}`;
+    error.hidden = true;
+  });
+
+  const etiqueta = { verde: 'Bien encaminado', amarillo: 'Por mejorar', rojo: 'Prioridad' } as const;
+  const cargos: Record<string, string> = { jefatura: 'jefatura o coordinación', calidad: 'calidad o acreditación', tecnologo: 'tecnología médica o clínico', direccion: 'dirección o gerencia', estudiante: 'estudiante o docente', otro: 'otro' };
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const faltan = BLOQUES.flatMap((b) => b.preguntas.map((_, i) => `${b.id}${i}`)).filter((n) => respuestaDe(n) === '');
+    if (faltan.length) {
+      error.hidden = false;
+      error.textContent = `Te faltan ${faltan.length} ${faltan.length === 1 ? 'pregunta' : 'preguntas'} por responder.`;
+      (document.querySelector(`[data-pregunta="${faltan[0]}"]`) as HTMLElement).scrollIntoView({ block: 'center', behavior: 'smooth' });
+      return;
+    }
+    const respuestas: Record<string, number[]> = {};
+    for (const b of BLOQUES) respuestas[b.id] = b.preguntas.map((_, i) => PUNTOS[respuestaDe(`${b.id}${i}`) as keyof typeof PUNTOS]);
+    const contexto = {
+      usuarios: (form.elements.namedItem('usuarios') as HTMLSelectElement).value,
+      sedes: (form.elements.namedItem('sedes') as HTMLSelectElement).value,
+    };
+    const cargo = (form.elements.namedItem('cargo') as HTMLSelectElement).value;
+    const r = evaluar(respuestas, contexto);
+    const plan = PLANES[r.plan as keyof typeof PLANES];
+
+    $('diag-resumen').textContent =
+      r.cuantosDebiles === 0
+        ? `Sumaste ${r.total} de 24 puntos: tu base es sólida. Aun así, te mostramos por dónde seguir.`
+        : `Sumaste ${r.total} de 24 puntos. ${r.cuantosDebiles === 1 ? 'Hay un área' : `Hay ${r.cuantosDebiles} áreas`} con espacio para mejorar.`;
+
+    const tarjetas = $('diag-tarjetas');
+    tarjetas.replaceChildren(
+      ...r.bloques.map((b) => {
+        const d = document.createElement('div');
+        d.className = `diag-tarjeta diag-${b.semaforo}`;
+        const t = document.createElement('strong');
+        t.textContent = b.titulo;
+        const p = document.createElement('span');
+        p.className = 'diag-puntaje';
+        p.textContent = `${b.puntaje} de 6`;
+        const s = document.createElement('span');
+        s.className = 'diag-etiqueta';
+        s.textContent = etiqueta[b.semaforo as keyof typeof etiqueta];
+        d.append(t, p, s);
+        return d;
+      }),
+    );
+
+    $('diag-plan-nombre').textContent = plan.nombre;
+    $('diag-plan-motivo').textContent = `Lo sugerimos porque ${plan.motivo}. Es una orientación: durante la prueba de 15 días puedes mirar las herramientas que quieras.`;
+    ($('diag-prueba') as HTMLAnchorElement).href = `${URL_REGISTRO}&utm_source=sitio&utm_medium=diagnostico&utm_campaign=${r.plan}`;
+    ($('diag-plan-enlace') as HTMLAnchorElement).href = `${ruta('planes/')}#plan-${r.plan}`;
+
+    $('diag-acciones').replaceChildren(
+      ...r.acciones.map((a) => {
+        const li = document.createElement('li');
+        const enlace = document.createElement('a');
+        enlace.href = ruta(a.ruta);
+        enlace.textContent = a.texto;
+        li.append(enlace);
+        return li;
+      }),
+    );
+
+    resumenParaEnvio =
+      'Diagnóstico inicial: pide una conversación de 30 minutos. ' +
+      r.bloques.map((b) => `${b.titulo} ${b.puntaje}/6`).join('; ') +
+      `. Plan sugerido: ${plan.nombre}. Cargo: ${cargos[cargo] ?? 'no indicado'}. Personas que registran: ${contexto.usuarios}. Sedes: ${contexto.sedes}.`;
+
+    resultado.hidden = false;
+    $('diag-resultado-titulo').focus();
+    resultado.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const w = window as unknown as { gtag?: (...a: unknown[]) => void };
+    if (typeof w.gtag === 'function') w.gtag('event', 'diagnostico_completo', { plan: r.plan, puntaje: r.total });
+  });
+
+  $('diag-imprimir').addEventListener('click', () => window.print());
+
+  // Pedir la conversación: mismo destino que la cotización de /planes/, con el resumen en el mensaje.
+  const contacto = $<HTMLFormElement>('diag-contacto-form');
+  const estado = $('diag-contacto-estado');
+  const abierto = Date.now();
+  const mostrar = (texto: string, esError: boolean) => {
+    estado.hidden = false;
+    estado.textContent = texto;
+    estado.classList.toggle('estado-error', esError);
+  };
+  contacto.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const datos: Record<string, unknown> = {};
+    new FormData(contacto).forEach((v, k) => { datos[k] = String(v); });
+    if (!String(datos.nombre).trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(datos.correo).trim()) || !String(datos.laboratorio).trim()) {
+      mostrar('Completa tu nombre, un correo válido y el laboratorio.', true);
+      return;
+    }
+    datos.plan = 'no_se';
+    datos.sedes = (form.elements.namedItem('sedes') as HTMLSelectElement).value === '2omas' ? '2' : '1';
+    datos.piloto = false;
+    datos.marketing = false;
+    datos.mensaje = resumenParaEnvio.slice(0, 1400);
+    datos.t = Date.now() - abierto;
+    try { datos.origen = sessionStorage.getItem('origen') || (document.referrer ? 'referido/' + new URL(document.referrer).hostname : 'directo/'); } catch { datos.origen = ''; }
+    const boton = contacto.querySelector('button[type=submit]') as HTMLButtonElement;
+    boton.disabled = true;
+    mostrar('Enviando…', false);
+    try {
+      // Sin cabecera JSON: evita la consulta previa de CORS; la app responde JSON.
+      const r = await fetch(contacto.dataset.url!, { method: 'POST', body: JSON.stringify({ accion: 'cotizacion', datos }) });
+      const j = await r.json();
+      if (j.ok) {
+        contacto.reset();
+        mostrar('¡Listo! Recibimos tu solicitud. Te escribiremos dentro de un día hábil para coordinar la conversación.', false);
+        const w = window as unknown as { gtag?: (...a: unknown[]) => void };
+        if (typeof w.gtag === 'function') w.gtag('event', 'generate_lead', { plan: 'diagnostico', pagina: location.pathname });
+      } else if (j.error === 'validacion') {
+        mostrar('Revisa tu nombre, correo y laboratorio.', true);
+      } else {
+        mostrar('No pudimos recibir la solicitud. Inténtalo de nuevo o escríbenos a ' + contacto.dataset.correo + '.', true);
+      }
+    } catch {
+      mostrar('No pudimos conectar. Revisa tu conexión o escríbenos a ' + contacto.dataset.correo + '.', true);
+    } finally {
+      boton.disabled = false;
+    }
+  });
+</script>
