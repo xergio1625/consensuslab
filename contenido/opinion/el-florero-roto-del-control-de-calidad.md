@@ -1,6 +1,6 @@
 ---
 titulo: "El florero roto del control de calidad"
-fecha: 2026-10-31
+fecha: 2026-11-05
 serie: "Fábulas de laboratorio"
 resumen: "Un control de hemoglobina glicada preparado al revés, otro que se salía del gráfico y un colega que borraba los puntos malos. Dos errores, dos jefaturas posibles y una animación infantil que explica mejor que cualquier norma por qué la calidad analítica depende de poder decir «me equivoqué»."
 temas: ["Laboratorio clínico", "Control de calidad", "Gestión", "Cultura de calidad"]
