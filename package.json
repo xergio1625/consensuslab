@@ -11,6 +11,7 @@
     "revisar": "astro check",
     "medium": "node tools/importar-medium.mjs",
     "enlaces": "node tools/revisar-enlaces.mjs dist",
+    "aprendizaje": "node tools/aprendizaje-mercado.mjs",
     "test": "node --test \"tests/**/*.test.mjs\""
   },
   "engines": {
