@@ -1071,7 +1071,9 @@ img, svg { max-width: 100%; }
   background: var(--c-panel); color: var(--c-texto); border: 1px solid var(--c-borde); box-shadow: var(--sombra);
 }
 .puerta-destacada { border-color: var(--marca-dorado); box-shadow: 0 0 0 2px var(--marca-dorado), var(--sombra-h); }
+/* Las puertas viven dentro de .portada (que pinta los antetítulos en dorado claro, pensado para fondo burdeo): aquí el fondo es el panel. */
 .puerta .antetitulo { margin: 0; }
+.portada .puerta .antetitulo { color: var(--c-acento-texto); }
 .puerta h2 { margin: 0; font-size: 1.4rem; line-height: 1.2; }
 .puerta p { margin: 0; }
 .puerta ul { margin: 0; padding-left: 1.15em; display: grid; gap: 4px; }
