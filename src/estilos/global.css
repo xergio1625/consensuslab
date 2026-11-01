@@ -23,7 +23,7 @@
   --c-boton: #6D0F2B;
   --c-boton-h: #8A1A3C;
   --c-boton-texto: #FFFFFF;
-  --c-acento-texto: #8A6A2E;
+  --c-acento-texto: #6B4E12; /* dorado oscuro: ≥6:1 sobre blanco y sobre --c-panel-alt */
   --c-foco: #B8934A;
   --c-ok: #1F6B24;
   --c-ok-fondo: #E6F3E7;
