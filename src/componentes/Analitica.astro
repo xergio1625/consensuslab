@@ -4,7 +4,7 @@
 // La decisión se guarda en este navegador por 12 meses y se puede cambiar desde el pie («Preferencias de cookies»).
 // Sin GA_ID (src/lib/sitio.ts) este componente no agrega nada a la página.
 import { url } from '../lib/rutas';
-import { CF_BEACON_TOKEN, GA_ID, URL_APP } from '../lib/sitio';
+import { ADS_ID, CF_BEACON_TOKEN, GA_ID, URL_APP } from '../lib/sitio';
 ---
 
 {/* Cloudflare Web Analytics: sin cookies ni identificadores, por eso carga sin pedir consentimiento. */}
@@ -27,7 +27,7 @@ import { CF_BEACON_TOKEN, GA_ID, URL_APP } from '../lib/sitio';
         </div>
       </div>
     </div>
-    <script is:inline define:vars={{ GA_ID, URL_APP }}>
+    <script is:inline define:vars={{ GA_ID, ADS_ID, URL_APP }}>
       (function () {
         var CLAVE = 'consentimiento-analitica';
         var VIGENCIA_MS = 365 * 24 * 60 * 60 * 1000;
@@ -57,6 +57,7 @@ import { CF_BEACON_TOKEN, GA_ID, URL_APP } from '../lib/sitio';
           });
           window.gtag('js', new Date());
           window.gtag('config', GA_ID, { allow_google_signals: false, allow_ad_personalization_signals: false });
+          if (ADS_ID) window.gtag('config', ADS_ID);
           var s = document.createElement('script');
           s.async = true;
           s.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(GA_ID);

@@ -55,6 +55,13 @@ export const LINKEDIN_PERFIL = 'https://www.linkedin.com/in/sergio-inostroza-rif
 export const GA_ID = 'G-PBCF6HZRHZ';
 
 /**
+ * ID de la etiqueta de Google Ads (formato 'AW-XXXXXXXXX'; público). Con ID, se carga junto a Analytics solo si la persona
+ * acepta las cookies, y la solicitud de cotización exitosa envía la conversión «conversion_event_request_quote».
+ * Vacío = sin conversión de Ads.
+ */
+export const ADS_ID = '';
+
+/**
  * Token de Cloudflare Web Analytics (público, aparece en el código de cada página).
  * Mide visitas sin cookies ni identificadores personales, por eso no pide consentimiento.
  * Vacío = no se carga el script. Instalación manual: el sitio va en «solo DNS», sin proxy de Cloudflare.
