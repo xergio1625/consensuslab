@@ -33,7 +33,7 @@ const grupos = [
     items: [
       { id: 'professional', texto: 'ConsensusLab Professional', ruta: 'professional/' },
       { id: 'guias', texto: 'Guías', ruta: 'guias/' },
-      { id: 'planes-pro', texto: 'Planes para profesionales', ruta: 'planes/#profesional' },
+      { id: 'planes-pro', texto: 'Planes para profesionales', ruta: 'planes/professional/' },
     ],
     comunes,
   },
@@ -46,7 +46,7 @@ const grupos = [
       { id: 'qc', texto: 'ConsensusLab QC', ruta: 'qc/' },
       { id: 'accreditation', texto: 'Accreditation', ruta: 'accreditation/' },
       { id: 'herramientas', texto: 'Herramientas', ruta: 'herramientas/' },
-      { id: 'planes-lab', texto: 'Planes para laboratorios', ruta: 'planes/#laboratorios' },
+      { id: 'planes-lab', texto: 'Planes para laboratorios', ruta: 'planes/laboratorios/' },
     ],
     comunes,
   },
@@ -54,11 +54,11 @@ const grupos = [
 const grupoActivo = (g: (typeof grupos)[number]) => g.items.some((e) => e.id === seccion);
 // Botón único según dónde estás: en las páginas de profesionales, Professional; en Accreditation, la lista de espera; en la portada y
 // en Planes no hay (ahí ya están las dos puertas y los botones de cada plan).
-const secciones_pro = ['professional', 'guias'];
+const secciones_pro = ['professional', 'guias', 'planes-pro'];
 const cta = secciones_pro.includes(seccion ?? '')
   ? (PROFESSIONAL_ABIERTO ? { texto: 'Probar Professional', href: URL_PROFESSIONAL_REGISTRO } : { texto: 'Quiero entrar primero', href: '#novedades' })
   : seccion === 'accreditation' ? { texto: 'Sumarme a la lista', href: '#novedades' }
-  : seccion === 'inicio' || seccion === 'planes' ? null : { texto: 'Probar gratis', href: URL_REGISTRO };
+  : seccion === 'inicio' || seccion === 'planes' || seccion === 'planes-lab' ? null : { texto: 'Probar gratis', href: URL_REGISTRO };
 ---
 
 <header class="cabecera">

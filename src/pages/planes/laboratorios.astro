@@ -1,0 +1,425 @@
+---
+// Planes para laboratorios (los de profesionales viven aparte, en /planes/professional/). Solo el plan Esencial muestra precio (decisión del 9-10-2026); los demás se cotizan
+// (llega a la app por doPost) y su lista de precios vive en el repositorio privado de la app.
+import Base from '../../plantillas/Base.astro';
+import Capturas from '../../componentes/Capturas.astro';
+import { obtenerHerramientas } from '../../lib/datos';
+import { migasLd, url } from '../../lib/rutas';
+import { CORREO_COTIZACION, PRECIO_ESSENTIAL_BASE, URL_APP, URL_REGISTRO } from '../../lib/sitio';
+
+const herramientas = await obtenerHerramientas();
+const enApp = herramientas.filter((h) => h.data.estado === 'disponible' && h.data.app_modulo);
+const ESENCIAL = ['panel', 'temperaturas', 'turno', 'documentos', 'vencimientos', 'informes'];
+const esencial = ESENCIAL.map((m) => enApp.find((h) => h.data.app_modulo === m)).filter(Boolean);
+
+const planes = [
+  {
+    id: 'esencial',
+    nombre: 'Essential Base',
+    para: 'La base del día a día, sobre la que se apoya cualquier plan de calidad.',
+    sirve: 'Para ordenar los registros que sostienen el plan: saber qué toca hoy, dejar las temperaturas con alarma, entregar el turno, tener los documentos vigentes y que la dirección reciba un informe mensual.',
+    elige: 'Quieres partir por lo básico y dejar evidencia para las auditorías antes de sumar el control de calidad analítico.',
+    usuarios: 'Hasta 5 usuarios',
+    precio: PRECIO_ESSENTIAL_BASE,
+    incluye: esencial.map((h) => h!.data.titulo),
+  },
+  {
+    id: 'gestion',
+    nombre: 'Essential Completo',
+    para: 'Lo que sostiene el plan: equipos, reactivos y compras.',
+    sirve: 'Para que lo administrativo trabaje para lo técnico: equipos y su mantención, contingencia, derivaciones, inventario de reactivos, compras, recepción, proveedores y contratos.',
+    elige: 'Tu plan de calidad ya existe y lo que falla es lo que lo rodea: equipos, insumos y compras.',
+    usuarios: 'Hasta 15 usuarios',
+    incluye: [
+      `Las ${enApp.length} herramientas disponibles en la app`,
+      'Equipos, mantención, contingencia y derivaciones',
+      'Inventario, compras, recepción, proveedores y contratos',
+      'Las nuevas herramientas que se publiquen',
+    ],
+  },
+  {
+    id: 'gestion_qc',
+    nombre: 'ConsensusLab completo',
+    subtitulo: 'Essential Completo + ConsensusLab QC',
+    destacado: 'El más completo',
+    para: 'El plan de calidad y lo que lo sostiene, con la misma información.',
+    sirve: 'Para decidir y ejecutar en un solo sistema: todo lo de Essential Completo más el plan de calidad por analito, las reglas de Westgard, el control externo, los estudios N20 y las no conformidades.',
+    elige: 'Quieres que todo el equipo vea en un solo lugar si el plan se cumple, junto con los equipos, reactivos y compras que lo sostienen.',
+    usuarios: 'Hasta 15 usuarios',
+    incluye: [
+      'Todo lo de Essential Completo',
+      'ConsensusLab QC: Westgard, Levey-Jennings y sigma',
+      'Plan de calidad, estudios N20 y control externo',
+      'No conformidades con análisis de causa',
+    ],
+  },
+  {
+    id: 'qc',
+    nombre: 'ConsensusLab QC',
+    para: 'Que tu plan de calidad analítico se cumpla igual en cada turno.',
+    sirve: 'Para llevar el plan al mesón: plan de calidad por analito, reglas de Westgard, gráficos de Levey-Jennings, desempeño y sigma, control externo y no conformidades.',
+    elige: 'Quieres definir o ajustar tu plan de calidad y que todo el equipo lo aplique igual.',
+    usuarios: 'Hasta 15 usuarios',
+    incluye: ['Controles diarios con reglas de Westgard', 'Gráficos de Levey-Jennings', 'Desempeño, sigma y control externo', 'Plan de calidad por analito'],
+  },
+];
+
+// Servicios institucionales y próximos módulos: van juntos, debajo de los planes de laboratorio.
+const institucional = {
+  id: 'institucional',
+  nombre: 'Institucional',
+  para: 'Redes de salud, varias sedes o muchos usuarios.',
+  sirve: 'Para redes y laboratorios con varias sedes: una licencia por sede y condiciones de compra a convenir.',
+  elige: 'Tienes más de un laboratorio o necesitas más de 15 usuarios.',
+  usuarios: 'Usuarios y sedes a convenir',
+  incluye: ['Todos los módulos y ConsensusLab QC', 'Una licencia por sede', 'Condiciones y forma de compra a convenir'],
+};
+const planesCotizables = [...planes, institucional];
+---
+
+<Base
+  titulo="Planes para laboratorios clínicos"
+  seccion="planes-lab"
+  datos={migasLd(Astro.site, [['Planes', 'planes/'], ['Laboratorios', 'planes/laboratorios/']])}
+  descripcion="Planes de ConsensusLab para laboratorios clínicos: Essential Base, Essential Completo y ConsensusLab QC. Prueba 15 días gratis y preventa fundadores con 40 % de descuento."
+>
+  <section class="portada">
+    <div class="contenedor">
+      <p class="antetitulo">Planes para laboratorios</p>
+      <h1>Planes de ConsensusLab para tu laboratorio</h1>
+      <p class="portada-lema">
+        <strong>Essential</strong> y <strong>ConsensusLab QC</strong> ordenan los registros del laboratorio y llevan tu plan de
+        calidad al mesón. Cada plan incluye hasta 5 cuentas de Professional para tu equipo.
+      </p>
+      <div class="acciones-portada">
+        <a class="boton boton-dorado" href={URL_REGISTRO}>Probar gratis 15 días</a>
+        <a class="boton boton-secundario boton-claro" href="#cotizar" data-plan="gestion_qc">Pedir cotización</a>
+      </div>
+      <p class="nota-portada">
+        Precios anuales con IVA incluido. No vendemos controles, analizadores, equipos ni reactivos: solo gestión.
+        ¿Eres profesional y buscas algo para ti? Mira <a href={url('planes/professional/')}>Professional</a>.
+      </p>
+    </div>
+  </section>
+
+  <section class="seccion seccion-alt" id="laboratorios">
+    <div class="contenedor">
+      <p class="antetitulo">Preventa fundadores</p>
+      <h2>Para tu laboratorio</h2>
+      <p class="texto-suave">
+        <strong>40 % de descuento en el primer año</strong> para los laboratorios que paguen por adelantado antes del
+        <strong>1 de diciembre de 2026</strong>, fecha en que comienza el servicio. Pruébalo 15 días con los datos de tu
+        laboratorio, sin tarjeta, y si prefieres una cotización la respondemos en un día hábil.
+      </p>
+      <p>
+        <a class="boton boton-primario" href={URL_REGISTRO}>Probar gratis 15 días</a>
+        <a class="boton boton-secundario" href="#cotizar" data-plan="gestion_qc">Pedir cotización</a>
+      </p>
+      <div class="guia-planes">
+        <h3>¿Qué quieres resolver primero?</h3>
+        <ul>
+          <li><strong>Que tu plan de calidad se aplique igual en cada turno:</strong> <a href="#plan-qc">ConsensusLab QC</a>.</li>
+          <li><strong>Ordenar equipos, reactivos y compras que sostienen el plan:</strong> <a href="#plan-gestion">Essential Completo</a>.</li>
+          <li><strong>Las dos cosas, con la misma información:</strong> <a href="#plan-gestion_qc">ConsensusLab completo</a>.</li>
+          <li><strong>Partir por los registros básicos del día:</strong> <a href="#plan-esencial">Essential Base</a>.</li>
+          <li><strong>Varias sedes o una red:</strong> <a href="#plan-institucional">Institucional</a>.</li>
+        </ul>
+        <p class="texto-suave">
+          ¿No sabes cuál? Haz el <a href={url('diagnostico/')}>diagnóstico de tu laboratorio</a> (12 preguntas, sin cuenta) o empieza la
+          prueba gratis: durante 15 días pruebas las herramientas que quieras y después eliges.
+        </p>
+      </div>
+      <Capturas titulo="Así se ve la plataforma por dentro" />
+      <div class="planes">
+        {
+          planes.map((p) => (
+            <article class={'plan' + (p.destacado ? ' plan-destacado' : '')} id={`plan-${p.id}`}>
+              {p.destacado && <span class="plan-cinta">{p.destacado}</span>}
+              <h3>{p.nombre}</h3>
+              {p.subtitulo && <p class="texto-suave">{p.subtitulo}</p>}
+              <p class="plan-para">{p.para}</p>
+              <p class="plan-usuarios">{p.usuarios}</p>
+              <p class="plan-sirve">{p.sirve}</p>
+              <p class="plan-elige"><strong>Elígelo si:</strong> {p.elige}</p>
+              {p.precio && (
+                <p class="plan-precio">
+                  <span class="plan-precio-fundador">{p.precio.fundador}</span>
+                  <span class="plan-precio-nota">al año con IVA incluido, precio fundador (40 % de descuento)</span>
+                  <span class="plan-precio-nota">Luego {p.precio.normal} al año con IVA incluido</span>
+                </p>
+              )}
+              <ul class="plan-incluye">
+                {p.incluye.map((x) => <li>{x}</li>)}
+              </ul>
+              <a class="boton boton-primario boton-ancho" href={URL_REGISTRO}>Probar 15 días gratis</a>
+              <a class="boton boton-secundario boton-ancho" href="#cotizar" data-plan={p.id}>Pedir cotización</a>
+            </article>
+          ))
+        }
+      </div>
+      <p class="texto-suave">
+        Todos los planes de laboratorio incluyen hasta 5 cuentas de ConsensusLab Professional para tu equipo, registros trazables (nada se borra: las correcciones quedan con nombre y motivo),
+        actualizaciones, soporte por correo y una copia de tus registros cuando la pidas. La app no admite datos de
+        pacientes. Prueba cualquier herramienta <strong>15 días gratis</strong> con los datos de tu laboratorio:
+        <a href={URL_REGISTRO}>crea tu cuenta</a> y empieza.
+      </p>
+      <div class="aviso aviso-info">
+        <p>
+          <strong>Sin riesgo:</strong> si pagas antes del 1 de diciembre para asegurar el precio de fundador y, dentro de los
+          30 días de tu prueba, decides no continuar, te devolvemos el pago completo.
+        </p>
+      </div>
+      <div class="aviso aviso-info">
+        <p>
+          <strong>Próximamente: avisos por WhatsApp.</strong> Después del lanzamiento del 1 de diciembre sumaremos avisos
+          de vencimientos, alertas y recordatorios de las tareas del turno. No estarán en el lanzamiento, pero los primeros
+          clientes tendrán acceso a ellos.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="institucional-y-mas">
+    <div class="contenedor">
+      <p class="antetitulo">Redes, sedes y lo que viene</p>
+      <h2>Institucional y próximos módulos</h2>
+      <div class="planes planes-fila">
+        <article class="plan" id="plan-institucional">
+          <h3>{institucional.nombre}</h3>
+          <p class="plan-para">{institucional.para}</p>
+          <p class="plan-usuarios">{institucional.usuarios}</p>
+          <p class="plan-sirve">{institucional.sirve}</p>
+          <p class="plan-elige"><strong>Elígelo si:</strong> {institucional.elige}</p>
+          <ul class="plan-incluye">
+            {institucional.incluye.map((x) => <li>{x}</li>)}
+          </ul>
+          <a class="boton boton-primario boton-ancho" href="#cotizar" data-plan="institucional">Pedir cotización</a>
+        </article>
+        <article class="plan plan-preparacion" id="plan-accreditation">
+          <span class="plan-cinta plan-cinta-suave">En preparación · 2027</span>
+          <h3>ConsensusLab Accreditation</h3>
+          <p class="plan-para">Para preparar y sostener la acreditación del laboratorio.</p>
+          <p class="plan-sirve">
+            Las brechas frente al estándar chileno, las características obligatorias y el plan de acciones, enlazados con los
+            registros que ya llevas en ConsensusLab.
+          </p>
+          <ul class="plan-incluye">
+            <li>Mapa de brechas y plan por fases</li>
+            <li>Evidencia enlazada a tus registros</li>
+          </ul>
+          <a class="boton boton-secundario boton-ancho" href={url('accreditation/#novedades')}>Sumarme a la lista de espera</a>
+        </article>
+        <article class="plan plan-preparacion" id="plan-expertise">
+          <span class="plan-cinta plan-cinta-suave">En preparación</span>
+          <h3>ConsensusLab Expertise</h3>
+          <p class="plan-para">Para laboratorios que trabajan con normas internacionales.</p>
+          <p class="plan-sirve">
+            Cumplimiento de ISO 15189 y normas afines para laboratorios grandes. Es un módulo de largo plazo: aún no tiene fecha
+            de lanzamiento.
+          </p>
+          <ul class="plan-incluye">
+            <li>Todavía en definición</li>
+          </ul>
+          <a class="boton boton-secundario boton-ancho" href="#novedades">Avísame cuando exista</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion seccion-alt">
+    <div class="contenedor">
+      <h2>Cómo funciona la preventa</h2>
+      <ol class="pasos-preventa">
+        <li>
+          <strong>Prueba gratis 15 días</strong> con los datos reales de tu laboratorio: <a href={URL_REGISTRO}>crea tu cuenta</a>,
+          sin tarjeta ni compromiso. Si contratas, sigues en la misma cuenta y tus registros se mantienen.
+        </li>
+        <li>
+          <strong>Pide tu cotización</strong> con el formulario. Te la enviamos por correo en un día hábil y, si necesitas más
+          tiempo para evaluar, extendemos tu prueba a 30 días.
+        </li>
+        <li>
+          <strong>Paga el año por adelantado antes del 1 de diciembre de 2026</strong> y obtienes el 40 % de descuento en el
+          primer año. Usas la app desde el pago y el año pagado corre desde el 1 de diciembre.
+        </li>
+        <li><strong>Pago contra factura electrónica</strong>, por transferencia o con orden de compra.</li>
+      </ol>
+      <div class="aviso aviso-info">
+        <p>
+          <strong>¿Tu prueba termina después del 1 de diciembre?</strong> Igual accedes al precio de fundador: paga o envía
+          la orden de compra antes del 1 de diciembre y sigue probando. Si decides no continuar dentro de los 30 días de
+          tu prueba, te devolvemos el pago completo.
+        </p>
+      </div>
+      <p class="texto-suave">
+        Desde el 1 de diciembre de 2026 rigen los precios normales. También puedes pagar mes a mes, sin el descuento de
+        fundador.
+      </p>
+    </div>
+  </section>
+
+  <section class="seccion" id="cotizar">
+    <div class="contenedor">
+      <h2>Pide tu cotización</h2>
+      <p class="texto-suave">
+        Solo datos de contacto del laboratorio: nunca datos de pacientes. Si prefieres escribirnos, envía tu consulta a
+        <a href={`mailto:${CORREO_COTIZACION}?subject=${encodeURIComponent('Cotización ConsensusLab')}`}>{CORREO_COTIZACION}</a>.
+      </p>
+      <form class="form-cotizacion" id="form-cotizacion" novalidate data-url={URL_APP} data-correo={CORREO_COTIZACION}>
+        <div class="calc-campos">
+          <label class="calc-campo"><span>Nombre y apellido</span><input class="campo" name="nombre" required maxlength="120" autocomplete="name" autocapitalize="words" enterkeyhint="next" /></label>
+          <label class="calc-campo"><span>Correo</span><input class="campo" name="correo" type="email" required maxlength="254" autocomplete="email" inputmode="email" autocapitalize="none" spellcheck="false" enterkeyhint="next" /></label>
+          <label class="calc-campo"><span>Laboratorio o institución</span><input class="campo" name="laboratorio" required maxlength="200" autocomplete="organization" autocapitalize="words" enterkeyhint="next" /></label>
+          <label class="calc-campo">
+            <span>Plan de interés</span>
+            <select class="campo" name="plan" id="cotizar-plan">
+              {planesCotizables.map((p) => <option value={p.id} selected={p.id === 'gestion_qc'}>{p.nombre}</option>)}
+              <option value="no_se">Aún no lo sé</option>
+            </select>
+          </label>
+          <details class="calc-mas calc-ancho" id="cotizar-mas" open>
+            <summary>Más datos para la cotización <span class="opcional">(opcional)</span></summary>
+            <div class="calc-campos">
+          <label class="calc-campo"><span>Cargo <span class="opcional">(opcional)</span></span><input class="campo" name="cargo" maxlength="100" autocomplete="organization-title" /></label>
+          <label class="calc-campo"><span>Teléfono <span class="opcional">(opcional)</span></span><input class="campo" name="telefono" type="tel" maxlength="30" autocomplete="tel" inputmode="tel" /></label>
+          <label class="calc-campo"><span>Ciudad <span class="opcional">(opcional)</span></span><input class="campo" name="ciudad" maxlength="80" autocomplete="address-level2" /></label>
+          <label class="calc-campo">
+            <span>Sector</span>
+            <select class="campo" name="sector">
+              <option value="privado">Privado (clínica, centro médico, laboratorio)</option>
+              <option value="publico">Público (hospital, CESFAM, servicio de salud)</option>
+              <option value="otro">Otro</option>
+            </select>
+          </label>
+          <label class="calc-campo"><span>Usuarios <span class="opcional">(aprox.)</span></span><input class="campo" name="usuarios" type="number" min="1" max="1000" inputmode="numeric" /></label>
+          <label class="calc-campo"><span>Sedes</span><input class="campo" name="sedes" type="number" min="1" max="50" value="1" inputmode="numeric" /></label>
+          <label class="calc-campo calc-ancho"><span>Mensaje <span class="opcional">(opcional)</span></span><textarea class="campo" name="mensaje" maxlength="1500" rows="3" placeholder="Por ejemplo: qué necesitas ordenar, si te preparas para la acreditación o cómo compra tu institución"></textarea></label>
+            </div>
+          </details>
+        </div>
+        <label class="casilla-sitio"><input type="checkbox" name="piloto" id="cotizar-piloto" /> <span>Quiero extender mi prueba a 30 días con los datos de mi laboratorio mientras evalúo la cotización.</span></label>
+        <label class="casilla-sitio"><input type="checkbox" name="marketing" /> <span>Acepto recibir novedades y guías de ConsensusLab por correo (opcional; puedes darte de baja cuando quieras).</span></label>
+        <div class="campo-trampa" aria-hidden="true">
+          <label>Sitio web <input name="sitio_web" tabindex="-1" autocomplete="off" /></label>
+        </div>
+        <p class="texto-suave">
+          Usaremos estos datos solo para responder tu solicitud, como explica la <a href={url('privacidad/')}>política de privacidad</a>.
+        </p>
+        <button type="submit" class="boton boton-primario">Pedir cotización</button>
+        <p class="estado-cotizacion" id="estado-cotizacion" role="status" hidden></p>
+      </form>
+    </div>
+  </section>
+
+  <section class="seccion seccion-alt">
+    <div class="contenedor prosa">
+      <h2>Preguntas frecuentes</h2>
+      <h3>¿El precio es por usuario?</h3>
+      <p>
+        No: es por laboratorio, con un tope de usuarios según el plan, para que todo el equipo registre. Cada sede es un
+        laboratorio con su propia licencia.
+      </p>
+      <h3>¿Qué pasa después del 1 de diciembre de 2026?</h3>
+      <p>Se cobra el precio normal. El descuento de fundador aplica solo al primer año pagado por adelantado antes de esa fecha.</p>
+      <h3>Empecé mi prueba en noviembre: ¿alcanzo el precio de fundador?</h3>
+      <p>
+        Sí. Paga o envía la orden de compra antes del 1 de diciembre y termina tu prueba tranquilo: si decides no continuar
+        dentro de sus 30 días, te devolvemos el pago completo.
+      </p>
+      <h3>¿Qué pasa cuando terminan los 15 días?</h3>
+      <p>
+        Tu cuenta queda en solo lectura: puedes consultar y descargar tus registros, que conservamos 90 días. Si contratas,
+        la misma cuenta pasa al plan pagado, sin perder nada.
+      </p>
+      <h3>¿Sirve para hospitales y servicios públicos?</h3>
+      <p>Sí. Cotizamos con los datos de la institución y aceptamos orden de compra. Indícalo en el mensaje.</p>
+      <h3>¿La app avisa por WhatsApp?</h3>
+      <p>
+        Todavía no. Es una mejora que incorporaremos después del lanzamiento del 1 de diciembre: avisos de vencimientos,
+        alertas y recordatorios de las tareas del turno. Los primeros clientes tendrán acceso. Serán mensajes breves, sin
+        datos de pacientes ni de personas, y solo para quienes den su consentimiento. Mientras tanto, los avisos llegan por
+        correo.
+      </p>
+      <h3>¿Puedo usar mi cuenta personal de Professional en el laboratorio?</h3>
+      <p>
+        Sí. Tu cuenta es tuya: si tu laboratorio usa ConsensusLab y te invita, la aceptas y entras con la misma cuenta; tus
+        resultados de las rondas siguen siendo privados. Cada plan de laboratorio incluye hasta 5 cuentas de Professional.
+      </p>
+      <h3>¿Qué pasa con mi cuenta si cambio de trabajo?</h3>
+      <p>Sales del laboratorio y conservas tu cuenta, tu perfil y tu historial. Si tu acceso venía del laboratorio, continúas con tu prueba o con tu suscripción propia.</p>
+      <h3>¿Puedo seguir usando lo gratuito?</h3>
+      <p>
+        Sí. Las fichas, guías, prompts y calculadoras siguen siendo gratuitas, y cada herramienta de la app se puede probar 15 días gratis.
+      </p>
+    </div>
+  </section>
+
+  <script>
+    const form = document.getElementById('form-cotizacion') as HTMLFormElement;
+    const estado = document.getElementById('estado-cotizacion') as HTMLElement;
+    const selectPlan = document.getElementById('cotizar-plan') as HTMLSelectElement;
+    const piloto = document.getElementById('cotizar-piloto') as HTMLInputElement;
+    const abierto = Date.now();
+
+    // Los botones «Cotizar» de cada plan dejan elegido ese plan (y el de piloto marca la casilla).
+    document.querySelectorAll<HTMLElement>('[data-plan], [data-piloto]').forEach((a) => {
+      a.addEventListener('click', () => {
+        if (a.dataset.plan) selectPlan.value = a.dataset.plan;
+        if (a.hasAttribute('data-piloto')) piloto.checked = true;
+      });
+    });
+
+    // Los datos opcionales se pliegan en pantallas angostas (sin JavaScript quedan abiertos).
+    const mas = document.getElementById('cotizar-mas') as HTMLDetailsElement | null;
+    if (mas && matchMedia("(max-width: 760px)").matches) mas.open = false;
+
+    function mostrar(texto: string, error: boolean) {
+      estado.hidden = false;
+      estado.textContent = texto;
+      estado.classList.toggle('estado-error', error);
+      estado.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      // Si el servidor objetó un dato opcional, se despliega la sección para que se vea.
+      if (error && mas) mas.open = true;
+    }
+
+    const ETIQUETAS: Record<string, string> = { nombre: 'nombre', correo: 'correo', laboratorio: 'laboratorio', usuarios: 'usuarios', sedes: 'sedes', mensaje: 'mensaje' };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const f = new FormData(form);
+      const datos: Record<string, unknown> = {};
+      f.forEach((v, k) => { datos[k] = String(v); });
+      datos.piloto = piloto.checked;
+      datos.marketing = (form.elements.namedItem('marketing') as HTMLInputElement).checked;
+      datos.t = Date.now() - abierto;
+      try { datos.origen = sessionStorage.getItem('origen') || (document.referrer ? 'referido/' + new URL(document.referrer).hostname : 'directo/'); } catch { datos.origen = ''; }
+      if (!String(datos.nombre).trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(datos.correo).trim()) || !String(datos.laboratorio).trim()) {
+        mostrar('Completa tu nombre, un correo válido y el laboratorio.', true);
+        return;
+      }
+      const boton = form.querySelector('button[type=submit]') as HTMLButtonElement;
+      boton.disabled = true;
+      mostrar('Enviando…', false);
+      try {
+        // text/plain evita la consulta previa de CORS; la app responde JSON.
+        const r = await fetch(form.dataset.url!, { method: 'POST', body: JSON.stringify({ accion: 'cotizacion', datos }) });
+        const j = await r.json();
+        if (j.ok) {
+          form.reset();
+          mostrar('¡Listo! Recibimos tu solicitud' + (j.numero ? ' (N° ' + j.numero + ')' : '') + '. Te llegará un correo de confirmación y la cotización dentro de un día hábil.', false);
+          const w = window as unknown as { gtag?: (...a: unknown[]) => void };
+          if (typeof w.gtag === 'function') w.gtag('event', 'generate_lead', { plan: String(datos.plan) });
+        } else if (j.error === 'validacion' && j.detalle) {
+          const campos = Object.keys(j.detalle).map((k) => (ETIQUETAS[k] || k) + ': ' + j.detalle[k]).join('; ');
+          mostrar('Revisa los datos: ' + (campos || 'hay un dato no válido') + '.', true);
+        } else {
+          mostrar('No pudimos recibir la solicitud. Inténtalo de nuevo en unos minutos o escríbenos a ' + form.dataset.correo + '.', true);
+        }
+      } catch {
+        mostrar('No pudimos conectar. Revisa tu conexión e inténtalo de nuevo, o escríbenos a ' + form.dataset.correo + '.', true);
+      } finally {
+        boton.disabled = false;
+      }
+    });
+  </script>
+</Base>

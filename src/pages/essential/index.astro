@@ -1,6 +1,6 @@
 ---
 // ConsensusLab Essential: las herramientas de gestión del laboratorio como producto, con dos niveles (Base y Completo).
-// Los precios y los planes completos están en /planes/; aquí se explica qué es y qué incluye cada nivel.
+// Los precios y los planes completos están en /planes/laboratorios/; aquí se explica qué es y qué incluye cada nivel.
 import Base from '../../plantillas/Base.astro';
 import { obtenerCatalogo, obtenerHerramientas } from '../../lib/datos';
 import { url } from '../../lib/rutas';
@@ -29,7 +29,7 @@ const incluyeBase = BASE.map((m) => enApp.find((h) => h.data.app_modulo === m)).
       </p>
       <div class="acciones-portada">
         <a class="boton boton-dorado" href={URL_REGISTRO}>Probar 15 días gratis</a>
-        <a class="boton boton-secundario boton-claro" href={url('planes/')}>Ver planes</a>
+        <a class="boton boton-secundario boton-claro" href={url('planes/laboratorios/')}>Ver planes</a>
       </div>
       <p class="nota-portada">
         Con datos reales de tu laboratorio, sin tarjeta. La app no admite datos de pacientes. Es independiente de proveedores:
@@ -45,7 +45,7 @@ const incluyeBase = BASE.map((m) => enApp.find((h) => h.data.app_modulo === m)).
           <p class="antetitulo">Dos niveles</p>
           <h2>Elige hasta dónde ordenar</h2>
         </div>
-        <a href={url('planes/')}>Planes y cotización</a>
+        <a href={url('planes/laboratorios/')}>Planes y cotización</a>
       </div>
       <div class="niveles-essential">
         <article class="plan">

@@ -121,7 +121,7 @@ Nada de esto exige cambiar a las personas. Exige cambiar lo que pasa cuando algo
 - Un **control interno** que se revise con quien lo hace, no en su contra. [Control de calidad interno y externo](/herramientas/control-de-calidad-interno-y-externo/).
 - Y la medida de la sección anterior: **un nivel a la vez**, con registro de quién preparó qué.
 
-Todo esto funciona dentro de la app de ConsensusLab, con registros que no se borran. Puedes [probarla 15 días gratis con los datos reales de tu laboratorio](/planes/), y quien paga antes del 1 de diciembre tiene 40 % de descuento el primer año.
+Todo esto funciona dentro de la app de ConsensusLab, con registros que no se borran. Puedes [probarla 15 días gratis con los datos reales de tu laboratorio](/planes/laboratorios/), y quien paga antes del 1 de diciembre tiene 40 % de descuento el primer año.
 
 ## El padre del florero
 

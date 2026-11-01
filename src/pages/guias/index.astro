@@ -2,11 +2,13 @@
 // Sección Guías: guías libres (de acceso abierto, con su atribución) y guías de pago (todos los derechos reservados).
 // Las guías de pago se venden por ahora de forma manual, solo por transferencia y por correo; sin botón de pago.
 // GUIAS_A_LA_VENTA (sitio.ts) controla si ya se pueden pedir o solo dejar el correo para que avisemos.
+// Con un enlace de pago creado en src/lib/pagos.ts, la guía se compra en línea; sin enlace, se pide por correo.
 import Base from '../../plantillas/Base.astro';
 import { obtenerGuias } from '../../lib/datos';
 import { GUIAS_PAGO } from '../../lib/guias_pago';
 import { formatoFecha, url } from '../../lib/rutas';
 import { CORREO_CONTACTO, GUIAS_A_LA_VENTA } from '../../lib/sitio';
+import { enlacePagoGuia } from '../../lib/pagos';
 
 const guias = await obtenerGuias();
 const pesos = (n: number) => '$' + n.toLocaleString('es-CL');
@@ -52,7 +54,9 @@ const pedido = (titulo: string) =>
             </ul>
             <p class="texto-suave">{g.formato}{g.precio ? ` · ${pesos(g.precio)} con IVA incluido` : ''}</p>
             <div class="acciones-portada">
-              {g.lista && GUIAS_A_LA_VENTA ? (
+              {g.lista && GUIAS_A_LA_VENTA && enlacePagoGuia(g.id) ? (
+                <a class="boton boton-primario" href={enlacePagoGuia(g.id)} rel="noopener">Comprar{g.precio ? ` · ${pesos(g.precio)}` : ''}</a>
+              ) : g.lista && GUIAS_A_LA_VENTA ? (
                 <a class="boton boton-primario" href={pedido(g.titulo)}>Pedir esta guía</a>
               ) : (
                 <a class="boton boton-secundario" href="#novedades">Avísame cuando esté</a>
@@ -63,7 +67,15 @@ const pedido = (titulo: string) =>
       }
     </div>
     {
-      GUIAS_A_LA_VENTA && (
+      GUIAS_A_LA_VENTA && GUIAS_PAGO.some((g) => g.lista && enlacePagoGuia(g.id)) && (
+        <p class="texto-suave" style="margin-top:14px">
+          <strong>Cómo se compra:</strong> pulsa «Comprar» y pagas en línea; al confirmarse el pago recibes la guía en PDF por
+          correo, a tu nombre, y la boleta electrónica. Cualquier duda: <a href={`mailto:${CORREO_CONTACTO}`}>{CORREO_CONTACTO}</a>.
+        </p>
+      )
+    }
+    {
+      GUIAS_A_LA_VENTA && GUIAS_PAGO.some((g) => g.lista && !enlacePagoGuia(g.id)) && (
         <p class="texto-suave" style="margin-top:14px">
           <strong>Cómo se compra:</strong> pulsa «Pedir esta guía» y se abre un correo con tu pedido. Te respondemos con el valor
           y los datos para pagar por transferencia; al confirmar el pago te enviamos la guía en PDF a tu nombre y la boleta

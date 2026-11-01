@@ -105,7 +105,7 @@ const opciones = [
           <p id="diag-plan-motivo"></p>
           <p>
             <a class="boton boton-primario" id="diag-prueba" href={URL_REGISTRO}>Probar 15 días gratis</a>
-            <a class="boton boton-secundario" id="diag-plan-enlace" href={url('planes/')}>Ver este plan</a>
+            <a class="boton boton-secundario" id="diag-plan-enlace" href={url('planes/laboratorios/')}>Ver este plan</a>
           </p>
         </div>
 
@@ -221,7 +221,7 @@ const opciones = [
     $('diag-plan-nombre').textContent = plan.nombre;
     $('diag-plan-motivo').textContent = `Lo sugerimos porque ${plan.motivo}. Es una orientación: durante la prueba de 15 días puedes mirar las herramientas que quieras.`;
     ($('diag-prueba') as HTMLAnchorElement).href = `${URL_REGISTRO}&utm_source=sitio&utm_medium=diagnostico&utm_campaign=${r.plan}`;
-    ($('diag-plan-enlace') as HTMLAnchorElement).href = `${ruta('planes/')}#plan-${r.plan}`;
+    ($('diag-plan-enlace') as HTMLAnchorElement).href = `${ruta('planes/laboratorios/')}#plan-${r.plan}`;
 
     $('diag-acciones').replaceChildren(
       ...r.acciones.map((a) => {
@@ -248,7 +248,7 @@ const opciones = [
 
   $('diag-imprimir').addEventListener('click', () => window.print());
 
-  // Pedir la conversación: mismo destino que la cotización de /planes/, con el resumen en el mensaje.
+  // Pedir la conversación: mismo destino que la cotización de /planes/laboratorios/, con el resumen en el mensaje.
   const contacto = $<HTMLFormElement>('diag-contacto-form');
   const estado = $('diag-contacto-estado');
   const abierto = Date.now();

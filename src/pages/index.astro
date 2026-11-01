@@ -26,7 +26,7 @@ const ultimos = (await obtenerOpinion()).slice(0, 3);
       url: Astro.site?.href,
       logo: new URL('logo.png', Astro.site).href,
       email: CORREO_CONTACTO,
-      areaServed: 'CL',
+      areaServed: ['CL', 'AR', 'PE', 'CO', 'EC', 'PY', 'UY', 'BO', 'MX', 'ES'],
       description: 'Criterio y gestión para el laboratorio clínico: ConsensusLab Professional para profesionales y software de calidad y gestión para laboratorios, independiente de proveedores de controles, equipos y reactivos, con calculadoras y guías gratuitas.',
       founder: {
         '@type': 'Person',
@@ -41,7 +41,7 @@ const ultimos = (await obtenerOpinion()).slice(0, 3);
       '@type': 'WebSite',
       name: 'ConsensusLab',
       url: Astro.site?.href,
-      inLanguage: 'es-CL',
+      inLanguage: 'es',
       potentialAction: {
         '@type': 'SearchAction',
         target: { '@type': 'EntryPoint', urlTemplate: new URL('herramientas/?q={search_term_string}', Astro.site).href },

@@ -1,0 +1,103 @@
+---
+// Plan para profesionales de laboratorio: ConsensusLab Professional (los planes de laboratorios viven aparte, en /planes/laboratorios/).
+// Los botones de pago usan los enlaces de src/lib/pagos.ts: sin enlace creado, el botón sigue siendo el de la prueba o la lista de espera.
+import Base from '../../plantillas/Base.astro';
+import { migasLd, url } from '../../lib/rutas';
+import { enlacePago } from '../../lib/pagos';
+import {
+  MESES_PRUEBA_PROFESSIONAL, PRECIO_PROFESSIONAL_TEXTO, PROFESSIONAL_ABIERTO, URL_PROFESSIONAL, URL_PROFESSIONAL_REGISTRO,
+} from '../../lib/sitio';
+
+const entrar = PROFESSIONAL_ABIERTO
+  ? { texto: `Probar ${MESES_PRUEBA_PROFESSIONAL} meses gratis`, href: URL_PROFESSIONAL_REGISTRO }
+  : { texto: 'Quiero entrar primero', href: url('professional/#novedades') };
+const pagar = enlacePago('professional-anual');
+
+const preguntas = [
+  ['¿Cuánto cuesta y qué incluye?', `${PRECIO_PROFESSIONAL_TEXTO} al año con IVA incluido, a contar desde la fecha de pago. Incluye las rondas de control externo del criterio profesional, la respuesta experta, los resultados anónimos del grupo y un certificado de participación por ronda.`],
+  ['¿Hay prueba gratis?', `Sí: ${MESES_PRUEBA_PROFESSIONAL} meses gratis, sin tarjeta y sin compromiso. Al terminar, decides si continúas.`],
+  ['¿Sirve si trabajo fuera de Chile?', 'Sí. Los casos usan criterios internacionales de control de calidad (reglas de Westgard, CLSI) y no dependen de una norma nacional. Por ahora el precio y el pago son en pesos chilenos; si estás en otro país, escríbenos a contacto@consensuslab.cl.'],
+  ['¿Se renueva sola?', 'No. Es un pago por un año, sin renovación automática. Te avisamos antes de que venza, y si no continúas puedes consultar tu historial por 30 días.'],
+  ['¿Cómo pago y qué recibo?', 'Pagas en línea con el enlace de pago y recibes boleta electrónica por correo. Si necesitas factura para tu institución, escríbenos a contacto@consensuslab.cl.'],
+  ['¿Mi laboratorio puede pagar por mí?', 'Sí. Los planes de laboratorio incluyen hasta 5 cuentas de Professional para el equipo. Tu cuenta es tuya: si cambias de trabajo, la conservas con tu perfil y tu historial.'],
+  ['¿Puedo seguir usando lo gratuito?', 'Sí. Las calculadoras, los prompts y las guías libres siguen siendo gratuitas.'],
+];
+---
+
+<Base
+  titulo="Plan de ConsensusLab Professional"
+  seccion="planes-pro"
+  descripcion={`ConsensusLab Professional: rondas de control externo de tu criterio, respuesta experta y certificado. ${PRECIO_PROFESSIONAL_TEXTO} al año, ${MESES_PRUEBA_PROFESSIONAL} meses gratis.`}
+  datos={[
+    migasLd(Astro.site, [['Planes', 'planes/'], ['Professional', 'planes/professional/']]),
+    {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: preguntas.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })),
+    },
+  ]}
+>
+  <section class="portada">
+    <div class="contenedor">
+      <p class="antetitulo">Planes para profesionales</p>
+      <h1>ConsensusLab Professional</h1>
+      <p class="portada-lema">
+        Para ti, como profesional de laboratorio: pon a prueba tu criterio frente a casos de control de calidad, compara con tus
+        colegas y guarda tu certificado. La cuenta es tuya y te acompaña si cambias de trabajo.
+      </p>
+      <p class="nota-portada">
+        ¿Buscas un plan para tu laboratorio? Mira <a href={url('planes/laboratorios/')}>los planes para laboratorios</a>.
+      </p>
+    </div>
+  </section>
+
+  <section class="seccion" id="professional">
+    <div class="contenedor">
+      <div class="seccion-cabeza">
+        <div>
+          <p class="antetitulo">Un plan, un año</p>
+          <h2>Professional</h2>
+        </div>
+        <a href={url('professional/')}>Cómo funciona</a>
+      </div>
+      <div class="planes">
+        <article class="plan plan-destacado" id="plan-professional">
+          <span class="plan-cinta">{MESES_PRUEBA_PROFESSIONAL} meses gratis</span>
+          <h3>Professional</h3>
+          <p class="plan-para">Pon a prueba tu criterio en rondas de control externo.</p>
+          <p class="plan-sirve">
+            Casos de control de calidad con su gráfica, respuesta experta, comparación anónima con el grupo y certificado de
+            participación.
+          </p>
+          <p class="plan-precio">
+            <span class="plan-precio-fundador">{PRECIO_PROFESSIONAL_TEXTO}</span>
+            <span class="plan-precio-nota">al año, IVA incluido · sin renovación automática</span>
+          </p>
+          <ul class="plan-incluye">
+            <li>Rondas con fechas fijas y casos de Westgard</li>
+            <li>Respuesta experta apenas respondes</li>
+            <li>Resultados del grupo al cierre, siempre anónimos</li>
+            <li>Certificado de participación verificable</li>
+            <li>Boleta electrónica por cada pago</li>
+          </ul>
+          <a class="boton boton-primario boton-ancho" href={entrar.href}>{entrar.texto}</a>
+          {pagar && <a class="boton boton-secundario boton-ancho" href={pagar} rel="noopener">Pagar mi anualidad · {PRECIO_PROFESSIONAL_TEXTO}</a>}
+          <a class="boton boton-secundario boton-ancho" href={url('professional/')}>Ver Professional</a>
+        </article>
+      </div>
+      <p class="texto-suave">
+        Empiezas con {MESES_PRUEBA_PROFESSIONAL} meses gratis. {pagar ? 'Si ya tienes cuenta, puedes pagar la anualidad desde el botón de arriba o desde tu cuenta.' : 'Cuando abra la cuenta, la anualidad se paga en línea desde tu propia cuenta.'}
+      </p>
+    </div>
+  </section>
+
+  <section class="seccion seccion-alt">
+    <div class="contenedor prosa">
+      <h2>Preguntas frecuentes</h2>
+      {preguntas.map(([q, a]) => (<><h3>{q}</h3><p>{a}</p></>))}
+      <p class="texto-suave">
+        La app de Professional estará en {URL_PROFESSIONAL.replace('https://', '')}. Las guías de pago único están en <a href={url('guias/')}>Guías</a>.
+      </p>
+    </div>
+  </section>
+</Base>

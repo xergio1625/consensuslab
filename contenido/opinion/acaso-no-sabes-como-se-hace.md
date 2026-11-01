@@ -97,7 +97,7 @@ Las tres son respuestas de profesionales. Las tres suman. Y la tercera, la más 
 
 La opción A o B no es el problema. Lo que debería haber en cualquier laboratorio es un **registro de la decisión**: qué se eligió, por qué, quién lo aprobó, qué nivel de falsos positivos y negativos se aceptó y desde cuándo rige. Eso es [control documental](/herramientas/control-documental/) aplicado a lo que de verdad importa: no solo qué documento está vigente, sino **por qué se decidió así**. Y para que nadie se sienta atacado al preguntar, ayudan la [inducción del personal nuevo](/herramientas/induccion-del-personal-nuevo/) y las [competencias y capacitación](/herramientas/competencias-y-capacitacion/), que dejan claro que preguntar es parte del trabajo y no una falta.
 
-Todo esto funciona dentro de la app de ConsensusLab, con registros que no se borran y cada corrección con nombre y motivo. Puedes [probarla 15 días gratis con los datos reales de tu laboratorio](/planes/), y quien paga antes del 1 de diciembre tiene 40 % de descuento el primer año.
+Todo esto funciona dentro de la app de ConsensusLab, con registros que no se borran y cada corrección con nombre y motivo. Puedes [probarla 15 días gratis con los datos reales de tu laboratorio](/planes/laboratorios/), y quien paga antes del 1 de diciembre tiene 40 % de descuento el primer año.
 
 ## Para cerrar
 

@@ -18,7 +18,7 @@ interface Props {
   datos?: Record<string, unknown> | Record<string, unknown>[];
   /** Imagen al compartir (en public/). Por defecto: la de preventa en inicio y planes mientras dure; si no, la del sitio. */
   imagen?: string;
-  seccion?: 'inicio' | 'herramientas' | 'calculadoras' | 'prompts' | 'guias' | 'opinion' | 'professional' | 'laboratorios' | 'essential' | 'qc' | 'accreditation' | 'planes' | 'acerca' | 'cuenta';
+  seccion?: 'inicio' | 'herramientas' | 'calculadoras' | 'prompts' | 'guias' | 'opinion' | 'professional' | 'laboratorios' | 'essential' | 'qc' | 'accreditation' | 'planes' | 'planes-pro' | 'planes-lab' | 'acerca' | 'cuenta';
 }
 
 const {
@@ -36,7 +36,7 @@ const datos = Astro.props.datos ? [].concat(Astro.props.datos as never) : [];
 const jsonLd = (d: unknown) => JSON.stringify(d).replace(/</g, '\\u003c');
 const canonica = new URL(Astro.url.pathname, Astro.site);
 const enPreventa = new Date().toISOString().slice(0, 10) < FIN_PREVENTA;
-const paginaPreventa = Astro.url.pathname === url('para-laboratorios/') || Astro.url.pathname === url('planes/');
+const paginaPreventa = Astro.url.pathname === url('para-laboratorios/') || Astro.url.pathname === url('planes/laboratorios/');
 const imagen = new URL(url(Astro.props.imagen ?? (enPreventa && paginaPreventa ? 'og-preventa.png' : 'og-sitio.png')), Astro.site);
 ---
 
@@ -59,7 +59,8 @@ const imagen = new URL(url(Astro.props.imagen ?? (enPreventa && paginaPreventa ?
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content="ConsensusLab: herramientas de gestión para el laboratorio clínico" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta property="og:locale" content="es_CL" />
+    <meta property="og:locale" content="es_LA" />
+    <meta property="og:locale:alternate" content="es_ES" />
     <meta name="theme-color" content="#4B0B1E" />
     <link rel="icon" type="image/svg+xml" href={url('favicon.svg')} />
     <link rel="sitemap" href={url('sitemap-index.xml')} />
@@ -92,7 +93,7 @@ const imagen = new URL(url(Astro.props.imagen ?? (enPreventa && paginaPreventa ?
       <slot />
     </main>
     <Pie />
-    {(seccion === 'inicio' || seccion === 'qc' || seccion === 'planes') && <BarraDemo />}
+    {(seccion === 'inicio' || seccion === 'qc' || seccion === 'planes-lab') && <BarraDemo />}
     <Analitica />
   </body>
 </html>
