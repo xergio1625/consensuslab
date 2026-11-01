@@ -46,7 +46,7 @@ import { url } from '../../lib/rutas';
                 const g = GRUPOS_ESTADISTICA.find((x) => x.id === (c as { grupo?: string }).grupo);
                 return (
                   <article class="tarjeta" data-calc data-texto={`${c.titulo} ${c.resumen} ${g?.titulo ?? ''}`.toLowerCase()}>
-                    {g && <span class="tarjeta-grupo">{g.titulo}</span>}
+                    {g && <span class="tarjeta-tema">{g.titulo}</span>}
                     <h3>
                       <a href={url(`calculadoras/${c.id}/`)}>{c.titulo}</a>
                     </h3>

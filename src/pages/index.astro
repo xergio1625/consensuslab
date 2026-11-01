@@ -50,15 +50,19 @@ const ultimos = (await obtenerOpinion()).slice(0, 3);
     },
   ]}
 >
-  <section class="portada">
+  <section class="portada portada-compacta">
     <div class="portada-fondo" aria-hidden="true"></div>
     <div class="contenedor">
-      <p class="antetitulo">Laboratorio clínico</p>
-      <h1>Criterio y gestión para el laboratorio clínico</h1>
-      <p class="portada-lema">
-        Dos formas de hacerlo mejor, según desde dónde trabajas. Hecho por un tecnólogo médico, sin conflicto de interés:
-        no vendemos controles, analizadores, equipos ni reactivos.
-      </p>
+      <div class="portada-cabeza">
+        <div>
+          <p class="antetitulo">Laboratorio clínico</p>
+          <h1>Criterio y gestión para el laboratorio clínico</h1>
+        </div>
+        <p class="portada-lema">
+          Dos formas de hacerlo mejor, según desde dónde trabajas. Hecho por un tecnólogo médico, sin conflicto de interés:
+          no vendemos controles, analizadores, equipos ni reactivos.
+        </p>
+      </div>
 
       <div class="puertas" id="puertas">
         <article class="puerta puerta-destacada">
