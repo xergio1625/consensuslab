@@ -123,6 +123,34 @@ export const PUENTES: Partial<Record<IdCalculadora, Puente>> = {
     boton: 'Ver el inventario de reactivos',
     enlace: 'herramientas/inventario-y-lotes-de-reactivos/',
   },
+  'verificacion-de-precision': {
+    titulo: 'Esto es el cálculo; falta el procedimiento completo',
+    texto:
+      'La guía «Verificar un método en una tarde» te lleva de la decisión a la conclusión firmada: qué medir cada día, cómo registrar, cómo interpretar y qué guardar para la auditoría. Incluye una planilla de Excel que hace este mismo cálculo y arma el informe.',
+    boton: 'Ver la guía',
+    enlace: 'guias/#de-pago',
+  },
+  'comparacion-con-el-fabricante': {
+    titulo: 'Compararte con el fabricante es un paso de una verificación',
+    texto:
+      'La guía «Verificar un método en una tarde» ordena el estudio completo: precisión y veracidad contra lo declarado, el criterio de aceptación escrito antes de medir y la planilla de Excel para dejarlo documentado.',
+    boton: 'Ver la guía',
+    enlace: 'guias/#de-pago',
+  },
+  'precision-del-lote': {
+    titulo: 'Un lote nuevo es un buen momento para verificar',
+    texto:
+      'Si lo que necesitas es una verificación formal de precisión, la guía «Verificar un método en una tarde» te da el diseño de cinco días, el criterio y una planilla de Excel que calcula y arma el informe.',
+    boton: 'Ver la guía',
+    enlace: 'guias/#de-pago',
+  },
+  'cusum-y-ewma': {
+    titulo: 'Detectar una deriva es una cosa; decidir qué hacer, otra',
+    texto:
+      'ConsensusLab Professional te hace decidir frente a casos reales de control de calidad, como un control externo para tu criterio: ves la gráfica, eliges qué harías y comparas con la respuesta experta y, al cierre de la ronda, con el grupo, de forma anónima.',
+    boton: 'Conocer Professional',
+    enlace: 'professional/',
+  },
   'rendimiento-de-reactivos': {
     titulo: 'El rendimiento de un kit exige saber cuándo se abrió',
     texto:

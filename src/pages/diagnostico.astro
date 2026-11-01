@@ -4,7 +4,7 @@
 import Base from '../plantillas/Base.astro';
 import { BLOQUES } from '../lib/diagnostico.js';
 import { url } from '../lib/rutas';
-import { CORREO_CONTACTO, URL_APP, URL_REGISTRO } from '../lib/sitio';
+import { CORREO_CONTACTO, MESES_PRUEBA_PROFESSIONAL, PRECIO_PROFESSIONAL_TEXTO, URL_APP, URL_REGISTRO } from '../lib/sitio';
 
 const opciones = [
   ['si', 'Sí'],
@@ -107,6 +107,16 @@ const opciones = [
             <a class="boton boton-primario" id="diag-prueba" href={URL_REGISTRO}>Probar 15 días gratis</a>
             <a class="boton boton-secundario" id="diag-plan-enlace" href={url('planes/')}>Ver este plan</a>
           </p>
+        </div>
+
+        <div class="caja diag-profesional">
+          <h3>Para ti, como profesional: ConsensusLab Professional</h3>
+          <p>
+            El plan es del laboratorio, pero el criterio es tuyo. Practica decidir frente a casos de control de calidad, como un
+            control externo de tu criterio: respuesta experta apenas respondes y comparación anónima con el grupo.
+            {PRECIO_PROFESSIONAL_TEXTO} al año, IVA incluido, con {MESES_PRUEBA_PROFESSIONAL} meses gratis.
+          </p>
+          <p><a class="boton boton-secundario" href={url('professional/')}>Conocer Professional</a></p>
         </div>
 
         <h3>Tres cosas que puedes hacer esta semana</h3>

@@ -64,10 +64,10 @@ export const BLOQUES = [
 ];
 
 export const PLANES = {
-  esencial: { nombre: 'Esencial', motivo: 'tu mayor brecha está en los registros del día y en que la dirección tenga evidencia de lo que se hace' },
-  gestion: { nombre: 'Gestión', motivo: 'lo que sostiene tu plan (equipos, reactivos y compras) está sin ordenar' },
+  esencial: { nombre: 'Essential Base', motivo: 'tu mayor brecha está en los registros del día y en que la dirección tenga evidencia de lo que se hace' },
+  gestion: { nombre: 'Essential Completo', motivo: 'lo que sostiene tu plan (equipos, reactivos y compras) está sin ordenar' },
   qc: { nombre: 'ConsensusLab QC', motivo: 'tu desafío está en definir el plan de calidad y en que se aplique igual en cada turno' },
-  gestion_qc: { nombre: 'Gestión + ConsensusLab QC', motivo: 'varias áreas necesitan ordenarse y conviene que usen la misma información' },
+  gestion_qc: { nombre: 'ConsensusLab completo (Essential Completo + QC)', motivo: 'varias áreas necesitan ordenarse y conviene que usen la misma información' },
   institucional: { nombre: 'Institucional', motivo: 'tienes varias sedes o más de 15 personas registrando' },
 };
 
