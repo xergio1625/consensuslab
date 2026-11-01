@@ -29,5 +29,7 @@ export default defineConfig({
   ],
   build: {
     format: 'directory',
+    // El CSS va dentro del HTML: se quita una solicitud de la cadena crítica (Lighthouse: árbol de dependencia de red).
+    inlineStylesheets: 'always',
   },
 });
