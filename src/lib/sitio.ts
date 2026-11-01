@@ -20,7 +20,7 @@ export const URL_PROFESSIONAL_REGISTRO = URL_PROFESSIONAL + '?registro=1';
  * «Probar gratis» se cambian por «Quiero entrar primero» (lista de espera, el formulario de novedades del pie).
  * Pasar a `true` el día que abra, y publicar.
  */
-export const PROFESSIONAL_ABIERTO = false;
+export const PROFESSIONAL_ABIERTO = true;
 /** Anualidad de Professional en pesos chilenos, IVA incluido (decisión del 31-10-2026). */
 export const PRECIO_PROFESSIONAL = 23900;
 export const PRECIO_PROFESSIONAL_TEXTO = '$' + PRECIO_PROFESSIONAL.toLocaleString('es-CL');
@@ -31,7 +31,7 @@ export const MESES_PRUEBA_PROFESSIONAL = 3;
  * `false` mientras las guías no estén revisadas técnica y legalmente: las fichas se muestran «Disponibles pronto» y piden
  * dejar el correo. Con `true` aparece «Pedir esta guía» y se envían los datos de transferencia por correo.
  */
-export const GUIAS_A_LA_VENTA = false;
+export const GUIAS_A_LA_VENTA = true;
 
 /** Enlace que abre la app directamente en un módulo (tras ingresar con el código). */
 export function urlModulo(modulo: string): string {

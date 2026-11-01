@@ -1,17 +1,19 @@
 ---
 // Sección Guías: guías libres (de acceso abierto, con su atribución) y guías de pago (todos los derechos reservados).
-// Las guías de pago se venden por ahora de forma manual, solo por transferencia y por correo; sin botón de pago.
+// Las guías de pago se compran por transferencia: el formulario de /guias/#pedir crea el pedido en la app (accion pedido_guia), que envía
+// los datos para transferir; al confirmar el pago, la app entrega la guía con el nombre del comprador. Sin pasarela de pago por ahora.
 // GUIAS_A_LA_VENTA (sitio.ts) controla si ya se pueden pedir o solo dejar el correo para que avisemos.
 // Con un enlace de pago creado en src/lib/pagos.ts, la guía se compra en línea; sin enlace, se pide por correo.
 import Base from '../../plantillas/Base.astro';
 import { obtenerGuias } from '../../lib/datos';
 import { GUIAS_PAGO } from '../../lib/guias_pago';
 import { formatoFecha, url } from '../../lib/rutas';
-import { CORREO_CONTACTO, GUIAS_A_LA_VENTA } from '../../lib/sitio';
+import { CORREO_CONTACTO, GUIAS_A_LA_VENTA, URL_APP } from '../../lib/sitio';
 import { enlacePagoGuia } from '../../lib/pagos';
 
 const guias = await obtenerGuias();
 const pesos = (n: number) => '$' + n.toLocaleString('es-CL');
+const disponibles = GUIAS_PAGO.filter((g) => g.lista);
 const pedido = (titulo: string) =>
   `mailto:${CORREO_CONTACTO}?subject=${encodeURIComponent('Pedido de guía: ' + titulo)}&body=${encodeURIComponent(
     `Hola, quiero la guía «${titulo}».\n\nNombre completo (la copia se entrega a tu nombre):\nCorreo:\n\nPor favor envíame el valor y los datos para pagar por transferencia. Gracias.`,
@@ -57,7 +59,7 @@ const pedido = (titulo: string) =>
               {g.lista && GUIAS_A_LA_VENTA && enlacePagoGuia(g.id) ? (
                 <a class="boton boton-primario" href={enlacePagoGuia(g.id)} rel="noopener">Comprar{g.precio ? ` · ${pesos(g.precio)}` : ''}</a>
               ) : g.lista && GUIAS_A_LA_VENTA ? (
-                <a class="boton boton-primario" href={pedido(g.titulo)}>Pedir esta guía</a>
+                <a class="boton boton-primario" href="#pedir" data-guia={g.id}>Comprar{g.precio ? ` · ${pesos(g.precio)}` : ''}</a>
               ) : (
                 <a class="boton boton-secundario" href="#novedades">Avísame cuando esté</a>
               )}
@@ -76,11 +78,35 @@ const pedido = (titulo: string) =>
     }
     {
       GUIAS_A_LA_VENTA && GUIAS_PAGO.some((g) => g.lista && !enlacePagoGuia(g.id)) && (
-        <p class="texto-suave" style="margin-top:14px">
-          <strong>Cómo se compra:</strong> pulsa «Pedir esta guía» y se abre un correo con tu pedido. Te respondemos con el valor
-          y los datos para pagar por transferencia; al confirmar el pago te enviamos la guía en PDF a tu nombre y la boleta
-          electrónica. Cualquier duda: <a href={`mailto:${CORREO_CONTACTO}`}>{CORREO_CONTACTO}</a>.
-        </p>
+        <section class="seccion-pedido" id="pedir" style="margin-top:20px">
+          <h3>Compra tu guía</h3>
+          <p class="texto-suave">
+            Completa tus datos y te enviamos por correo el valor y los datos para pagar por <strong>transferencia</strong>. Cuando
+            vemos el pago (normalmente el mismo día hábil), te llegan la guía en PDF con tu nombre al pie de cada página, la planilla
+            de Excel y la boleta electrónica. Pago único, sin suscripción.
+          </p>
+          <form class="form-cotizacion" id="form-pedido" novalidate data-url={URL_APP} data-correo={CORREO_CONTACTO}>
+            <div class="calc-campos">
+              <label class="calc-campo"><span>Nombre y apellido <span class="opcional">(la guía queda a tu nombre)</span></span><input class="campo" name="nombre" required maxlength="120" autocomplete="name" autocapitalize="words" enterkeyhint="next" /></label>
+              <label class="calc-campo"><span>Correo <span class="opcional">(aquí te llega la guía)</span></span><input class="campo" name="correo" type="email" required maxlength="254" autocomplete="email" inputmode="email" autocapitalize="none" spellcheck="false" enterkeyhint="next" /></label>
+              <label class="calc-campo calc-ancho">
+                <span>Guía</span>
+                <select class="campo" name="guia" id="pedido-guia">
+                  {disponibles.map((g) => <option value={g.id}>{g.titulo}{g.precio ? ` · ${pesos(g.precio)}` : ''}</option>)}
+                </select>
+              </label>
+            </div>
+            <label class="casilla-sitio"><input type="checkbox" name="acepta" required /> <span>Entiendo que la guía es de uso personal e intransferible (todos los derechos reservados) y acepto los <a href={url('terminos/')}>términos</a> y la <a href={url('privacidad/')}>política de privacidad</a>.</span></label>
+            <div class="campo-trampa" aria-hidden="true">
+              <label>Sitio web <input name="sitio_web" tabindex="-1" autocomplete="off" /></label>
+            </div>
+            <button type="submit" class="boton boton-primario">Pedir y recibir los datos de pago</button>
+            <p class="estado-cotizacion" id="estado-pedido" role="status" hidden></p>
+          </form>
+          <p class="texto-suave">
+            ¿Prefieres escribirnos? <a href={pedido(disponibles[0]?.titulo ?? 'Guía')}>Pide la guía por correo</a>, o a {CORREO_CONTACTO}.
+          </p>
+        </section>
       )
     }
 
@@ -111,4 +137,63 @@ const pedido = (titulo: string) =>
       )
     }
   </div>
+
+  <script>
+    // Pedido de una guía: se envía a la app (que manda al correo los datos para transferir). Si falla, se ofrece escribirnos.
+    const form = document.getElementById('form-pedido') as HTMLFormElement | null;
+    if (form) {
+      const estado = document.getElementById('estado-pedido') as HTMLElement;
+      const selector = document.getElementById('pedido-guia') as HTMLSelectElement;
+      const abierto = Date.now();
+      document.querySelectorAll<HTMLElement>('[data-guia]').forEach((a) => {
+        a.addEventListener('click', () => { if (a.dataset.guia) selector.value = a.dataset.guia; });
+      });
+      const mostrar = (texto: string, error: boolean) => {
+        estado.hidden = false;
+        estado.textContent = texto;
+        estado.classList.toggle('estado-error', error);
+        estado.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      };
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const f = new FormData(form);
+        const datos: Record<string, unknown> = {};
+        f.forEach((v, k) => { datos[k] = String(v); });
+        datos.acepta = (form.elements.namedItem('acepta') as HTMLInputElement).checked;
+        datos.t = Date.now() - abierto;
+        if (String(datos.nombre).trim().length < 3 || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(datos.correo).trim())) {
+          mostrar('Escribe tu nombre completo y un correo válido.', true);
+          return;
+        }
+        if (!datos.acepta) {
+          mostrar('Marca la casilla para continuar: la guía es de uso personal.', true);
+          return;
+        }
+        const boton = form.querySelector('button[type=submit]') as HTMLButtonElement;
+        boton.disabled = true;
+        mostrar('Enviando…', false);
+        try {
+          // text/plain evita la consulta previa de CORS; la app responde JSON.
+          const r = await fetch(form.dataset.url!, { method: 'POST', body: JSON.stringify({ accion: 'pedido_guia', datos }) });
+          const j = await r.json();
+          if (j.ok) {
+            form.reset();
+            mostrar('¡Listo! Te enviamos a tu correo el valor y los datos para pagar por transferencia' + (j.numero ? ' (pedido ' + j.numero + ')' : '') + '. Si no lo ves en unos minutos, revisa la carpeta de spam.', false);
+            const w = window as unknown as { gtag?: (...a: unknown[]) => void };
+            if (typeof w.gtag === 'function') w.gtag('event', 'begin_checkout', { item_id: String(datos.guia) });
+          } else if (j.error === 'validacion' && j.detalle) {
+            mostrar('Revisa los datos: ' + Object.keys(j.detalle).join(', ') + '.', true);
+          } else if (j.error === 'limite') {
+            mostrar('Ya hay varios pedidos con este correo hoy. Escríbenos a ' + form.dataset.correo + ' y lo resolvemos.', true);
+          } else {
+            mostrar('No pudimos recibir el pedido. Inténtalo de nuevo en unos minutos o escríbenos a ' + form.dataset.correo + '.', true);
+          }
+        } catch {
+          mostrar('No pudimos conectar. Revisa tu conexión o escríbenos a ' + form.dataset.correo + '.', true);
+        } finally {
+          boton.disabled = false;
+        }
+      });
+    }
+  </script>
 </Base>
