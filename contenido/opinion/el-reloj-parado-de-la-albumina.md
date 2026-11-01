@@ -113,9 +113,9 @@ Hasta donde se sabe, aquí no hubo daño. Pero «hasta donde se sabe» es la par
 - **No uses el silencio como indicador de calidad.** Busca el error antes de que lo reclame un paciente.
 - **Protege a quien trae malas noticias.** El tecnólogo que dice «esto estaba mal» está haciendo exactamente lo que se le paga por hacer.
 
-## Y ahí entra Consensus Lab QC
+## Y ahí entra ConsensusLab QC
 
-Esta historia es parte de la razón por la que armé [Consensus Lab QC](/qc/), el software de control de calidad de Consensus Lab. No encuentra por sí solo una curva saturada ni una dilución dudosa: eso lo sigue encontrando una persona que mira. Lo que hace es dejar **a la vista y con registro** lo que en esta historia vivía en la memoria de alguien:
+Esta historia es parte de la razón por la que armé [ConsensusLab QC](/qc/), el software de control de calidad de ConsensusLab. No encuentra por sí solo una curva saturada ni una dilución dudosa: eso lo sigue encontrando una persona que mira. Lo que hace es dejar **a la vista y con registro** lo que en esta historia vivía en la memoria de alguien:
 
 - **Configuración:** cada analizador con su ciclo de vida, sus analitos, sus materiales de control y sus lotes con las metas del fabricante, para que quede escrito qué se controla con qué.
 - **Plan de calidad:** un plan por analito con su requisito de calidad y una táctica de control por analizador, con versiones, aprobación e historial.
@@ -123,7 +123,7 @@ Esta historia es parte de la razón por la que armé [Consensus Lab QC](/qc/), e
 - **Desempeño:** mes a mes por analizador y analito, el CV, el sesgo, el error total frente al permitido y el sigma.
 - **No conformidades:** desde un control rechazado, análisis de causa, impacto en pacientes, acciones con responsable y plazo, y verificación de eficacia.
 
-Lo que se puede hacer sin el software está en las calculadoras gratuitas del sitio: [comparación de métodos](/calculadoras/comparacion-de-metodos/), [diluciones y soluciones](/calculadoras/diluciones-y-soluciones/), [curva de calibración](/calculadoras/curva-de-calibracion/) y [error total y sigma](/calculadoras/error-total-y-sigma/). Consensus Lab es mío; no recibo comisiones de proveedores. Consensus Lab QC tiene una prueba gratuita de 15 días con los datos de tu laboratorio.
+Lo que se puede hacer sin el software está en las calculadoras gratuitas del sitio: [comparación de métodos](/calculadoras/comparacion-de-metodos/), [diluciones y soluciones](/calculadoras/diluciones-y-soluciones/), [curva de calibración](/calculadoras/curva-de-calibracion/) y [error total y sigma](/calculadoras/error-total-y-sigma/). ConsensusLab es mío; no recibo comisiones de proveedores. ConsensusLab QC tiene una prueba gratuita de 15 días con los datos de tu laboratorio.
 
 Así, cuando alguien diga «esto estaba mal», la primera respuesta no es «¿estás seguro?» sino «muéstrame el historial».
 

@@ -32,41 +32,30 @@ import { url } from '../../lib/rutas';
           <h2><IconoFamilia familia={f.id} />{f.titulo}</h2>
           <p class="texto-suave">{f.descripcion}</p>
           {
-            f.id === 'estadistica' ? (
-              <>
-                <p>
-                  <a class="boton boton-secundario" href={url('calculadoras/pruebas-estadisticas/')}>Guía: ¿qué prueba uso?</a>
-                </p>
-                {GRUPOS_ESTADISTICA.map((g) => (
-                  <div data-subgrupo>
-                    <h3 class="calc-subgrupo">{g.titulo}</h3>
-                    <p class="texto-suave">{g.pregunta}</p>
-                    <div class="rejilla">
-                      {CALCULADORAS.filter((c) => c.familia === f.id && (c as { grupo?: string }).grupo === g.id).map((c) => (
-                        <article class="tarjeta" data-calc data-texto={`${c.titulo} ${c.resumen} ${g.titulo}`.toLowerCase()}>
-                          <h4>
-                            <a href={url(`calculadoras/${c.id}/`)}>{c.titulo}</a>
-                          </h4>
-                          <p>{c.resumen}</p>
-                        </article>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </>
-            ) : (
-              <div class="rejilla">
-                {CALCULADORAS.filter((c) => c.familia === f.id).map((c) => (
-                  <article class="tarjeta" data-calc data-texto={`${c.titulo} ${c.resumen}`.toLowerCase()}>
+            f.id === 'estadistica' && (
+              <p class="calc-guia-enlace">
+                ¿No sabes cuál usar? <a href={url('calculadoras/pruebas-estadisticas/')}>Guía: ¿qué prueba uso?</a>
+              </p>
+            )
+          }
+          <div class="rejilla">
+            {
+              CALCULADORAS.filter((c) => c.familia === f.id)
+                .sort((a, b) => (f.id === 'estadistica' ? GRUPOS_ESTADISTICA.findIndex((x) => x.id === (a as { grupo?: string }).grupo) - GRUPOS_ESTADISTICA.findIndex((x) => x.id === (b as { grupo?: string }).grupo) : 0))
+                .map((c) => {
+                const g = GRUPOS_ESTADISTICA.find((x) => x.id === (c as { grupo?: string }).grupo);
+                return (
+                  <article class="tarjeta" data-calc data-texto={`${c.titulo} ${c.resumen} ${g?.titulo ?? ''}`.toLowerCase()}>
+                    {g && <span class="tarjeta-grupo">{g.titulo}</span>}
                     <h3>
                       <a href={url(`calculadoras/${c.id}/`)}>{c.titulo}</a>
                     </h3>
                     <p>{c.resumen}</p>
                   </article>
-                ))}
-              </div>
-            )
-          }
+                );
+              })
+            }
+          </div>
         </section>
       ))
     }

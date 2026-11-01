@@ -28,7 +28,7 @@ export const FAMILIAS = [
     id: 'estadistica',
     titulo: 'Pruebas estadísticas',
     descripcion:
-      'Las pruebas para decidir sobre una serie de resultados (por ejemplo, 20 datos de un lote de control): atípicos, normalidad, tendencia, homogeneidad, comparación con el fabricante y precisión. Cada grupo responde una pregunta distinta.',
+      'Atípicos, normalidad, tendencia, homogeneidad, comparación con el fabricante y precisión del lote, para decidir sobre una serie de resultados.',
   },
   {
     id: 'indicadores',

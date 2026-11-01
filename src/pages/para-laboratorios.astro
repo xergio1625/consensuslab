@@ -1,5 +1,5 @@
 ---
-// Consensus Lab para laboratorios: la propuesta para quien dirige o gestiona un laboratorio (antes era la portada).
+// ConsensusLab para laboratorios: la propuesta para quien dirige o gestiona un laboratorio (antes era la portada).
 // La portada ahora ofrece dos puertas: profesionales (Professional) y laboratorios (esta página).
 import Base from '../plantillas/Base.astro';
 import TarjetaHerramienta from '../componentes/TarjetaHerramienta.astro';
@@ -50,7 +50,7 @@ const pasos = [
         <p class="antetitulo">Para laboratorios clínicos</p>
         <h1>Tu plan de calidad, aplicado igual en cada turno</h1>
         <p class="portada-lema">
-          Tu laboratorio decide qué controlar, con qué reglas y qué hacer cuando un control falla. Consensus Lab lleva esa
+          Tu laboratorio decide qué controlar, con qué reglas y qué hacer cuando un control falla. ConsensusLab lleva esa
           decisión al trabajo de cada día, para todo el equipo, y muestra si se cumple. No vendemos controles,
           analizadores, equipos ni reactivos: solo gestión, sin conflicto de interés.
         </p>
@@ -60,16 +60,16 @@ const pasos = [
         </div>
         <p class="nota-portada">
           Hecho por un tecnólogo médico. <a class="enlace-portada" href={url('herramientas/')}>Ver planillas y guías gratuitas →</a><br />
-          ¿Eres profesional de laboratorio y buscas algo para ti? <a class="enlace-portada" href={url('professional/')}>Conoce Consensus Lab Professional →</a>
+          ¿Eres profesional de laboratorio y buscas algo para ti? <a class="enlace-portada" href={url('professional/')}>Conoce ConsensusLab Professional →</a>
         </p>
       </div>
       {VIDEOS.portada ? (
         <div class="portada-visual portada-visual-video">
-          <EspacioVideo titulo="Consensus Lab QC en acción" {...VIDEOS.portada} />
+          <EspacioVideo titulo="ConsensusLab QC en acción" {...VIDEOS.portada} />
         </div>
       ) : (
       <figure class="portada-visual" aria-hidden="true">
-        <!-- Ilustración del tipo de gráfico que genera Consensus Lab QC (datos de ejemplo). Se reemplaza por un video al llenar VIDEOS.portada (src/lib/videos.ts). -->
+        <!-- Ilustración del tipo de gráfico que genera ConsensusLab QC (datos de ejemplo). Se reemplaza por un video al llenar VIDEOS.portada (src/lib/videos.ts). -->
         <div class="maqueta">
           <div class="maqueta-barra"><span></span><span></span><span></span><b>Levey-Jennings · Control nivel 1</b></div>
           <svg viewBox="0 0 360 200" role="presentation">
@@ -134,7 +134,7 @@ const pasos = [
           <p class="antetitulo">Cómo funciona</p>
           <h2>Del plan de calidad al trabajo de cada día</h2>
         </div>
-        <a href={url('qc/')}>Ver Consensus Lab QC</a>
+        <a href={url('qc/')}>Ver ConsensusLab QC</a>
       </div>
       <ol class="pasos">
         {
@@ -157,7 +157,7 @@ const pasos = [
           <p class="antetitulo">Independencia</p>
           <h2>Sin conflicto de interés</h2>
           <p>
-            Un software que vende controles de calidad no es neutro frente a esos controles. Consensus Lab no vende controles,
+            Un software que vende controles de calidad no es neutro frente a esos controles. ConsensusLab no vende controles,
             analizadores, equipos ni reactivos, y no cobra comisiones de proveedores. Solo vende herramientas de gestión, así
             que ninguna decisión del plan te empuja hacia una marca.
           </p>
@@ -264,13 +264,13 @@ const pasos = [
     <div class="contenedor">
       <div class="franja-qc">
         <div>
-          <h2>Consensus Lab QC es donde el plan se ejecuta</h2>
+          <h2>ConsensusLab QC es donde el plan se ejecuta</h2>
           <p>
             Plan de calidad por analito, reglas de Westgard, Levey-Jennings, sigma, control externo y no conformidades en una
             sola plataforma. Las herramientas gratuitas de este sitio funcionan sin él.
           </p>
         </div>
-        <a class="boton" href={url('qc/')}>Conocer Consensus Lab QC</a>
+        <a class="boton" href={url('qc/')}>Conocer ConsensusLab QC</a>
       </div>
     </div>
   </section>

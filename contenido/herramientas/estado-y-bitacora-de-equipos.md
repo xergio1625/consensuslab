@@ -24,7 +24,7 @@ actualizado: 2026-10-21
 3. **Define qué controles requiere cada equipo.** En la pestaña «Controles requeridos» marcas, equipo por equipo,
    si necesita registro de temperatura y rutinas de mantención diarias, semanales o mensuales. Los registros se hacen
    después en «Registro de temperaturas» y en «Mantención preventiva y calibraciones». Esta definición no cambia el
-   equipo ni su vínculo con Consensus Lab QC.
+   equipo ni su vínculo con ConsensusLab QC.
 4. **Sigue el ciclo de vida del equipo.** Todo equipo nuevo parte «instalado», en período de prueba. Cuando empieza a
    usarse en el laboratorio, registra el **inicio de operación** con la fecha real: desde ahí se exigen sus registros.
    Después el estado cambia solo con lo que registras: una falla que lo detiene lo deja «detenido», una mantención

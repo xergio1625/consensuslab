@@ -1,17 +1,17 @@
 ---
-// Entrada a la app Consensus Lab (app.consensuslab.cl, Google Cloud en Santiago). Las cuentas, sesiones y contraseñas
+// Entrada a la app ConsensusLab (app.consensuslab.cl, Google Cloud en Santiago). Las cuentas, sesiones y contraseñas
 // viven en la app: este sitio estático no guarda datos de usuarios.
 import Base from '../plantillas/Base.astro';
 import { url } from '../lib/rutas';
 import { PROFESSIONAL_ABIERTO, URL_PROFESSIONAL, URL_PROFESSIONAL_REGISTRO, URL_APP, URL_REGISTRO } from '../lib/sitio';
 ---
 
-<Base titulo="Ingresar" seccion="cuenta" indexar={false} descripcion="Ingresa a la app Consensus Lab para probar las herramientas 15 días gratis o usarlas con tu suscripción.">
+<Base titulo="Ingresar" seccion="cuenta" indexar={false} descripcion="Ingresa a la app ConsensusLab para probar las herramientas 15 días gratis o usarlas con tu suscripción.">
   <div class="contenedor">
     <article class="prosa">
-      <h1>Ingresa a Consensus Lab</h1>
-      <p>Hay dos entradas, con una misma cuenta si trabajas en un laboratorio que usa Consensus Lab.</p>
-      <h2>Soy profesional de laboratorio: Consensus Lab Professional</h2>
+      <h1>Ingresa a ConsensusLab</h1>
+      <p>Hay dos entradas, con una misma cuenta si trabajas en un laboratorio que usa ConsensusLab.</p>
+      <h2>Soy profesional de laboratorio: ConsensusLab Professional</h2>
       <p>
         {PROFESSIONAL_ABIERTO
           ? 'Entra a tus rondas de control externo, tu historial y tus certificados, o crea tu cuenta con 3 meses gratis.'
@@ -30,7 +30,7 @@ import { PROFESSIONAL_ABIERTO, URL_PROFESSIONAL, URL_PROFESSIONAL_REGISTRO, URL_
 
       <h2>Dirijo o gestiono un laboratorio: la app de laboratorios</h2>
       <p>
-        Las herramientas funcionan en la app Consensus Lab. Al crear tu cuenta tienes 15 días gratis con los datos reales de
+        Las herramientas funcionan en la app ConsensusLab. Al crear tu cuenta tienes 15 días gratis con los datos reales de
         tu laboratorio; si contratas, sigues en la misma cuenta y tus registros se mantienen.
       </p>
       <p>
@@ -59,7 +59,7 @@ import { PROFESSIONAL_ABIERTO, URL_PROFESSIONAL, URL_PROFESSIONAL_REGISTRO, URL_
       <ul>
         <li>Tu contraseña se guarda solo como una huella cifrada e irreversible: nadie puede verla.</li>
         <li>En «Mis dispositivos» ves dónde tienes sesión abierta y puedes cerrarla.</li>
-        <li>Consensus Lab no guarda datos de pacientes.</li>
+        <li>ConsensusLab no guarda datos de pacientes.</li>
       </ul>
       <p class="texto-suave"><a href={url('planes/')}>Ver planes de suscripción</a></p>
     </article>

@@ -1,5 +1,5 @@
 ---
-// Portada de Consensus Lab: dos puertas. Una para profesionales de laboratorio (Consensus Lab Professional) y otra para
+// Portada de ConsensusLab: dos puertas. Una para profesionales de laboratorio (ConsensusLab Professional) y otra para
 // quien dirige o gestiona un laboratorio (Para laboratorios: Essential, QC y Accreditation). Lo gratuito y la opinión
 // van debajo. La propuesta completa para laboratorios vive en /para-laboratorios/.
 import Base from '../plantillas/Base.astro';
@@ -15,19 +15,19 @@ const ultimos = (await obtenerOpinion()).slice(0, 3);
 ---
 
 <Base
-  titulo="Consensus Lab: criterio y gestión para el laboratorio clínico"
-  descripcion="Consensus Lab Professional para profesionales de laboratorio y software de calidad y gestión para laboratorios, sin conflicto de interés. Calculadoras gratis."
+  titulo="ConsensusLab: criterio y gestión para el laboratorio clínico"
+  descripcion="ConsensusLab Professional para profesionales de laboratorio y software de calidad y gestión para laboratorios, sin conflicto de interés. Calculadoras gratis."
   seccion="inicio"
   datos={[
     {
       '@context': 'https://schema.org',
       '@type': 'Organization',
-      name: 'Consensus Lab',
+      name: 'ConsensusLab',
       url: Astro.site?.href,
       logo: new URL('logo.png', Astro.site).href,
       email: CORREO_CONTACTO,
       areaServed: 'CL',
-      description: 'Criterio y gestión para el laboratorio clínico: Consensus Lab Professional para profesionales y software de calidad y gestión para laboratorios, independiente de proveedores de controles, equipos y reactivos, con calculadoras y guías gratuitas.',
+      description: 'Criterio y gestión para el laboratorio clínico: ConsensusLab Professional para profesionales y software de calidad y gestión para laboratorios, independiente de proveedores de controles, equipos y reactivos, con calculadoras y guías gratuitas.',
       founder: {
         '@type': 'Person',
         name: 'Sergio Inostroza Riffo',
@@ -39,7 +39,7 @@ const ultimos = (await obtenerOpinion()).slice(0, 3);
     {
       '@context': 'https://schema.org',
       '@type': 'WebSite',
-      name: 'Consensus Lab',
+      name: 'ConsensusLab',
       url: Astro.site?.href,
       inLanguage: 'es-CL',
       potentialAction: {
@@ -63,7 +63,7 @@ const ultimos = (await obtenerOpinion()).slice(0, 3);
       <div class="puertas" id="puertas">
         <article class="puerta puerta-destacada">
           <p class="antetitulo">Soy profesional de laboratorio</p>
-          <h2>Consensus Lab Professional</h2>
+          <h2>ConsensusLab Professional</h2>
           <p>
             Pon a prueba tu criterio en rondas de control externo: decides frente a una gráfica de control, ves la
             respuesta experta y comparas, de forma anónima, con el resto del grupo.
@@ -82,14 +82,14 @@ const ultimos = (await obtenerOpinion()).slice(0, 3);
 
         <article class="puerta">
           <p class="antetitulo">Dirijo o gestiono un laboratorio</p>
-          <h2>Consensus Lab para laboratorios</h2>
+          <h2>ConsensusLab para laboratorios</h2>
           <p>
             Lleva tu plan de calidad al trabajo de cada turno y mira si se cumple: Essential para la gestión del
-            laboratorio y Consensus Lab QC para el control de calidad.
+            laboratorio y ConsensusLab QC para el control de calidad.
           </p>
           <ul>
             <li>Prueba gratis 15 días con los datos reales de tu laboratorio</li>
-            <li>Essential, Consensus Lab QC o los dos juntos</li>
+            <li>Essential, ConsensusLab QC o los dos juntos</li>
             <li>Cada plan incluye hasta 5 cuentas de Professional para tu equipo</li>
           </ul>
           <p class="puerta-precio">Planes anuales desde la preventa de fundadores</p>
@@ -145,7 +145,7 @@ const ultimos = (await obtenerOpinion()).slice(0, 3);
       <div class="franja-qc">
         <div>
           <p class="antetitulo">Próximamente</p>
-          <h2>Consensus Lab Accreditation</h2>
+          <h2>ConsensusLab Accreditation</h2>
           <p>
             Ordenar la evidencia para la acreditación de tu laboratorio, a partir de las características obligatorias del
             estándar. Deja tu correo y te avisamos primero.
@@ -190,7 +190,7 @@ const ultimos = (await obtenerOpinion()).slice(0, 3);
           <p class="antetitulo">Independencia</p>
           <h2>Sin conflicto de interés</h2>
           <p>
-            Un software que vende controles de calidad no es neutro frente a esos controles. Consensus Lab no vende controles,
+            Un software que vende controles de calidad no es neutro frente a esos controles. ConsensusLab no vende controles,
             analizadores, equipos ni reactivos, y no cobra comisiones de proveedores: ninguna decisión te empuja hacia una marca.
           </p>
         </div>

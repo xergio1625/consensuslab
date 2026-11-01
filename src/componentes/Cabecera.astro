@@ -10,25 +10,48 @@ interface Props {
 }
 const { seccion } = Astro.props;
 
-// «Opinión» aparece en el menú solo cuando hay al menos un artículo.
-const hayOpinion = (await getCollection('opinion')).length > 0;
-// En celular los recursos gratuitos van en un grupo plegable; en pantallas anchas la lista va plana.
-const gratis = [
-  { id: 'herramientas', texto: 'Herramientas', ruta: 'herramientas/' },
-  { id: 'calculadoras', texto: 'Calculadoras', ruta: 'calculadoras/' },
-  { id: 'prompts', texto: 'Prompts IA', ruta: 'prompts/' },
-  ...(hayOpinion ? [{ id: 'opinion', texto: 'Opinión', ruta: 'opinion/' }] : []),
+// Tres grupos desplegables: lo gratuito (para todos), el perfil profesional y el de laboratorios (institucional).
+// «Planes» abre la vista de cada perfil; «Acerca» e «Ingresar» cuelgan de ambos perfiles.
+const comunes = [
+  { texto: 'Acerca de', ruta: 'acerca/' },
+  { texto: 'Ingresar', ruta: 'cuenta/' },
 ];
-// Dos puertas: Professional (profesionales) y Para laboratorios (Essential, QC y Accreditation cuelgan de esa página).
-const resto = [
-  { id: 'guias', texto: 'Guías', ruta: 'guias/' },
-  { id: 'professional', texto: 'Professional', ruta: 'professional/' },
-  { id: 'laboratorios', texto: 'Para laboratorios', ruta: 'para-laboratorios/' },
-  { id: 'planes', texto: 'Planes', ruta: 'planes/' },
-  { id: 'acerca', texto: 'Acerca', ruta: 'acerca/' },
-  { id: 'cuenta', texto: 'Ingresar', ruta: 'cuenta/' },
+const grupos = [
+  {
+    id: 'gratis',
+    texto: 'Gratis',
+    items: [
+      { id: 'calculadoras', texto: 'Calculadoras', ruta: 'calculadoras/' },
+      { id: 'prompts', texto: 'Prompts de IA', ruta: 'prompts/' },
+      { id: 'opinion', texto: 'Opinión', ruta: 'opinion/' },
+    ],
+    comunes: [],
+  },
+  {
+    id: 'profesional',
+    texto: 'Profesional',
+    items: [
+      { id: 'professional', texto: 'ConsensusLab Professional', ruta: 'professional/' },
+      { id: 'guias', texto: 'Guías', ruta: 'guias/' },
+      { id: 'planes-pro', texto: 'Planes para profesionales', ruta: 'planes/#profesional' },
+    ],
+    comunes,
+  },
+  {
+    id: 'laboratorios',
+    texto: 'Laboratorios',
+    items: [
+      { id: 'laboratorios', texto: 'Para laboratorios', ruta: 'para-laboratorios/' },
+      { id: 'essential', texto: 'Essential', ruta: 'essential/' },
+      { id: 'qc', texto: 'ConsensusLab QC', ruta: 'qc/' },
+      { id: 'accreditation', texto: 'Accreditation', ruta: 'accreditation/' },
+      { id: 'herramientas', texto: 'Herramientas', ruta: 'herramientas/' },
+      { id: 'planes-lab', texto: 'Planes para laboratorios', ruta: 'planes/#laboratorios' },
+    ],
+    comunes,
+  },
 ];
-const grupoActivo = gratis.some((e) => e.id === seccion);
+const grupoActivo = (g: (typeof grupos)[number]) => g.items.some((e) => e.id === seccion);
 // Botón único según dónde estás: en las páginas de profesionales, Professional; en Accreditation, la lista de espera; en la portada y
 // en Planes no hay (ahí ya están las dos puertas y los botones de cada plan).
 const secciones_pro = ['professional', 'guias'];
@@ -40,36 +63,32 @@ const cta = secciones_pro.includes(seccion ?? '')
 
 <header class="cabecera">
   <div class="contenedor cabecera-interior">
-    <a class="marca" href={url()} aria-label="Consensus Lab, inicio">
+    <a class="marca" href={url()} aria-label="ConsensusLab, inicio">
       <Logo />
-      <span>Consensus <span class="marca-lab">Lab</span></span>
+      <span>Consensus<span class="marca-lab">Lab</span></span>
     </a>
 
     <nav class="nav-principal" aria-label="Navegación principal">
       <ul class="nav-lista" id="menu-principal">
-        <li class="nav-grupo">
-          <button type="button" class="nav-grupo-boton" aria-expanded={grupoActivo ? 'true' : 'false'} aria-controls="menu-gratis">
-            Recursos gratis
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg>
-          </button>
-          <ul class="nav-sublista" id="menu-gratis">
-            {
-              gratis.map((e) => (
-                <li>
-                  <a href={url(e.ruta)} aria-current={seccion === e.id ? 'page' : undefined}>
-                    {e.texto}
-                  </a>
-                </li>
-              ))
-            }
-          </ul>
-        </li>
         {
-          resto.map((e) => (
-            <li class={'nav-' + e.id}>
-              <a href={url(e.ruta)} aria-current={seccion === e.id ? 'page' : undefined}>
-                {e.texto}
-              </a>
+          grupos.map((g) => (
+            <li class={'nav-grupo' + (g.id === 'laboratorios' ? ' nav-grupo-der' : '')}>
+              <button type="button" class={'nav-grupo-boton' + (grupoActivo(g) ? ' activo' : '')} aria-expanded="false" aria-controls={`menu-${g.id}`}>
+                {g.texto}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg>
+              </button>
+              <ul class="nav-sublista" id={`menu-${g.id}`}>
+                {g.items.map((e) => (
+                  <li>
+                    <a href={url(e.ruta)} aria-current={seccion === e.id ? 'page' : undefined}>{e.texto}</a>
+                  </li>
+                ))}
+                {g.comunes.map((e, i) => (
+                  <li class={i === 0 ? 'nav-sep' : undefined}>
+                    <a href={url(e.ruta)}>{e.texto}</a>
+                  </li>
+                ))}
+              </ul>
             </li>
           ))
         }
@@ -106,10 +125,22 @@ const cta = secciones_pro.includes(seccion ?? '')
     }),
   );
 
-  // Grupo «Recursos gratis» del menú móvil.
-  const grupoBoton = document.querySelector('.nav-grupo-boton');
-  grupoBoton?.addEventListener('click', () => {
-    grupoBoton.setAttribute('aria-expanded', String(grupoBoton.getAttribute('aria-expanded') !== 'true'));
+  // Grupos del menú: se abren de a uno; se cierran con Esc o al tocar fuera.
+  const gruposBoton = Array.from(document.querySelectorAll<HTMLButtonElement>('.nav-grupo-boton'));
+  const cerrarGrupos = (menos?: HTMLElement | null) =>
+    gruposBoton.forEach((b) => { if (b !== menos) b.setAttribute('aria-expanded', 'false'); });
+  gruposBoton.forEach((b) =>
+    b.addEventListener('click', () => {
+      const abrir = b.getAttribute('aria-expanded') !== 'true';
+      cerrarGrupos(b);
+      b.setAttribute('aria-expanded', String(abrir));
+    }),
+  );
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') cerrarGrupos();
+  });
+  document.addEventListener('click', (e) => {
+    if (!(e.target as HTMLElement).closest('.nav-grupo')) cerrarGrupos();
   });
 
   // Menú plegable en celular: se cierra con Esc o al tocar fuera.

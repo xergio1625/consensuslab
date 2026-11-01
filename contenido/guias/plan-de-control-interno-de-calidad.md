@@ -16,7 +16,7 @@ fuente:
   cambios: "Traducción y adaptación al español, condensación y reorganización de las secciones, redacción propia de los ejemplos y listas, escritura explícita de las fórmulas (que en el original son ecuaciones), tabla de reglas, lista de verificación final y enlaces a las herramientas de este sitio. Se omitieron los detalles de la regulación de cada país y las referencias bibliográficas; para ello consulta el texto original. Si encuentras una diferencia con el original, prevalece este último."
 ---
 
-Casi todos los laboratorios miden controles todos los días. Mucho menos común es tener un **plan** que diga qué se mide, cuándo, con qué reglas y qué se hace cuando algo falla. Esta guía resume los elementos de ese plan según la literatura, y los aterriza con las calculadoras de Consensus Lab.
+Casi todos los laboratorios miden controles todos los días. Mucho menos común es tener un **plan** que diga qué se mide, cuándo, con qué reglas y qué se hace cuando algo falla. Esta guía resume los elementos de ese plan según la literatura, y los aterriza con las calculadoras de ConsensusLab.
 
 ## 1. Qué debe definir el plan, para cada examen
 

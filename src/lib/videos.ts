@@ -16,9 +16,9 @@ export interface VideoSitio {
 }
 
 export const VIDEOS: Record<'portada' | 'qc' | 'planes', VideoSitio | null> = {
-  // Clip corto de Consensus Lab QC (reemplaza a la maqueta ilustrada de la portada).
+  // Clip corto de ConsensusLab QC (reemplaza a la maqueta ilustrada de la portada).
   portada: null,
-  // Demostración larga en la página de Consensus Lab QC.
+  // Demostración larga en la página de ConsensusLab QC.
   'consensus-qc': null,
   // Presentación o tutorial en la página de planes.
   planes: null,

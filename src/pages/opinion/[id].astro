@@ -38,7 +38,7 @@ const minutos = Math.max(1, Math.round(palabras / 220));
       datePublished: a.fecha.toISOString().slice(0, 10),
       ...(a.actualizado ? { dateModified: a.actualizado.toISOString().slice(0, 10) } : {}),
       author: { '@type': 'Person', name: 'Sergio Inostroza Riffo', jobTitle: 'Tecnólogo médico', url: new URL(url('acerca/'), Astro.site).href, sameAs: [LINKEDIN_PERFIL] },
-      publisher: { '@type': 'Organization', name: 'Consensus Lab', url: Astro.site?.href, logo: new URL(url('logo.png'), Astro.site).href },
+      publisher: { '@type': 'Organization', name: 'ConsensusLab', url: Astro.site?.href, logo: new URL(url('logo.png'), Astro.site).href },
       mainEntityOfPage: direccion,
       inLanguage: 'es',
       wordCount: palabras,
@@ -79,7 +79,7 @@ const minutos = Math.max(1, Math.round(palabras / 220));
         <aside class="caja-autor">
           <p>
             <strong>Sergio Inostroza</strong> es tecnólogo médico, con más de 10 años en laboratorio clínico. Escribe sobre
-            gestión, calidad y la profesión, y desarrolla las herramientas de Consensus Lab.{' '}
+            gestión, calidad y la profesión, y desarrolla las herramientas de ConsensusLab.{' '}
             <a href={url('acerca/')}>Más sobre el autor</a>.
           </p>
         </aside>

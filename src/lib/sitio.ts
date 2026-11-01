@@ -7,12 +7,12 @@
  */
 export const INDEXAR = true;
 
-/** App Consensus Lab (Google Cloud, Santiago; Consensus Lab QC en /qc/). Las fichas con `app_modulo` enlazan aquí. */
+/** App ConsensusLab (Google Cloud, Santiago; ConsensusLab QC en /qc/). Las fichas con `app_modulo` enlazan aquí. */
 export const URL_APP = 'https://app.consensuslab.cl/';
 // Página de «Crear cuenta» (prueba gratuita) de la app: los botones «Probar gratis» van aquí; «Ingresar» va a URL_APP.
 export const URL_REGISTRO = URL_APP + '?registro=1';
 
-/** Consensus Lab Professional: la app vive en app.consensuslab.cl/professional; la página de venta, en /professional/ de este sitio. */
+/** ConsensusLab Professional: la app vive en app.consensuslab.cl/professional; la página de venta, en /professional/ de este sitio. */
 export const URL_PROFESSIONAL = URL_APP + 'professional';
 export const URL_PROFESSIONAL_REGISTRO = URL_PROFESSIONAL + '?registro=1';
 /**

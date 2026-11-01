@@ -35,7 +35,7 @@ acordada con los servicios clínicos: una para urgencias y otra para rutina.
    filas para que confirmes que cada dato está en su lugar. Si la fecha y la hora vienen en columnas separadas,
    también puedes indicarlo.
 4. **Tus datos de pacientes no salen del computador.** Solo se envían el examen, el área, la prioridad y las dos
-   horas de cada fila; columnas como nombre, RUT o folio se quedan en tu navegador. Consensus Lab guarda solo el
+   horas de cada fila; columnas como nombre, RUT o folio se quedan en tu navegador. ConsensusLab guarda solo el
    resumen, no las filas.
 5. **Lee los resultados.** Por prioridad, por área y por examen verás la **mediana**, el **percentil 90**, el máximo
    y el **porcentaje dentro de la meta**, con semáforo: verde 90 % o más, amarillo 75 % o más, rojo bajo eso.

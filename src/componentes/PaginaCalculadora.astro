@@ -123,12 +123,12 @@ const otras = CALCULADORAS.filter((o) => o.id !== c.id).sort(
             </section>
           ) : c.familia === 'calidad' ? (
             <section class="caja caja-app">
-              <h2>Automático en Consensus Lab QC</h2>
+              <h2>Automático en ConsensusLab QC</h2>
               <p>
-                Consensus Lab QC calcula cada mes el CV, el sesgo, el error total y la sigma de cada analizador con tus controles
+                ConsensusLab QC calcula cada mes el CV, el sesgo, el error total y la sigma de cada analizador con tus controles
                 y tu control externo, y los compara con el plan de calidad.
               </p>
-              <p><a class="boton boton-primario boton-ancho" href={url('qc/')}>Conocer Consensus Lab QC</a></p>
+              <p><a class="boton boton-primario boton-ancho" href={url('qc/')}>Conocer ConsensusLab QC</a></p>
             </section>
           ) : c.familia === 'estadistica' ? (
             <section class="caja caja-app">
@@ -152,10 +152,10 @@ const otras = CALCULADORAS.filter((o) => o.id !== c.id).sort(
             <section class="caja caja-app">
               <h2>Verifica y deja registro</h2>
               <p>
-                Consensus Lab QC lleva el control de calidad y el cambio crítico de cada analizador. Para dejar evidencia
+                ConsensusLab QC lleva el control de calidad y el cambio crítico de cada analizador. Para dejar evidencia
                 trazable de tus verificaciones, conoce el plan Gestión.
               </p>
-              <p><a class="boton boton-primario boton-ancho" href={url('qc/')}>Conocer Consensus Lab QC</a></p>
+              <p><a class="boton boton-primario boton-ancho" href={url('qc/')}>Conocer ConsensusLab QC</a></p>
             </section>
           ) : null
         }

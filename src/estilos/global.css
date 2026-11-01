@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════
-   Consensus Lab — estilos globales
+   ConsensusLab — estilos globales
    Paleta de la marca Consensus (burdeo + dorado), con modo claro y oscuro.
    Los colores se definen una sola vez como variables (tokens).
    ═══════════════════════════════════════════════════════════════ */
@@ -389,7 +389,7 @@ img, svg { max-width: 100%; }
   background: var(--c-info-fondo); color: var(--c-info); font-size: .7rem; font-weight: 700;
 }
 
-/* ── Consensus Lab QC y bloques de texto ──────────────────────────── */
+/* ── ConsensusLab QC y bloques de texto ──────────────────────────── */
 .franja-qc {
   background: linear-gradient(150deg, var(--marca-burdeo) 0%, var(--marca-burdeo-o) 100%);
   color: #fff; border-radius: var(--radio); padding: 28px;
@@ -891,32 +891,31 @@ img, svg { max-width: 100%; }
   .casilla-sitio, .lj-reglas label { align-items: center; gap: 12px; }
 }
 
-/* ─── Móvil, fase 3: menú agrupado y barra inferior ─── */
-/* En pantallas anchas el grupo «Recursos gratis» no existe: sus enlaces van planos en la lista */
-.nav-grupo, .nav-sublista { display: contents; list-style: none; margin: 0; padding: 0; }
-.nav-grupo-boton { display: none; }
-@media (min-width: 1081px) {
-  .nav-sublista { display: contents; }
+/* ─── Menú en tres grupos desplegables: Gratis, Profesional y Laboratorios ─── */
+.nav-grupo { position: relative; list-style: none; margin: 0; padding: 0; }
+.nav-grupo-boton {
+  display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px; background: none; border: 0; border-radius: var(--radio-s);
+  color: #F1E3E9; font: inherit; font-weight: 550; font-size: .95rem; cursor: pointer; white-space: nowrap;
 }
+.nav-grupo-boton:hover, .nav-grupo-boton[aria-expanded="true"] { background: rgba(255, 255, 255, .08); color: #fff; }
+.nav-grupo-boton.activo { color: #fff; box-shadow: inset 0 -2px 0 var(--marca-dorado); border-radius: 0; }
+.nav-grupo-boton svg { width: 16px; height: 16px; transition: transform var(--dur-2) var(--ease-out); }
+.nav-grupo-boton[aria-expanded="true"] svg { transform: rotate(180deg); }
+.nav-sublista {
+  display: none; list-style: none; margin: 0; padding: 6px; position: absolute; top: calc(100% + 6px); left: 0; min-width: 250px;
+  background: var(--marca-burdeo-o); border: 1px solid rgba(255, 255, 255, .14); border-radius: var(--radio-s);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, .35); z-index: 110;
+}
+.nav-grupo-der .nav-sublista { left: auto; right: 0; }
+.nav-grupo-boton[aria-expanded="true"] + .nav-sublista { display: block; }
+.nav-sublista a { padding: 10px 12px; }
+.nav-sep { margin-top: 4px; padding-top: 4px; border-top: 1px solid rgba(255, 255, 255, .12); }
 @media (max-width: 1080px) {
-  .nav-professional { order: 1; }
-  .nav-laboratorios { order: 2; }
-  .nav-guias { order: 3; }
-  .nav-planes { order: 4; }
-  .nav-grupo { display: block; order: 5; }
-  .nav-acerca { order: 6; }
-  .nav-cuenta { order: 7; margin-top: 8px; }
-  .nav-cuenta a { border: 1px solid rgba(255, 255, 255, .25); text-align: center; }
+  .nav-grupo-boton { display: flex; justify-content: space-between; width: 100%; padding: 12px; }
+  .nav-grupo-boton.activo { box-shadow: inset 3px 0 0 var(--marca-dorado); }
+  .nav-sublista { position: static; min-width: 0; padding: 0 0 0 12px; margin: 0 0 4px 12px; background: none; border: 0; border-left: 1px solid rgba(255, 255, 255, .15); border-radius: 0; box-shadow: none; }
+  .nav-grupo-boton[aria-expanded="true"] + .nav-sublista { display: flex; flex-direction: column; }
   .nav-tema { order: 8; }
-  .nav-grupo-boton {
-    display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 12px;
-    background: none; border: 0; color: #F1E3E9; font: inherit; font-weight: 550; cursor: pointer; border-radius: var(--radio-s);
-  }
-  .nav-grupo-boton:hover { background: rgba(255, 255, 255, .08); color: #fff; }
-  .nav-grupo-boton svg { width: 18px; height: 18px; transition: transform var(--dur-2) var(--ease-out); }
-  .nav-grupo-boton[aria-expanded="true"] svg { transform: rotate(180deg); }
-  .nav-sublista { display: none; flex-direction: column; list-style: none; padding: 0 0 0 12px; border-left: 1px solid rgba(255, 255, 255, .15); margin: 0 0 4px 12px; }
-  .nav-grupo-boton[aria-expanded="true"] + .nav-sublista { display: flex; }
   .nav-lista { max-height: calc(100vh - 60px); overflow-y: auto; overscroll-behavior: contain; }
 }
 
@@ -1120,3 +1119,13 @@ img, svg { max-width: 100%; }
 .niveles-essential { display: grid; gap: 16px; margin-top: 16px; }
 @media (min-width: 860px) { .niveles-essential { grid-template-columns: 1fr 1fr; } }
 .franja-qc .antetitulo { color: var(--marca-dorado); }
+
+/* Calculadoras de pruebas estadísticas: mismas tarjetas que el resto, con el tema como etiqueta pequeña */
+.tarjeta-grupo { display: inline-block; margin-bottom: 6px; padding: 2px 8px; border-radius: 999px; font-size: .74rem; font-weight: 600; color: var(--c-texto-suave); background: var(--c-panel-alt); border: 1px solid var(--c-borde); }
+.calc-guia-enlace { margin: 0 0 12px; }
+
+/* Planes: vista por perfil y tarjetas de lo que está en preparación */
+[data-vista="pro"] .solo-lab, [data-vista="lab"] .solo-pro { display: none; }
+.planes-fila { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); align-items: stretch; }
+.plan-preparacion { border-style: dashed; }
+.plan-cinta-suave { background: var(--c-panel-alt); color: var(--c-texto-suave); border: 1px solid var(--c-borde); }

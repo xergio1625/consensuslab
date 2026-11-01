@@ -30,7 +30,7 @@ const {
 // Google corta las descripciones sobre ~160 caracteres: se recortan en un límite de palabra.
 const descripcion = descripcionCompleta.length > 160 ? descripcionCompleta.slice(0, 157).replace(/\s+\S*$/, '') + '…' : descripcionCompleta;
 // Google corta los títulos sobre ~60 caracteres: la marca va al final solo si el título cabe con ella.
-const tituloCompleto = titulo.startsWith('Consensus Lab') || titulo.length + ' · Consensus Lab'.length > 70 ? titulo : `${titulo} · Consensus Lab`;
+const tituloCompleto = titulo.startsWith('ConsensusLab') || titulo.length + ' · ConsensusLab'.length > 70 ? titulo : `${titulo} · ConsensusLab`;
 const indexable = INDEXAR && Astro.props.indexar !== false;
 const datos = Astro.props.datos ? [].concat(Astro.props.datos as never) : [];
 const jsonLd = (d: unknown) => JSON.stringify(d).replace(/</g, '\\u003c');
@@ -53,17 +53,17 @@ const imagen = new URL(url(Astro.props.imagen ?? (enPreventa && paginaPreventa ?
     <meta property="og:description" content={descripcion} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonica} />
-    <meta property="og:site_name" content="Consensus Lab" />
+    <meta property="og:site_name" content="ConsensusLab" />
     <meta property="og:image" content={imagen} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Consensus Lab: herramientas de gestión para el laboratorio clínico" />
+    <meta property="og:image:alt" content="ConsensusLab: herramientas de gestión para el laboratorio clínico" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta property="og:locale" content="es_CL" />
     <meta name="theme-color" content="#4B0B1E" />
     <link rel="icon" type="image/svg+xml" href={url('favicon.svg')} />
     <link rel="sitemap" href={url('sitemap-index.xml')} />
-    <link rel="alternate" type="application/rss+xml" title="Opinión · Consensus Lab" href={url('opinion/rss.xml')} />
+    <link rel="alternate" type="application/rss+xml" title="Opinión · ConsensusLab" href={url('opinion/rss.xml')} />
     {datos.map((d) => <script type="application/ld+json" set:html={jsonLd(d)} />)}
     <script is:inline>
       // Canal por el que llegó la visita (enlaces con utm_source), para saber de dónde vienen las cotizaciones.

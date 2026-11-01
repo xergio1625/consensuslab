@@ -7,9 +7,9 @@ import { CORREO_CONTACTO, PROFESSIONAL_ABIERTO, URL_APP } from '../lib/sitio';
 // En Professional (mientras no abre), Accreditation y Guías, el formulario es la lista de espera de ese producto.
 const ruta = Astro.url.pathname;
 const lista = ruta.startsWith('/accreditation/')
-  ? { antetitulo: 'Lista de espera', titulo: 'Entérate primero de Consensus Lab Accreditation', texto: 'Te escribimos cuando haya novedades de la herramienta para preparar la acreditación. Sin costo ni compromiso, y sin compartir tu correo.', boton: 'Sumarme a la lista' }
+  ? { antetitulo: 'Lista de espera', titulo: 'Entérate primero de ConsensusLab Accreditation', texto: 'Te escribimos cuando haya novedades de la herramienta para preparar la acreditación. Sin costo ni compromiso, y sin compartir tu correo.', boton: 'Sumarme a la lista' }
   : ruta.startsWith('/professional/') && !PROFESSIONAL_ABIERTO
-    ? { antetitulo: 'Lista de espera', titulo: 'Entra primero a Consensus Lab Professional', texto: 'Te avisamos el día que abra, con tus 3 meses gratis. Sin costo ni compromiso, y sin compartir tu correo.', boton: 'Quiero entrar primero' }
+    ? { antetitulo: 'Lista de espera', titulo: 'Entra primero a ConsensusLab Professional', texto: 'Te avisamos el día que abra, con tus 3 meses gratis. Sin costo ni compromiso, y sin compartir tu correo.', boton: 'Quiero entrar primero' }
     : ruta.startsWith('/guias/')
       ? { antetitulo: 'Avísame', titulo: 'Entérate cuando una guía esté disponible', texto: 'Te escribimos cuando una guía de pago esté lista, o cuando haya una nueva. Sin relleno y sin compartir tu correo.', boton: 'Avisarme' }
       : null;
@@ -47,7 +47,7 @@ const lista = ruta.startsWith('/accreditation/')
       <label class="casilla-sitio">
         <input type="checkbox" name="acepta" />
         <span>
-          Acepto recibir por correo las novedades de Consensus Lab. Puedo darme de baja cuando quiera.{' '}
+          Acepto recibir por correo las novedades de ConsensusLab. Puedo darme de baja cuando quiera.{' '}
           <a href={url('privacidad/')}>Privacidad</a>
         </span>
       </label>

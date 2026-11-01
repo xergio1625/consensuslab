@@ -1,4 +1,4 @@
-// Configuración de Astro para Consensus Lab.
+// Configuración de Astro para ConsensusLab.
 // El sitio se publica en GitHub Pages con el dominio propio consensuslab.cl (DNS en Cloudflare, sin proxy).
 // Las direcciones antiguas xergio1625.github.io/consensuslab/… las redirige GitHub a este dominio.
 import { defineConfig } from 'astro/config';
@@ -10,7 +10,7 @@ const enPreparacion = fs.readdirSync('contenido/herramientas')
   .filter((f) => f.endsWith('.md') && /^estado:\s*en-preparacion\s*$/m.test(fs.readFileSync('contenido/herramientas/' + f, 'utf8')))
   .map((f) => '/herramientas/' + f.replace(/\.md$/, '') + '/');
 // La guía nació en Opinión; su dirección antigua redirige a la sección Guías.
-// Consensus QC pasó a llamarse Consensus Lab QC y vive en /qc/: la dirección antigua redirige (y queda fuera del sitemap).
+// Consensus QC pasó a llamarse ConsensusLab QC y vive en /qc/: la dirección antigua redirige (y queda fuera del sitemap).
 const redirecciones = {
   '/opinion/guia-plan-de-control-interno-de-calidad/': '/guias/plan-de-control-interno-de-calidad/',
   '/consensus-qc/': '/qc/',

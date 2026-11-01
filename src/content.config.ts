@@ -1,4 +1,4 @@
-// Definición de las colecciones de contenido de Consensus Lab.
+// Definición de las colecciones de contenido de ConsensusLab.
 // Aquí se describe qué campos lleva cada ficha. Si una ficha tiene un error
 // (falta un campo, un grupo no existe o un archivo no está subido), la
 // compilación se detiene y muestra el problema.
@@ -53,7 +53,7 @@ const herramientas = defineCollection({
       estado: z.enum(['disponible', 'en-preparacion']),
       acceso: z.enum(['gratuito', 'suscripcion']).default('gratuito'),
       etiquetas: z.array(z.string()).default([]),
-      // Relación con el software Consensus Lab QC
+      // Relación con el software ConsensusLab QC
       consensus_qc: z.enum(['existente', 'parcial', 'previsto', 'no']).default('no'),
       que_es: z.string(),
       seo_titulo: z.string().optional(),
@@ -62,7 +62,7 @@ const herramientas = defineCollection({
       // Descripción del recurso que se prepara (útil mientras la ficha está «en preparación»)
       recurso_previsto: z.string().optional(),
       recursos: z.array(recurso).default([]),
-      // Módulo de la app Consensus Lab que implementa la herramienta (prueba gratis + suscripción).
+      // Módulo de la app ConsensusLab que implementa la herramienta (prueba gratis + suscripción).
       app_modulo: z.string().regex(/^[a-z]{3,30}$/).optional(),
       // Video de la herramienta (opcional): ID de YouTube. Si falta, la ficha no muestra espacio de video.
       video: z.string().regex(/^[\w-]{6,20}$/).optional(),

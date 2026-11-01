@@ -1,5 +1,5 @@
 ---
-// Consensus Lab Professional: página de venta. La app vive en app.consensuslab.cl/professional.
+// ConsensusLab Professional: página de venta. La app vive en app.consensuslab.cl/professional.
 // Mientras PROFESSIONAL_ABIERTO sea false, los botones llevan a la lista de espera (formulario de novedades del pie).
 import Base from '../../plantillas/Base.astro';
 import { url } from '../../lib/rutas';
@@ -36,23 +36,23 @@ const preguntas = [
   ['¿Alguien ve qué decidí yo?', 'No. Tu decisión es privada. Los resultados se publican siempre agrupados: ni tu laboratorio ni otras personas ven qué eligió cada quien. Por eso el desglose de un laboratorio aparece solo desde 5 personas.'],
   ['¿Los casos son de pacientes reales?', 'No. Son casos compuestos, sin datos de pacientes ni de laboratorios identificables. En tu laboratorio siempre manda tu procedimiento aprobado.'],
   ['¿Quién decide cuál es la respuesta experta?', 'Cada caso lo redacta un tecnólogo médico y lo revisan otras personas del área antes de publicarse. Cuando la conducta depende del procedimiento del laboratorio, el caso lo dice en su supuesto y se aceptan respuestas razonables además de la experta.'],
-  ['Si mi laboratorio usa Consensus Lab, ¿pierdo mi cuenta al cambiar de trabajo?', 'No. Tu cuenta es tuya: si tu laboratorio te invita, la aceptas y entras con la misma cuenta; si cambias de trabajo, sales del laboratorio y conservas tu perfil y tu historial. Los planes de laboratorio incluyen hasta 5 cuentas de Professional.'],
+  ['Si mi laboratorio usa ConsensusLab, ¿pierdo mi cuenta al cambiar de trabajo?', 'No. Tu cuenta es tuya: si tu laboratorio te invita, la aceptas y entras con la misma cuenta; si cambias de trabajo, sales del laboratorio y conservas tu perfil y tu historial. Los planes de laboratorio incluyen hasta 5 cuentas de Professional.'],
   ['¿Qué pasa cuando terminan los 3 meses?', `Para continuar pagas la anualidad (${PRECIO_PROFESSIONAL_TEXTO} con IVA incluido), a contar desde la fecha de pago. No hay renovación automática: te avisamos antes de que venza. Si no continúas, por 30 días puedes consultar tu historial.`],
   ['¿Cómo pago y qué recibo?', 'Por transferencia, y te emitimos boleta electrónica. Si necesitas factura para tu institución, escríbenos a contacto@consensuslab.cl.'],
 ];
 ---
 
 <Base
-  titulo="Consensus Lab Professional para profesionales de laboratorio"
+  titulo="ConsensusLab Professional para profesionales de laboratorio"
   seccion="professional"
   descripcion={`Rondas de control externo de tu criterio: decides frente a gráficas de Westgard, ves la respuesta experta y comparas con el grupo. ${PRECIO_PROFESSIONAL_TEXTO} al año, ${MESES_PRUEBA_PROFESSIONAL} meses gratis.`}
   datos={[
     {
       '@context': 'https://schema.org',
       '@type': 'Product',
-      name: 'Consensus Lab Professional',
+      name: 'ConsensusLab Professional',
       description: 'Rondas de control externo del criterio profesional para bioquímicos, tecnólogos médicos y químicos farmacéuticos de laboratorio clínico: casos con gráficas de control, respuesta experta, resultados anónimos del grupo y certificado de participación.',
-      brand: { '@type': 'Brand', name: 'Consensus Lab' },
+      brand: { '@type': 'Brand', name: 'ConsensusLab' },
       url: new URL('professional/', Astro.site).href,
       offers: {
         '@type': 'Offer',
@@ -208,7 +208,7 @@ const preguntas = [
         <p style="margin-top:10px"><a class="boton boton-primario" href={entrar.href}>{entrar.texto}</a></p>
       </div>
       <p class="texto-suave" style="margin-top:14px">
-        ¿Tu laboratorio usa o quiere usar Consensus Lab? Cada plan de laboratorio incluye hasta 5 cuentas de Professional para
+        ¿Tu laboratorio usa o quiere usar ConsensusLab? Cada plan de laboratorio incluye hasta 5 cuentas de Professional para
         su equipo: <a href={url('planes/')}>mira los planes</a>.
       </p>
     </div>
@@ -227,7 +227,7 @@ const preguntas = [
       }
       <p class="texto-suave">
         La app de Professional está en {URL_PROFESSIONAL.replace('https://', '')}. Quien dirige un laboratorio puede
-        ver <a href={url('para-laboratorios/')}>Consensus Lab para laboratorios</a>.
+        ver <a href={url('para-laboratorios/')}>ConsensusLab para laboratorios</a>.
       </p>
     </div>
   </section>
