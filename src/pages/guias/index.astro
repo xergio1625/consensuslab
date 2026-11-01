@@ -1,28 +1,78 @@
 ---
-// Sección Guías: textos de referencia para el laboratorio. Las que adaptan una obra ajena llevan su atribución.
+// Sección Guías: guías libres (de acceso abierto, con su atribución) y guías de pago (todos los derechos reservados).
+// Las guías de pago se venden por ahora de forma manual, solo por transferencia y por correo; sin botón de pago.
+// GUIAS_A_LA_VENTA (sitio.ts) controla si ya se pueden pedir o solo dejar el correo para que avisemos.
 import Base from '../../plantillas/Base.astro';
 import { obtenerGuias } from '../../lib/datos';
+import { GUIAS_PAGO } from '../../lib/guias_pago';
 import { formatoFecha, url } from '../../lib/rutas';
+import { CORREO_CONTACTO, GUIAS_A_LA_VENTA } from '../../lib/sitio';
 
 const guias = await obtenerGuias();
+const pesos = (n: number) => '$' + n.toLocaleString('es-CL');
+const pedido = (titulo: string) =>
+  `mailto:${CORREO_CONTACTO}?subject=${encodeURIComponent('Pedido de guía: ' + titulo)}&body=${encodeURIComponent(
+    `Hola, quiero la guía «${titulo}».\n\nNombre completo (la copia se entrega a tu nombre):\nCorreo:\n\nPor favor envíame el valor y los datos para pagar por transferencia. Gracias.`,
+  )}`;
 ---
 
 <Base
   titulo="Guías para el laboratorio clínico"
   seccion="guias"
-  descripcion="Guías en español sobre control de calidad y gestión del laboratorio clínico, con fuentes citadas y licencia clara."
+  descripcion="Guías prácticas para el laboratorio clínico: verificación de métodos, qué hacer cuando un control se sale y plan de control interno. Guías libres y de pago."
 >
   <div class="contenedor seccion">
     <div class="seccion-cabeza">
       <div>
         <h1>Guías</h1>
         <p class="texto-suave intro-prompts">
-          Textos de referencia para armar y mejorar procesos del laboratorio. Cuando una guía adapta una obra de acceso
-          abierto, ves arriba y al final quién la escribió, con qué licencia y qué se cambió.
+          Textos prácticos para armar y mejorar procesos del laboratorio. Hay guías libres, que adaptan obras de acceso abierto
+          con su atribución, y guías de pago único que te ahorran horas de trabajo.
         </p>
       </div>
     </div>
 
+    <h2 id="de-pago">Guías de pago</h2>
+    <p class="texto-suave">
+      Pago único, sin suscripción. Se entregan por correo en PDF, a tu nombre, para tu uso personal, y puedes adaptar los
+      formularios a los registros de tu propio laboratorio. Todos los derechos reservados: no se pueden compartir ni redistribuir.
+    </p>
+    <div class="guias-pago">
+      {
+        GUIAS_PAGO.map((g) => (
+          <article class="guia-pago">
+            <span class={'guia-estado' + (g.lista && GUIAS_A_LA_VENTA ? ' lista' : '')}>
+              {!g.lista ? 'En preparación' : GUIAS_A_LA_VENTA ? 'Disponible' : 'Disponible pronto'}
+            </span>
+            <h3>{g.titulo}</h3>
+            <p class="texto-suave">{g.subtitulo}</p>
+            <p>{g.paraQuien}</p>
+            <ul>
+              {g.incluye.map((x) => <li>{x}</li>)}
+            </ul>
+            <p class="texto-suave">{g.formato}{g.precio ? ` · ${pesos(g.precio)} con IVA incluido` : ''}</p>
+            <div class="acciones-portada">
+              {g.lista && GUIAS_A_LA_VENTA ? (
+                <a class="boton boton-primario" href={pedido(g.titulo)}>Pedir esta guía</a>
+              ) : (
+                <a class="boton boton-secundario" href="#novedades">Avísame cuando esté</a>
+              )}
+            </div>
+          </article>
+        ))
+      }
+    </div>
+    {
+      GUIAS_A_LA_VENTA && (
+        <p class="texto-suave" style="margin-top:14px">
+          <strong>Cómo se compra:</strong> pulsa «Pedir esta guía» y se abre un correo con tu pedido. Te respondemos con el valor
+          y los datos para pagar por transferencia; al confirmar el pago te enviamos la guía en PDF a tu nombre y la boleta
+          electrónica. Cualquier duda: <a href={`mailto:${CORREO_CONTACTO}`}>{CORREO_CONTACTO}</a>.
+        </p>
+      )
+    }
+
+    <h2 id="libres" style="margin-top:36px">Guías libres</h2>
     {
       guias.length > 0 ? (
         <ol class="lista-articulos">
@@ -35,7 +85,7 @@ const guias = await obtenerGuias();
                   </time>
                   {g.data.temas.length > 0 && <span>· {g.data.temas.join(' · ')}</span>}
                 </div>
-                <h2><a href={url(`guias/${g.id}/`)}>{g.data.titulo}</a></h2>
+                <h3><a href={url(`guias/${g.id}/`)}>{g.data.titulo}</a></h3>
                 <p>{g.data.resumen}</p>
                 <div class="tarjeta-pie">
                   <span class="texto-suave">Leer la guía →</span>
@@ -45,7 +95,7 @@ const guias = await obtenerGuias();
           ))}
         </ol>
       ) : (
-        <p class="aviso aviso-info">Pronto publicaremos aquí las primeras guías.</p>
+        <p class="aviso aviso-info">Pronto publicaremos aquí las primeras guías libres.</p>
       )
     }
   </div>

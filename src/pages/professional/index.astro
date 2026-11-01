@@ -1,0 +1,271 @@
+---
+// Consensus Lab Professional: página de venta. La app vive en app.consensuslab.cl/professional.
+// Mientras PROFESSIONAL_ABIERTO sea false, los botones llevan a la lista de espera (formulario de novedades del pie).
+import Base from '../../plantillas/Base.astro';
+import { url } from '../../lib/rutas';
+import {
+  MESES_PRUEBA_PROFESSIONAL,
+  PRECIO_PROFESSIONAL,
+  PRECIO_PROFESSIONAL_TEXTO,
+  PROFESSIONAL_ABIERTO,
+  URL_PROFESSIONAL,
+  URL_PROFESSIONAL_REGISTRO,
+} from '../../lib/sitio';
+
+const entrar = PROFESSIONAL_ABIERTO
+  ? { texto: `Probar ${MESES_PRUEBA_PROFESSIONAL} meses gratis`, href: URL_PROFESSIONAL_REGISTRO }
+  : { texto: 'Quiero entrar primero', href: '#novedades' };
+
+const pasos = [
+  ['Se abre la ronda', 'Cada ronda abre y cierra en fechas fijas, como un control externo de laboratorio: una vez al mes o cada tres meses.'],
+  ['Decides primero', 'Ves un caso con su gráfica de control y eliges qué harías. Puedes explicarlo en una frase. No se puede cambiar después.'],
+  ['Ves la respuesta experta', 'Recién al responder aparece el razonamiento experto y cómo quedó tu decisión: experta, aceptable o no recomendada.'],
+  ['Comparas con el grupo', 'Al cierre se publica cómo decidió el resto, de forma anónima. Tu laboratorio ve su propio resultado desde 5 personas.'],
+];
+
+const incluye = [
+  'Rondas de control externo del criterio profesional, con casos de control de calidad y gráficas de Westgard.',
+  'La respuesta experta con su razonamiento, apenas respondes.',
+  'Resultados del grupo al cierre (con 30 o más respuestas) y, si tu laboratorio participa, el resultado del equipo desde 5 personas.',
+  'Un certificado de participación por ronda, con un código para que cualquiera pueda verificarlo.',
+  'Tu historial de decisiones, siempre privado.',
+];
+
+const preguntas = [
+  ['¿Me evalúan o me ponen nota?', 'No. Es un ejercicio de criterio, no un examen ni una certificación de competencias. El certificado acredita que participaste.'],
+  ['¿Alguien ve qué decidí yo?', 'No. Tu decisión es privada. Los resultados se publican siempre agrupados: ni tu laboratorio ni otras personas ven qué eligió cada quien. Por eso el desglose de un laboratorio aparece solo desde 5 personas.'],
+  ['¿Los casos son de pacientes reales?', 'No. Son casos compuestos, sin datos de pacientes ni de laboratorios identificables. En tu laboratorio siempre manda tu procedimiento aprobado.'],
+  ['¿Quién decide cuál es la respuesta experta?', 'Cada caso lo redacta un tecnólogo médico y lo revisan otras personas del área antes de publicarse. Cuando la conducta depende del procedimiento del laboratorio, el caso lo dice en su supuesto y se aceptan respuestas razonables además de la experta.'],
+  ['Si mi laboratorio usa Consensus Lab, ¿pierdo mi cuenta al cambiar de trabajo?', 'No. Tu cuenta es tuya: si tu laboratorio te invita, la aceptas y entras con la misma cuenta; si cambias de trabajo, sales del laboratorio y conservas tu perfil y tu historial. Los planes de laboratorio incluyen hasta 5 cuentas de Professional.'],
+  ['¿Qué pasa cuando terminan los 3 meses?', `Para continuar pagas la anualidad (${PRECIO_PROFESSIONAL_TEXTO} con IVA incluido), a contar desde la fecha de pago. No hay renovación automática: te avisamos antes de que venza. Si no continúas, por 30 días puedes consultar tu historial.`],
+  ['¿Cómo pago y qué recibo?', 'Por transferencia, y te emitimos boleta electrónica. Si necesitas factura para tu institución, escríbenos a contacto@consensuslab.cl.'],
+];
+---
+
+<Base
+  titulo="Consensus Lab Professional para profesionales de laboratorio"
+  seccion="professional"
+  descripcion={`Rondas de control externo de tu criterio: decides frente a gráficas de Westgard, ves la respuesta experta y comparas con el grupo. ${PRECIO_PROFESSIONAL_TEXTO} al año, ${MESES_PRUEBA_PROFESSIONAL} meses gratis.`}
+  datos={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'Product',
+      name: 'Consensus Lab Professional',
+      description: 'Rondas de control externo del criterio profesional para bioquímicos, tecnólogos médicos y químicos farmacéuticos de laboratorio clínico: casos con gráficas de control, respuesta experta, resultados anónimos del grupo y certificado de participación.',
+      brand: { '@type': 'Brand', name: 'Consensus Lab' },
+      url: new URL('professional/', Astro.site).href,
+      offers: {
+        '@type': 'Offer',
+        price: String(PRECIO_PROFESSIONAL),
+        priceCurrency: 'CLP',
+        availability: PROFESSIONAL_ABIERTO ? 'https://schema.org/InStock' : 'https://schema.org/PreOrder',
+        url: new URL('professional/', Astro.site).href,
+      },
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: preguntas.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })),
+    },
+  ]}
+>
+  <section class="portada">
+    <div class="portada-fondo" aria-hidden="true"></div>
+    <div class="contenedor">
+      <p class="antetitulo">Para profesionales de laboratorio clínico</p>
+      <h1>Pon a prueba tu criterio, ronda a ronda</h1>
+      <p class="portada-lema">
+        Cada ronda abre y cierra en fechas fijas, como un control externo: te presentamos un caso con su gráfica de control,
+        decides qué harías y recién entonces ves la respuesta experta y cómo decidió el resto, de forma anónima.
+      </p>
+      <div class="acciones-portada">
+        <a class="boton boton-dorado" href={entrar.href}>{entrar.texto}</a>
+        <a class="boton boton-secundario boton-claro" href="#muestra">Prueba un caso ahora</a>
+      </div>
+      <p class="nota-portada">
+        {PRECIO_PROFESSIONAL_TEXTO} al año, IVA incluido · {MESES_PRUEBA_PROFESSIONAL} meses gratis, sin tarjeta · sin renovación automática.
+        {!PROFESSIONAL_ABIERTO && <span> Abre pronto: deja tu correo y te avisamos primero.</span>}
+      </p>
+    </div>
+  </section>
+
+  <section class="seccion" id="como">
+    <div class="contenedor">
+      <div class="seccion-cabeza">
+        <div>
+          <p class="antetitulo">Cómo funciona</p>
+          <h2>Una ronda en cuatro pasos</h2>
+        </div>
+      </div>
+      <ol class="pasos">
+        {
+          pasos.map(([titulo, texto], i) => (
+            <li class="paso">
+              <span class="paso-num">{i + 1}</span>
+              <h3>{titulo}</h3>
+              <p>{texto}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="seccion seccion-alt" id="muestra">
+    <div class="contenedor">
+      <div class="seccion-cabeza">
+        <div>
+          <p class="antetitulo">Un caso de muestra</p>
+          <h2>¿Qué harías tú?</h2>
+        </div>
+      </div>
+      <form class="caso-muestra" id="caso-muestra" novalidate>
+        <p>
+          Control de glucosa en dos niveles. En las corridas 15 y 16, los dos niveles quedaron por sobre +2 DE, del mismo
+          lado. Hay 40 muestras de pacientes en la bandeja.
+        </p>
+        <p class="texto-suave">Supuesto de procedimiento: el plan del laboratorio usa las reglas 1-3s, 2-2s y R-4s.</p>
+        <img
+          src={url('professional/caso-muestra.svg')}
+          width="680"
+          height="578"
+          alt="Gráfica de Levey-Jennings de glucosa con dos niveles de control, 22 corridas. En las corridas 15 y 16 ambos niveles superan +2 desviaciones estándar."
+        />
+        <fieldset style="border:0;padding:0;margin:0">
+          <legend class="visually-hidden-sitio" style="position:absolute;left:-9999px">Elige tu decisión</legend>
+          <ul class="opciones-caso">
+            <li>
+              <label class="opcion-caso" data-val="experta">
+                <input type="radio" name="decision" value="A" />
+                <span><strong>A.</strong> Rechazar la corrida, detener la liberación y buscar la causa<span class="etiqueta-val experta" hidden>Respuesta experta</span></span>
+              </label>
+            </li>
+            <li>
+              <label class="opcion-caso" data-val="no-recomendada">
+                <input type="radio" name="decision" value="B" />
+                <span><strong>B.</strong> Repetir el control hasta que pase y seguir informando<span class="etiqueta-val no-recomendada" hidden>No recomendada</span></span>
+              </label>
+            </li>
+            <li>
+              <label class="opcion-caso" data-val="aceptable">
+                <input type="radio" name="decision" value="C" />
+                <span><strong>C.</strong> Recalibrar y repetir los controles antes de decidir<span class="etiqueta-val aceptable" hidden>Aceptable</span></span>
+              </label>
+            </li>
+          </ul>
+        </fieldset>
+        <button type="submit" class="boton boton-primario">Enviar mi decisión</button>
+        <p class="estado-cotizacion estado-error" id="muestra-error" role="alert" hidden>Elige una opción antes de enviar.</p>
+        <div class="resultado-caso" id="muestra-resultado" role="status" hidden>
+          <p id="muestra-tu-decision"></p>
+          <p>
+            <strong>Razonamiento experto:</strong> dos controles seguidos sobre 2 DE del mismo lado violan la regla 2-2s e indican
+            un error sistemático. Se detiene la liberación, se busca la causa (calibración, reactivo, material de control) y se
+            revisan los resultados informados desde el último control aceptable. Repetir hasta que «pase» no es una acción
+            correctiva: esconde el problema.
+          </p>
+          <p class="texto-suave">
+            Es un caso de muestra. En las rondas reales, el reparto de las decisiones del grupo se publica al cierre.
+          </p>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="contenedor">
+      <div class="seccion-cabeza">
+        <div>
+          <p class="antetitulo">Qué incluye</p>
+          <h2>Lo que obtienes con tu cuenta</h2>
+        </div>
+      </div>
+      <ul class="prosa" style="padding:0 0 0 1.2em">
+        {incluye.map((t) => <li>{t}</li>)}
+      </ul>
+      <div class="aviso aviso-info">
+        <p>
+          <strong>Lo que no es:</strong> no es un examen ni una certificación de competencias, y tu resultado individual no
+          se usa para evaluar ni sancionar a nadie. En tu laboratorio manda tu procedimiento aprobado.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion seccion-alt">
+    <div class="contenedor">
+      <div class="seccion-cabeza">
+        <div>
+          <p class="antetitulo">Precio</p>
+          <h2>Un año, un solo pago</h2>
+        </div>
+      </div>
+      <div class="precio-bloque">
+        <p class="precio-grande">{PRECIO_PROFESSIONAL_TEXTO}</p>
+        <p>al año, IVA incluido, a contar desde la fecha de pago.</p>
+        <p><strong>{MESES_PRUEBA_PROFESSIONAL} meses gratis</strong> para probar, sin tarjeta y sin compromiso.</p>
+        <p class="texto-suave">Sin renovación automática. Te emitimos boleta electrónica.</p>
+        <p style="margin-top:10px"><a class="boton boton-primario" href={entrar.href}>{entrar.texto}</a></p>
+      </div>
+      <p class="texto-suave" style="margin-top:14px">
+        ¿Tu laboratorio usa o quiere usar Consensus Lab? Cada plan de laboratorio incluye hasta 5 cuentas de Professional para
+        su equipo: <a href={url('planes/')}>mira los planes</a>.
+      </p>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="contenedor prosa">
+      <h2>Preguntas frecuentes</h2>
+      {
+        preguntas.map(([q, a]) => (
+          <>
+            <h3>{q}</h3>
+            <p>{a}</p>
+          </>
+        ))
+      }
+      <p class="texto-suave">
+        La app de Professional está en {URL_PROFESSIONAL.replace('https://', '')}. Quien dirige un laboratorio puede
+        ver <a href={url('para-laboratorios/')}>Consensus Lab para laboratorios</a>.
+      </p>
+    </div>
+  </section>
+</Base>
+
+<script>
+  // Caso de muestra: se responde primero y recién entonces aparece la respuesta experta (todo en el navegador).
+  const form = document.getElementById('caso-muestra') as HTMLFormElement | null;
+  if (form) {
+    const error = document.getElementById('muestra-error') as HTMLElement;
+    const resultado = document.getElementById('muestra-resultado') as HTMLElement;
+    const tuDecision = document.getElementById('muestra-tu-decision') as HTMLElement;
+    const frases: Record<string, string> = {
+      experta: 'Tu decisión coincide con la respuesta experta.',
+      aceptable: 'Tu decisión es aceptable, aunque no es la respuesta experta.',
+      'no-recomendada': 'Tu decisión no es recomendable: esconde el problema en vez de resolverlo.',
+    };
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const elegida = form.querySelector<HTMLInputElement>('input[name="decision"]:checked');
+      if (!elegida) {
+        error.hidden = false;
+        return;
+      }
+      error.hidden = true;
+      form.querySelectorAll<HTMLInputElement>('input[name="decision"]').forEach((i) => (i.disabled = true));
+      form.querySelectorAll<HTMLElement>('.opcion-caso').forEach((o) => {
+        o.querySelector<HTMLElement>('.etiqueta-val')!.hidden = false;
+        if (o.dataset.val === 'experta') o.classList.add('es-experta');
+      });
+      const etiqueta = elegida.closest<HTMLElement>('.opcion-caso')!;
+      etiqueta.classList.add('es-elegida');
+      tuDecision.textContent = `Elegiste la opción ${elegida.value}. ${frases[etiqueta.dataset.val ?? ''] ?? ''}`;
+      resultado.hidden = false;
+      form.querySelector<HTMLButtonElement>('button[type=submit]')!.hidden = true;
+      resultado.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      const w = window as unknown as { gtag?: (...a: unknown[]) => void };
+      if (typeof w.gtag === 'function') w.gtag('event', 'caso_muestra_respondido', { pagina: location.pathname });
+    });
+  }
+</script>

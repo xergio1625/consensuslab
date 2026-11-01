@@ -6,7 +6,7 @@ import { enSitio, obtenerOpinion } from '../../lib/datos';
 export const GET: APIRoute = async (context) => {
   const articulos = (await obtenerOpinion()).filter(enSitio);
   return rss({
-    title: 'Opinión · ConsensusLab',
+    title: 'Opinión · Consensus Lab',
     description: 'Artículos de Sergio Inostroza sobre gestión del laboratorio clínico, calidad y la profesión.',
     site: context.site!,
     customData: '<language>es-CL</language>',

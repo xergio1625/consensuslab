@@ -66,8 +66,8 @@ export const BLOQUES = [
 export const PLANES = {
   esencial: { nombre: 'Esencial', motivo: 'tu mayor brecha está en los registros del día y en que la dirección tenga evidencia de lo que se hace' },
   gestion: { nombre: 'Gestión', motivo: 'lo que sostiene tu plan (equipos, reactivos y compras) está sin ordenar' },
-  qc: { nombre: 'Consensus QC', motivo: 'tu desafío está en definir el plan de calidad y en que se aplique igual en cada turno' },
-  gestion_qc: { nombre: 'Gestión + Consensus QC', motivo: 'varias áreas necesitan ordenarse y conviene que usen la misma información' },
+  qc: { nombre: 'Consensus Lab QC', motivo: 'tu desafío está en definir el plan de calidad y en que se aplique igual en cada turno' },
+  gestion_qc: { nombre: 'Gestión + Consensus Lab QC', motivo: 'varias áreas necesitan ordenarse y conviene que usen la misma información' },
   institucional: { nombre: 'Institucional', motivo: 'tienes varias sedes o más de 15 personas registrando' },
 };
 
@@ -79,7 +79,7 @@ export function semaforo(puntaje) {
 }
 
 /**
- * Los bloques A y B (el plan y su aplicación) los resuelve Consensus QC; el C, Gestión; el D, el plan Esencial.
+ * Los bloques A y B (el plan y su aplicación) los resuelve Consensus Lab QC; el C, Gestión; el D, el plan Esencial.
  * @param {Record<string, number[]>} respuestas puntos (0 a 2) de cada pregunta, por bloque (`a` a `d`).
  * @param {{ usuarios?: string, sedes?: string }} contexto `usuarios`: «hasta5» | «6a15» | «mas15»; `sedes`: «1» | «2omas».
  */

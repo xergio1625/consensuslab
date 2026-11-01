@@ -1,5 +1,5 @@
 ---
-// Sección del software Consensus QC (absorbe el sitio consensus-qc-site).
+// Sección del software Consensus Lab QC (absorbe el sitio consensus-qc-site).
 import Base from '../../plantillas/Base.astro';
 import TarjetaHerramienta from '../../componentes/TarjetaHerramienta.astro';
 import EspacioVideo from '../../componentes/EspacioVideo.astro';
@@ -28,36 +28,36 @@ const modulos = [
 ---
 
 <Base
-  titulo="Consensus QC: software de control de calidad para laboratorio clínico"
-  seccion="consensus-qc"
+  titulo="Consensus Lab QC: software de control de calidad para laboratorio clínico"
+  seccion="qc"
   datos={{
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
-    name: 'Consensus QC',
+    name: 'Consensus Lab QC',
     description: 'Software web de control de calidad analítico para laboratorio clínico: reglas de Westgard, Levey-Jennings, sigma, plan de calidad, estudios N20, control externo y no conformidades.',
     url: new URL(Astro.url.pathname, Astro.site).href,
     applicationCategory: 'HealthApplication',
     operatingSystem: 'Web',
     inLanguage: 'es',
-    publisher: { '@type': 'Organization', name: 'ConsensusLab', url: Astro.site?.href },
+    publisher: { '@type': 'Organization', name: 'Consensus Lab', url: Astro.site?.href },
   }}
-  descripcion="Consensus QC: software de control de calidad para laboratorio clínico con Westgard, Levey-Jennings, sigma, control externo y plan de calidad."
+  descripcion="Consensus Lab QC: software de control de calidad para laboratorio clínico con Westgard, Levey-Jennings, sigma, control externo y plan de calidad."
 >
   <section class="portada">
     <div class="contenedor">
       <p class="antetitulo">Software de control de calidad</p>
-      <h1>Consensus QC: el plan de calidad en el centro de tu laboratorio</h1>
+      <h1>Consensus Lab QC: el plan de calidad en el centro de tu laboratorio</h1>
       <p class="portada-lema">
         Integra el plan de calidad con el control QC diario para detectar la causa raíz de cada desviación. Funciona en
-        el navegador, sin instalar nada. Automatiza parte de las herramientas de ConsensusLab, pero ninguna herramienta
+        el navegador, sin instalar nada. Automatiza parte de las herramientas de Consensus Lab, pero ninguna herramienta
         del sitio depende de él.
       </p>
       <div class="acciones-portada">
         <a class="boton boton-dorado" href={urlModulo('consensusqc')} target="_blank" rel="noopener">Probar 15 días gratis</a>
       </div>
       <p class="nota-portada">
-        15 días gratis con los datos reales de tu laboratorio, sin tarjeta: creas tu cuenta de ConsensusLab (te llega un
-        código al correo) y la prueba incluye Consensus QC. Si contratas, sigues en la misma cuenta.
+        15 días gratis con los datos reales de tu laboratorio, sin tarjeta: creas tu cuenta de Consensus Lab (te llega un
+        código al correo) y la prueba incluye Consensus Lab QC. Si contratas, sigues en la misma cuenta.
       </p>
     </div>
   </section>
@@ -65,9 +65,9 @@ const modulos = [
   <section class="seccion">
     <div class="contenedor">
       {VIDEOS['consensus-qc'] ? (
-        <EspacioVideo titulo="Consensus QC en funcionamiento" texto="Recorrido por la versión web de Consensus QC." {...VIDEOS['consensus-qc']} />
+        <EspacioVideo titulo="Consensus Lab QC en funcionamiento" texto="Recorrido por la versión web de Consensus Lab QC." {...VIDEOS['consensus-qc']} />
       ) : (
-        <Capturas titulo="Consensus QC en funcionamiento" grupo="qc" />
+        <Capturas titulo="Consensus Lab QC en funcionamiento" grupo="qc" />
       )}
       <h2>Qué incluye</h2>
       <p class="texto-suave">Estos son los módulos de la versión web. Todos se pueden probar en la prueba gratuita.</p>
@@ -85,7 +85,7 @@ const modulos = [
       <ul class="lista-simple lista-como">
         <li>
           <strong>En el navegador.</strong> Se usa desde el computador del laboratorio o la oficina, sin instalar programas
-          ni depender de un equipo en particular. La versión web es la versión oficial de Consensus QC.
+          ni depender de un equipo en particular. La versión web es la versión oficial de Consensus Lab QC.
         </li>
         <li>
           <strong>El plan manda.</strong> El requisito de calidad y la táctica de cada analizador definen qué reglas y
@@ -107,7 +107,7 @@ const modulos = [
     relacionadas.length > 0 && (
       <section class="seccion seccion-alt">
         <div class="contenedor">
-          <h2>Herramientas del catálogo que cubre Consensus QC</h2>
+          <h2>Herramientas del catálogo que cubre Consensus Lab QC</h2>
           <p class="texto-suave">
             {Object.entries(RELACION_CONSENSUS_QC)
               .filter(([k]) => k !== 'no')
@@ -129,7 +129,7 @@ const modulos = [
       <div class="franja-qc">
         <div>
           <h2>Pronto, incluido en la suscripción</h2>
-          <p>Consensus QC formará parte de los planes de suscripción de ConsensusLab.</p>
+          <p>Consensus Lab QC formará parte de los planes de suscripción de Consensus Lab.</p>
         </div>
         <a class="boton" href={url('planes/')}>Ver planes</a>
       </div>

@@ -29,10 +29,10 @@ export const TIPOS_RECURSO = {
 } as const;
 
 export const RELACION_CONSENSUS_QC = {
-  existente: 'Ya incluida en Consensus QC',
-  parcial: 'Consensus QC cubre una parte',
-  previsto: 'Prevista en Consensus QC',
-  no: 'No depende de Consensus QC',
+  existente: 'Ya incluida en Consensus Lab QC',
+  parcial: 'Consensus Lab QC cubre una parte',
+  previsto: 'Prevista en Consensus Lab QC',
+  no: 'No depende de Consensus Lab QC',
 } as const;
 
 /** Título para buscadores: agrega «en el laboratorio clínico» a los títulos cortos que no lo dicen. */

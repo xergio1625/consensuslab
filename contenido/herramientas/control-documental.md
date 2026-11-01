@@ -20,7 +20,7 @@ actualizado: 2026-09-28
    procedimiento de control de calidad), su título, tipo, área, responsable y cada cuánto se revisa (12 o 24 meses
    es lo habitual).
 2. **Registra la versión vigente.** Indica el número de versión, quién la aprobó y cuándo, desde qué fecha rige, un
-   resumen de los cambios y el enlace al archivo (Drive, OneDrive, SharePoint…). ConsensusLab guarda el enlace, no el
+   resumen de los cambios y el enlace al archivo (Drive, OneDrive, SharePoint…). Consensus Lab guarda el enlace, no el
    archivo: compártelo solo con tu equipo.
 3. **Pide el acuse de lectura.** Cada persona del laboratorio ve la versión nueva en «Por leer», abre el documento y
    confirma que lo leyó. Tú ves en todo momento quién falta.

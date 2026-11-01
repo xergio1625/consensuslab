@@ -5,7 +5,14 @@ import Base from '../plantillas/Base.astro';
 import Capturas from '../componentes/Capturas.astro';
 import { obtenerHerramientas } from '../lib/datos';
 import { url } from '../lib/rutas';
-import { CORREO_COTIZACION, URL_APP, URL_REGISTRO } from '../lib/sitio';
+import {
+  CORREO_COTIZACION, MESES_PRUEBA_PROFESSIONAL, PRECIO_ESSENTIAL_BASE, PRECIO_PROFESSIONAL_TEXTO, PROFESSIONAL_ABIERTO,
+  URL_APP, URL_PROFESSIONAL_REGISTRO, URL_REGISTRO,
+} from '../lib/sitio';
+
+const entrarProfessional = PROFESSIONAL_ABIERTO
+  ? { texto: `Probar ${MESES_PRUEBA_PROFESSIONAL} meses gratis`, href: URL_PROFESSIONAL_REGISTRO }
+  : { texto: 'Quiero entrar primero', href: url('professional/#novedades') };
 
 const herramientas = await obtenerHerramientas();
 const enApp = herramientas.filter((h) => h.data.estado === 'disponible' && h.data.app_modulo);
@@ -15,17 +22,17 @@ const esencial = ESENCIAL.map((m) => enApp.find((h) => h.data.app_modulo === m))
 const planes = [
   {
     id: 'esencial',
-    nombre: 'Esencial',
+    nombre: 'Essential Base',
     para: 'La base del día a día, sobre la que se apoya cualquier plan de calidad.',
     sirve: 'Para ordenar los registros que sostienen el plan: saber qué toca hoy, dejar las temperaturas con alarma, entregar el turno, tener los documentos vigentes y que la dirección reciba un informe mensual.',
     elige: 'Quieres partir por lo básico y dejar evidencia para las auditorías antes de sumar el control de calidad analítico.',
     usuarios: 'Hasta 5 usuarios',
-    precio: { normal: '$199.900', fundador: '$119.940' },
+    precio: PRECIO_ESSENTIAL_BASE,
     incluye: esencial.map((h) => h!.data.titulo),
   },
   {
     id: 'gestion',
-    nombre: 'Gestión',
+    nombre: 'Essential Completo',
     para: 'Lo que sostiene el plan: equipos, reactivos y compras.',
     sirve: 'Para que lo administrativo trabaje para lo técnico: equipos y su mantención, contingencia, derivaciones, inventario de reactivos, compras, recepción, proveedores y contratos.',
     elige: 'Tu plan de calidad ya existe y lo que falla es lo que lo rodea: equipos, insumos y compras.',
@@ -39,22 +46,23 @@ const planes = [
   },
   {
     id: 'gestion_qc',
-    nombre: 'Gestión + Consensus QC',
+    nombre: 'Consensus Lab completo',
+    subtitulo: 'Essential Completo + Consensus Lab QC',
     destacado: 'El más completo',
     para: 'El plan de calidad y lo que lo sostiene, con la misma información.',
-    sirve: 'Para decidir y ejecutar en un solo sistema: todo lo de Gestión más el plan de calidad por analito, las reglas de Westgard, el control externo, los estudios N20 y las no conformidades.',
+    sirve: 'Para decidir y ejecutar en un solo sistema: todo lo de Essential Completo más el plan de calidad por analito, las reglas de Westgard, el control externo, los estudios N20 y las no conformidades.',
     elige: 'Quieres que todo el equipo vea en un solo lugar si el plan se cumple, junto con los equipos, reactivos y compras que lo sostienen.',
     usuarios: 'Hasta 15 usuarios',
     incluye: [
-      'Todo lo del plan Gestión',
-      'Consensus QC: Westgard, Levey-Jennings y sigma',
+      'Todo lo de Essential Completo',
+      'Consensus Lab QC: Westgard, Levey-Jennings y sigma',
       'Plan de calidad, estudios N20 y control externo',
       'No conformidades con análisis de causa',
     ],
   },
   {
     id: 'qc',
-    nombre: 'Consensus QC',
+    nombre: 'Consensus Lab QC',
     para: 'Que tu plan de calidad analítico se cumpla igual en cada turno.',
     sirve: 'Para llevar el plan al mesón: plan de calidad por analito, reglas de Westgard, gráficos de Levey-Jennings, desempeño y sigma, control externo y no conformidades.',
     elige: 'Quieres definir o ajustar tu plan de calidad y que todo el equipo lo aplique igual.',
@@ -68,43 +76,88 @@ const planes = [
     sirve: 'Para redes y laboratorios con varias sedes: una licencia por sede y condiciones de compra a convenir.',
     elige: 'Tienes más de un laboratorio o necesitas más de 15 usuarios.',
     usuarios: 'Usuarios y sedes a convenir',
-    incluye: ['Todos los módulos y Consensus QC', 'Una licencia por sede', 'Condiciones y forma de compra a convenir'],
+    incluye: ['Todos los módulos y Consensus Lab QC', 'Una licencia por sede', 'Condiciones y forma de compra a convenir'],
   },
 ];
 ---
 
 <Base
-  titulo="Planes para laboratorios clínicos"
+  titulo="Planes y precios"
   seccion="planes"
-  descripcion="Planes de ConsensusLab para laboratorios clínicos: Esencial, Gestión, Gestión + Consensus QC e Institucional. Preventa fundadores con 40 % de descuento y prueba gratis de 15 días con tus datos reales."
+  descripcion="Planes de Consensus Lab: Professional para profesionales de laboratorio y, para laboratorios clínicos, Essential Base, Essential Completo y Consensus Lab QC. Prueba gratis."
 >
   <section class="portada">
     <div class="contenedor">
-      <p class="antetitulo">Preventa fundadores</p>
-      <h1>Tu plan de calidad, aplicado igual en cada turno</h1>
+      <p class="antetitulo">Planes</p>
+      <h1>Un plan para ti y un plan para tu laboratorio</h1>
       <p class="portada-lema">
-        Elige según la parte de tu plan de calidad que quieras resolver. <strong>40 % de descuento en el primer año</strong> para los laboratorios que paguen por adelantado antes del{' '}
-        <strong>1 de diciembre de 2026</strong>, fecha en que comienza el servicio. Pruébalo 15 días con los datos de tu laboratorio, sin tarjeta, y si prefieres una cotización la respondemos en un
-        día hábil.
+        <strong>Consensus Lab Professional</strong> es para ti, como profesional de laboratorio. <strong>Essential</strong> y{' '}
+        <strong>Consensus Lab QC</strong> son para tu laboratorio, y cada plan de laboratorio incluye hasta 5 cuentas de
+        Professional para tu equipo.
       </p>
       <div class="acciones-portada">
-        <a class="boton boton-dorado" href={URL_REGISTRO}>Probar gratis 15 días</a>
-        <a class="boton boton-secundario boton-claro" href="#cotizar" data-plan="gestion_qc">Pedir cotización</a>
+        <a class="boton boton-dorado" href="#professional">Para ti: Professional</a>
+        <a class="boton boton-secundario boton-claro" href="#laboratorios">Para mi laboratorio</a>
       </div>
-      <p class="nota-portada">Precios por laboratorio, anuales, con IVA incluido. Factura electrónica. No vendemos controles, analizadores, equipos ni reactivos: solo gestión.</p>
+      <p class="nota-portada">Precios anuales con IVA incluido. No vendemos controles, analizadores, equipos ni reactivos: solo gestión.</p>
     </div>
   </section>
 
-  <section class="seccion">
+  <section class="seccion" id="professional">
     <div class="contenedor">
-      <h2>Planes</h2>
+      <div class="seccion-cabeza">
+        <div>
+          <p class="antetitulo">Para profesionales de laboratorio</p>
+          <h2>Consensus Lab Professional</h2>
+        </div>
+        <a href={url('professional/')}>Cómo funciona</a>
+      </div>
+      <div class="planes">
+        <article class="plan plan-destacado" id="plan-professional">
+          <span class="plan-cinta">{MESES_PRUEBA_PROFESSIONAL} meses gratis</span>
+          <h3>Professional</h3>
+          <p class="plan-para">Pon a prueba tu criterio en rondas de control externo.</p>
+          <p class="plan-sirve">
+            Casos de control de calidad con su gráfica, respuesta experta, comparación anónima con el grupo y certificado de
+            participación. Tu cuenta es tuya y te acompaña si cambias de trabajo.
+          </p>
+          <p class="plan-precio">
+            <span class="plan-precio-fundador">{PRECIO_PROFESSIONAL_TEXTO}</span>
+            <span class="plan-precio-nota">al año, IVA incluido · sin renovación automática</span>
+          </p>
+          <ul class="plan-incluye">
+            <li>Rondas con fechas fijas y casos de Westgard</li>
+            <li>Respuesta experta apenas respondes</li>
+            <li>Resultados del grupo al cierre, siempre anónimos</li>
+            <li>Certificado de participación verificable</li>
+          </ul>
+          <a class="boton boton-primario boton-ancho" href={entrarProfessional.href}>{entrarProfessional.texto}</a>
+          <a class="boton boton-secundario boton-ancho" href={url('professional/')}>Ver Professional</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion seccion-alt" id="laboratorios">
+    <div class="contenedor">
+      <p class="antetitulo">Preventa fundadores</p>
+      <h2>Para tu laboratorio</h2>
+      <p class="texto-suave">
+        <strong>40 % de descuento en el primer año</strong> para los laboratorios que paguen por adelantado antes del
+        <strong>1 de diciembre de 2026</strong>, fecha en que comienza el servicio. Pruébalo 15 días con los datos de tu
+        laboratorio, sin tarjeta, y si prefieres una cotización la respondemos en un día hábil.
+      </p>
+      <p>
+        <a class="boton boton-primario" href={URL_REGISTRO}>Probar gratis 15 días</a>
+        <a class="boton boton-secundario" href="#cotizar" data-plan="gestion_qc">Pedir cotización</a>
+      </p>
       <div class="guia-planes">
         <h3>¿Qué quieres resolver primero?</h3>
         <ul>
-          <li><strong>Que tu plan de calidad se aplique igual en cada turno:</strong> <a href="#plan-qc">Consensus QC</a>.</li>
-          <li><strong>Ordenar equipos, reactivos y compras que sostienen el plan:</strong> <a href="#plan-gestion">Gestión</a>.</li>
-          <li><strong>Las dos cosas, con la misma información:</strong> <a href="#plan-gestion_qc">Gestión + Consensus QC</a>.</li>
-          <li><strong>Partir por los registros básicos del día:</strong> <a href="#plan-esencial">Esencial</a>.</li>
+          <li><strong>Que tu plan de calidad se aplique igual en cada turno:</strong> <a href="#plan-qc">Consensus Lab QC</a>.</li>
+          <li><strong>Ordenar equipos, reactivos y compras que sostienen el plan:</strong> <a href="#plan-gestion">Essential Completo</a>.</li>
+          <li><strong>Las dos cosas, con la misma información:</strong> <a href="#plan-gestion_qc">Consensus Lab completo</a>.</li>
+          <li><strong>Partir por los registros básicos del día:</strong> <a href="#plan-esencial">Essential Base</a>.</li>
           <li><strong>Varias sedes o una red:</strong> <a href="#plan-institucional">Institucional</a>.</li>
         </ul>
         <p class="texto-suave">
@@ -119,6 +172,7 @@ const planes = [
             <article class={'plan' + (p.destacado ? ' plan-destacado' : '')} id={`plan-${p.id}`}>
               {p.destacado && <span class="plan-cinta">{p.destacado}</span>}
               <h3>{p.nombre}</h3>
+              {p.subtitulo && <p class="texto-suave">{p.subtitulo}</p>}
               <p class="plan-para">{p.para}</p>
               <p class="plan-usuarios">{p.usuarios}</p>
               <p class="plan-sirve">{p.sirve}</p>
@@ -140,7 +194,7 @@ const planes = [
         }
       </div>
       <p class="texto-suave">
-        Todos los planes incluyen registros trazables (nada se borra: las correcciones quedan con nombre y motivo),
+        Todos los planes de laboratorio incluyen hasta 5 cuentas de Consensus Lab Professional para tu equipo, registros trazables (nada se borra: las correcciones quedan con nombre y motivo),
         actualizaciones, soporte por correo y una copia de tus registros cuando la pidas. La app no admite datos de
         pacientes. Prueba cualquier herramienta <strong>15 días gratis</strong> con los datos de tu laboratorio:
         <a href={URL_REGISTRO}>crea tu cuenta</a> y empieza.
@@ -198,7 +252,7 @@ const planes = [
       <h2>Pide tu cotización</h2>
       <p class="texto-suave">
         Solo datos de contacto del laboratorio: nunca datos de pacientes. Si prefieres escribirnos, envía tu consulta a
-        <a href={`mailto:${CORREO_COTIZACION}?subject=${encodeURIComponent('Cotización ConsensusLab')}`}>{CORREO_COTIZACION}</a>.
+        <a href={`mailto:${CORREO_COTIZACION}?subject=${encodeURIComponent('Cotización Consensus Lab')}`}>{CORREO_COTIZACION}</a>.
       </p>
       <form class="form-cotizacion" id="form-cotizacion" novalidate data-url={URL_APP} data-correo={CORREO_COTIZACION}>
         <div class="calc-campos">
@@ -233,7 +287,7 @@ const planes = [
           </details>
         </div>
         <label class="casilla-sitio"><input type="checkbox" name="piloto" id="cotizar-piloto" /> <span>Quiero extender mi prueba a 30 días con los datos de mi laboratorio mientras evalúo la cotización.</span></label>
-        <label class="casilla-sitio"><input type="checkbox" name="marketing" /> <span>Acepto recibir novedades y guías de ConsensusLab por correo (opcional; puedes darte de baja cuando quieras).</span></label>
+        <label class="casilla-sitio"><input type="checkbox" name="marketing" /> <span>Acepto recibir novedades y guías de Consensus Lab por correo (opcional; puedes darte de baja cuando quieras).</span></label>
         <div class="campo-trampa" aria-hidden="true">
           <label>Sitio web <input name="sitio_web" tabindex="-1" autocomplete="off" /></label>
         </div>
@@ -275,6 +329,13 @@ const planes = [
         datos de pacientes ni de personas, y solo para quienes den su consentimiento. Mientras tanto, los avisos llegan por
         correo.
       </p>
+      <h3>¿Puedo usar mi cuenta personal de Professional en el laboratorio?</h3>
+      <p>
+        Sí. Tu cuenta es tuya: si tu laboratorio usa Consensus Lab y te invita, la aceptas y entras con la misma cuenta; tus
+        resultados de las rondas siguen siendo privados. Cada plan de laboratorio incluye hasta 5 cuentas de Professional.
+      </p>
+      <h3>¿Qué pasa con mi cuenta si cambio de trabajo?</h3>
+      <p>Sales del laboratorio y conservas tu cuenta, tu perfil y tu historial. Si tu acceso venía del laboratorio, continúas con tu prueba o con tu suscripción propia.</p>
       <h3>¿Puedo seguir usando lo gratuito?</h3>
       <p>
         Sí. Las fichas, guías, prompts y calculadoras siguen siendo gratuitas, y cada herramienta de la app se puede probar 15 días gratis.

@@ -15,10 +15,10 @@ export interface VideoSitio {
   bucle?: boolean;
 }
 
-export const VIDEOS: Record<'portada' | 'consensus-qc' | 'planes', VideoSitio | null> = {
-  // Clip corto de Consensus QC (reemplaza a la maqueta ilustrada de la portada).
+export const VIDEOS: Record<'portada' | 'qc' | 'planes', VideoSitio | null> = {
+  // Clip corto de Consensus Lab QC (reemplaza a la maqueta ilustrada de la portada).
   portada: null,
-  // Demostración larga en la página de Consensus QC.
+  // Demostración larga en la página de Consensus Lab QC.
   'consensus-qc': null,
   // Presentación o tutorial en la página de planes.
   planes: null,

@@ -385,6 +385,16 @@ export const SEO_CALCULADORAS: Partial<Record<IdCalculadora, { titulo: string; d
     descripcion:
       'Calcula la temperatura cinética media (MKT) de un refrigerador o una bodega con tu registro de temperaturas. Gratis, en tu navegador y con la fórmula explicada.',
   },
+  'tiempos-de-respuesta-tat': {
+    titulo: 'Tiempos de respuesta (TAT) del laboratorio: mediana y P90',
+    descripcion:
+      'Calcula la mediana, el percentil 90 y el porcentaje dentro de tu meta de los tiempos de respuesta (TAT) del laboratorio. Gratis: pegas los minutos y nada sale de tu navegador.',
+  },
+  'centrifuga-g-rpm': {
+    titulo: 'Convertir rpm a g (y g a rpm) de una centrífuga: calculadora',
+    descripcion:
+      'Convierte rpm a fuerza centrífuga relativa (× g) y al revés según el radio del rotor, con las rpm para las fuerzas más usadas. Gratis y en tu navegador.',
+  },
   'delta-check': {
     titulo: 'Delta check: cómo calcular el cambio entre dos resultados',
     descripcion:

@@ -157,9 +157,9 @@ Se optó por una evaluación exclusiva: tratarlo como lo que era, un biuret modi
 
 Para ordenar el resto hay fichas de [control de calidad interno y externo](/herramientas/control-de-calidad-interno-y-externo/) y de [inventario y lotes de reactivos](/herramientas/inventario-y-lotes-de-reactivos/).
 
-## Y ahí entra Consensus QC
+## Y ahí entra Consensus Lab QC
 
-Esta historia es parte de la razón por la que armé [Consensus QC](/consensus-qc/), el software de control de calidad analítico de ConsensusLab. Un cambio de reactivo o de lote tiene que quedar a la vista, con su fecha, sus controles y su comparación, no en la memoria de quien estaba esa semana. Y el desempeño mes a mes por analizador, con su sesgo, su CV, su error total frente al permitido y su sigma, muestra qué parte del presupuesto de error se está comiendo cada cosa.
+Esta historia es parte de la razón por la que armé [Consensus Lab QC](/qc/), el software de control de calidad analítico de Consensus Lab. Un cambio de reactivo o de lote tiene que quedar a la vista, con su fecha, sus controles y su comparación, no en la memoria de quien estaba esa semana. Y el desempeño mes a mes por analizador, con su sesgo, su CV, su error total frente al permitido y su sigma, muestra qué parte del presupuesto de error se está comiendo cada cosa.
 
 Así la próxima vez que un control dé 5,3 donde siempre daba 4,8, la conversación empieza con datos a la vista y no con "es esperable, es un reactivo nuevo".
 

@@ -1,4 +1,4 @@
-// Lista pública de artículos de opinión (sin enlaces de amigo). La app ConsensusLab la lee para mostrar los
+// Lista pública de artículos de opinión (sin enlaces de amigo). La app Consensus Lab la lee para mostrar los
 // artículos a sus usuarios; a los suscriptores les agrega el enlace de amigo guardado en la planilla privada.
 import type { APIRoute } from 'astro';
 import { enSitio, obtenerOpinion } from '../../lib/datos';

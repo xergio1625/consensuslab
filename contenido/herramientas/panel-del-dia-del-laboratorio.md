@@ -51,7 +51,7 @@ actualizado: 2026-10-05
 - **Documentos:** rojo si hay revisiones vencidas; amarillo si hay revisiones próximas o documentos que debes leer.
 - **Vencimientos:** rojo si hay contratos, licencias u otros elementos vencidos; amarillo si alguno está por vencer.
 
-Los controles de calidad y las corridas rechazadas se revisan en Consensus QC, en su cumplimiento diario.
+Los controles de calidad y las corridas rechazadas se revisan en Consensus Lab QC, en su cumplimiento diario.
 
 ## Buenas prácticas
 

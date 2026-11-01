@@ -76,10 +76,10 @@ Por eso me llama la atención el versículo de Pablo en el que andamos «por fe,
 
 Y hay otro consejo de Pablo que viene bien a un hermano agotado: olvidar lo que queda atrás y extenderse hacia lo que está adelante (Filipenses 3:13-14). Traducido al laboratorio: aprender de lo que pasó sin quedarse pegado en ello, y seguir caminando con la mirada puesta en lo que importa.
 
-## Y ahí entra Consensus QC
+## Y ahí entra Consensus Lab QC
 
-Las ayudas que dejo en este sitio (las calculadoras, las fichas, Consensus QC) no son más que una mirada crítica a todo esto. Intentan dar apoyo técnico y administrativo para que las decisiones se piensen en el fin último, no en el próximo informe.
+Las ayudas que dejo en este sitio (las calculadoras, las fichas, Consensus Lab QC) no son más que una mirada crítica a todo esto. Intentan dar apoyo técnico y administrativo para que las decisiones se piensen en el fin último, no en el próximo informe.
 
-Por eso armé [Consensus QC](/consensus-qc/): para que el N20 por lote, las reglas de Westgard evaluadas al instante, el Levey-Jennings, las no conformidades con nombre y motivo y el desempeño mes a mes (CV, sesgo, error total frente al permitido y sigma) dejen de ocupar la cabeza. Así la mirada queda libre para lo que importa. Un software no te convierte en el tercer hermano ni te salva de ser como él. Pero puede cargar con lo que se puede automatizar, para que a ti te quede lo que no: levantar la vista y acordarte de para quién trabajas.
+Por eso armé [Consensus Lab QC](/qc/): para que el N20 por lote, las reglas de Westgard evaluadas al instante, el Levey-Jennings, las no conformidades con nombre y motivo y el desempeño mes a mes (CV, sesgo, error total frente al permitido y sigma) dejen de ocupar la cabeza. Así la mirada queda libre para lo que importa. Un software no te convierte en el tercer hermano ni te salva de ser como él. Pero puede cargar con lo que se puede automatizar, para que a ti te quede lo que no: levantar la vista y acordarte de para quién trabajas.
 
 Esa parte nadie te la programa. Es solo tuya.

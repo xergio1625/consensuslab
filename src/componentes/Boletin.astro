@@ -2,17 +2,26 @@
 // Suscripción a las novedades (análisis gerencial y clínico, herramientas y calculadoras nuevas).
 // Va sobre el pie de todas las páginas. Envía a la app (acción «suscripcion»); la app guarda la suscripción y la agrega a la lista «Novedades» de Brevo, desde donde salen los correos.
 import { url } from '../lib/rutas';
-import { CORREO_CONTACTO, URL_APP } from '../lib/sitio';
+import { CORREO_CONTACTO, PROFESSIONAL_ABIERTO, URL_APP } from '../lib/sitio';
+
+// En Professional (mientras no abre), Accreditation y Guías, el formulario es la lista de espera de ese producto.
+const ruta = Astro.url.pathname;
+const lista = ruta.startsWith('/accreditation/')
+  ? { antetitulo: 'Lista de espera', titulo: 'Entérate primero de Consensus Lab Accreditation', texto: 'Te escribimos cuando haya novedades de la herramienta para preparar la acreditación. Sin costo ni compromiso, y sin compartir tu correo.', boton: 'Sumarme a la lista' }
+  : ruta.startsWith('/professional/') && !PROFESSIONAL_ABIERTO
+    ? { antetitulo: 'Lista de espera', titulo: 'Entra primero a Consensus Lab Professional', texto: 'Te avisamos el día que abra, con tus 3 meses gratis. Sin costo ni compromiso, y sin compartir tu correo.', boton: 'Quiero entrar primero' }
+    : ruta.startsWith('/guias/')
+      ? { antetitulo: 'Avísame', titulo: 'Entérate cuando una guía esté disponible', texto: 'Te escribimos cuando una guía de pago esté lista, o cuando haya una nueva. Sin relleno y sin compartir tu correo.', boton: 'Avisarme' }
+      : null;
 ---
 
 <section class="boletin" id="novedades" aria-labelledby="boletin-titulo">
   <div class="contenedor boletin-cuerpo">
     <div class="boletin-texto">
-      <p class="antetitulo">Novedades</p>
-      <h2 id="boletin-titulo">Un análisis nuevo, cuando lo hay</h2>
+      <p class="antetitulo">{lista ? lista.antetitulo : 'Novedades'}</p>
+      <h2 id="boletin-titulo">{lista ? lista.titulo : 'Un análisis nuevo, cuando lo hay'}</h2>
       <p>
-        Artículos de gestión y clínica del laboratorio, y las calculadoras y herramientas nuevas. Sin relleno y sin
-        compartir tu correo.
+        {lista ? lista.texto : 'Artículos de gestión y clínica del laboratorio, y las calculadoras y herramientas nuevas. Sin relleno y sin compartir tu correo.'}
       </p>
     </div>
     <form class="form-boletin" novalidate data-url={URL_APP} data-correo={CORREO_CONTACTO}>
@@ -38,11 +47,11 @@ import { CORREO_CONTACTO, URL_APP } from '../lib/sitio';
       <label class="casilla-sitio">
         <input type="checkbox" name="acepta" />
         <span>
-          Acepto recibir por correo las novedades de ConsensusLab. Puedo darme de baja cuando quiera.{' '}
+          Acepto recibir por correo las novedades de Consensus Lab. Puedo darme de baja cuando quiera.{' '}
           <a href={url('privacidad/')}>Privacidad</a>
         </span>
       </label>
-      <button type="submit" class="boton boton-primario">Suscribirme</button>
+      <button type="submit" class="boton boton-primario">{lista ? lista.boton : 'Suscribirme'}</button>
       <p class="estado-cotizacion" role="status" hidden></p>
     </form>
   </div>

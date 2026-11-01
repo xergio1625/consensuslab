@@ -3,7 +3,7 @@
 // Con la lista vacía el carrusel no se muestra.
 
 export interface Captura {
-  grupo: 'gestion' | 'qc'; // la página de Consensus QC muestra solo las de «qc»; Planes muestra todas
+  grupo: 'gestion' | 'qc'; // la página de Consensus Lab QC muestra solo las de «qc»; Planes muestra todas
   archivo: string; // ruta dentro de public/, p. ej. 'capturas/panel-del-dia.webp'
   titulo: string;
   texto: string;

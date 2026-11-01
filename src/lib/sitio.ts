@@ -7,10 +7,31 @@
  */
 export const INDEXAR = true;
 
-/** App ConsensusLab (Google Cloud, Santiago; Consensus QC en /qc/). Las fichas con `app_modulo` enlazan aquí. */
+/** App Consensus Lab (Google Cloud, Santiago; Consensus Lab QC en /qc/). Las fichas con `app_modulo` enlazan aquí. */
 export const URL_APP = 'https://app.consensuslab.cl/';
 // Página de «Crear cuenta» (prueba gratuita) de la app: los botones «Probar gratis» van aquí; «Ingresar» va a URL_APP.
 export const URL_REGISTRO = URL_APP + '?registro=1';
+
+/** Consensus Lab Professional: la app vive en app.consensuslab.cl/professional; la página de venta, en /professional/ de este sitio. */
+export const URL_PROFESSIONAL = URL_APP + 'professional';
+export const URL_PROFESSIONAL_REGISTRO = URL_PROFESSIONAL + '?registro=1';
+/**
+ * `false` hasta aplicar las migraciones de la base y desplegar el servidor con Professional: mientras tanto los botones
+ * «Probar gratis» se cambian por «Quiero entrar primero» (lista de espera, el formulario de novedades del pie).
+ * Pasar a `true` el día que abra, y publicar.
+ */
+export const PROFESSIONAL_ABIERTO = false;
+/** Anualidad de Professional en pesos chilenos, IVA incluido (decisión del 31-10-2026). */
+export const PRECIO_PROFESSIONAL = 23900;
+export const PRECIO_PROFESSIONAL_TEXTO = '$' + PRECIO_PROFESSIONAL.toLocaleString('es-CL');
+/** Meses gratis al registrarse en Professional. */
+export const MESES_PRUEBA_PROFESSIONAL = 3;
+/**
+ * Guías de pago (todos los derechos reservados): venta manual, solo por transferencia y por correo, sin botón de pago.
+ * `false` mientras las guías no estén revisadas técnica y legalmente: las fichas se muestran «Disponibles pronto» y piden
+ * dejar el correo. Con `true` aparece «Pedir esta guía» y se envían los datos de transferencia por correo.
+ */
+export const GUIAS_A_LA_VENTA = false;
 
 /** Enlace que abre la app directamente en un módulo (tras ingresar con el código). */
 export function urlModulo(modulo: string): string {
@@ -53,3 +74,6 @@ export const VIGENCIA_LEGAL = '11 de octubre de 2026';
 
 /** Fecha de la versión vigente de la política de privacidad (Google Analytics con consentimiento, Cloudflare Web Analytics sin cookies, formulario de cotización, suscripción a novedades y avisos por WhatsApp futuros). */
 export const VIGENCIA_PRIVACIDAD = '27 de octubre de 2026';
+
+/** Essential Base: único plan de laboratorio con precio público (los demás se cotizan). Anual, IVA incluido. */
+export const PRECIO_ESSENTIAL_BASE = { normal: '$199.900', fundador: '$119.940' };

@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════
-   ConsensusLab — estilos globales
+   Consensus Lab — estilos globales
    Paleta de la marca Consensus (burdeo + dorado), con modo claro y oscuro.
    Los colores se definen una sola vez como variables (tokens).
    ═══════════════════════════════════════════════════════════════ */
@@ -389,7 +389,7 @@ img, svg { max-width: 100%; }
   background: var(--c-info-fondo); color: var(--c-info); font-size: .7rem; font-weight: 700;
 }
 
-/* ── Consensus QC y bloques de texto ──────────────────────────── */
+/* ── Consensus Lab QC y bloques de texto ──────────────────────────── */
 .franja-qc {
   background: linear-gradient(150deg, var(--marca-burdeo) 0%, var(--marca-burdeo-o) 100%);
   color: #fff; border-radius: var(--radio); padding: 28px;
@@ -825,7 +825,7 @@ img, svg { max-width: 100%; }
 
 /* Precio del plan Esencial */
 .plan-precio { margin: 0; display: grid; gap: 2px; }
-.plan-precio-fundador { font-size: 1.8rem; font-weight: 800; color: var(--marca-burdeo); line-height: 1.1; }
+.plan-precio-fundador { font-size: 1.8rem; font-weight: 800; color: var(--c-enlace); line-height: 1.1; }
 .plan-precio-nota { font-size: .85rem; color: var(--c-texto-suave); }
 
 /* Guías: bloque de atribución al final de la guía */
@@ -899,13 +899,15 @@ img, svg { max-width: 100%; }
   .nav-sublista { display: contents; }
 }
 @media (max-width: 1080px) {
-  .nav-grupo { display: block; order: 3; }
-  .nav-consensus-qc { order: 1; }
-  .nav-planes { order: 2; }
-  .nav-acerca { order: 4; }
-  .nav-cuenta { order: 5; margin-top: 8px; }
+  .nav-professional { order: 1; }
+  .nav-laboratorios { order: 2; }
+  .nav-guias { order: 3; }
+  .nav-planes { order: 4; }
+  .nav-grupo { display: block; order: 5; }
+  .nav-acerca { order: 6; }
+  .nav-cuenta { order: 7; margin-top: 8px; }
   .nav-cuenta a { border: 1px solid rgba(255, 255, 255, .25); text-align: center; }
-  .nav-tema { order: 6; }
+  .nav-tema { order: 8; }
   .nav-grupo-boton {
     display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 12px;
     background: none; border: 0; color: #F1E3E9; font: inherit; font-weight: 550; cursor: pointer; border-radius: var(--radio-s);
@@ -1061,3 +1063,60 @@ img, svg { max-width: 100%; }
 .problemas-cierre { max-width: 760px; font-size: 1.05rem; }
 .independencia { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px; }
 .independencia > div { flex: 1 1 420px; max-width: 760px; }
+
+/* ── Dos puertas, Professional, Accreditation y guías de pago ─────────────────────────────── */
+.puertas { display: grid; gap: 18px; margin-top: 8px; }
+@media (min-width: 860px) { .puertas { grid-template-columns: 1fr 1fr; } }
+.puerta {
+  position: relative; display: flex; flex-direction: column; gap: 10px; padding: 26px; border-radius: var(--radio);
+  background: var(--c-panel); color: var(--c-texto); border: 1px solid var(--c-borde); box-shadow: var(--sombra);
+}
+.puerta-destacada { border-color: var(--marca-dorado); box-shadow: 0 0 0 2px var(--marca-dorado), var(--sombra-h); }
+.puerta .antetitulo { margin: 0; }
+.puerta h2 { margin: 0; font-size: 1.4rem; line-height: 1.2; }
+.puerta p { margin: 0; }
+.puerta ul { margin: 0; padding-left: 1.15em; display: grid; gap: 4px; }
+.puerta-precio { font-weight: 650; color: var(--c-acento-texto); }
+.puerta .acciones-portada { margin-top: auto; padding-top: 8px; }
+.puerta .boton-secundario { color: var(--c-enlace); border-color: var(--c-borde); }
+
+.precio-bloque { display: grid; gap: 4px; padding: 20px 22px; border: 1px solid var(--marca-dorado); border-radius: var(--radio); background: var(--c-panel); max-width: 460px; }
+.precio-grande { font-size: 2.1rem; font-weight: 700; line-height: 1.1; color: var(--c-texto); }
+.precio-bloque p { margin: 0; }
+
+.caso-muestra { border: 1px solid var(--c-borde); border-radius: var(--radio); background: var(--c-panel); padding: 22px; box-shadow: var(--sombra); }
+.caso-muestra h3 { margin-top: 0; }
+.caso-muestra img { display: block; max-width: 100%; height: auto; border-radius: var(--radio-s); border: 1px solid var(--c-borde); background: #fff; margin: 12px 0; }
+.opciones-caso { list-style: none; padding: 0; margin: 12px 0; display: grid; gap: 8px; }
+.opcion-caso {
+  display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border: 1px solid var(--c-borde);
+  border-radius: var(--radio-s); cursor: pointer; font-weight: 400; margin: 0;
+}
+.opcion-caso input { margin-top: 5px; flex: none; accent-color: var(--marca-burdeo); }
+.opcion-caso.es-experta { border-color: var(--c-ok); background: var(--c-ok-fondo); }
+.opcion-caso.es-elegida { box-shadow: inset 0 0 0 2px var(--marca-burdeo); }
+.etiqueta-val { display: inline-block; margin-left: 8px; padding: 1px 9px; border-radius: 999px; font-size: .78rem; font-weight: 650; background: var(--c-panel-alt); }
+.etiqueta-val.experta { background: var(--c-ok-fondo); color: var(--c-ok); }
+.etiqueta-val.aceptable { background: var(--c-prep-fondo); color: var(--c-prep); }
+.etiqueta-val.no-recomendada { background: var(--c-error-fondo); color: var(--c-error); }
+.resultado-caso { margin-top: 14px; padding: 14px 16px; border-radius: var(--radio-s); background: var(--c-info-fondo); }
+.resultado-caso[hidden] { display: none; }
+
+.lista-obligatorias { list-style: none; padding: 0; margin: 14px 0 0; display: grid; gap: 12px; }
+@media (min-width: 760px) { .lista-obligatorias { grid-template-columns: 1fr 1fr; } }
+.lista-obligatorias li { display: grid; gap: 4px; padding: 14px 16px; border: 1px solid var(--c-borde); border-radius: var(--radio); background: var(--c-panel); }
+.lista-obligatorias .clave { font-weight: 700; color: var(--c-acento-texto); letter-spacing: .03em; }
+.lista-obligatorias p { margin: 0; }
+
+.guias-pago { display: grid; gap: 16px; margin-top: 16px; }
+@media (min-width: 860px) { .guias-pago { grid-template-columns: 1fr 1fr; } }
+.guia-pago { display: flex; flex-direction: column; gap: 10px; padding: 22px; border: 1px solid var(--c-borde); border-radius: var(--radio); background: var(--c-panel); box-shadow: var(--sombra); }
+.guia-pago h3 { margin: 0; }
+.guia-pago p { margin: 0; }
+.guia-pago ul { margin: 0; padding-left: 1.15em; display: grid; gap: 3px; }
+.guia-pago .acciones-portada { margin-top: auto; padding-top: 6px; }
+.guia-estado { align-self: flex-start; padding: 2px 10px; border-radius: 999px; font-size: .78rem; font-weight: 650; background: var(--c-prep-fondo); color: var(--c-prep); }
+.guia-estado.lista { background: var(--c-ok-fondo); color: var(--c-ok); }
+.niveles-essential { display: grid; gap: 16px; margin-top: 16px; }
+@media (min-width: 860px) { .niveles-essential { grid-template-columns: 1fr 1fr; } }
+.franja-qc .antetitulo { color: var(--marca-dorado); }

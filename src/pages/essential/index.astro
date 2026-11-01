@@ -1,0 +1,133 @@
+---
+// Consensus Lab Essential: las herramientas de gestión del laboratorio como producto, con dos niveles (Base y Completo).
+// Los precios y los planes completos están en /planes/; aquí se explica qué es y qué incluye cada nivel.
+import Base from '../../plantillas/Base.astro';
+import { obtenerCatalogo, obtenerHerramientas } from '../../lib/datos';
+import { url } from '../../lib/rutas';
+import { PRECIO_ESSENTIAL_BASE, URL_REGISTRO } from '../../lib/sitio';
+
+const catalogo = await obtenerCatalogo();
+const herramientas = await obtenerHerramientas();
+const enApp = herramientas.filter((h) => h.data.estado === 'disponible' && h.data.app_modulo);
+const BASE = ['panel', 'temperaturas', 'turno', 'documentos', 'vencimientos', 'informes'];
+const incluyeBase = BASE.map((m) => enApp.find((h) => h.data.app_modulo === m)).filter(Boolean).map((h) => h!.data.titulo);
+---
+
+<Base
+  titulo="Consensus Lab Essential: gestión del laboratorio clínico"
+  seccion="essential"
+  descripcion="Consensus Lab Essential: temperaturas, turnos, documentos, equipos, insumos, compras y personal del laboratorio en un solo lugar, con registros trazables. Nivel Base y nivel Completo."
+>
+  <section class="portada">
+    <div class="portada-fondo" aria-hidden="true"></div>
+    <div class="contenedor">
+      <p class="antetitulo">Consensus Lab Essential</p>
+      <h1>La gestión del laboratorio, ordenada y con evidencia</h1>
+      <p class="portada-lema">
+        Temperaturas, turnos, documentos, vencimientos, equipos, insumos, compras y personal en un solo lugar, para que lo
+        administrativo trabaje para lo técnico. Cada registro queda con su autor y su fecha, y nada se borra.
+      </p>
+      <div class="acciones-portada">
+        <a class="boton boton-dorado" href={URL_REGISTRO}>Probar 15 días gratis</a>
+        <a class="boton boton-secundario boton-claro" href={url('planes/')}>Ver planes</a>
+      </div>
+      <p class="nota-portada">
+        Con datos reales de tu laboratorio, sin tarjeta. La app no admite datos de pacientes. Es independiente de proveedores:
+        no vendemos controles, analizadores, equipos ni reactivos.
+      </p>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="contenedor">
+      <div class="seccion-cabeza">
+        <div>
+          <p class="antetitulo">Dos niveles</p>
+          <h2>Elige hasta dónde ordenar</h2>
+        </div>
+        <a href={url('planes/')}>Planes y cotización</a>
+      </div>
+      <div class="niveles-essential">
+        <article class="plan">
+          <h3>Essential Base</h3>
+          <p class="plan-para">La base del día a día, sobre la que se apoya cualquier plan de calidad.</p>
+          <p class="plan-usuarios">Hasta 5 usuarios</p>
+          <p class="plan-sirve">
+            Para ordenar los registros que sostienen el plan: saber qué toca hoy, dejar las temperaturas con alarma, entregar el
+            turno, tener los documentos vigentes y que la dirección reciba un informe mensual.
+          </p>
+          <ul class="plan-incluye">
+            {incluyeBase.map((t) => <li>{t}</li>)}
+          </ul>
+          <p class="plan-precio">
+            <span class="plan-precio-fundador">{PRECIO_ESSENTIAL_BASE.fundador}</span>
+            <span class="plan-precio-nota">al año con IVA incluido, precio fundador (40 % de descuento) para quien pague antes del 1 de diciembre de 2026</span>
+            <span class="plan-precio-nota">Luego {PRECIO_ESSENTIAL_BASE.normal} al año con IVA incluido</span>
+          </p>
+        </article>
+        <article class="plan plan-destacado">
+          <span class="plan-cinta">Todo Essential</span>
+          <h3>Essential Completo</h3>
+          <p class="plan-para">Lo que sostiene el plan: equipos, reactivos y compras.</p>
+          <p class="plan-usuarios">Hasta 15 usuarios</p>
+          <p class="plan-sirve">
+            Todo lo de Base y, además, equipos y su mantención, contingencia, derivaciones, inventario de reactivos, compras,
+            recepción, proveedores, contratos y personal.
+          </p>
+          <ul class="plan-incluye">
+            <li>Las {enApp.length} herramientas disponibles en la app</li>
+            <li>Equipos, mantención, contingencia y derivaciones</li>
+            <li>Inventario, compras, recepción, proveedores y contratos</li>
+            <li>Las nuevas herramientas que se publiquen</li>
+          </ul>
+          <p class="texto-suave">Precio a cotizar según tu laboratorio.</p>
+        </article>
+      </div>
+      <p class="texto-suave" style="margin-top:14px">
+        Cada plan de laboratorio incluye hasta 5 cuentas de <a href={url('professional/')}>Consensus Lab Professional</a> para tu
+        equipo, y se combina con <a href={url('qc/')}>Consensus Lab QC</a> en el plan <strong>Consensus Lab completo</strong>.
+      </p>
+    </div>
+  </section>
+
+  <section class="seccion seccion-alt">
+    <div class="contenedor">
+      <div class="seccion-cabeza">
+        <div>
+          <p class="antetitulo">Por áreas</p>
+          <h2>Siete grupos de herramientas</h2>
+        </div>
+        <a href={url('herramientas/')}>Ver el catálogo completo</a>
+      </div>
+      <div class="rejilla rejilla-grupos">
+        {
+          catalogo.map(({ grupo, herramientas: hs }) => (
+            <article class="tarjeta tarjeta-grupo">
+              <div class="tarjeta-meta">
+                <span class="numero">{grupo.data.numero}</span>
+                <span class="conteo">{hs.length} {hs.length === 1 ? 'herramienta' : 'herramientas'}</span>
+              </div>
+              <h3><a href={url(`grupos/${grupo.id}/`)}>{grupo.data.nombre}</a></h3>
+              <p>{grupo.data.descripcion}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="contenedor">
+      <div class="franja-qc">
+        <div>
+          <h2>Y el plan de calidad, en Consensus Lab QC</h2>
+          <p>
+            Westgard, Levey-Jennings, sigma, control externo y no conformidades en la misma plataforma, con la misma
+            información de tus equipos e insumos.
+          </p>
+        </div>
+        <a class="boton" href={url('qc/')}>Conocer Consensus Lab QC</a>
+      </div>
+    </div>
+  </section>
+</Base>

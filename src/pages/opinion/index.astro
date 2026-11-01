@@ -2,11 +2,9 @@
 // Sección Opinión: el sitio reúne todo lo que escribe el autor.
 //   · Artículos del sitio (con cuerpo en el .md): se leen completos aquí; Medium tiene una copia importada
 //     que apunta a esta página como original.
-//   · Artículos solo de Medium (sin cuerpo): la tarjeta lleva directo a Medium.
 import Base from '../../plantillas/Base.astro';
 import { enSitio, obtenerOpinion } from '../../lib/datos';
 import { formatoFecha, url } from '../../lib/rutas';
-import { MEDIUM_PERFIL } from '../../lib/sitio';
 
 const articulos = await obtenerOpinion();
 ---
@@ -22,18 +20,11 @@ const articulos = await obtenerOpinion();
         <h1>Opinión</h1>
         <p class="texto-suave intro-prompts">
           Todo lo que escribo sobre la gestión del laboratorio clínico, la calidad y la profesión, reunido en un solo
-          lugar. Algunos artículos se publicaron solo en Medium: esos te llevan allá.
+          lugar.
         </p>
       </div>
       <div class="acciones-opinion">
         <a class="boton boton-secundario" href={url('opinion/rss.xml')}>Suscribirse (RSS)</a>
-        {
-          MEDIUM_PERFIL && (
-            <a class="boton boton-secundario" href={MEDIUM_PERFIL} target="_blank" rel="noopener me">
-              Seguir en Medium
-            </a>
-          )
-        }
       </div>
     </div>
 
@@ -60,7 +51,7 @@ const articulos = await obtenerOpinion();
                   </h2>
                   <p>{a.data.resumen}</p>
                   <div class="tarjeta-pie">
-                    <span class="texto-suave">{propio ? 'Leer el artículo →' : 'Leer en Medium ↗'}</span>
+                    <span class="texto-suave">{propio ? 'Leer el artículo →' : 'Leer el artículo ↗'}</span>
                   </div>
                 </article>
               </li>

@@ -1,17 +1,36 @@
 ---
-// Entrada a la app ConsensusLab (app.consensuslab.cl, Google Cloud en Santiago). Las cuentas, sesiones y contraseñas
+// Entrada a la app Consensus Lab (app.consensuslab.cl, Google Cloud en Santiago). Las cuentas, sesiones y contraseñas
 // viven en la app: este sitio estático no guarda datos de usuarios.
 import Base from '../plantillas/Base.astro';
 import { url } from '../lib/rutas';
-import { URL_APP, URL_REGISTRO } from '../lib/sitio';
+import { PROFESSIONAL_ABIERTO, URL_PROFESSIONAL, URL_PROFESSIONAL_REGISTRO, URL_APP, URL_REGISTRO } from '../lib/sitio';
 ---
 
-<Base titulo="Ingresar" seccion="cuenta" indexar={false} descripcion="Ingresa a la app ConsensusLab para probar las herramientas 15 días gratis o usarlas con tu suscripción.">
+<Base titulo="Ingresar" seccion="cuenta" indexar={false} descripcion="Ingresa a la app Consensus Lab para probar las herramientas 15 días gratis o usarlas con tu suscripción.">
   <div class="contenedor">
     <article class="prosa">
-      <h1>Ingresa a ConsensusLab</h1>
+      <h1>Ingresa a Consensus Lab</h1>
+      <p>Hay dos entradas, con una misma cuenta si trabajas en un laboratorio que usa Consensus Lab.</p>
+      <h2>Soy profesional de laboratorio: Consensus Lab Professional</h2>
       <p>
-        Las herramientas funcionan en la app ConsensusLab. Al crear tu cuenta tienes 15 días gratis con los datos reales de
+        {PROFESSIONAL_ABIERTO
+          ? 'Entra a tus rondas de control externo, tu historial y tus certificados, o crea tu cuenta con 3 meses gratis.'
+          : 'Professional abre pronto. Mientras tanto, deja tu correo en la lista de espera de la página de Professional y te avisamos primero.'}
+      </p>
+      <p>
+        {PROFESSIONAL_ABIERTO ? (
+          <>
+            <a class="boton boton-primario" href={URL_PROFESSIONAL}>Ingresar a Professional</a>
+            <a class="boton boton-secundario" href={URL_PROFESSIONAL_REGISTRO}>Crear cuenta (3 meses gratis)</a>
+          </>
+        ) : (
+          <a class="boton boton-primario" href={url('professional/')}>Ver Professional</a>
+        )}
+      </p>
+
+      <h2>Dirijo o gestiono un laboratorio: la app de laboratorios</h2>
+      <p>
+        Las herramientas funcionan en la app Consensus Lab. Al crear tu cuenta tienes 15 días gratis con los datos reales de
         tu laboratorio; si contratas, sigues en la misma cuenta y tus registros se mantienen.
       </p>
       <p>
@@ -19,7 +38,7 @@ import { URL_APP, URL_REGISTRO } from '../lib/sitio';
         <a class="boton boton-secundario" href={URL_REGISTRO}>Crear cuenta gratis</a>
       </p>
 
-      <h2>Cómo se ingresa</h2>
+      <h2>Cómo se ingresa a la app de laboratorios</h2>
       <ul>
         <li>
           <strong>La primera vez:</strong> pulsa «Crear cuenta gratis», completa tu nombre, el de tu laboratorio y tu
@@ -40,7 +59,7 @@ import { URL_APP, URL_REGISTRO } from '../lib/sitio';
       <ul>
         <li>Tu contraseña se guarda solo como una huella cifrada e irreversible: nadie puede verla.</li>
         <li>En «Mis dispositivos» ves dónde tienes sesión abierta y puedes cerrarla.</li>
-        <li>ConsensusLab no guarda datos de pacientes.</li>
+        <li>Consensus Lab no guarda datos de pacientes.</li>
       </ul>
       <p class="texto-suave"><a href={url('planes/')}>Ver planes de suscripción</a></p>
     </article>

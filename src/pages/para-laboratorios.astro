@@ -1,0 +1,333 @@
+---
+// Consensus Lab para laboratorios: la propuesta para quien dirige o gestiona un laboratorio (antes era la portada).
+// La portada ahora ofrece dos puertas: profesionales (Professional) y laboratorios (esta página).
+import Base from '../plantillas/Base.astro';
+import TarjetaHerramienta from '../componentes/TarjetaHerramienta.astro';
+import TarjetaPrompt from '../componentes/TarjetaPrompt.astro';
+import EspacioVideo from '../componentes/EspacioVideo.astro';
+import PedirDemo from '../componentes/PedirDemo.astro';
+import { VIDEOS } from '../lib/videos';
+import { obtenerCatalogo, obtenerHerramientas, obtenerPrompts } from '../lib/datos';
+import { url } from '../lib/rutas';
+import { CALCULADORAS } from '../lib/calculadoras';
+import { URL_REGISTRO } from '../lib/sitio';
+
+const catalogo = await obtenerCatalogo();
+const nombreGrupo = new Map(catalogo.map(({ grupo }) => [grupo.id, grupo.data.nombre_corto]));
+const promptsDestacados = (await obtenerPrompts()).filter((p) =>
+  ['redactar-procedimiento', 'analisis-de-causa', 'alarma-de-control-de-calidad'].includes(p.id),
+);
+const todas = await obtenerHerramientas();
+const prioritarias = todas.filter((h) => h.data.etiquetas.includes('prioridad-coordinador'));
+const totalHerramientas = catalogo.reduce((n, { herramientas }) => n + herramientas.length, 0);
+const totalPrompts = (await obtenerPrompts()).length;
+
+// El problema que resuelve (portada)
+const problemas = [
+  ['El criterio depende de quién está de turno', 'Frente al mismo resultado de control, dos tecnólogos pueden decidir distinto: repetir, recalibrar, avisar o liberar.'],
+  ['El plan está escrito, pero no se ejecuta', 'La decisión se tomó arriba y quedó en un documento. En el mesón cada uno la interpreta a su manera.'],
+  ['Se decide sin la información del laboratorio', 'Los controles, los reactivos y las compras se manejan por costumbre y no con lo que realmente pasa en tu laboratorio.'],
+];
+
+// Cómo funciona (portada)
+const pasos = [
+  ['Defines el plan', 'Por analito: el error total permitido, las reglas de aceptación y qué hacer ante cada alarma.'],
+  ['Se aplica igual en cada turno', 'Westgard y Levey-Jennings evalúan cada control con tus reglas, y la acción a seguir ya está decidida.'],
+  ['Ves si se cumple', 'Cumplimiento diario, CV, sesgo, error total y sigma, comparados con tu plan, y cada desvío con su responsable.'],
+  ['Decides con respaldo', 'Los equipos, las temperaturas y los insumos están en el mismo lugar que tus controles, y todo queda trazable.'],
+];
+---
+
+<Base
+  titulo="Software de calidad para laboratorios clínicos"
+  descripcion="Software de calidad y gestión para laboratorios clínicos, independiente de proveedores: lleva tu plan de calidad al trabajo de cada turno. Prueba gratis 15 días."
+  seccion="laboratorios"
+>
+  <section class="portada">
+    <div class="portada-fondo" aria-hidden="true"></div>
+    <div class="contenedor portada-rejilla">
+      <div class="portada-texto">
+        <p class="antetitulo">Para laboratorios clínicos</p>
+        <h1>Tu plan de calidad, aplicado igual en cada turno</h1>
+        <p class="portada-lema">
+          Tu laboratorio decide qué controlar, con qué reglas y qué hacer cuando un control falla. Consensus Lab lleva esa
+          decisión al trabajo de cada día, para todo el equipo, y muestra si se cumple. No vendemos controles,
+          analizadores, equipos ni reactivos: solo gestión, sin conflicto de interés.
+        </p>
+        <div class="acciones-portada">
+          <a class="boton boton-primario" href={URL_REGISTRO}>Probar 15 días gratis</a>
+          <a class="boton boton-secundario boton-claro" href={url('diagnostico/')}>Haz el diagnóstico de tu laboratorio</a>
+        </div>
+        <p class="nota-portada">
+          Hecho por un tecnólogo médico. <a class="enlace-portada" href={url('herramientas/')}>Ver planillas y guías gratuitas →</a><br />
+          ¿Eres profesional de laboratorio y buscas algo para ti? <a class="enlace-portada" href={url('professional/')}>Conoce Consensus Lab Professional →</a>
+        </p>
+      </div>
+      {VIDEOS.portada ? (
+        <div class="portada-visual portada-visual-video">
+          <EspacioVideo titulo="Consensus Lab QC en acción" {...VIDEOS.portada} />
+        </div>
+      ) : (
+      <figure class="portada-visual" aria-hidden="true">
+        <!-- Ilustración del tipo de gráfico que genera Consensus Lab QC (datos de ejemplo). Se reemplaza por un video al llenar VIDEOS.portada (src/lib/videos.ts). -->
+        <div class="maqueta">
+          <div class="maqueta-barra"><span></span><span></span><span></span><b>Levey-Jennings · Control nivel 1</b></div>
+          <svg viewBox="0 0 360 200" role="presentation">
+            <rect x="0" y="0" width="360" height="30" class="m-rech" />
+            <rect x="0" y="170" width="360" height="30" class="m-rech" />
+            <rect x="0" y="30" width="360" height="26" class="m-adv" />
+            <rect x="0" y="144" width="360" height="26" class="m-adv" />
+            <line x1="0" x2="360" y1="100" y2="100" class="m-media" />
+            <polyline pathLength="1" class="m-linea" points="14,104 44,92 74,110 104,98 134,86 164,108 194,96 224,118 254,126 284,72 314,60 346,34" />
+            <circle cx="14" cy="104" r="4" class="m-ok" /><circle cx="44" cy="92" r="4" class="m-ok" />
+            <circle cx="74" cy="110" r="4" class="m-ok" /><circle cx="104" cy="98" r="4" class="m-ok" />
+            <circle cx="134" cy="86" r="4" class="m-ok" /><circle cx="164" cy="108" r="4" class="m-ok" />
+            <circle cx="194" cy="96" r="4" class="m-ok" /><circle cx="224" cy="118" r="4" class="m-ok" />
+            <circle cx="254" cy="126" r="4" class="m-ok" /><path d="M284 64l8 8-8 8-8-8z" class="m-adv-p" />
+            <path d="M314 52l8 8-8 8-8-8z" class="m-adv-p" /><rect x="340" y="28" width="12" height="12" class="m-rech-p" />
+          </svg>
+          <p class="maqueta-pie">Ejemplo ilustrativo</p>
+        </div>
+      </figure>
+      )}
+    </div>
+  </section>
+
+  <section class="cifras" aria-label="El sitio en cifras">
+    <div class="contenedor cifras-fila">
+      <p><strong data-contar={totalHerramientas}>{totalHerramientas}</strong> herramientas en {catalogo.length} grupos</p>
+      <p><strong data-contar={CALCULADORAS.length}>{CALCULADORAS.length}</strong> calculadoras gratuitas</p>
+      <p><strong data-contar={totalPrompts}>{totalPrompts}</strong> prompts de IA</p>
+      <p><strong>0</strong> datos de pacientes</p>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="contenedor">
+      <div class="seccion-cabeza">
+        <div>
+          <p class="antetitulo">El problema</p>
+          <h2>El laboratorio no trabaja con una sola decisión</h2>
+        </div>
+      </div>
+      <ul class="problemas">
+        {
+          problemas.map(([titulo, texto]) => (
+            <li class="problema">
+              <h3>{titulo}</h3>
+              <p>{texto}</p>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="problemas-cierre">
+        No se arregla registrando más. Se arregla decidiendo el plan una vez, arriba, y llevándolo al mesón, para que
+        el criterio profesional del tecnólogo quede para las excepciones y no para cada resultado de rutina.
+      </p>
+    </div>
+  </section>
+
+  <section class="seccion seccion-alt">
+    <div class="contenedor">
+      <div class="seccion-cabeza">
+        <div>
+          <p class="antetitulo">Cómo funciona</p>
+          <h2>Del plan de calidad al trabajo de cada día</h2>
+        </div>
+        <a href={url('qc/')}>Ver Consensus Lab QC</a>
+      </div>
+      <ol class="pasos">
+        {
+          pasos.map(([titulo, texto], i) => (
+            <li class="paso">
+              <span class="paso-num">{i + 1}</span>
+              <h3>{titulo}</h3>
+              <p>{texto}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="contenedor">
+      <div class="independencia">
+        <div>
+          <p class="antetitulo">Independencia</p>
+          <h2>Sin conflicto de interés</h2>
+          <p>
+            Un software que vende controles de calidad no es neutro frente a esos controles. Consensus Lab no vende controles,
+            analizadores, equipos ni reactivos, y no cobra comisiones de proveedores. Solo vende herramientas de gestión, así
+            que ninguna decisión del plan te empuja hacia una marca.
+          </p>
+        </div>
+        <a class="boton" href={url('acerca/')}>Quién lo prepara</a>
+      </div>
+    </div>
+  </section>
+
+  <PedirDemo />
+
+  <section class="seccion seccion-alt" id="gratis" data-pestanas>
+    <div class="contenedor">
+      <div class="seccion-cabeza">
+        <div>
+          <p class="antetitulo">Gratis, sin crear cuenta</p>
+          <h2>Herramientas para tu laboratorio</h2>
+        </div>
+        <a href={url('herramientas/')}>Ver el catálogo completo</a>
+      </div>
+
+      <div class="pestanas" role="tablist" aria-label="Tipo de herramienta gratuita" hidden>
+        <button type="button" role="tab" id="pest-herramientas" aria-controls="panel-herramientas" aria-selected="true">Planillas</button>
+        <button type="button" role="tab" id="pest-calculadoras" aria-controls="panel-calculadoras" aria-selected="false" tabindex="-1">Calculadoras</button>
+        <button type="button" role="tab" id="pest-prompts" aria-controls="panel-prompts" aria-selected="false" tabindex="-1">Prompts IA</button>
+      </div>
+
+      {
+        prioritarias.length > 0 && (
+          <div class="panel-pestana" role="tabpanel" id="panel-herramientas" aria-labelledby="pest-herramientas">
+            <h3 class="panel-titulo">Las prioridades de la coordinación</h3>
+            <div class="rejilla carrusel">
+              {prioritarias.map((h) => (
+                <TarjetaHerramienta herramienta={h} nombreGrupo={nombreGrupo.get(h.data.grupo.id)} />
+              ))}
+            </div>
+            <p class="panel-enlace"><a href={url('herramientas/?etiqueta=prioridad-coordinador')}>Ver todas las prioritarias</a></p>
+          </div>
+        )
+      }
+
+      <div class="panel-pestana" role="tabpanel" id="panel-calculadoras" aria-labelledby="pest-calculadoras">
+        <h3 class="panel-titulo">Calculadoras para el laboratorio</h3>
+        <div class="rejilla carrusel">
+          {
+            CALCULADORAS.filter((c) => 'destacada' in c).map((c) => (
+              <article class="tarjeta">
+                <h3>
+                  <a href={url(`calculadoras/${c.id}/`)}>{c.titulo}</a>
+                </h3>
+                <p>{c.resumen}</p>
+              </article>
+            ))
+          }
+        </div>
+        <p class="panel-enlace"><a href={url('calculadoras/')}>Ver las {CALCULADORAS.length} calculadoras</a></p>
+      </div>
+
+      <div class="panel-pestana" role="tabpanel" id="panel-prompts" aria-labelledby="pest-prompts">
+        <h3 class="panel-titulo">Prompts de IA para el laboratorio</h3>
+        <p class="texto-suave">
+          Instrucciones listas para copiar en tu asistente de IA. Sin datos de pacientes.
+        </p>
+        <div class="rejilla carrusel">
+          {promptsDestacados.map((p) => <TarjetaPrompt prompt={p} conCategoria />)}
+        </div>
+        <p class="panel-enlace"><a href={url('prompts/')}>Ver todos los prompts</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="contenedor">
+      <div class="seccion-cabeza">
+        <div>
+          <p class="antetitulo">Catálogo</p>
+          <h2>Siete grupos de herramientas</h2>
+        </div>
+        <a href={url('herramientas/')}>Ver el catálogo completo</a>
+      </div>
+      <div class="rejilla rejilla-grupos">
+        {
+          catalogo.map(({ grupo, herramientas }) => (
+            <article class="tarjeta tarjeta-grupo">
+              <div class="tarjeta-meta">
+                <span class="numero">{grupo.data.numero}</span>
+                <span class="conteo">
+                  <span data-contar={herramientas.length}>{herramientas.length}</span>{' '}
+                  {herramientas.length === 1 ? 'herramienta' : 'herramientas'}
+                </span>
+              </div>
+              <h3>
+                <a href={url(`grupos/${grupo.id}/`)}>{grupo.data.nombre}</a>
+              </h3>
+              <p>{grupo.data.descripcion}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion seccion-alt">
+    <div class="contenedor">
+      <div class="franja-qc">
+        <div>
+          <h2>Consensus Lab QC es donde el plan se ejecuta</h2>
+          <p>
+            Plan de calidad por analito, reglas de Westgard, Levey-Jennings, sigma, control externo y no conformidades en una
+            sola plataforma. Las herramientas gratuitas de este sitio funcionan sin él.
+          </p>
+        </div>
+        <a class="boton" href={url('qc/')}>Conocer Consensus Lab QC</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  // Pestañas de «Herramientas para tu laboratorio». Sin JavaScript se ven los tres bloques uno bajo otro.
+  const seccionPestanas = document.querySelector<HTMLElement>('[data-pestanas]');
+  const listaPestanas = seccionPestanas?.querySelector<HTMLElement>('[role="tablist"]');
+  if (seccionPestanas && listaPestanas) {
+    const pestanas = [...listaPestanas.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+    const paneles = pestanas.map((p) => document.getElementById(p.getAttribute('aria-controls') ?? ''));
+    const elegir = (i: number, enfocar = false) => {
+      pestanas.forEach((p, j) => {
+        p.setAttribute('aria-selected', String(i === j));
+        p.tabIndex = i === j ? 0 : -1;
+        const panel = paneles[j];
+        if (panel) panel.hidden = i !== j;
+      });
+      if (enfocar) pestanas[i].focus();
+    };
+    listaPestanas.hidden = false;
+    seccionPestanas.classList.add('con-pestanas');
+    pestanas.forEach((p, i) => {
+      p.addEventListener('click', () => elegir(i));
+      p.addEventListener('keydown', (e) => {
+        const n = pestanas.length;
+        if (e.key === 'ArrowRight') elegir((i + 1) % n, true);
+        else if (e.key === 'ArrowLeft') elegir((i + n - 1) % n, true);
+        else if (e.key === 'Home') elegir(0, true);
+        else if (e.key === 'End') elegir(n - 1, true);
+        else return;
+        e.preventDefault();
+      });
+    });
+    elegir(0);
+  }
+
+  // Cuenta hasta el total cuando el número entra en pantalla (el HTML ya trae el valor final).
+  const reducir = matchMedia('(prefers-reduced-motion: reduce)').matches || document.documentElement.dataset.movimiento === 'reducido';
+  const nums = document.querySelectorAll<HTMLElement>('[data-contar]');
+  if (!reducir && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entradas) => {
+      for (const e of entradas) {
+        if (!e.isIntersecting) continue;
+        io.unobserve(e.target);
+        const el = e.target as HTMLElement;
+        const fin = Number(el.dataset.contar);
+        const t0 = performance.now();
+        const paso = (t: number) => {
+          const p = Math.min(1, (t - t0) / 700);
+          el.textContent = String(Math.round(fin * (1 - Math.pow(1 - p, 3))));
+          if (p < 1) requestAnimationFrame(paso);
+        };
+        requestAnimationFrame(paso);
+      }
+    });
+    nums.forEach((n) => io.observe(n));
+  }
+</script>

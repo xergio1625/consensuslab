@@ -55,9 +55,9 @@ Los colegas de la historia aprendieron rápido, para ser justos, y yo también a
 
 ¿Y la escoba nueva? Barre rápido, que no es lo mismo que barrer bien. Lo que quedó bajo la alfombra recién se ve cuando pasa el tiempo.
 
-## Y ahí entra Consensus QC
+## Y ahí entra Consensus Lab QC
 
-Esta historia es la razón por la que armé [Consensus QC](/consensus-qc/), el software de control de calidad analítico que forma parte de ConsensusLab. No es una escoba nueva, es un sistema para no depender de ninguna. El N20 queda registrado por lote, las reglas de Westgard se evalúan al instante en cada corrida, el Levey-Jennings muestra cada nivel con sus límites y cada no conformidad queda con nombre y motivo. Además, el desempeño mes a mes por analizador muestra el CV, el sesgo, el error total frente al permitido y el sigma, o sea, el CV real del laboratorio y no el de su mejor día.
+Esta historia es la razón por la que armé [Consensus Lab QC](/qc/), el software de control de calidad analítico que forma parte de Consensus Lab. No es una escoba nueva, es un sistema para no depender de ninguna. El N20 queda registrado por lote, las reglas de Westgard se evalúan al instante en cada corrida, el Levey-Jennings muestra cada nivel con sus límites y cada no conformidad queda con nombre y motivo. Además, el desempeño mes a mes por analizador muestra el CV, el sesgo, el error total frente al permitido y el sigma, o sea, el CV real del laboratorio y no el de su mejor día.
 
 Así, la próxima vez que alguien llegue diciendo "esto es horrible, se cambia mañana", la conversación con la jefatura tiene datos de meses a la vista y no depende de quién tiene más labia. Y uno se ahorra las palomitas.
 
