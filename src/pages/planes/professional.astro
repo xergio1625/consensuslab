@@ -15,7 +15,8 @@ const pagar = enlacePago('professional-anual');
 
 const preguntas = [
   ['¿Cuánto cuesta y qué incluye?', `${PRECIO_PROFESSIONAL_TEXTO} al año con IVA incluido, a contar desde la fecha de pago. Incluye las rondas de control externo del criterio profesional, la respuesta experta, los resultados anónimos del grupo y un certificado de participación por ronda.`],
-  ['¿Hay prueba gratis?', `Sí: ${MESES_PRUEBA_PROFESSIONAL} meses gratis, sin tarjeta y sin compromiso. Al terminar, decides si continúas.`],
+  ['¿Hay prueba gratis?', `Sí: ${MESES_PRUEBA_PROFESSIONAL} meses gratis, sin tarjeta y sin compromiso. Durante la prueba haces las rondas y ves las dos primeras páginas de cada guía de la biblioteca; las descargas completas son con la suscripción pagada. Al terminar, decides si continúas.`],
+  ['¿Qué hay en la biblioteca?', 'Guías prácticas en PDF y planillas de Excel, con una pieza nueva cada dos meses (al menos 6 al año). Cada guía suelta cuesta $2.900; con Professional las tienes todas, con tu nombre al pie de cada PDF.'],
   ['¿Sirve si trabajo fuera de Chile?', 'Sí. Los casos usan criterios internacionales de control de calidad (reglas de Westgard, CLSI) y no dependen de una norma nacional. Por ahora el precio y el pago son en pesos chilenos; si estás en otro país, escríbenos a contacto@consensuslab.cl.'],
   ['¿Se renueva sola?', 'No. Es un pago por un año, sin renovación automática. Te avisamos antes de que venza, y si no continúas puedes consultar tu historial por 30 días.'],
   ['¿Cómo pago y qué recibo?', 'Pagas por transferencia desde tu cuenta, avisas con un botón y, al confirmar el pago, se activa tu año y recibes la boleta electrónica por correo. Si necesitas factura para tu institución, escríbenos a contacto@consensuslab.cl.'],
@@ -78,6 +79,7 @@ const preguntas = [
             <li>Respuesta experta apenas respondes</li>
             <li>Resultados del grupo al cierre, siempre anónimos</li>
             <li>Certificado de participación verificable</li>
+            <li>Biblioteca de guías y planillas de Excel, con una pieza nueva cada dos meses</li>
             <li>Boleta electrónica por cada pago</li>
           </ul>
           <a class="boton boton-primario boton-ancho" href={entrar.href}>{entrar.texto}</a>
