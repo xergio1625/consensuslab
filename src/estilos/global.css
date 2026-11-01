@@ -1144,3 +1144,10 @@ img, svg { max-width: 100%; }
 .portada-compacta .puerta h2 { font-size: 1.25rem; }
 .portada-compacta .puerta p, .portada-compacta .puerta li { font-size: .94rem; }
 .diag-profesional { margin: 0 0 22px; }
+
+/* ── Respuesta corta y preguntas frecuentes de las calculadoras ───────────────────────────── */
+.respuesta-corta { max-width: 70ch; padding: 12px 16px; border-left: 4px solid var(--marca-dorado); background: var(--c-panel-alt); border-radius: 0 var(--radio-s) var(--radio-s) 0; font-size: 1.02rem; }
+.faq { margin-top: 32px; }
+.faq-item { padding: 14px 0; border-top: 1px solid var(--c-borde); }
+.faq-item h3 { margin: 0 0 6px; font-size: 1.02rem; }
+.faq-item p { margin: 0; max-width: 70ch; }

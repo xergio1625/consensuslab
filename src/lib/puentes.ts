@@ -53,6 +53,20 @@ export const PUENTES: Partial<Record<IdCalculadora, Puente>> = {
     boton: 'Ver el registro de temperaturas',
     enlace: 'herramientas/registro-de-temperaturas/',
   },
+  'actividad-enzimatica': {
+    titulo: 'Calcular la actividad es una parte; controlarla en el tiempo, otra',
+    texto:
+      'ConsensusLab QC lleva el control de calidad de cada analizador y analito con tus controles reales: el gráfico de Levey-Jennings, las reglas de Westgard y lo que se hizo cuando una regla se rompe.',
+    boton: 'Ver cómo funciona',
+    enlace: 'qc/',
+  },
+  'curva-de-calibracion': {
+    titulo: 'La curva se ajusta; el control dice si sigue valiendo',
+    texto:
+      'Después de calibrar, el control de calidad confirma que el método sigue en rango. ConsensusLab QC arma el gráfico de Levey-Jennings de cada analito y nivel con tus controles y aplica las reglas de Westgard.',
+    boton: 'Ver cómo funciona',
+    enlace: 'qc/',
+  },
   'centrifuga-g-rpm': {
     titulo: 'La centrífuga también tiene rutina',
     texto:

@@ -1,0 +1,35 @@
+# ConsensusLab
+
+> Herramientas gratuitas y software de gestión de calidad para laboratorios clínicos de habla hispana, con base en el contexto chileno (acreditación, control de calidad y estadística del laboratorio). El cálculo de las calculadoras se hace en el navegador: no se envían datos.
+
+Autor: Sergio Inostroza. Sitio: https://consensuslab.cl/
+
+## Calculadoras gratuitas (control de calidad, estadística, banco de laboratorio)
+
+- [Todas las calculadoras](https://consensuslab.cl/calculadoras/): índice con la lista completa.
+- [Temperatura cinética media (MKT)](https://consensuslab.cl/calculadoras/temperatura-cinetica-media/): MKT de un refrigerador o bodega a partir del registro de temperaturas.
+- [Error total y sigma](https://consensuslab.cl/calculadoras/error-total-y-sigma/): error total, métrica sigma y reglas de Westgard sugeridas.
+- [Gráfico de Levey-Jennings](https://consensuslab.cl/calculadoras/levey-jennings/): límites de ±1, 2 y 3 DE y violaciones de reglas de Westgard.
+- [Sesgo y SDI](https://consensuslab.cl/calculadoras/sesgo-y-sdi/): sesgo porcentual e índice de desviación estándar del control externo.
+- [Actividad enzimática](https://consensuslab.cl/calculadoras/actividad-enzimatica/): U/L y µkat/L desde ΔA/min.
+- [Curva de calibración](https://consensuslab.cl/calculadoras/curva-de-calibracion/): ajuste lineal y 4PL.
+- [Pruebas estadísticas](https://consensuslab.cl/calculadoras/pruebas-estadisticas/): guía para elegir la prueba según la decisión.
+
+## Herramientas y software
+
+- [Herramientas](https://consensuslab.cl/herramientas/): fichas de herramientas para el laboratorio (registro de temperaturas, bitácora de equipos, inventario de reactivos, tiempos de respuesta).
+- [ConsensusLab QC](https://consensuslab.cl/qc/): control de calidad por analizador, gráfico de Levey-Jennings, reglas de Westgard y no conformidades.
+- [ConsensusLab Professional](https://consensuslab.cl/professional/): casos de control de calidad para decidir y comparar con una respuesta experta.
+- [Accreditation](https://consensuslab.cl/accreditation/): preparación para la acreditación (en preparación).
+
+## Guías, opinión y apoyo
+
+- [Guías](https://consensuslab.cl/guias/): procedimientos paso a paso para el laboratorio.
+- [Opinión](https://consensuslab.cl/opinion/): artículos sobre calidad, gestión y práctica del laboratorio clínico.
+- [Prompts](https://consensuslab.cl/prompts/): instrucciones listas para redactar documentos del laboratorio con IA.
+- [Planes](https://consensuslab.cl/planes/): planes por perfil, con prueba gratuita.
+
+## Notas de uso
+
+- Las calculadoras son herramientas de apoyo y no reemplazan el criterio profesional ni la verificación del fabricante.
+- Se puede citar el contenido del sitio mencionando ConsensusLab y enlazando la página de origen.
