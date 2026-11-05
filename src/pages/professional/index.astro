@@ -87,9 +87,9 @@ const areas = [
 ];
 
 const herramientas = [
-  ['Piano hematológico', 'Cuentas el recuento diferencial con el teclado, con las ocho líneas en el orden clásico. Suena una alarma al completar el recuento y obtienes el informe en ese mismo orden.'],
-  ['Identificación bacteriana', 'Anotas lo que ves en los cinco tubos (TSI, LIA, MIO, citrato y urea) y la herramienta reparte la confianza entre las bacterias posibles. Es una ayuda para ordenar la decisión, no una identificación definitiva.'],
-  ['Antibiograma', 'Según el organismo y el sitio de la muestra, te sugiere qué antibióticos probar e interpreta los halos con los puntos de corte que tú declaras desde la tabla vigente de tu laboratorio. No guardamos los halos.'],
+  ['Piano hematológico', 'Cuentas el recuento diferencial con el teclado, con las ocho líneas en el orden clásico. Suena una alarma al completar el recuento y obtienes el informe en ese mismo orden.', 'professional/piano-hematologico/'],
+  ['Identificación bacteriana', 'Anotas lo que ves en los cinco tubos (TSI, LIA, MIO, citrato y urea) y la herramienta reparte la confianza entre las bacterias posibles. Es una ayuda para ordenar la decisión, no una identificación definitiva.', 'professional/identificacion-bacteriana/'],
+  ['Antibiograma', 'Según el organismo y el sitio de la muestra, te sugiere qué antibióticos probar e interpreta los halos con los puntos de corte que tú declaras desde la tabla vigente de tu laboratorio. No guardamos los halos.', 'professional/antibiograma/'],
 ];
 
 const incluye = [
@@ -203,9 +203,9 @@ const preguntas = [
       </div>
       <div class="rejilla">
         {
-          herramientas.map(([titulo, texto]) => (
+          herramientas.map(([titulo, texto, ruta]) => (
             <div class="tarjeta">
-              <h3>{titulo}</h3>
+              <h3><a href={url(ruta)}>{titulo}</a></h3>
               <p>{texto}</p>
             </div>
           ))

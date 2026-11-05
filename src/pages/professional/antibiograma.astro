@@ -1,0 +1,46 @@
+---
+import H from '../../componentes/HerramientaProfessional.astro';
+---
+
+<H
+  titulo="Antibiograma de cocos grampositivos: panel e interpretación"
+  descripcion="Qué antibióticos probar según el organismo y el sitio de la muestra, e interpretación de halos con los puntos de corte de tu laboratorio. ConsensusLab Professional."
+  h1="Antibiograma de cocos grampositivos: panel sugerido e interpretación de halos"
+  bajada="Eliges el organismo y el sitio de la muestra, ves qué antibióticos probar y cómo medirlos, e interpretas los halos con los puntos de corte que tú declaras."
+  secciones={[
+    {
+      titulo: 'Para qué organismos',
+      parrafos: ['La primera versión cubre los cocos grampositivos con método manual (disco-difusión):'],
+      lista: ['Staphylococcus aureus', 'Staphylococcus coagulasa negativo', 'Enterococcus spp.', 'Streptococcus β-hemolítico', 'Streptococcus pneumoniae'],
+    },
+    {
+      titulo: 'El panel depende del sitio de la muestra',
+      parrafos: [
+        'No todos los antibióticos se informan en todas las muestras. La herramienta propone una lista distinta según el sitio: orina, piel y partes blandas, sangre, vías respiratorias, genital o rectal, líquido cefalorraquídeo u otro.',
+        'Para cada antibiótico indica cómo se mide (disco, cribado o CIM) y agrega notas útiles, por ejemplo que en Staphylococcus la vancomicina no se interpreta por disco o que la cefoxitina reemplaza a la oxacilina.',
+      ],
+    },
+    {
+      titulo: 'Los puntos de corte los declaras tú',
+      parrafos: [
+        'ConsensusLab no incluye tablas de puntos de corte. Cada profesional declara los de la tabla vigente de su laboratorio (CLSI, EUCAST u otra), a mano o pegándolos desde una planilla.',
+        'Así trabajas siempre con tu edición y evitamos reproducir tablas con derechos de autor, donde un número equivocado puede cambiar un informe.',
+      ],
+    },
+    {
+      titulo: 'Qué hace con los halos',
+      lista: [
+        'Interpreta cada halo como sensible, intermedio o resistente según tus puntos de corte.',
+        'Marca alertas de revisión cuando un resultado merece una segunda mirada.',
+        'No guarda los halos ni datos de pacientes: se calcula al momento.',
+      ],
+    },
+  ]}
+  aviso="Es una ayuda para ordenar el panel y la lectura. La interpretación y el informe son responsabilidad del profesional, según el procedimiento y la tabla vigente de tu laboratorio. El contenido está en afinación continua."
+  preguntas={[
+    ['¿El antibiograma trae los puntos de corte?', 'No. Tú declaras los de la tabla vigente de tu laboratorio. Es una decisión de diseño: usas siempre tu edición y no reproducimos tablas protegidas por derechos de autor.'],
+    ['¿Sirve para bacilos gramnegativos?', 'La primera versión cubre cocos grampositivos con método manual. Otros paneles vendrán en etapas posteriores.'],
+    ['¿Guarda los halos?', 'No. Se interpretan al momento y no se almacenan.'],
+    ['¿Reemplaza a mi sistema automatizado?', 'No. Es una ayuda para el método manual y para ordenar la lectura.'],
+  ]}
+/>

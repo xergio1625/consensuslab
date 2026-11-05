@@ -1,0 +1,74 @@
+---
+// Página de una herramienta de ConsensusLab Professional (SEO por herramienta). Solo explica; no hay demostración.
+import Base from '../plantillas/Base.astro';
+import { url } from '../lib/rutas';
+import { MESES_PRUEBA_PROFESSIONAL, PRECIO_PROFESSIONAL_TEXTO, PROFESSIONAL_ABIERTO, URL_PROFESSIONAL_REGISTRO } from '../lib/sitio';
+
+interface Props {
+  titulo: string;
+  descripcion: string;
+  h1: string;
+  bajada: string;
+  secciones: { titulo: string; parrafos?: string[]; lista?: string[] }[];
+  preguntas: [string, string][];
+  aviso?: string;
+}
+const { titulo, descripcion, h1, bajada, secciones, preguntas, aviso } = Astro.props;
+const entrar = PROFESSIONAL_ABIERTO
+  ? { texto: `Probar ${MESES_PRUEBA_PROFESSIONAL} meses gratis`, href: URL_PROFESSIONAL_REGISTRO }
+  : { texto: 'Quiero entrar primero', href: url('professional/') + '#novedades' };
+---
+
+<Base
+  titulo={titulo}
+  descripcion={descripcion}
+  seccion="professional"
+  datos={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: preguntas.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })),
+    },
+  ]}
+>
+  <section class="portada">
+    <div class="portada-fondo" aria-hidden="true"></div>
+    <div class="contenedor">
+      <p class="antetitulo"><a href={url('professional/')} style="color:inherit">ConsensusLab Professional</a> · para profesionales de laboratorio clínico</p>
+      <h1>{h1}</h1>
+      <p class="portada-lema">{bajada}</p>
+      <div class="acciones-portada">
+        <a class="boton boton-dorado" href={entrar.href}>{entrar.texto}</a>
+        <a class="boton boton-secundario boton-claro" href={url('professional/')}>Ver todo lo que incluye</a>
+      </div>
+      <p class="nota-portada">{PRECIO_PROFESSIONAL_TEXTO} al año, IVA incluido · {MESES_PRUEBA_PROFESSIONAL} meses gratis, sin tarjeta · sin renovación automática.</p>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="contenedor prosa">
+      {
+        secciones.map((s) => (
+          <>
+            <h2>{s.titulo}</h2>
+            {s.parrafos?.map((p) => <p>{p}</p>)}
+            {s.lista && <ul>{s.lista.map((t) => <li>{t}</li>)}</ul>}
+          </>
+        ))
+      }
+      {aviso && <div class="aviso aviso-info"><p>{aviso}</p></div>}
+    </div>
+  </section>
+
+  <section class="seccion seccion-alt">
+    <div class="contenedor prosa">
+      <h2>Preguntas frecuentes</h2>
+      {preguntas.map(([q, a]) => (<><h3>{q}</h3><p>{a}</p></>))}
+      <p class="texto-suave">
+        Esta herramienta es parte de <a href={url('professional/')}>ConsensusLab Professional</a>, junto con las rondas de
+        criterio, las rutas por situación, el portafolio y la biblioteca. También tienes
+        <a href={url('calculadoras/')}>calculadoras gratuitas</a> de control de calidad.
+      </p>
+    </div>
+  </section>
+</Base>

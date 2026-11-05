@@ -1,0 +1,45 @@
+---
+import H from '../../componentes/HerramientaProfessional.astro';
+---
+
+<H
+  titulo="Identificación bacteriana con TSI, LIA, MIO, citrato y urea"
+  descripcion="Anota lo que ves en cinco tubos bioquímicos y compara la confianza entre las bacterias posibles. Una ayuda para decidir, no una identificación definitiva."
+  h1="Identificación bacteriana con cinco tubos: TSI, LIA, MIO, citrato y urea"
+  bajada="Anotas lo que ves en la batería bioquímica y la herramienta reparte la confianza entre las bacterias posibles, para ordenar tu decisión."
+  secciones={[
+    {
+      titulo: 'La batería de cinco tubos',
+      parrafos: ['Es la batería bioquímica clásica para orientar la identificación de bacilos gramnegativos:'],
+      lista: [
+        'TSI (agar hierro triple azúcar): fermentación de azúcares y producción de ácido sulfhídrico.',
+        'LIA (agar hierro lisina): descarboxilación y desaminación de la lisina.',
+        'MIO (movilidad, indol, ornitina).',
+        'Citrato de Simmons.',
+        'Urea.',
+      ],
+    },
+    {
+      titulo: 'Cómo funciona',
+      parrafos: [
+        'Registras la lectura de cada tubo y la herramienta compara el patrón con el de las bacterias de su lista. El resultado es un reparto de confianza entre los candidatos: nunca llega al 100 %.',
+        'Si el patrón es atípico para el mejor candidato, la herramienta lo advierte y rebaja la confianza, para mostrarte cuándo conviene seguir con otras pruebas.',
+      ],
+    },
+    {
+      titulo: 'Lo que no hace',
+      lista: [
+        'No entrega una identificación definitiva: es una orientación.',
+        'Las bacterias del grupo Salmonella y Shigella siempre se confirman con serología.',
+        'No guarda los resultados de los tubos ni datos de pacientes.',
+      ],
+    },
+  ]}
+  aviso="Es una ayuda para ordenar la decisión, no un sistema de identificación. La identificación y el informe son responsabilidad del profesional, según el procedimiento de tu laboratorio. El contenido está en afinación continua."
+  preguntas={[
+    ['¿Es una identificación definitiva?', 'No. Reparte la confianza entre las bacterias de la lista y nunca llega al 100 %. Sirve para decidir qué pruebas seguir.'],
+    ['¿Qué pasa si mi cepa no está en la lista?', 'La herramienta solo compara con las bacterias que conoce. Si el patrón no calza bien, lo señala como atípico y conviene confirmar con otros métodos.'],
+    ['¿Guarda mis resultados?', 'No. Se calcula al momento y no se almacena nada del paciente.'],
+    ['¿Qué incluye el plan?', 'Forma parte de ConsensusLab Professional, junto con las rondas, las rutas por situación, el piano hematológico, el antibiograma y el portafolio.'],
+  ]}
+/>

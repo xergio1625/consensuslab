@@ -1,0 +1,47 @@
+---
+import H from '../../componentes/HerramientaProfessional.astro';
+---
+
+<H
+  titulo="Piano hematológico online para el recuento diferencial"
+  descripcion="Cuenta el diferencial con el teclado: ocho líneas en el orden clásico, alarma al completar el recuento e informe en ese orden. En ConsensusLab Professional."
+  h1="Piano hematológico para el recuento diferencial"
+  bajada="Cuentas las células con el teclado, como en un piano clásico, y obtienes el informe en el orden en que se informa. Sin instalar nada."
+  secciones={[
+    {
+      titulo: 'Qué es un piano hematológico',
+      parrafos: [
+        'Es el contador manual con el que se hace el recuento diferencial de leucocitos en el frotis: cada tecla corresponde a un tipo de célula y, al terminar, el recuento se expresa en porcentaje y, si conoces los leucocitos totales, en valor absoluto.',
+        'El piano de ConsensusLab Professional funciona en el navegador, con el teclado del computador.',
+      ],
+    },
+    {
+      titulo: 'Las ocho líneas, en el orden clásico',
+      parrafos: ['Las células van de izquierda a derecha, en el orden en que se acostumbra a informar:'],
+      lista: ['Basófilos', 'Eosinófilos', 'Mielocitos', 'Promielocitos', 'Baciliformes (bandas)', 'Segmentados', 'Linfocitos', 'Monocitos'],
+    },
+    {
+      titulo: 'Otras células, aparte',
+      parrafos: [
+        'Metamielocitos, blastos, linfocitos reactivos o atípicos y plasmocitos se cuentan en un bloque adicional: suman al total del 100 % y se informan debajo de las ocho líneas.',
+        'Los eritroblastos se cuentan fuera del total, por cada 100 leucocitos, y corrigen el recuento total de leucocitos.',
+      ],
+    },
+    {
+      titulo: 'Cómo ayuda en el trabajo diario',
+      lista: [
+        'Alarma sonora al completar el recuento, para no perder la cuenta.',
+        'Valores absolutos cuando ingresas los leucocitos totales del hemograma.',
+        'Informe ordenado, listo para copiar.',
+        'Los recuentos no se guardan en la plataforma y no debes escribir datos de pacientes.',
+      ],
+    },
+  ]}
+  aviso="El piano ayuda a contar y ordenar. La identificación de las células la hace el profesional con el microscopio, y en tu laboratorio manda tu procedimiento aprobado."
+  preguntas={[
+    ['¿Cuántas células cuenta el piano?', 'Las que defina el procedimiento de tu laboratorio. La alarma suena cuando completas el total que fijaste.'],
+    ['¿Sirve para cualquier frotis?', 'Es una ayuda para el recuento manual; la identificación de cada célula sigue siendo tuya. No lee imágenes ni reemplaza al analizador.'],
+    ['¿Guarda los recuentos?', 'No. El recuento se calcula al momento y no se almacena. No escribas datos de pacientes.'],
+    ['¿Qué incluye el plan?', 'El piano forma parte de ConsensusLab Professional, junto con las rondas de criterio, las rutas por situación, el portafolio y la biblioteca.'],
+  ]}
+/>
