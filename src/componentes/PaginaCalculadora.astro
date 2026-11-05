@@ -5,9 +5,9 @@ import Base from '../plantillas/Base.astro';
 import PedirDemo from './PedirDemo.astro';
 import { CALCULADORAS, GRUPOS_ESTADISTICA, SEO_CALCULADORAS, calculadora, type IdCalculadora } from '../lib/calculadoras';
 import { migasLd, url } from '../lib/rutas';
-import { PUENTES } from '../lib/puentes';
+import { PUENTES, PUENTES_PROFESSIONAL } from '../lib/puentes';
 import { RESPUESTAS } from '../lib/preguntas-calculadoras';
-import { URL_REGISTRO } from '../lib/sitio';
+import { URL_REGISTRO, URL_PROFESSIONAL_REGISTRO, MESES_PRUEBA_PROFESSIONAL, PRECIO_PROFESSIONAL_TEXTO } from '../lib/sitio';
 
 interface Props {
   id: IdCalculadora;
@@ -16,7 +16,10 @@ const c = calculadora(Astro.props.id);
 const seo = SEO_CALCULADORAS[Astro.props.id];
 const puente = PUENTES[Astro.props.id];
 const respuestas = RESPUESTAS[Astro.props.id];
-const registro = `${URL_REGISTRO}&utm_source=sitio&utm_medium=calculadora&utm_campaign=${Astro.props.id}`;
+const puentePro = PUENTES_PROFESSIONAL[Astro.props.id];
+const utmPro = `utm_source=sitio&utm_medium=calculadora&utm_campaign=${Astro.props.id}&utm_content=professional`;
+const registroPro = `${URL_PROFESSIONAL_REGISTRO}&${utmPro}`;
+const registro =`${URL_REGISTRO}&utm_source=sitio&utm_medium=calculadora&utm_campaign=${Astro.props.id}`;
 const grupoDe = (x: { grupo?: string }) => x.grupo;
 const grupoEst = c.familia === 'estadistica' ? GRUPOS_ESTADISTICA.find((g) => g.id === grupoDe(c)) : undefined;
 const otras = CALCULADORAS.filter((o) => o.id !== c.id).sort(
@@ -110,6 +113,22 @@ const otras = CALCULADORAS.filter((o) => o.id !== c.id).sort(
               </p>
               <p class="texto-suave">
                 ¿No sabes por dónde empezar? <a href={url('diagnostico/')}>Haz el diagnóstico de tu laboratorio</a> (10 minutos, sin cuenta).
+              </p>
+            </section>
+          )
+        }
+        {
+          puentePro && (
+            <section class="caja puente puente-professional" aria-label="Para quien decide en el laboratorio">
+              <h2>{puentePro.titulo}</h2>
+              <p>{puentePro.texto}</p>
+              <p class="texto-suave">
+                Incluye 24 rutas por situación y certificado de participación por ronda. {MESES_PRUEBA_PROFESSIONAL} meses
+                gratis; después, {PRECIO_PROFESSIONAL_TEXTO} al año.
+              </p>
+              <p class="puente-acciones">
+                <a class="boton boton-primario" href={registroPro}>Probar Professional gratis</a>
+                <a class="boton boton-secundario" href={url(`professional/?${utmPro}`)}>Conocer Professional</a>
               </p>
             </section>
           )

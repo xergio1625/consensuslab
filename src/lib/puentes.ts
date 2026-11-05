@@ -10,6 +10,42 @@ export interface Puente {
   enlace: string;
 }
 
+// Puente al profesional individual (ConsensusLab Professional). Va aparte del puente a la app, que habla al jefe del
+// laboratorio: aquí se habla a quien toma la decisión en el mesón. Solo se prometen las rondas de criterio y las rutas,
+// que Professional ya tiene; el cierre común (prueba gratis, precio, certificado) lo agrega el componente.
+export interface PuenteProfessional {
+  titulo: string;
+  texto: string;
+}
+
+export const PUENTES_PROFESSIONAL: Partial<Record<IdCalculadora, PuenteProfessional>> = {
+  'temperatura-cinetica-media': {
+    titulo: 'Calcular la MKT es la parte fácil: ¿qué harías con una excursión?',
+    texto:
+      'Si los reactivos estuvieron fuera de rango, ¿se descartan, se verifican o se siguen usando? Eso es criterio, y se entrena. En ConsensusLab Professional eliges qué harías en un caso de laboratorio y recién después ves la respuesta experta.',
+  },
+  'amef-npr': {
+    titulo: 'El NPR ordena las fallas; ¿cuál atenderías primero?',
+    texto:
+      'Con dos modos de falla parecidos, la cifra no decide sola. En ConsensusLab Professional resuelves casos de laboratorio, eliges qué harías y comparas tu criterio con la respuesta experta.',
+  },
+  'levey-jennings': {
+    titulo: 'Ver la gráfica es una cosa; decidir qué hacer, otra',
+    texto:
+      'Una regla de Westgard se rompe: ¿repites, recalibras o detienes la corrida? En ConsensusLab Professional te enfrentas a casos con su gráfica de control, decides primero y comparas con la respuesta experta.',
+  },
+  'sesgo-y-sdi': {
+    titulo: 'El sesgo dice cuánto te desvías, no qué hacer',
+    texto:
+      '¿Revisas la calibración, el lote o el método? Esa decisión se afina con práctica. En ConsensusLab Professional eliges qué harías en casos de control de calidad y comparas tu criterio con la respuesta experta.',
+  },
+  'ldl-calculado': {
+    titulo: 'Calcular el LDL es fórmula; saber cuándo fiarte, criterio',
+    texto:
+      'Cuándo informar el LDL calculado y cuándo pedir otra medición depende de la situación. En ConsensusLab Professional entrenas esas decisiones con casos de laboratorio y rutas por situación.',
+  },
+};
+
 export const PUENTES: Partial<Record<IdCalculadora, Puente>> = {
   'sesgo-y-sdi': {
     titulo: 'Esto lo haces una vez por informe',
