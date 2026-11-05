@@ -23,12 +23,81 @@ const pasos = [
   ['Comparas con el grupo', 'Al cierre se publica cómo decidió el resto, de forma anónima. Tu laboratorio ve su propio resultado desde 5 personas.'],
 ];
 
+// Lo que la plataforma tiene hoy, por área. No agregar aquí nada que aún no exista.
+const areas = [
+  {
+    id: 'rondas',
+    titulo: 'Rondas de criterio',
+    frase: 'Decide primero, compara después.',
+    puntos: [
+      'Casos de control de calidad con gráficas de Westgard y respuesta experta.',
+      'Resultados anónimos del grupo al cierre de cada ronda.',
+      'Certificado de participación con código verificable.',
+    ],
+  },
+  {
+    id: 'rutas',
+    titulo: 'Rutas por situación',
+    frase: 'Cuéntale qué te pasa y te ordena qué hacer.',
+    puntos: [
+      '24 rutas: control rechazado, analizador nuevo, cambio de método o proveedor, dos equipos que deben dar lo mismo, no conformidades, compras y rutinas.',
+      'Pasos en orden, la estadística que corresponde y la calculadora para hacerla.',
+      'Guardas el resultado en tu cuaderno.',
+    ],
+  },
+  {
+    id: 'herramientas',
+    titulo: 'Herramientas de trabajo',
+    frase: 'Para el mesón y para microbiología.',
+    puntos: [
+      'Piano hematológico: recuento diferencial con el teclado.',
+      'Identificación bacteriana con 5 tubos.',
+      'Antibiograma con los puntos de corte de tu laboratorio.',
+    ],
+  },
+  {
+    id: 'portafolio',
+    titulo: 'Portafolio y desarrollo',
+    frase: 'Tu carrera en una sola cuenta.',
+    puntos: [
+      'Guardas tus títulos, cursos y capacitaciones; los certificados de las rondas llegan solos.',
+      'Autoevaluación por áreas que te muestra qué reforzar.',
+      'Cuaderno de decisiones y pendientes, y un calendario. Todo es solo tuyo.',
+    ],
+  },
+  {
+    id: 'biblioteca',
+    titulo: 'Biblioteca',
+    frase: 'Guías y planillas para el trabajo diario.',
+    puntos: [
+      'Guías en PDF y planillas de Excel, como verificar un método o qué hacer cuando un control se sale.',
+      'Una pieza nueva cada dos meses.',
+    ],
+  },
+  {
+    id: 'laboratorio',
+    titulo: 'Conecta con tu laboratorio',
+    frase: 'Tu cuenta es tuya, estés donde estés.',
+    puntos: [
+      'Si tu laboratorio te lo pide, entregas documentos de tu portafolio con tu consentimiento.',
+      'Acceso directo a ConsensusLab Essential cuando tu laboratorio lo tiene.',
+      'Cada plan de laboratorio incluye hasta 5 cuentas de Professional.',
+    ],
+  },
+];
+
+const herramientas = [
+  ['Piano hematológico', 'Cuentas el recuento diferencial con el teclado, con las ocho líneas en el orden clásico. Suena una alarma al completar el recuento y obtienes el informe en ese mismo orden.'],
+  ['Identificación bacteriana', 'Anotas lo que ves en los cinco tubos (TSI, LIA, MIO, citrato y urea) y la herramienta reparte la confianza entre las bacterias posibles. Es una ayuda para ordenar la decisión, no una identificación definitiva.'],
+  ['Antibiograma', 'Según el organismo y el sitio de la muestra, te sugiere qué antibióticos probar e interpreta los halos con los puntos de corte que tú declaras desde la tabla vigente de tu laboratorio. No guardamos los halos.'],
+];
+
 const incluye = [
   'Rondas de control externo del criterio profesional, con casos de control de calidad y gráficas de Westgard.',
-  'La respuesta experta con su razonamiento, apenas respondes.',
-  'Resultados del grupo al cierre (con 30 o más respuestas) y, si tu laboratorio participa, el resultado del equipo desde 5 personas.',
-  'Un certificado de participación por ronda, con un código para que cualquiera pueda verificarlo.',
-  'Biblioteca de guías y planillas de Excel para descargar, con una pieza nueva cada dos meses (al menos 6 al año). Cada guía suelta cuesta $2.900.',
+  'Respuesta experta con su razonamiento, resultados del grupo al cierre y certificado de participación por ronda.',
+  '24 rutas por situación, piano hematológico, identificación bacteriana y antibiograma.',
+  'Portafolio personal con autoevaluación, cuaderno y calendario.',
+  'Biblioteca de guías y planillas de Excel, con una pieza nueva cada dos meses (al menos 6 al año). Cada guía suelta cuesta $2.900.',
   'Tu historial de decisiones, siempre privado.',
 ];
 
@@ -39,6 +108,13 @@ const preguntas = [
   ['¿Quién decide cuál es la respuesta experta?', 'Cada caso lo redacta un tecnólogo médico y lo revisan otras personas del área antes de publicarse. Cuando la conducta depende del procedimiento del laboratorio, el caso lo dice en su supuesto y se aceptan respuestas razonables además de la experta.'],
   ['Si mi laboratorio usa ConsensusLab, ¿pierdo mi cuenta al cambiar de trabajo?', 'No. Tu cuenta es tuya: si tu laboratorio te invita, la aceptas y entras con la misma cuenta; si cambias de trabajo, sales del laboratorio y conservas tu perfil y tu historial. Los planes de laboratorio incluyen hasta 5 cuentas de Professional.'],
   ['¿Qué hay en la biblioteca y puedo descargarla durante la prueba?', 'Son guías prácticas en PDF y planillas de Excel (por ejemplo, verificar un método o qué hacer cuando un control se sale), con una pieza nueva cada dos meses. Cada PDF lleva tu nombre al pie y es de uso personal. Las descargas completas son para quienes tienen la suscripción pagada (o el cupo de un laboratorio); durante los 3 meses gratis ves el índice y las dos primeras páginas de cada guía.'],
+  ['¿Qué es el portafolio y quién lo ve?', 'Es tu espacio para guardar títulos, cursos, certificados, autoevaluaciones y notas. Es privado: nadie lo ve salvo que tú entregues un documento a un laboratorio que te lo pida, con tu consentimiento expreso. Lo que entregas pasa a ser parte del registro de ese laboratorio y no se puede retirar, porque la acreditación exige que el laboratorio conserve el registro de su personal.'],
+  ['¿La autoevaluación me evalúa o me certifica?', 'No. Es una guía privada para ver en qué áreas conviene reforzar y te sugiere calculadoras, guías o rondas. No genera ningún certificado.'],
+  ['¿Las rutas por situación son protocolos?', 'No. Son una ayuda para ordenar los pasos y elegir la estadística adecuada. En tu laboratorio siempre manda tu procedimiento aprobado.'],
+  ['¿El antibiograma trae los puntos de corte?', 'No. Tú declaras los de la tabla vigente de tu laboratorio (CLSI, EUCAST u otra). Así usas siempre tu edición y no reproducimos tablas protegidas por derechos de autor.'],
+  ['¿La identificación bacteriana es definitiva?', 'No. Reparte la confianza entre las bacterias de la lista según lo que ves en los tubos y nunca llega al 100 %. Salmonella y Shigella, por ejemplo, siempre se confirman con serología.'],
+  ['¿Guardan los halos, los recuentos o los resultados de los tubos?', 'No. Se calculan al momento y no se guardan. Tampoco debes escribir datos de pacientes.'],
+  ['¿Necesito ConsensusLab Essential para usar Professional?', 'No. Professional funciona solo. El acceso directo a Essential se activa si tu laboratorio tiene ese servicio.'],
   ['¿Qué pasa cuando terminan los 3 meses?', `Para continuar pagas la anualidad (${PRECIO_PROFESSIONAL_TEXTO} con IVA incluido), a contar desde la fecha de pago. No hay renovación automática: te avisamos antes de que venza. Si no continúas, por 30 días puedes consultar tu historial.`],
   ['¿Sirve si trabajo fuera de Chile?', 'Sí. Los casos usan criterios internacionales de control de calidad (reglas de Westgard, CLSI) y no dependen de una norma nacional. Por ahora el precio y el pago son en pesos chilenos; si estás en otro país, escríbenos a contacto@consensuslab.cl y te contamos cómo pagar.'],
   ['¿Cómo pago y qué recibo?', 'Por transferencia, y te emitimos boleta electrónica. Si necesitas factura para tu institución, escríbenos a contacto@consensuslab.cl.'],
@@ -46,15 +122,16 @@ const preguntas = [
 ---
 
 <Base
-  titulo="ConsensusLab Professional · criterio en control de calidad"
+  titulo="ConsensusLab Professional · tu escritorio profesional de laboratorio clínico"
   seccion="professional"
-  descripcion={`Para tecnólogos médicos, bioquímicos y bacteriólogos: decide frente a gráficas de Westgard, ve la respuesta experta y compara con el grupo. ${MESES_PRUEBA_PROFESSIONAL} meses gratis.`}
+  descripcion={`Rondas de criterio con gráficas de Westgard, 24 rutas para cada situación del laboratorio, piano hematológico, identificación bacteriana, antibiograma y tu portafolio profesional. ${MESES_PRUEBA_PROFESSIONAL} meses gratis.`}
   datos={[
     {
       '@context': 'https://schema.org',
       '@type': 'Product',
       name: 'ConsensusLab Professional',
-      description: 'Rondas de control externo del criterio profesional para tecnólogos médicos, bioquímicos, bacteriólogos, químicos farmacéuticos y técnicos de laboratorio clínico de habla hispana: casos con gráficas de control, respuesta experta, resultados anónimos del grupo y certificado de participación.',
+      description: 'Escritorio profesional para personal de laboratorio clínico de habla hispana: rondas de control externo del criterio con gráficas de control, 24 rutas por situación, piano hematológico, identificación bacteriana, antibiograma, portafolio con autoevaluación y biblioteca de guías y planillas.',
+      featureList: areas.map((x) => x.titulo),
       brand: { '@type': 'Brand', name: 'ConsensusLab' },
       url: new URL('professional/', Astro.site).href,
       offers: {
@@ -75,15 +152,15 @@ const preguntas = [
   <section class="portada">
     <div class="portada-fondo" aria-hidden="true"></div>
     <div class="contenedor">
-      <p class="antetitulo">Para tecnólogos médicos, bioquímicos y bacteriólogos de laboratorio clínico</p>
-      <h1>Pon a prueba tu criterio, ronda a ronda</h1>
+      <p class="antetitulo">Para profesionales de laboratorio clínico</p>
+      <h1>Tu escritorio profesional de laboratorio clínico</h1>
       <p class="portada-lema">
-        Cada ronda abre y cierra en fechas fijas, como un control externo: te presentamos un caso con su gráfica de control,
-        decides qué harías y recién entonces ves la respuesta experta y cómo decidió el resto, de forma anónima.
+        Rondas de criterio, rutas para cada situación, herramientas de trabajo y un portafolio que te acompaña si cambias
+        de laboratorio. Todo en una cuenta personal.
       </p>
       <div class="acciones-portada">
         <a class="boton boton-dorado" href={entrar.href}>{entrar.texto}</a>
-        <a class="boton boton-secundario boton-claro" href="#muestra">Prueba un caso ahora</a>
+        <a class="boton boton-secundario boton-claro" href="#dentro">Ver qué hay adentro</a>
       </div>
       <p class="nota-portada">
         {PRECIO_PROFESSIONAL_TEXTO} al año, IVA incluido · {MESES_PRUEBA_PROFESSIONAL} meses gratis, sin tarjeta · sin renovación automática.
@@ -92,11 +169,60 @@ const preguntas = [
     </div>
   </section>
 
+  <section class="seccion" id="dentro">
+    <div class="contenedor">
+      <div class="seccion-cabeza">
+        <div>
+          <p class="antetitulo">Qué hay adentro</p>
+          <h2>Seis áreas, una sola cuenta</h2>
+        </div>
+      </div>
+      <div class="rejilla">
+        {
+          areas.map((a) => (
+            <div class="tarjeta" id={a.id}>
+              <h3>{a.titulo}</h3>
+              <p><strong>{a.frase}</strong></p>
+              <ul class="lista-tarjeta">
+                {a.puntos.map((t) => <li>{t}</li>)}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion seccion-alt" id="herramientas-detalle">
+    <div class="contenedor">
+      <div class="seccion-cabeza">
+        <div>
+          <p class="antetitulo">Herramientas de trabajo</p>
+          <h2>Para el mesón y para microbiología</h2>
+        </div>
+      </div>
+      <div class="rejilla">
+        {
+          herramientas.map(([titulo, texto]) => (
+            <div class="tarjeta">
+              <h3>{titulo}</h3>
+              <p>{texto}</p>
+            </div>
+          ))
+        }
+      </div>
+      <p class="texto-suave" style="margin-top:14px">
+        Estas secciones están en afinación continua. Ayudan a contar, ordenar e interpretar; no reemplazan el juicio del
+        profesional ni el procedimiento de tu laboratorio.
+      </p>
+    </div>
+  </section>
+
   <section class="seccion" id="como">
     <div class="contenedor">
       <div class="seccion-cabeza">
         <div>
-          <p class="antetitulo">Cómo funciona</p>
+          <p class="antetitulo">Rondas de criterio</p>
           <h2>Una ronda en cuatro pasos</h2>
         </div>
       </div>
@@ -114,69 +240,7 @@ const preguntas = [
     </div>
   </section>
 
-  <section class="seccion seccion-alt" id="muestra">
-    <div class="contenedor">
-      <div class="seccion-cabeza">
-        <div>
-          <p class="antetitulo">Un caso de muestra</p>
-          <h2>¿Qué harías tú?</h2>
-        </div>
-      </div>
-      <form class="caso-muestra" id="caso-muestra" novalidate>
-        <p>
-          Control de glucosa en dos niveles. Acabas de correr el control de la última corrida de la mañana (la n.º 22): en
-          ella y en la anterior, los dos niveles quedaron por sobre +2 DE, del mismo lado. Las corridas anteriores ya se
-          validaron. Hay 40 muestras de pacientes en la bandeja.
-        </p>
-        <p class="texto-suave">Supuesto de procedimiento: el plan del laboratorio usa las reglas 1-3s, 2-2s y R-4s.</p>
-        <img
-          src={url('professional/caso-muestra.svg')}
-          width="680"
-          height="554"
-          alt="Gráfica de Levey-Jennings de glucosa con dos niveles de control, 22 corridas. En la corrida 21 y en la última, la 22, ambos niveles superan +2 desviaciones estándar."
-        />
-        <fieldset style="border:0;padding:0;margin:0">
-          <legend class="visually-hidden-sitio" style="position:absolute;left:-9999px">Elige tu decisión</legend>
-          <ul class="opciones-caso">
-            <li>
-              <label class="opcion-caso" data-val="experta">
-                <input type="radio" name="decision" value="A" />
-                <span><strong>A.</strong> Rechazar la corrida, detener la liberación y buscar la causa<span class="etiqueta-val experta" hidden>Respuesta experta</span></span>
-              </label>
-            </li>
-            <li>
-              <label class="opcion-caso" data-val="no-recomendada">
-                <input type="radio" name="decision" value="B" />
-                <span><strong>B.</strong> Repetir el control hasta que pase y seguir informando<span class="etiqueta-val no-recomendada" hidden>No recomendada</span></span>
-              </label>
-            </li>
-            <li>
-              <label class="opcion-caso" data-val="aceptable">
-                <input type="radio" name="decision" value="C" />
-                <span><strong>C.</strong> Recalibrar y repetir los controles antes de decidir<span class="etiqueta-val aceptable" hidden>Aceptable</span></span>
-              </label>
-            </li>
-          </ul>
-        </fieldset>
-        <button type="submit" class="boton boton-primario">Enviar mi decisión</button>
-        <p class="estado-cotizacion estado-error" id="muestra-error" role="alert" hidden>Elige una opción antes de enviar.</p>
-        <div class="resultado-caso" id="muestra-resultado" role="status" hidden>
-          <p id="muestra-tu-decision"></p>
-          <p>
-            <strong>Razonamiento experto:</strong> dos controles seguidos sobre 2 DE del mismo lado violan la regla 2-2s e indican
-            un error sistemático. Se detiene la liberación, se busca la causa (calibración, reactivo, material de control) y se
-            revisan los resultados informados desde el último control aceptable. Repetir hasta que «pase» no es una acción
-            correctiva: esconde el problema.
-          </p>
-          <p class="texto-suave">
-            Es un caso de muestra. En las rondas reales, el reparto de las decisiones del grupo se publica al cierre.
-          </p>
-        </div>
-      </form>
-    </div>
-  </section>
-
-  <section class="seccion">
+  <section class="seccion seccion-alt">
     <div class="contenedor">
       <div class="seccion-cabeza">
         <div>
@@ -189,14 +253,14 @@ const preguntas = [
       </ul>
       <div class="aviso aviso-info">
         <p>
-          <strong>Lo que no es:</strong> no es un examen ni una certificación de competencias, y tu resultado individual no
+          <strong>Lo que no es:</strong> no es un examen ni una certificación de competencias; el certificado acredita participación, no un título ni una capacitación acreditada. Tu resultado individual no
           se usa para evaluar ni sancionar a nadie. En tu laboratorio manda tu procedimiento aprobado.
         </p>
       </div>
     </div>
   </section>
 
-  <section class="seccion seccion-alt">
+  <section class="seccion">
     <div class="contenedor">
       <div class="seccion-cabeza">
         <div>
@@ -218,7 +282,7 @@ const preguntas = [
     </div>
   </section>
 
-  <section class="seccion">
+  <section class="seccion seccion-alt">
     <div class="contenedor prosa">
       <h2>Preguntas frecuentes</h2>
       {
@@ -237,39 +301,6 @@ const preguntas = [
   </section>
 </Base>
 
-<script>
-  // Caso de muestra: se responde primero y recién entonces aparece la respuesta experta (todo en el navegador).
-  const form = document.getElementById('caso-muestra') as HTMLFormElement | null;
-  if (form) {
-    const error = document.getElementById('muestra-error') as HTMLElement;
-    const resultado = document.getElementById('muestra-resultado') as HTMLElement;
-    const tuDecision = document.getElementById('muestra-tu-decision') as HTMLElement;
-    const frases: Record<string, string> = {
-      experta: 'Tu decisión coincide con la respuesta experta.',
-      aceptable: 'Tu decisión es aceptable, aunque no es la respuesta experta.',
-      'no-recomendada': 'Tu decisión no es recomendable: esconde el problema en vez de resolverlo.',
-    };
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const elegida = form.querySelector<HTMLInputElement>('input[name="decision"]:checked');
-      if (!elegida) {
-        error.hidden = false;
-        return;
-      }
-      error.hidden = true;
-      form.querySelectorAll<HTMLInputElement>('input[name="decision"]').forEach((i) => (i.disabled = true));
-      form.querySelectorAll<HTMLElement>('.opcion-caso').forEach((o) => {
-        o.querySelector<HTMLElement>('.etiqueta-val')!.hidden = false;
-        if (o.dataset.val === 'experta') o.classList.add('es-experta');
-      });
-      const etiqueta = elegida.closest<HTMLElement>('.opcion-caso')!;
-      etiqueta.classList.add('es-elegida');
-      tuDecision.textContent = `Elegiste la opción ${elegida.value}. ${frases[etiqueta.dataset.val ?? ''] ?? ''}`;
-      resultado.hidden = false;
-      form.querySelector<HTMLButtonElement>('button[type=submit]')!.hidden = true;
-      resultado.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-      const w = window as unknown as { gtag?: (...a: unknown[]) => void };
-      if (typeof w.gtag === 'function') w.gtag('event', 'caso_muestra_respondido', { pagina: location.pathname });
-    });
-  }
-</script>
+<style>
+  .lista-tarjeta { margin: 0; padding-left: 1.15em; display: grid; gap: 6px; color: var(--c-texto-suave); font-size: .95rem; }
+</style>
