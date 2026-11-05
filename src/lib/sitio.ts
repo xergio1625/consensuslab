@@ -12,7 +12,10 @@ export const URL_APP = 'https://app.consensuslab.cl/';
 // Página de «Crear cuenta» (prueba gratuita) de la app: los botones «Probar gratis» van aquí; «Ingresar» va a URL_APP.
 export const URL_REGISTRO = URL_APP + '?registro=1';
 
-/** ConsensusLab Professional: la app vive en app.consensuslab.cl/professional; la página de venta, en /professional/ de este sitio. */
+/**
+ * ConsensusLab Professional: la página de venta está en /professional/ de este sitio. El INGRESO es uno solo para todo ConsensusLab
+ * (URL_APP): la app te lleva a tu perfil. URL_PROFESSIONAL solo sirve para crear la cuenta de Professional (?registro=1).
+ */
 export const URL_PROFESSIONAL = URL_APP + 'professional';
 export const URL_PROFESSIONAL_REGISTRO = URL_PROFESSIONAL + '?registro=1';
 /**

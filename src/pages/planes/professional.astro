@@ -5,7 +5,7 @@ import Base from '../../plantillas/Base.astro';
 import { migasLd, url } from '../../lib/rutas';
 import { enlacePago } from '../../lib/pagos';
 import {
-  MESES_PRUEBA_PROFESSIONAL, PRECIO_PROFESSIONAL_TEXTO, PROFESSIONAL_ABIERTO, URL_PROFESSIONAL, URL_PROFESSIONAL_REGISTRO,
+  MESES_PRUEBA_PROFESSIONAL, PRECIO_PROFESSIONAL_TEXTO, PROFESSIONAL_ABIERTO, URL_APP, URL_PROFESSIONAL_REGISTRO,
 } from '../../lib/sitio';
 
 const entrar = PROFESSIONAL_ABIERTO
@@ -98,7 +98,7 @@ const preguntas = [
       <h2>Preguntas frecuentes</h2>
       {preguntas.map(([q, a]) => (<><h3>{q}</h3><p>{a}</p></>))}
       <p class="texto-suave">
-        La app de Professional estará en {URL_PROFESSIONAL.replace('https://', '')}. Las guías de pago único están en <a href={url('guias/')}>Guías</a>.
+        Se ingresa siempre por {URL_APP.replace('https://', '').replace(/\/$/, '')}: es el mismo acceso para Professional y para los laboratorios. Las guías de pago único están en <a href={url('guias/')}>Guías</a>.
       </p>
     </div>
   </section>

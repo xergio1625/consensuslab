@@ -8,7 +8,7 @@ import {
   PRECIO_PROFESSIONAL,
   PRECIO_PROFESSIONAL_TEXTO,
   PROFESSIONAL_ABIERTO,
-  URL_PROFESSIONAL,
+  URL_APP,
   URL_PROFESSIONAL_REGISTRO,
 } from '../../lib/sitio';
 
@@ -230,7 +230,7 @@ const preguntas = [
         ))
       }
       <p class="texto-suave">
-        La app de Professional está en {URL_PROFESSIONAL.replace('https://', '')}. Quien dirige un laboratorio puede
+        Se ingresa siempre por {URL_APP.replace('https://', '').replace(/\/$/, '')}: es el mismo acceso para Professional y para los laboratorios. Quien dirige un laboratorio puede
         ver <a href={url('para-laboratorios/')}>ConsensusLab para laboratorios</a>.
       </p>
     </div>

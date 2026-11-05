@@ -3,7 +3,7 @@
 // viven en la app: este sitio estático no guarda datos de usuarios.
 import Base from '../plantillas/Base.astro';
 import { url } from '../lib/rutas';
-import { PROFESSIONAL_ABIERTO, URL_PROFESSIONAL, URL_PROFESSIONAL_REGISTRO, URL_APP, URL_REGISTRO } from '../lib/sitio';
+import { PROFESSIONAL_ABIERTO, URL_PROFESSIONAL_REGISTRO, URL_APP, URL_REGISTRO } from '../lib/sitio';
 ---
 
 <Base titulo="Ingresar" seccion="cuenta" indexar={false} descripcion="Ingresa a la app ConsensusLab para probar las herramientas 15 días gratis o usarlas con tu suscripción.">
@@ -20,7 +20,7 @@ import { PROFESSIONAL_ABIERTO, URL_PROFESSIONAL, URL_PROFESSIONAL_REGISTRO, URL_
       <p>
         {PROFESSIONAL_ABIERTO ? (
           <>
-            <a class="boton boton-primario" href={URL_PROFESSIONAL}>Ingresar a Professional</a>
+            <a class="boton boton-primario" href={URL_APP}>Ingresar a Professional</a>
             <a class="boton boton-secundario" href={URL_PROFESSIONAL_REGISTRO}>Crear cuenta (3 meses gratis)</a>
           </>
         ) : (
