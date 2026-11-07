@@ -28,7 +28,7 @@
     "numero": 4,
     "nombre": "Calidad y cumplimiento normativo",
     "nombre_corto": "Calidad",
-    "descripcion": "El sistema de gestión de calidad que exigen la acreditación (ISO 15189 / Manual de acreditación) y la autorización sanitaria.",
+    "descripcion": "El sistema de gestión de calidad que exige la autorización sanitaria: documentos, auditorías, no conformidades, riesgos e indicadores.",
     "jira": "PP-66"
   },
   {

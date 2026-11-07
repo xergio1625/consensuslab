@@ -7,6 +7,7 @@ acceso: suscripcion
 app_modulo: inventario
 etiquetas: []
 consensus_qc: "previsto"
+capturas: [inventario]
 que_es: "Stock por lote con mínimo, vencimientos, alertas de quiebre, reactivos en uso con su estabilidad y trazabilidad del lote usado cada día."
 problema: "Evita suspender exámenes por falta de reactivo y pérdidas por vencimiento."
 recurso_previsto: "Planilla de inventario con stock mínimo y alerta de vencimiento a 30/60 días."

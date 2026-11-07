@@ -18,6 +18,7 @@ import {
 } from '../../lib/rutas';
 import { urlModulo } from '../../lib/sitio';
 import { calculadorasDe } from '../../lib/calculadoras';
+import { CAPTURAS } from '../../lib/capturas';
 
 export async function getStaticPaths() {
   const herramientas = await obtenerHerramientas();
@@ -33,6 +34,7 @@ const tienePasos = Boolean(herramienta.body?.trim());
 const calculadoras = calculadorasDe(herramienta.id);
 const prompts = (await obtenerPrompts()).filter((p) => p.data.herramientas.some((r) => r.id === herramienta.id));
 
+const capturas = h.capturas.flatMap((id) => CAPTURAS.filter((c) => c.id === id));
 const siglas = { excel: 'XLS', sheets: 'GS', word: 'DOC', pdf: 'PDF', formulario: 'FORM', otro: '↓' } as const;
 ---
 
@@ -75,6 +77,24 @@ const siglas = { excel: 'XLS', sheets: 'GS', word: 'DOC', pdf: 'PDF', formulario
         <p>{h.que_es}</p>
         <h2>Problema que resuelve</h2>
         <p>{h.problema}</p>
+
+        {
+          capturas.length > 0 && (
+            <>
+              <h2>Así se ve por dentro</h2>
+              {capturas.map((c) => (
+                <figure class="ficha-captura">
+                  <a href={url(c.archivo)} target="_blank" rel="noopener" aria-label={`Abrir la captura «${c.titulo}» en tamaño completo`}>
+                    <img src={url(c.archivo)} alt={c.alt} width={c.ancho} height={c.alto} loading="lazy" decoding="async" />
+                  </a>
+                  <figcaption>
+                    <strong>{c.titulo}</strong> {c.texto} <span class="texto-suave">Datos de prueba.</span>
+                  </figcaption>
+                </figure>
+              ))}
+            </>
+          )
+        }
 
         {
           tienePasos ? (
@@ -214,3 +234,12 @@ const siglas = { excel: 'XLS', sheets: 'GS', word: 'DOC', pdf: 'PDF', formulario
     </div>
   </div>
 </Base>
+
+<script>
+  // En celular la captura se ve a tamaño real: se parte ocultando la barra lateral y se desliza hacia los lados.
+  if (matchMedia('(max-width: 760px)').matches) {
+    document.querySelectorAll<HTMLElement>('.ficha-captura a').forEach((a) => {
+      a.scrollLeft = Math.round(a.scrollWidth * 0.2);
+    });
+  }
+</script>

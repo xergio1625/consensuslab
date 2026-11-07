@@ -7,6 +7,7 @@ acceso: suscripcion
 app_modulo: mantencion
 etiquetas: []
 consensus_qc: "previsto"
+capturas: [mantencion]
 que_es: "Dos carriles de mantención por equipo: las rutinas diarias, semanales y mensuales con lista de verificación, a cargo de quien usa el equipo, y el plan del servicio técnico, con mantenciones y calibraciones programadas, avisos y certificados."
 problema: "Evita rutinas y mantenciones olvidadas y deja evidencia por equipo y por área para las auditorías."
 recurso_previsto: "Plantilla de programa anual de mantención."

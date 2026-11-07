@@ -7,6 +7,7 @@ acceso: suscripcion
 app_modulo: informes
 etiquetas: [prioridad-coordinador]
 consensus_qc: "no"
+capturas: [informes]
 que_es: "Informes de producción, consumo, costos, indicadores y cumplimiento, generados y enviados por correo al jefe o a la dirección."
 problema: "Elimina las horas de fin de mes armando informes a mano."
 recurso_previsto: "Plantilla de informe mensual en planilla que se llena desde los registros."

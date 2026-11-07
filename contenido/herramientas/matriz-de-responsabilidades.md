@@ -7,6 +7,7 @@ acceso: suscripcion
 app_modulo: responsabilidades
 etiquetas: []
 consensus_qc: "no"
+capturas: [responsabilidades]
 que_es: "Quién aprueba, quién valida resultados y quién reemplaza a quién en cada función (matriz RACI)."
 problema: "Evita vacíos de responsabilidad cuando alguien falta y aclara las funciones ante auditorías."
 recurso_previsto: "Plantilla de matriz RACI para laboratorio clínico."

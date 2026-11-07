@@ -155,7 +155,7 @@ Se optó por una evaluación exclusiva: tratarlo como lo que era, un biuret modi
 - **Registra cada cambio de reactivo, de lote y de calibración** junto al control de ese momento. Así puedes separar un reactivo nuevo de uno que se salvó de la alarma.
 - **Pregúntate siempre si es sesgo o imprecisión.** El remedio de uno no sirve para el otro.
 
-Para ordenar el resto hay fichas de [control de calidad interno y externo](/herramientas/control-de-calidad-interno-y-externo/) y de [inventario y lotes de reactivos](/herramientas/inventario-y-lotes-de-reactivos/).
+Para ordenar el resto hay fichas de [control de calidad interno y externo](/qc/) y de [inventario y lotes de reactivos](/herramientas/inventario-y-lotes-de-reactivos/).
 
 ## Y ahí entra ConsensusLab QC
 

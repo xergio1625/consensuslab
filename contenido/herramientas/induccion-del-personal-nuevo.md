@@ -7,6 +7,7 @@ acceso: suscripcion
 app_modulo: induccion
 etiquetas: []
 consensus_qc: "no"
+capturas: [induccion]
 que_es: "Programa de inducción con lista de chequeo y firma del nuevo integrante y del responsable."
 problema: "Todos reciben la misma información mínima y queda evidencia de la inducción."
 recurso_previsto: "Lista de chequeo de inducción por área."

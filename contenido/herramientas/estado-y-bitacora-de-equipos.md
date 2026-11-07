@@ -7,6 +7,7 @@ acceso: suscripcion
 app_modulo: equipos
 etiquetas: []
 consensus_qc: "no"
+capturas: [equipos]
 que_es: "Registro de fallas, tiempo detenido, visitas técnicas, tickets al proveedor y tiempo de respuesta del servicio técnico."
 problema: "Permite demostrar con datos cuánto tiempo estuvo detenido un equipo y cómo respondió el proveedor, útil para reclamos y renovación de contratos."
 recurso_previsto: "Planilla de bitácora de equipos con cálculo de disponibilidad (%)."

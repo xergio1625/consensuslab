@@ -7,6 +7,7 @@ acceso: suscripcion
 app_modulo: panel
 etiquetas: []
 consensus_qc: "parcial"
+capturas: [panel-del-dia]
 que_es: "Una sola pantalla con equipos operativos o detenidos, controles cumplidos, corridas rechazadas, personal en turno y alertas abiertas."
 problema: "El coordinador no tiene que recorrer el laboratorio ni revisar varias planillas para saber si la operación está bien."
 recurso_previsto: "Plantilla de tablero diario en planilla (semáforo por área)."

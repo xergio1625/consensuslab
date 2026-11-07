@@ -49,7 +49,7 @@ Si las alarmas saltan todos los días y no hay ningún otro síntoma, sospecha p
 
 Si quieres comprobarlo con tus datos, pega los resultados de un control en [Estadística del control](/calculadoras/estadistica-del-control/) y calcula la DE de un solo día y la de un mes entero. La diferencia suele ser bastante elocuente. Después mira ambos en un [gráfico de Levey-Jennings](/calculadoras/levey-jennings/) y cuenta cuántas alarmas aparecen con cada una. Y si lo que quieres es saber cuánto varía tu método de verdad, la [verificación de precisión 5 × 5](/calculadoras/verificacion-de-precision/) separa la variación dentro de la serie de la variación entre días, que es justo la que faltó en esta historia.
 
-Para ordenar el resto, en el sitio hay fichas de [control de calidad interno y externo](/herramientas/control-de-calidad-interno-y-externo/), de [indicadores de calidad](/herramientas/indicadores-de-calidad/) y de [competencias y capacitación](/herramientas/competencias-y-capacitacion/). Esta última no es casual: un colega principiante que mira una gráfica roja y se cree culpable es un problema de formación, no de dedos.
+Para ordenar el resto, en el sitio hay fichas de [control de calidad interno y externo](/qc/), de [indicadores de calidad](/herramientas/indicadores-de-calidad/) y de [competencias y capacitación](/herramientas/competencias-y-capacitacion/). Esta última no es casual: un colega principiante que mira una gráfica roja y se cree culpable es un problema de formación, no de dedos.
 
 Los colegas de la historia aprendieron rápido, para ser justos, y yo también aprendí algo: tener razón no alcanza, y hay maneras de decirlo que se escuchan mejor. O hay que traer palomitas, que también funciona.
 

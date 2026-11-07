@@ -967,11 +967,10 @@ img, svg { max-width: 100%; }
   .rejilla-grupos .tarjeta-meta { gap: 10px; }
   .rejilla-grupos .tarjeta p { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-size: .9rem; }
 
-  /* Cifras: una fila que se desliza, en vez de cuatro bloques apilados */
-  .cifras-fila { display: flex; gap: 24px; overflow-x: auto; scrollbar-width: none; scroll-snap-type: x proximity; }
-  .cifras-fila::-webkit-scrollbar { display: none; }
-  .cifras-fila p { flex: none; white-space: nowrap; scroll-snap-align: start; }
-  .cifras strong { font-size: 1.25rem; }
+  /* Cifras: cuadrícula de 2 × 2 con todo visible (antes una fila que se cortaba en los bordes) */
+  .cifras-fila { grid-template-columns: 1fr 1fr; gap: 10px 16px; }
+  .cifras-fila p { display: flex; flex-direction: column; line-height: 1.25; font-size: .88rem; }
+  .cifras strong { font-size: 1.35rem; margin-right: 0; }
 
   .seccion { padding: 36px 0; }
   .demo-franja { padding: 32px 0; }
@@ -1151,3 +1150,30 @@ img, svg { max-width: 100%; }
 .faq-item { padding: 14px 0; border-top: 1px solid var(--c-borde); }
 .faq-item h3 { margin: 0 0 6px; font-size: 1.02rem; }
 .faq-item p { margin: 0; max-width: 70ch; }
+
+/* Captura de la herramienta por dentro, en la ficha */
+.ficha-captura { margin: 1rem 0 1.5rem; }
+.ficha-captura img { display: block; width: 100%; height: auto; border: 1px solid var(--c-borde); border-radius: var(--radio); box-shadow: var(--sombra); }
+.ficha-captura figcaption { margin-top: 0.5rem; font-size: 0.9rem; }
+
+/* ─── Celular: capturas legibles, zonas táctiles y letra mínima ───────────── */
+@media (max-width: 760px) {
+  /* La captura se ve a tamaño real y se desliza con el dedo; al tocarla se abre completa */
+  .ficha-captura a { display: block; overflow-x: auto; border-radius: var(--radio); -webkit-overflow-scrolling: touch; }
+  .ficha-cuerpo { min-width: 0; }
+  .ficha-captura { min-width: 0; max-width: 100%; }
+  .ficha-captura img { width: 720px; max-width: none; height: auto; }
+  .ficha-captura figcaption { font-size: .92rem; }
+
+  .marca { min-height: 44px; }
+  .chip { min-height: 40px; padding: 6px 14px; font-size: .9rem; }
+
+  /* Ningún texto por debajo de 13 px */
+  .insignia, .tarjeta-meta, .tarjeta-tema, .plan-cinta { font-size: .82rem; }
+  .maqueta-pie { font-size: .82rem; }
+  time { font-size: .85rem; }
+}
+
+/* Un bloque que es a la vez «contenedor» y «seccion» no debe perder el margen lateral (en celular quedaba pegado al borde) */
+.contenedor.seccion, .contenedor.prosa, .contenedor.proximamente { padding-left: 16px; padding-right: 16px; }
+@media (min-width: 720px) { .contenedor.seccion, .contenedor.prosa, .contenedor.proximamente { padding-left: 24px; padding-right: 24px; } }

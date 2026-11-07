@@ -2,7 +2,7 @@
 titulo: "Plan de verificación de un método"
 categoria: control-de-calidad
 resumen: "Arma el plan para verificar un método o equipo nuevo antes de usarlo con pacientes: precisión, veracidad y criterios de aceptación."
-herramientas: [control-de-calidad-interno-y-externo, mantencion-preventiva-y-calibraciones]
+herramientas: [mantencion-preventiva-y-calibraciones]
 actualizado: 2026-09-28
 prompt: |
   Actúa como profesional de laboratorio clínico experto en verificación y validación de métodos analíticos (documentos CLSI como EP15 y EP09, e ISO 15189).

@@ -2,7 +2,7 @@
 titulo: "Autoevaluación previa a una acreditación"
 categoria: calidad
 resumen: "Prepara una autoevaluación contra los requisitos que te evaluarán, con brechas, evidencias faltantes y un plan priorizado."
-herramientas: [acreditacion-y-autorizacion-sanitaria, auditorias-internas]
+herramientas: [autorizacion-sanitaria, auditorias-internas]
 actualizado: 2026-10-17
 prompt: |
   Actúa como evaluador de calidad con experiencia en acreditación de laboratorios clínicos.

@@ -7,6 +7,7 @@ acceso: suscripcion
 app_modulo: compras
 etiquetas: []
 consensus_qc: "no"
+capturas: [compras]
 que_es: "Solicitudes que parten del pedido sugerido del inventario, con aprobación, orden de compra verificada y recepción que suma al stock."
 problema: "Elimina los pedidos de última hora y deja claro en qué estado está cada compra."
 recurso_previsto: "Plantilla de solicitud de compra con flujo de estados (solicitada, aprobada, emitida, recibida)."

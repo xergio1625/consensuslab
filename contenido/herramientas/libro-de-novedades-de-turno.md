@@ -7,6 +7,7 @@ acceso: suscripcion
 app_modulo: turno
 etiquetas: [prioridad-coordinador]
 consensus_qc: "no"
+capturas: [turno]
 que_es: "Entrega de turno con pendientes, incidentes y equipos con problemas."
 problema: "La información no se pierde entre turnos y queda registro de quién entregó y quién recibió."
 recurso_previsto: "Formulario digital de entrega de turno (Google Forms / planilla)."

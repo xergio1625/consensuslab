@@ -118,7 +118,7 @@ Nada de esto exige cambiar a las personas. Exige cambiar lo que pasa cuando algo
 - Una **regla pública** y escrita: el error comunicado a tiempo no se sanciona; el error escondido, sí.
 - Un **registro que no se borra**, donde cada corrección queda con nombre y motivo. Si alguien tiene que borrar un punto, que quede constancia.
 - Una **no conformidad** abierta por cada desvío, con su causa y su acción, sin buscar culpables sino mecanismos. [No conformidades y acciones correctivas](/herramientas/no-conformidades-y-acciones-correctivas/).
-- Un **control interno** que se revise con quien lo hace, no en su contra. [Control de calidad interno y externo](/herramientas/control-de-calidad-interno-y-externo/).
+- Un **control interno** que se revise con quien lo hace, no en su contra. [Control de calidad interno y externo](/qc/).
 - Y la medida de la sección anterior: **un nivel a la vez**, con registro de quién preparó qué.
 
 Todo esto funciona dentro de la app de ConsensusLab, con registros que no se borran. Puedes [probarla 15 días gratis con los datos reales de tu laboratorio](/planes/laboratorios/), y quien paga antes del 1 de diciembre tiene 40 % de descuento el primer año.

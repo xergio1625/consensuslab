@@ -7,6 +7,7 @@ acceso: suscripcion
 app_modulo: programacion
 etiquetas: []
 consensus_qc: "no"
+capturas: [programacion]
 que_es: "Cuadrantes de turno, reemplazos, horas extra, feriados y licencias."
 problema: "Asegura dotación mínima en cada turno y reduce el tiempo que el coordinador dedica a armar y ajustar turnos."
 recurso_previsto: "Plantilla de cuadrante mensual con conteo de horas y validación de dotación mínima."

@@ -7,6 +7,7 @@ acceso: suscripcion
 app_modulo: proveedores
 etiquetas: []
 consensus_qc: "no"
+capturas: [proveedores]
 que_es: "Evaluación periódica de cumplimiento de plazos, calidad del producto y respuesta del servicio técnico, con puntaje calculado a partir de tus registros."
 problema: "Es requisito de ISO 15189 y da argumentos objetivos para renovar o cambiar un proveedor."
 recurso_previsto: "Pauta de evaluación de proveedores con puntaje anual."

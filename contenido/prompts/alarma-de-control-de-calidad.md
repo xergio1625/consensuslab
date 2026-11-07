@@ -2,7 +2,7 @@
 titulo: "Interpretar una alarma de control de calidad"
 categoria: control-de-calidad
 resumen: "Ordena el razonamiento ante un control fuera de regla de Westgard: tipo de error, causas probables y pasos a seguir."
-herramientas: [control-de-calidad-interno-y-externo]
+herramientas: []
 actualizado: 2026-09-28
 prompt: |
   Actúa como profesional de laboratorio clínico experto en control de calidad analítico (reglas de Westgard, gráficos de Levey-Jennings y métrica sigma).

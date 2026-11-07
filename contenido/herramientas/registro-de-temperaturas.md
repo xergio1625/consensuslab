@@ -7,6 +7,7 @@ acceso: suscripcion
 app_modulo: temperaturas
 etiquetas: [prioridad-coordinador]
 consensus_qc: "no"
+capturas: [temperaturas]
 que_es: "Control de refrigeradores, congeladores, estufas y temperatura ambiente, con alarmas y acciones cuando algo queda fuera de rango."
 problema: "Protege reactivos y muestras; es uno de los registros más revisados en auditorías y fiscalizaciones."
 recurso_previsto: "Planilla mensual de temperaturas con formato condicional y gráfico."

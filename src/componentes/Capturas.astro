@@ -9,7 +9,7 @@ interface Props {
   grupo?: 'gestion' | 'qc';
 }
 const { titulo, grupo } = Astro.props;
-const capturas = CAPTURAS.filter((c) => !grupo || c.grupo === grupo);
+const capturas = CAPTURAS.filter((c) => !c.soloFicha && (!grupo || c.grupo === grupo));
 ---
 
 {

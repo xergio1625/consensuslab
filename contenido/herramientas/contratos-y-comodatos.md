@@ -7,6 +7,7 @@ acceso: suscripcion
 app_modulo: contratos
 etiquetas: []
 consensus_qc: "no"
+capturas: [contratos]
 que_es: "Registro de contratos con vencimientos, condiciones, consumos mínimos comprometidos y fechas de renovación."
 problema: "Evita renovaciones automáticas desfavorables y multas por no cumplir consumos mínimos."
 recurso_previsto: "Planilla de contratos con alerta de vencimiento y seguimiento del consumo comprometido."

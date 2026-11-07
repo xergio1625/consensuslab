@@ -66,6 +66,8 @@ const herramientas = defineCollection({
       app_modulo: z.string().regex(/^[a-z]{3,30}$/).optional(),
       // Video de la herramienta (opcional): ID de YouTube. Si falta, la ficha no muestra espacio de video.
       video: z.string().regex(/^[\w-]{6,20}$/).optional(),
+      // Imágenes de la herramienta por dentro: ids de src/lib/capturas.ts (se muestran en la ficha).
+      capturas: z.array(z.string()).default([]),
       relacionadas: z.array(reference('herramientas')).default([]),
       actualizado: z.coerce.date(),
     })
