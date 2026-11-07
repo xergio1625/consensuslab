@@ -3,15 +3,15 @@ import H from '../../componentes/HerramientaProfessional.astro';
 ---
 
 <H
-  titulo="Antibiograma de cocos grampositivos: panel e interpretación"
+  titulo="Antibiograma manual: panel sugerido e interpretación de halos"
   descripcion="Qué antibióticos probar según el organismo y el sitio de la muestra, e interpretación de halos con los puntos de corte de tu laboratorio. ConsensusLab Professional."
-  h1="Antibiograma de cocos grampositivos: panel sugerido e interpretación de halos"
+  h1="Antibiograma manual: panel sugerido e interpretación de halos"
   bajada="Eliges el organismo y el sitio de la muestra, ves qué antibióticos probar y cómo medirlos, e interpretas los halos con los puntos de corte que tú declaras."
   secciones={[
     {
       titulo: 'Para qué organismos',
-      parrafos: ['La primera versión cubre los cocos grampositivos con método manual (disco-difusión):'],
-      lista: ['Staphylococcus aureus', 'Staphylococcus coagulasa negativo', 'Enterococcus spp.', 'Streptococcus β-hemolítico', 'Streptococcus pneumoniae'],
+      parrafos: ['Cubre cocos grampositivos y bacilos gramnegativos con método manual (disco-difusión). Los sistemas automatizados están en preparación.'],
+      lista: ['Staphylococcus aureus', 'Staphylococcus coagulasa negativo', 'Enterococcus spp.', 'Streptococcus β-hemolítico', 'Streptococcus pneumoniae', 'Enterobacterales (E. coli, Klebsiella, Proteus y otros)', 'Pseudomonas aeruginosa', 'Acinetobacter baumannii (complejo)'],
     },
     {
       titulo: 'El panel depende del sitio de la muestra',
@@ -39,8 +39,8 @@ import H from '../../componentes/HerramientaProfessional.astro';
   aviso="Es una ayuda para ordenar el panel y la lectura. La interpretación y el informe son responsabilidad del profesional, según el procedimiento y la tabla vigente de tu laboratorio. El contenido está en afinación continua."
   preguntas={[
     ['¿El antibiograma trae los puntos de corte?', 'No. Tú declaras los de la tabla vigente de tu laboratorio. Es una decisión de diseño: usas siempre tu edición y no reproducimos tablas protegidas por derechos de autor.'],
-    ['¿Sirve para bacilos gramnegativos?', 'La primera versión cubre cocos grampositivos con método manual. Otros paneles vendrán en etapas posteriores.'],
+    ['¿Sirve para bacilos gramnegativos?', 'Sí: incluye Enterobacterales, Pseudomonas aeruginosa y el complejo Acinetobacter baumannii, con método manual. Otros organismos vendrán en etapas posteriores.'],
     ['¿Guarda los halos?', 'No. Se interpretan al momento y no se almacenan.'],
-    ['¿Reemplaza a mi sistema automatizado?', 'No. Es una ayuda para el método manual y para ordenar la lectura.'],
+    ['¿Reemplaza a mi sistema automatizado?', 'No. Es una ayuda para el método manual y para ordenar la lectura. La versión para sistemas automatizados está en preparación.'],
   ]}
 />
