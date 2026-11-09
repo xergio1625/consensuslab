@@ -95,5 +95,15 @@ const imagen = new URL(url(Astro.props.imagen ?? (enPreventa && paginaPreventa ?
     <Pie />
     {(seccion === 'inicio' || seccion === 'qc' || seccion === 'planes-lab') && <BarraDemo />}
     <Analitica />
+    <script is:inline>
+      // Los enlaces externos dentro de los textos (artículos científicos, prensa, normas) se abren en una pestaña nueva
+      // para que quien lee no se salga del sitio. Los internos y los de consensuslab.cl quedan igual.
+      document.querySelectorAll('.prosa a[href^="http"]').forEach(function (a) {
+        if (a.hostname && a.hostname !== location.hostname && !/(^|\.)consensuslab\.cl$/.test(a.hostname)) {
+          a.target = '_blank';
+          a.rel = 'noopener noreferrer';
+        }
+      });
+    </script>
   </body>
 </html>
