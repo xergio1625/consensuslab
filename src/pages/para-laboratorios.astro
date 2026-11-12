@@ -2,6 +2,7 @@
 // ConsensusLab para laboratorios: la propuesta para quien dirige o gestiona un laboratorio (antes era la portada).
 // La portada ahora ofrece dos puertas: profesionales (Professional) y laboratorios (esta página).
 import Base from '../plantillas/Base.astro';
+import FondoPortada from '../componentes/FondoPortada.astro';
 import TarjetaHerramienta from '../componentes/TarjetaHerramienta.astro';
 import TarjetaPrompt from '../componentes/TarjetaPrompt.astro';
 import EspacioVideo from '../componentes/EspacioVideo.astro';
@@ -44,7 +45,7 @@ const pasos = [
   seccion="laboratorios"
 >
   <section class="portada">
-    <div class="portada-fondo" aria-hidden="true"></div>
+    <FondoPortada motivo="control" />
     <div class="contenedor portada-rejilla">
       <div class="portada-texto">
         <p class="antetitulo">Para laboratorios clínicos</p>

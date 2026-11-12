@@ -2,6 +2,7 @@
 // Planes para laboratorios (los de profesionales viven aparte, en /planes/professional/). Solo el plan Esencial muestra precio (decisión del 9-10-2026); los demás se cotizan
 // (llega a la app por doPost) y su lista de precios vive en el repositorio privado de la app.
 import Base from '../../plantillas/Base.astro';
+import FondoPortada from '../../componentes/FondoPortada.astro';
 import Capturas from '../../componentes/Capturas.astro';
 import { obtenerHerramientas } from '../../lib/datos';
 import { migasLd, url } from '../../lib/rutas';
@@ -84,6 +85,7 @@ const planesCotizables = [...planes, institucional];
   descripcion="Planes de ConsensusLab para laboratorios clínicos: Essential Base, Essential Completo y ConsensusLab QC. Prueba 15 días gratis y preventa fundadores con 40 % de descuento."
 >
   <section class="portada">
+    <FondoPortada motivo="plan" />
     <div class="contenedor">
       <p class="antetitulo">Planes para laboratorios</p>
       <h1>Planes de ConsensusLab para tu laboratorio</h1>

@@ -2,6 +2,7 @@
 // ConsensusLab Professional: página de venta. La app vive en app.consensuslab.cl/professional.
 // Mientras PROFESSIONAL_ABIERTO sea false, los botones llevan a la lista de espera (formulario de novedades del pie).
 import Base from '../../plantillas/Base.astro';
+import FondoPortada from '../../componentes/FondoPortada.astro';
 import { url } from '../../lib/rutas';
 import {
   MESES_PRUEBA_PROFESSIONAL,
@@ -151,7 +152,7 @@ const preguntas = [
   ]}
 >
   <section class="portada">
-    <div class="portada-fondo" aria-hidden="true"></div>
+    <FondoPortada motivo="ronda" />
     <div class="contenedor">
       <p class="antetitulo">Para profesionales de laboratorio clínico</p>
       <h1>Tu escritorio profesional de laboratorio clínico</h1>

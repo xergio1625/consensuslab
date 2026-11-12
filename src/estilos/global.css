@@ -619,9 +619,16 @@ img, svg { max-width: 100%; }
 .pg-linea { fill: none; stroke: currentColor; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; stroke-dasharray: 1; animation: dibujar 3s var(--ease-in-out) .5s both; }
 .pg-punto { fill: currentColor; transform-box: fill-box; transform-origin: center; animation: punto .5s var(--ease-out) calc(.5s + var(--i) * .17s) backwards; }
 .pg-alerta { fill: none; stroke: currentColor; stroke-width: 1.5; transform-box: fill-box; transform-origin: center; animation: onda 2.8s ease-out 3.6s infinite backwards; }
+/* Otros motivos de fondo (ver FondoPortada.astro): barras de una ronda, tareas de un plan que se cumplen */
+.pg-barra { fill: currentColor; opacity: .55; transform-box: fill-box; transform-origin: bottom; animation: crece .9s var(--ease-out) calc(.4s + var(--i) * .1s) backwards; }
+.pg-barra-tuya { opacity: .95; }
+@keyframes crece { from { transform: scaleY(0); } }
+.pg-casilla { fill: none; stroke: rgba(255, 255, 255, .6); stroke-width: 1.5; }
+.pg-tarea { stroke: currentColor; stroke-width: 9; stroke-linecap: round; stroke-dasharray: 1; opacity: .6; animation: dibujar .9s var(--ease-in-out) both; }
+.pg-visto { fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; animation: dibujar .4s var(--ease-out) both; }
 @keyframes punto { from { opacity: 0; transform: scale(.3); } }
 @keyframes onda { 0% { opacity: .9; transform: scale(1); } 70%, 100% { opacity: 0; transform: scale(3.2); } }
-@media (max-width: 760px) { .portada-grafica { width: 130%; opacity: .2; } }
+@media (max-width: 760px) { .portada-grafica { width: 130%; opacity: .3; } }
 
 /* Antetítulo con una barra dorada que se traza al aparecer la sección */
 .seccion-cabeza .antetitulo::before, .portada-cabeza .antetitulo::before {

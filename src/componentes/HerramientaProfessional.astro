@@ -1,6 +1,7 @@
 ---
 // Página de una herramienta de ConsensusLab Professional (SEO por herramienta). Solo explica; no hay demostración.
 import Base from '../plantillas/Base.astro';
+import FondoPortada from './FondoPortada.astro';
 import { url } from '../lib/rutas';
 import { MESES_PRUEBA_PROFESSIONAL, PRECIO_PROFESSIONAL_TEXTO, PROFESSIONAL_ABIERTO, URL_PROFESSIONAL_REGISTRO } from '../lib/sitio';
 
@@ -32,7 +33,7 @@ const entrar = PROFESSIONAL_ABIERTO
   ]}
 >
   <section class="portada">
-    <div class="portada-fondo" aria-hidden="true"></div>
+    <FondoPortada motivo="ronda" />
     <div class="contenedor">
       <p class="antetitulo"><a href={url('professional/')} style="color:inherit">ConsensusLab Professional</a> · para profesionales de laboratorio clínico</p>
       <h1>{h1}</h1>

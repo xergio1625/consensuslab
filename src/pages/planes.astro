@@ -3,6 +3,7 @@
 // (/planes/laboratorios/) viven en páginas separadas y nunca se muestran juntos.
 // Los enlaces antiguos con ancla (/planes/#profesional, /planes/#plan-qc, /planes/#cotizar…) se reenvían a la página que corresponde.
 import Base from '../plantillas/Base.astro';
+import FondoPortada from '../componentes/FondoPortada.astro';
 import { url } from '../lib/rutas';
 import { MESES_PRUEBA_PROFESSIONAL, PRECIO_PROFESSIONAL_TEXTO } from '../lib/sitio';
 
@@ -16,6 +17,7 @@ const rutaLab = url('planes/laboratorios/');
   descripcion="Planes de ConsensusLab: Professional para profesionales de laboratorio y planes Essential y QC para laboratorios clínicos. Elige el tuyo."
 >
   <section class="portada">
+    <FondoPortada motivo="control" />
     <div class="contenedor">
       <p class="antetitulo">Planes</p>
       <h1>¿Para quién es el plan?</h1>

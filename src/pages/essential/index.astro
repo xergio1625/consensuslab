@@ -2,6 +2,7 @@
 // ConsensusLab Essential: las herramientas de gestión del laboratorio como producto, con dos niveles (Base y Completo).
 // Los precios y los planes completos están en /planes/laboratorios/; aquí se explica qué es y qué incluye cada nivel.
 import Base from '../../plantillas/Base.astro';
+import FondoPortada from '../../componentes/FondoPortada.astro';
 import { obtenerCatalogo, obtenerHerramientas } from '../../lib/datos';
 import { url } from '../../lib/rutas';
 import { PRECIO_ESSENTIAL_BASE, URL_REGISTRO } from '../../lib/sitio';
@@ -19,7 +20,7 @@ const incluyeBase = BASE.map((m) => enApp.find((h) => h.data.app_modulo === m)).
   descripcion="ConsensusLab Essential: temperaturas, turnos, documentos, equipos, insumos, compras y personal del laboratorio en un solo lugar, con registros trazables. Nivel Base y nivel Completo."
 >
   <section class="portada">
-    <div class="portada-fondo" aria-hidden="true"></div>
+    <FondoPortada motivo="plan" />
     <div class="contenedor">
       <p class="antetitulo">ConsensusLab Essential</p>
       <h1>La gestión del laboratorio, ordenada y con evidencia</h1>

@@ -3,6 +3,7 @@
 // sobre el estándar chileno de acreditación de laboratorios clínicos. Sin promesas de «cumplir» ni de «acreditar».
 // La lista de espera usa el formulario de novedades del pie (#novedades): el origen queda registrado como «accreditation».
 import Base from '../../plantillas/Base.astro';
+import FondoPortada from '../../componentes/FondoPortada.astro';
 import { url } from '../../lib/rutas';
 import { URL_REGISTRO } from '../../lib/sitio';
 
@@ -40,7 +41,7 @@ const preguntas = [
   ]}
 >
   <section class="portada">
-    <div class="portada-fondo" aria-hidden="true"></div>
+    <FondoPortada motivo="escalera" />
     <div class="contenedor">
       <p class="antetitulo">ConsensusLab Accreditation · en preparación</p>
       <h1>Prepara la acreditación de tu laboratorio con la evidencia lista para la visita</h1>

@@ -2,6 +2,7 @@
 // Plan para profesionales de laboratorio: ConsensusLab Professional (los planes de laboratorios viven aparte, en /planes/laboratorios/).
 // Los botones de pago usan los enlaces de src/lib/pagos.ts: sin enlace creado, el botón sigue siendo el de la prueba o la lista de espera.
 import Base from '../../plantillas/Base.astro';
+import FondoPortada from '../../componentes/FondoPortada.astro';
 import { migasLd, url } from '../../lib/rutas';
 import { enlacePago } from '../../lib/pagos';
 import {
@@ -39,6 +40,7 @@ const preguntas = [
   ]}
 >
   <section class="portada">
+    <FondoPortada motivo="ronda" />
     <div class="contenedor">
       <p class="antetitulo">Planes para profesionales</p>
       <h1>ConsensusLab Professional</h1>

@@ -1,0 +1,68 @@
+---
+// Fondo animado de las portadas: los destellos burdeo y dorado de siempre más una gráfica decorativa que se traza al cargar.
+// Cada motivo cuenta, sin palabras, de qué trata la página (todos comparten la misma familia visual):
+//   control  → gráfica de control Levey-Jennings que deriva y dispara la alerta de la regla 2s (QC, laboratorios, inicio)
+//   ronda    → distribución de respuestas de un grupo con «tu respuesta» resaltada (Professional)
+//   plan     → lista de tareas del plan de calidad que se van cumpliendo (Essential)
+//   escalera → peldaños de avance hacia un objetivo (Accreditation)
+interface Props { motivo?: 'control' | 'ronda' | 'plan' | 'escalera'; }
+const { motivo = 'control' } = Astro.props;
+
+const serie = [[40,118],[88,104],[136,131],[184,112],[232,97],[280,124],[328,140],[376,109],[424,98],[472,115],[520,92],[568,84],[616,72]];
+const barras = [30, 55, 90, 140, 180, 150, 100, 60, 28];
+const tareas = [150, 260, 120, 300, 200];
+const peldanos = [[160, 170], [280, 130], [400, 90], [520, 50]];
+const columnas = [[160, 50], [280, 90], [400, 130], [520, 170], [640, 200]];
+---
+
+<div class="portada-fondo" aria-hidden="true">
+  <div class="portada-grafica">
+    {motivo === 'control' && (
+      <svg viewBox="0 0 800 240" preserveAspectRatio="xMaxYMin meet" focusable="false">
+        <line class="pg-limite" x1="0" y1="30" x2="800" y2="30" />
+        <line class="pg-limite" x1="0" y1="60" x2="800" y2="60" />
+        <line class="pg-media" x1="0" y1="120" x2="800" y2="120" />
+        <line class="pg-limite" x1="0" y1="180" x2="800" y2="180" />
+        <line class="pg-limite" x1="0" y1="210" x2="800" y2="210" />
+        <polyline class="pg-linea" pathLength="1" points="40,118 88,104 136,131 184,112 232,97 280,124 328,140 376,109 424,98 472,115 520,92 568,84 616,72 664,58 712,46 760,38" />
+        {serie.map(([x, y], i) => <circle class="pg-punto" cx={x} cy={y} r="4" style={`--i:${i}`} />)}
+        <circle class="pg-punto" cx="664" cy="58" r="5.5" style="--i:13" />
+        <circle class="pg-punto" cx="712" cy="46" r="5.5" style="--i:14" />
+        <circle class="pg-punto" cx="760" cy="38" r="5.5" style="--i:15" />
+        <circle class="pg-alerta" cx="760" cy="38" r="8" />
+      </svg>
+    )}
+    {motivo === 'ronda' && (
+      <svg viewBox="0 0 800 240" preserveAspectRatio="xMaxYMin meet" focusable="false">
+        <line class="pg-media" x1="0" y1="222" x2="800" y2="222" />
+        {barras.map((h, i) => (
+          <rect class:list={['pg-barra', i === 5 && 'pg-barra-tuya']} x={70 + i * 74} y={220 - h} width="50" height={h} rx="4" style={`--i:${i}`} />
+        ))}
+        <path class="pg-linea" pathLength="1" style="animation-delay:1.2s" d="M95 190 C 170 160, 220 100, 300 70 S 420 30, 470 40 S 560 120, 640 150 S 700 195, 765 192" />
+        <line class="pg-limite" x1="515" y1="20" x2="515" y2="222" />
+        <circle class="pg-alerta" cx="515" cy="40" r="8" style="animation-delay:2.4s" />
+      </svg>
+    )}
+    {motivo === 'plan' && (
+      <svg viewBox="0 0 800 240" preserveAspectRatio="xMaxYMin meet" focusable="false">
+        {tareas.map((largo, i) => (
+          <g>
+            <circle class="pg-casilla" cx="430" cy={40 + i * 42} r="11" />
+            <polyline class="pg-visto" pathLength="1" points={`424,${40 + i * 42} 429,${45 + i * 42} 437,${35 + i * 42}`} style={`animation-delay:${1 + i * 0.5}s`} />
+            <line class="pg-tarea" pathLength="1" x1="464" y1={40 + i * 42} x2={464 + largo} y2={40 + i * 42} style={`animation-delay:${0.4 + i * 0.5}s`} />
+          </g>
+        ))}
+      </svg>
+    )}
+    {motivo === 'escalera' && (
+      <svg viewBox="0 0 800 240" preserveAspectRatio="xMaxYMin meet" focusable="false">
+        <line class="pg-media" x1="0" y1="222" x2="800" y2="222" />
+        {columnas.map(([x, h], i) => <rect class="pg-barra" x={x} y={220 - h} width="112" height={h} rx="4" style={`--i:${i * 2}`} />)}
+        <polyline class="pg-linea" pathLength="1" points="40,210 160,210 160,170 280,170 280,130 400,130 400,90 520,90 520,50 700,50" />
+        {peldanos.map(([x, y], i) => <circle class="pg-punto" cx={x} cy={y} r="5" style={`--i:${i * 4 + 2}`} />)}
+        <circle class="pg-punto" cx="700" cy="50" r="7" style="--i:18" />
+        <circle class="pg-alerta" cx="700" cy="50" r="10" />
+      </svg>
+    )}
+  </div>
+</div>
