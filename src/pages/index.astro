@@ -51,7 +51,28 @@ const ultimos = (await obtenerOpinion()).slice(0, 3);
   ]}
 >
   <section class="portada portada-compacta">
-    <div class="portada-fondo" aria-hidden="true"></div>
+    <div class="portada-fondo" aria-hidden="true">
+      <!-- Gráfica de control (Levey-Jennings) decorativa: la serie se traza, deriva y dispara la alerta de la regla 2s. -->
+      <div class="portada-grafica">
+        <svg viewBox="0 0 800 240" preserveAspectRatio="xMaxYMin meet" focusable="false">
+          <line class="pg-limite" x1="0" y1="30" x2="800" y2="30" />
+          <line class="pg-limite" x1="0" y1="60" x2="800" y2="60" />
+          <line class="pg-media" x1="0" y1="120" x2="800" y2="120" />
+          <line class="pg-limite" x1="0" y1="180" x2="800" y2="180" />
+          <line class="pg-limite" x1="0" y1="210" x2="800" y2="210" />
+          <polyline class="pg-linea" pathLength="1" points="40,118 88,104 136,131 184,112 232,97 280,124 328,140 376,109 424,98 472,115 520,92 568,84 616,72 664,58 712,46 760,38" />
+          {
+            [[40,118],[88,104],[136,131],[184,112],[232,97],[280,124],[328,140],[376,109],[424,98],[472,115],[520,92],[568,84],[616,72]].map(([x, y], i) => (
+              <circle class="pg-punto" cx={x} cy={y} r="4" style={`--i:${i}`} />
+            ))
+          }
+          <circle class="pg-punto" cx="664" cy="58" r="5.5" style="--i:13" />
+          <circle class="pg-punto" cx="712" cy="46" r="5.5" style="--i:14" />
+          <circle class="pg-punto" cx="760" cy="38" r="5.5" style="--i:15" />
+          <circle class="pg-alerta" cx="760" cy="38" r="8" />
+        </svg>
+      </div>
+    </div>
     <div class="contenedor">
       <div class="portada-cabeza">
         <div>
@@ -108,9 +129,9 @@ const ultimos = (await obtenerOpinion()).slice(0, 3);
 
   <section class="cifras" aria-label="El sitio en cifras">
     <div class="contenedor cifras-fila">
-      <p><strong>{totalHerramientas}</strong> herramientas de gestión</p>
-      <p><strong>{CALCULADORAS.length}</strong> calculadoras gratuitas</p>
-      <p><strong>{totalPrompts}</strong> prompts de IA</p>
+      <p><strong data-count={totalHerramientas}>{totalHerramientas}</strong> herramientas de gestión</p>
+      <p><strong data-count={CALCULADORAS.length}>{CALCULADORAS.length}</strong> calculadoras gratuitas</p>
+      <p><strong data-count={totalPrompts}>{totalPrompts}</strong> prompts de IA</p>
       <p><strong>0</strong> datos de pacientes</p>
     </div>
   </section>

@@ -1,0 +1,113 @@
+---
+// Movimiento del sitio, sobrio y al servicio de la lectura: las secciones entran suavemente al llegar a pantalla,
+// las cifras suben hasta su valor, un hilo dorado marca el avance en los textos largos y la portada responde al puntero.
+// Todo se apaga con «reducir animaciones» (sistema o interruptor del pie) y sin JavaScript la página se ve completa.
+---
+
+<script is:inline>
+  (function () {
+    var raiz = document.documentElement;
+    var reducido = matchMedia('(prefers-reduced-motion: reduce)').matches || raiz.dataset.movimiento === 'reducido';
+    var $$ = function (s) { return Array.prototype.slice.call(document.querySelectorAll(s)); };
+
+    // ── Revelado al entrar en pantalla, con escalonado por columna ──
+    var SEL = [
+      '.portada-cabeza > *', '.puerta', '.seccion-cabeza', '.rejilla > *', '.planes-fila > *', '.cifras-fila > p',
+      '.problema', '.guia-pago', '.precio-bloque', '.caso-muestra', '.lista-obligatorias li', '.niveles-essential > *',
+      '.guias-pago > *', '.franja-qc', '.independencia'
+    ].join(',');
+    if (!reducido && 'IntersectionObserver' in window) {
+      var pendientes = [];
+      var mostrar = function (el) {
+        var k = pendientes.indexOf(el);
+        if (k < 0) return;
+        pendientes.splice(k, 1);
+        el.classList.add('is-in');
+        io.unobserve(el);
+        // Al terminar se suelta la clase: así el efecto al pasar el puntero (elevar la tarjeta) sigue funcionando.
+        setTimeout(function () { el.classList.remove('reveal', 'is-in'); }, 1100 + Number(el.style.getPropertyValue('--d') || 0) * 70);
+      };
+      var io = new IntersectionObserver(function (entradas) {
+        entradas.forEach(function (e) { if (e.isIntersecting) mostrar(e.target); });
+      }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
+      $$(SEL).forEach(function (el) {
+        // Se saltan los vacíos u ocultos (paneles que la página llena o muestra después): ahí no hay nada que revelar.
+        if (el.classList.contains('reveal') || el.offsetHeight === 0) return;
+        var i = Array.prototype.indexOf.call(el.parentElement ? el.parentElement.children : [], el);
+        el.style.setProperty('--d', String(Math.max(i, 0) % 4));
+        el.classList.add('reveal');
+        pendientes.push(el);
+        io.observe(el);
+      });
+      // Red de seguridad: lo que quedó arriba por un salto de scroll (ancla, barra arrastrada) se muestra sin esperar.
+      var barrido = false;
+      addEventListener('scroll', function () {
+        if (barrido || !pendientes.length) return;
+        barrido = true;
+        requestAnimationFrame(function () {
+          barrido = false;
+          pendientes.slice().forEach(function (el) { if (el.getBoundingClientRect().bottom < 0) mostrar(el); });
+        });
+      }, { passive: true });
+    }
+
+    // ── Cifras que suben hasta su valor ──
+    var nf = new Intl.NumberFormat('es-CL');
+    var cifras = $$('[data-count]');
+    if (cifras.length) {
+      if (reducido || !('IntersectionObserver' in window)) {
+        cifras.forEach(function (el) { el.textContent = nf.format(Number(el.dataset.count)); });
+      } else {
+        var conteo = new IntersectionObserver(function (entradas) {
+          entradas.forEach(function (e) {
+            if (!e.isIntersecting) return;
+            var el = e.target, fin = Number(el.dataset.count), t0 = performance.now();
+            conteo.unobserve(el);
+            (function paso(t) {
+              var p = Math.min(1, (t - t0) / 1300);
+              el.textContent = nf.format(Math.round(fin * (1 - Math.pow(1 - p, 3))));
+              if (p < 1) requestAnimationFrame(paso);
+            })(t0);
+          });
+        }, { threshold: 0.6 });
+        cifras.forEach(function (el) { if (Number(el.dataset.count) > 0) { el.textContent = '0'; conteo.observe(el); } });
+      }
+    }
+
+    // ── Hilo de avance en artículos y textos largos ──
+    var texto = document.querySelector('article.articulo, article.prosa:not(.diag)');
+    if (texto && !reducido && texto.offsetHeight > innerHeight * 1.6) {
+      var barra = document.createElement('div');
+      barra.className = 'hilo-avance';
+      barra.setAttribute('aria-hidden', 'true');
+      document.body.appendChild(barra);
+      var pendiente = false;
+      var pintar = function () {
+        pendiente = false;
+        var r = texto.getBoundingClientRect();
+        var largo = Math.max(r.height - innerHeight * 0.6, 1);
+        barra.style.transform = 'scaleX(' + Math.max(0, Math.min(1, (80 - r.top) / largo)) + ')';
+      };
+      addEventListener('scroll', function () { if (!pendiente) { pendiente = true; requestAnimationFrame(pintar); } }, { passive: true });
+      pintar();
+    }
+
+    // ── Portada que responde suavemente al puntero (solo con ratón) ──
+    var portada = document.querySelector('.portada');
+    if (portada && !reducido && matchMedia('(pointer: fine)').matches) {
+      var x = 0, y = 0, cuadro = 0;
+      var aplicar = function () {
+        cuadro = 0;
+        portada.style.setProperty('--px', x.toFixed(3));
+        portada.style.setProperty('--py', y.toFixed(3));
+      };
+      portada.addEventListener('pointermove', function (e) {
+        var r = portada.getBoundingClientRect();
+        x = (e.clientX - r.left) / r.width - 0.5;
+        y = (e.clientY - r.top) / r.height - 0.5;
+        if (!cuadro) cuadro = requestAnimationFrame(aplicar);
+      }, { passive: true });
+      portada.addEventListener('pointerleave', function () { x = 0; y = 0; if (!cuadro) cuadro = requestAnimationFrame(aplicar); });
+    }
+  })();
+</script>

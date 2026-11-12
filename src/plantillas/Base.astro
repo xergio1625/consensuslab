@@ -6,6 +6,7 @@ import Pie from '../componentes/Pie.astro';
 import Analitica from '../componentes/Analitica.astro';
 import AvisoPreventa from '../componentes/AvisoPreventa.astro';
 import BarraDemo from '../componentes/BarraDemo.astro';
+import Movimiento from '../componentes/Movimiento.astro';
 import { url } from '../lib/rutas';
 import { FIN_PREVENTA, INDEXAR } from '../lib/sitio';
 
@@ -79,6 +80,8 @@ const imagen = new URL(url(Astro.props.imagen ?? (enPreventa && paginaPreventa ?
         var tema = localStorage.getItem('tema');
         if (tema === 'light' || tema === 'dark') document.documentElement.dataset.theme = tema;
       } catch (e) {}
+      // Con JavaScript activo, el revelado al scroll puede ocultar secciones hasta que entren en pantalla (ver Movimiento).
+      document.documentElement.classList.add('js');
       // Preferencia propia de «reducir animaciones» (además de la del sistema), también antes de pintar.
       try {
         if (localStorage.getItem('movimiento') === 'reducido') document.documentElement.dataset.movimiento = 'reducido';
@@ -95,6 +98,7 @@ const imagen = new URL(url(Astro.props.imagen ?? (enPreventa && paginaPreventa ?
     <Pie />
     {(seccion === 'inicio' || seccion === 'qc' || seccion === 'planes-lab') && <BarraDemo />}
     <Analitica />
+    <Movimiento />
     <script is:inline>
       // Los enlaces externos dentro de los textos (artículos científicos, prensa, normas) se abren en una pestaña nueva
       // para que quien lee no se salga del sitio. Los internos y los de consensuslab.cl quedan igual.

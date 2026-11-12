@@ -565,17 +565,8 @@ img, svg { max-width: 100%; }
 .boton { transition: background var(--transicion), border-color var(--transicion), transform var(--dur-1) var(--ease-out); }
 .boton:active { transform: scale(.97); }
 
-/* Revelado al entrar en pantalla (solo CSS; sin soporte, todo queda visible) */
+/* Revelado al entrar en pantalla: lo aplica Movimiento.astro (clases .reveal / .is-in, solo con JavaScript) */
 @keyframes revelar { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
-@media (min-width: 900px) {
-  @supports (animation-timeline: view()) {
-    .seccion-cabeza, .rejilla > *, .franja-qc > * {
-      animation: revelar linear backwards; /* «backwards»: al terminar no retiene transform y el hover sigue funcionando */
-      animation-timeline: view();
-      animation-range: entry 0% entry 45%;
-    }
-  }
-}
 
 /* Resultados de calculadoras: destello al actualizarse (lo activa PaginaCalculadora) */
 @keyframes destello { from { background: var(--c-info-fondo); transform: scale(1.03); } to { transform: none; } }
@@ -596,6 +587,7 @@ img, svg { max-width: 100%; }
     animation: none !important;
     scroll-behavior: auto !important;
   }
+  .js .reveal { opacity: 1 !important; transform: none !important; }
   @view-transition { navigation: none; }
 }
 /* Mismo efecto con el interruptor del pie («Reducir animaciones») */
@@ -603,6 +595,81 @@ img, svg { max-width: 100%; }
   transition: none !important;
   animation: none !important;
   scroll-behavior: auto !important;
+}
+:root[data-movimiento="reducido"].js .reveal { opacity: 1 !important; transform: none !important; }
+
+/* ─── Movimiento sobrio: revelado, portada con gráfica de control, acentos al pasar el puntero ─── */
+.js .reveal { opacity: 0; transform: translate3d(0, 22px, 0); will-change: opacity, transform; }
+.js .reveal.is-in {
+  opacity: 1; transform: none;
+  transition: opacity .7s var(--ease-out) calc(var(--d, 0) * 70ms), transform .7s var(--ease-out) calc(var(--d, 0) * 70ms);
+}
+@media print { .js .reveal { opacity: 1; transform: none; } }
+
+/* Portada: el fondo y la gráfica siguen el puntero con un desplazamiento mínimo (lo fija Movimiento.astro con --px y --py) */
+.portada-fondo { transition: transform .6s var(--ease-out); transform: translate3d(calc(var(--px, 0) * -18px), calc(var(--py, 0) * -12px), 0); }
+.portada-grafica {
+  position: absolute; top: 0; right: 0; width: min(100%, 940px); aspect-ratio: 10 / 3; opacity: .24; color: var(--marca-dorado);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 42%); mask-image: linear-gradient(90deg, transparent 0%, #000 42%);
+  transform: translate3d(calc(var(--px, 0) * 14px), calc(var(--py, 0) * 10px), 0); transition: transform .6s var(--ease-out);
+}
+.portada-grafica svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.pg-limite { stroke: rgba(255, 255, 255, .5); stroke-width: 1; stroke-dasharray: 5 6; fill: none; }
+.pg-media { stroke: rgba(255, 255, 255, .7); stroke-width: 1.2; fill: none; }
+.pg-linea { fill: none; stroke: currentColor; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; stroke-dasharray: 1; animation: dibujar 3s var(--ease-in-out) .5s both; }
+.pg-punto { fill: currentColor; transform-box: fill-box; transform-origin: center; animation: punto .5s var(--ease-out) calc(.5s + var(--i) * .17s) backwards; }
+.pg-alerta { fill: none; stroke: currentColor; stroke-width: 1.5; transform-box: fill-box; transform-origin: center; animation: onda 2.8s ease-out 3.6s infinite backwards; }
+@keyframes punto { from { opacity: 0; transform: scale(.3); } }
+@keyframes onda { 0% { opacity: .9; transform: scale(1); } 70%, 100% { opacity: 0; transform: scale(3.2); } }
+@media (max-width: 760px) { .portada-grafica { width: 130%; opacity: .2; } }
+
+/* Antetítulo con una barra dorada que se traza al aparecer la sección */
+.seccion-cabeza .antetitulo::before, .portada-cabeza .antetitulo::before {
+  content: ""; display: inline-block; width: 22px; height: 2px; margin-right: 8px; vertical-align: .28em; background: currentColor;
+}
+.reveal.is-in .antetitulo::before { animation: barra .8s var(--ease-out) .3s backwards; }
+@keyframes barra { from { width: 0; margin-right: 0; } }
+
+/* Las dos puertas de la portada: elevación al pasar el puntero y un halo dorado muy lento en la destacada */
+.puerta { transition: transform var(--dur-2) var(--ease-out), box-shadow var(--dur-2) var(--ease-out), border-color var(--dur-2); }
+@media (hover: hover) {
+  .puerta:hover { transform: translateY(-4px); box-shadow: 0 2px 4px rgba(0, 0, 0, .2), 0 16px 36px rgba(0, 0, 0, .32); }
+  .puerta-destacada:hover { box-shadow: 0 0 0 2px var(--marca-dorado), 0 16px 36px rgba(0, 0, 0, .38); }
+}
+.puerta-destacada::after {
+  content: ""; position: absolute; inset: -2px; border-radius: calc(var(--radio) + 2px); pointer-events: none;
+  box-shadow: 0 0 26px 3px rgba(201, 169, 110, .45); opacity: 0; animation: halo 5s ease-in-out 2.4s infinite;
+}
+@keyframes halo { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
+
+/* Tarjetas: filo dorado que se traza al pasar el puntero o enfocar */
+.tarjeta::before {
+  content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px; border-radius: var(--radio) var(--radio) 0 0; pointer-events: none;
+  background: linear-gradient(90deg, var(--marca-dorado), var(--c-boton-h)); transform: scaleX(0); transform-origin: left;
+  transition: transform var(--dur-3) var(--ease-out);
+}
+.tarjeta:hover::before, .tarjeta:focus-within::before { transform: scaleX(1); }
+
+/* Botones: se elevan apenas y la flecha de los enlaces de sección avanza */
+@media (hover: hover) {
+  .boton-primario:hover, .boton-dorado:hover { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(0, 0, 0, .22); }
+  .seccion-cabeza > a, .franja-qc .boton, .independencia .boton { transition: transform var(--dur-2) var(--ease-out), color var(--transicion), background var(--transicion); }
+  .seccion-cabeza > a:hover { transform: translateX(3px); }
+}
+
+/* Navegación: subrayado dorado que crece desde la izquierda */
+.nav-lista > li > a { position: relative; }
+.nav-lista > li > a::after {
+  content: ""; position: absolute; left: 12px; right: 12px; bottom: 4px; height: 2px; background: var(--marca-dorado);
+  transform: scaleX(0); transform-origin: left; transition: transform var(--dur-2) var(--ease-out); pointer-events: none;
+}
+.nav-lista > li > a:hover::after { transform: scaleX(1); }
+.nav-lista > li > a[aria-current="page"]::after { display: none; }
+
+/* Hilo dorado de avance en artículos y textos largos */
+.hilo-avance {
+  position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 400; pointer-events: none;
+  background: linear-gradient(90deg, var(--marca-dorado), #E3C98F); transform: scaleX(0); transform-origin: left;
 }
 
 /* Botón principal sobre fondos burdeo (portadas) */
