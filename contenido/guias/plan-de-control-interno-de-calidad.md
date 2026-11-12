@@ -100,6 +100,8 @@ Las reglas buscan detectar dos tipos de cambio: **error sistemático** (sesgo) y
 
 Ninguna regla es perfecta: todas dejan pasar algunos errores (falsos negativos) y alarman a veces sin error real (falsos positivos).
 
+Para ejemplos de cada regla y cómo elegirlas, lee [Reglas de Westgard: cuáles usar y cuándo](/guias/reglas-de-westgard-cuales-usar-y-cuando/).
+
 > **Practica con tus datos:** [Gráfico de Levey-Jennings con reglas de Westgard](/calculadoras/levey-jennings/)
 
 ## 6. Qué hacer cuando hay una alarma
