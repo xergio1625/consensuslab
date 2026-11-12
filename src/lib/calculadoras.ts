@@ -380,6 +380,36 @@ export function calculadorasDe(idHerramienta: string) {
 
 /** Título y descripción para buscadores de las calculadoras que ya aparecen en Google; el resto usa los generados. */
 export const SEO_CALCULADORAS: Partial<Record<IdCalculadora, { titulo: string; descripcion: string }>> = {
+  'amef-npr': {
+    titulo: 'AMEF: calcular el NPR (severidad × ocurrencia × detección)',
+    descripcion:
+      'Calcula el número de prioridad de riesgo (NPR = S × O × D) de cada modo de falla y ordena qué atender primero. Gratis, en tu navegador y con las escalas explicadas.',
+  },
+  'cambio-critico-rcv': {
+    titulo: 'Cambio crítico (RCV): cuánto debe cambiar un resultado seriado',
+    descripcion:
+      'Calcula el valor de referencia de cambio (RCV) con tu CV analítico y el biológico, para saber si la diferencia entre dos resultados es real. Gratis y con la fórmula.',
+  },
+  'actividad-enzimatica': {
+    titulo: 'Actividad enzimática desde ΔA/min: U/L y µkat/L',
+    descripcion:
+      'Calcula la actividad enzimática en U/L y µkat/L desde la velocidad de cambio de absorbancia, el coeficiente de extinción y los volúmenes. Gratis y con la fórmula.',
+  },
+  'levey-jennings': {
+    titulo: 'Gráfico de Levey-Jennings con reglas de Westgard',
+    descripcion:
+      'Pega los resultados de tu control y obtén el gráfico de Levey-Jennings con límites de ±1, 2 y 3 DE y las violaciones de Westgard marcadas. Gratis, en tu navegador.',
+  },
+  'error-total-y-sigma': {
+    titulo: 'Error total y métrica sigma: calculadora con reglas de Westgard',
+    descripcion:
+      'Con el error total permitido, el sesgo y el CV calcula el error total, la métrica sigma y las reglas de Westgard sugeridas. Gratis y en tu navegador.',
+  },
+  'filtrado-glomerular-ckd-epi': {
+    titulo: 'Filtrado glomerular CKD-EPI 2021: calculadora y comparación',
+    descripcion:
+      'Calcula el filtrado glomerular con CKD-EPI 2021 y compáralo con cistatina C, CKD-EPI 2009, MDRD y Cockcroft-Gault, con cuándo usar cada ecuación. Gratis.',
+  },
   'temperatura-cinetica-media': {
     titulo: 'Temperatura cinética media (MKT): cálculo con tu registro',
     descripcion:

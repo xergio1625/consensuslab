@@ -1,7 +1,7 @@
 ---
-titulo: "Guía para armar un plan de control interno de calidad"
+titulo: "Control de calidad interno en el laboratorio clínico: cómo armar el plan"
 fecha: 2026-10-11
-resumen: "Qué debe definir un plan de control interno (materiales, frecuencia, niveles y reglas), cómo calcular sesgo, CV y sigma, qué hacer ante una alarma y cómo revisar el plan. Adaptación en español de una revisión de acceso abierto."
+resumen: "Control de calidad interno en el laboratorio clínico: qué debe definir un plan de control interno (materiales, frecuencia, niveles y reglas), cómo calcular sesgo, CV y sigma, qué hacer ante una alarma y cómo revisar el plan. Adaptación en español de una revisión de acceso abierto."
 temas: ["Control de calidad"]
 fuente:
   titulo: "Internal Quality Controls in the Medical Laboratory: A Narrative Review of the Basic Principles of an Appropriate Quality Control Plan"
@@ -155,11 +155,13 @@ La revisión también advierte sobre dos críticas conocidas al enfoque clásico
 - **CLSI C24 y EP23:** describen estrategias de CI según la calidad requerida, la precisión y el sesgo observados, y el riesgo de daño al paciente.
 - Otros países (Alemania, Suiza, Austria) tienen reglas propias, que la revisión describe como ejemplos. Verifica siempre lo que exige tu normativa local y tu entidad acreditadora.
 
+Si te estás preparando para acreditarte, mira también [Acreditación de laboratorios clínicos en Chile](/guias/acreditacion-laboratorio-clinico-chile/).
+
 ## Resumen en una lista
 
 - [ ] Para cada examen: material, frecuencia, niveles y reglas por escrito.
 - [ ] Media y DE propias; al menos 20 puntos al inicio y 10 días tras un cambio de lote.
-- [ ] TEa definido con criterio explícito y consultado con clínicos.
+- [ ] TEa definido con criterio explícito y consultado con clínicos (ver [Error total permitido: cómo elegirlo](/guias/error-total-permitido-como-elegirlo/)).
 - [ ] Sesgo, CV y sigma calculados y revisados.
 - [ ] Reglas de rechazo y de advertencia distinguidas; 1-2s como advertencia.
 - [ ] Procedimiento de alarma: vial nuevo, detener, corregir, repetir control, revisar retrospectivamente.

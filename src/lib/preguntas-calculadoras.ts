@@ -14,6 +14,58 @@ export interface Respuestas {
 }
 
 export const RESPUESTAS: Partial<Record<IdCalculadora, Respuestas>> = {
+  'amef-npr': {
+    respuesta:
+      'El NPR (número de prioridad de riesgo) se calcula multiplicando tres notas de 1 a 10: severidad × ocurrencia × detección. Va de 1 a 1.000 y se atiende primero el más alto.',
+    preguntas: [
+      {
+        p: '¿Cómo se calcula el NPR de un AMEF?',
+        r: 'NPR = severidad (S) × ocurrencia (O) × detección (D), cada una de 1 a 10. Por ejemplo, severidad 8, ocurrencia 4 y detección 3 dan NPR 8 × 4 × 3 = 96.',
+      },
+      {
+        p: '¿Qué significa cada escala de 1 a 10?',
+        r: 'En severidad, 1 es sin efecto y 10 es daño grave o un resultado erróneo que llega al paciente. En ocurrencia, 1 es muy improbable y 10 casi seguro. En detección, 1 es que la falla se detecta siempre antes de causar daño y 10 que no se detecta.',
+      },
+      {
+        p: '¿Desde qué NPR hay que actuar?',
+        r: 'El umbral de 100 es una referencia habitual, no una regla: lo fija el procedimiento de gestión de riesgos de cada laboratorio.',
+      },
+      {
+        p: '¿Qué límite tiene el NPR?',
+        r: 'Combinaciones muy distintas dan el mismo número (S 9 × O 1 × D 2 = 18 y S 2 × O 3 × D 3 = 18). Por eso se atienden siempre los modos de severidad alta, aunque el NPR sea bajo.',
+      },
+      {
+        p: '¿Qué se hace con los modos de falla prioritarios?',
+        r: 'Para cada uno se define una acción, un responsable y una fecha, y se vuelve a calificar después de aplicarla para comprobar que el NPR bajó.',
+      },
+    ],
+  },
+  'cambio-critico-rcv': {
+    respuesta:
+      'El valor de referencia de cambio (RCV) indica cuánto debe cambiar un resultado seriado para que el cambio sea real y no variación analítica y biológica. Se calcula como RCV = √2 · Z · √(CVa² + CVi²), en %.',
+    preguntas: [
+      {
+        p: '¿Cómo se calcula el RCV?',
+        r: 'RCV = √2 · Z · √(CVa² + CVi²), en %, donde CVa es el CV analítico y CVi el CV biológico. El √2 aparece porque se comparan dos resultados, cada uno con su propia variación.',
+      },
+      {
+        p: '¿Qué valor de Z se usa?',
+        r: 'Para subida o bajada, Z = 1,96 con 95 % y Z = 2,58 con 99 %. Para un solo sentido, Z = 1,65 con 95 % y Z = 2,33 con 99 %.',
+      },
+      {
+        p: '¿Cuándo un cambio entre dos resultados es real?',
+        r: 'Si supera el RCV, es poco probable que se deba solo al azar analítico y biológico.',
+      },
+      {
+        p: '¿Mejorar un método preciso cambia mucho el RCV?',
+        r: 'Poco: con CVa bajo, el RCV queda dominado por la variación biológica.',
+      },
+      {
+        p: '¿Esta fórmula sirve con CV grandes?',
+        r: 'Esta versión simétrica funciona bien con CV pequeños. Con CV grandes, la literatura propone una versión asimétrica (logarítmica) porque la subida y la bajada no son simétricas.',
+      },
+    ],
+  },
   'temperatura-cinetica-media': {
     respuesta:
       'La temperatura cinética media (MKT) es la temperatura constante que produciría la misma degradación que todas las temperaturas de tu registro. Siempre es igual o mayor que el promedio, porque las temperaturas altas degradan más de lo que las bajas compensan.',
