@@ -8,6 +8,9 @@ interface Props {
 }
 const { variante = 'franja' } = Astro.props;
 const caja = variante === 'caja';
+// Origen de la visita a la app (lo lee el contador del admin como «sitio/<sección>») y evento de conversión.
+const seccion = Astro.url.pathname.split('/').filter(Boolean)[0] ?? 'inicio';
+const registro = `${URL_REGISTRO}&utm_source=sitio&utm_medium=${encodeURIComponent(seccion)}`;
 ---
 
 <section class={caja ? 'caja demo-caja' : 'demo-franja'}>
@@ -21,7 +24,7 @@ const caja = variante === 'caja';
           contratas, sigues en la misma cuenta con tus registros. Preventa fundadores: <strong>40 % de descuento</strong>
           pagando antes del 1 de diciembre de 2026.
         </p>
-        <p><a class="boton boton-primario" href={URL_REGISTRO}>Probar 15 días gratis</a></p>
+        <p><a class="boton boton-primario" href={registro} data-evento="cta_prueba_gratis" data-destino={Astro.url.pathname.replace(/^\/|\/$/g, '') || 'inicio'}>Probar 15 días gratis</a></p>
       </div>
     </div>
   </div>

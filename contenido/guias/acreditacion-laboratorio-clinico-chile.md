@@ -39,7 +39,7 @@ Que los otros ámbitos no tengan obligatorias no significa que sobren: suman par
 
 ## 3. Lo que más se pasa por alto en las obligatorias
 
-**Resultados críticos (AOC 1.3).** La entidad acreditadora pide tu lista de resultados críticos, recorre el sistema de información del laboratorio (LIS) para encontrar los que ocurrieron en el período, elige 7 al azar y verifica que cada uno se notificó dentro del plazo que tú definiste. Mostrar el cuaderno de registros no alcanza: tiene que coincidir con el LIS. Si compras exámenes a terceros, igual eres responsable de notificar.
+**Resultados críticos (AOC 1.3)** ([guía completa](/guias/resultados-criticos-comunicacion-y-acreditacion/)). La entidad acreditadora pide tu lista de resultados críticos, recorre el sistema de información del laboratorio (LIS) para encontrar los que ocurrieron en el período, elige 7 al azar y verifica que cada uno se notificó dentro del plazo que tú definiste. Mostrar el cuaderno de registros no alcanza: tiene que coincidir con el LIS. Si compras exámenes a terceros, igual eres responsable de notificar.
 
 **Control de calidad interno (GP 1.3).** Se toman 7 prestaciones al azar por área técnica y cada una debe tener documentada la técnica, los protocolos de control interno, los requisitos de calidad, los calibradores o controles y el tiempo de respuesta. Basta que a una le falte algo para que el elemento no se cumpla. Hay una guía sobre cómo armar ese plan: [Guía para armar un plan de control interno de calidad](/guias/plan-de-control-interno-de-calidad/). El número contra el que se mide el desempeño de cada examen se explica en [Error total permitido: cómo elegirlo](/guias/error-total-permitido-como-elegirlo/).
 

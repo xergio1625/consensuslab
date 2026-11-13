@@ -111,7 +111,7 @@ const pedido = (titulo: string) =>
               ) : g.lista && GUIAS_A_LA_VENTA && PEDIDO_AUTOMATICO ? (
                 <a class="boton boton-primario" href="#pedir" data-guia={g.id}>Comprar{g.precio ? ` · ${pesos(g.precio)}` : ''}</a>
               ) : g.lista && GUIAS_A_LA_VENTA ? (
-                <a class="boton boton-primario" href={pedido(g.titulo)}>Pedir por correo{g.precio ? ` · ${pesos(g.precio)}` : ''}</a>
+                <a class="boton boton-primario" href={pedido(g.titulo)} data-evento="pedir_planilla" data-destino={g.id}>Pedir por correo{g.precio ? ` · ${pesos(g.precio)}` : ''}</a>
               ) : (
                 <a class="boton boton-secundario" href="#novedades">Avísame cuando esté</a>
               )}

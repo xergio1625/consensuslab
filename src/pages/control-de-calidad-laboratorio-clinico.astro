@@ -64,6 +64,18 @@ const PASOS = [
     calculadoras: [['amef-npr', 'AMEF: NPR'], ['pareto-de-causas', 'Diagrama de Pareto']],
   },
   {
+    etapa: 'Mide con indicadores',
+    guia: 'indicadores-de-calidad-del-laboratorio',
+    texto: 'La ficha de un indicador, la tasa con su intervalo, el gráfico p para distinguir señal de azar y el Pareto para buscar causas.',
+    calculadoras: [['indicadores-tasa-y-sigma', 'Tasa, intervalo y sigma'], ['grafico-p-de-indicadores', 'Gráfico p'], ['pareto-de-causas', 'Diagrama de Pareto']],
+  },
+  {
+    etapa: 'Comunica lo crítico',
+    guia: 'resultados-criticos-comunicacion-y-acreditacion',
+    texto: 'La lista de valores críticos, el procedimiento de aviso, el registro y cómo lo constata una entidad acreditadora.',
+    calculadoras: [],
+  },
+  {
     etapa: 'Prepara la acreditación',
     guia: 'acreditacion-laboratorio-clinico-chile',
     texto: 'Cómo se decide una acreditación en Chile, cuáles son las 8 obligatorias y por dónde empezar.',
@@ -78,7 +90,7 @@ const direccion = new URL(Astro.url.pathname, Astro.site).href;
 <Base
   titulo="Control de calidad en el laboratorio clínico: ruta de lectura"
   seccion="guias"
-  descripcion="Diez guías libres para el control de calidad del laboratorio clínico, en orden: error total, plan de control, Westgard, control externo, verificación, incertidumbre, riesgos y acreditación."
+  descripcion="Doce guías libres para el control de calidad del laboratorio clínico, en orden: error total, plan de control, Westgard, control externo, verificación, incertidumbre, riesgos, indicadores, resultados críticos y acreditación."
   datos={[
     {
       '@context': 'https://schema.org',

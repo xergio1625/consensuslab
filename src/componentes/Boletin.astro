@@ -11,7 +11,7 @@ const lista = ruta.startsWith('/accreditation/')
   : ruta.startsWith('/professional/') && !PROFESSIONAL_ABIERTO
     ? { antetitulo: 'Lista de espera', titulo: 'Entra primero a ConsensusLab Professional', texto: 'Te avisamos el día que abra, con tus 3 meses gratis. Sin costo ni compromiso, y sin compartir tu correo.', boton: 'Quiero entrar primero' }
     : ruta.startsWith('/guias/')
-      ? { antetitulo: 'Avísame', titulo: 'Entérate cuando haya una guía nueva', texto: 'Te escribimos cuando publiquemos una guía nueva, de pago o libre. Sin relleno y sin compartir tu correo.', boton: 'Avisarme' }
+      ? { antetitulo: 'Avísame', titulo: 'Entérate cuando haya una guía nueva', texto: 'Te escribimos cuando publiquemos una guía nueva o una planilla. Sin relleno y sin compartir tu correo.', boton: 'Avisarme' }
       : null;
 ---
 

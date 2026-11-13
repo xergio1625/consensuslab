@@ -12,7 +12,7 @@ export const GUIAS_RELACIONADAS: Record<string, string[]> = {
   'los-tres-hermanos-del-control-de-calidad': ['reglas-de-westgard-cuales-usar-y-cuando', 'plan-de-control-interno-de-calidad'],
   'procalcitonina-ahorra-afuera-se-cobra-adentro': ['verificacion-de-metodos-precision-veracidad-comparacion', 'error-total-permitido-como-elegirlo'],
   'resultado-correcto-mal-comunicado': ['verificar-el-calculo-del-vfg-en-tu-sistema', 'amef-laboratorio-clinico-gestion-de-riesgos'],
-  'el-resultado-perfecto-que-llegaba-tarde': ['amef-laboratorio-clinico-gestion-de-riesgos'],
+  'el-resultado-perfecto-que-llegaba-tarde': ['indicadores-de-calidad-del-laboratorio', 'amef-laboratorio-clinico-gestion-de-riesgos'],
   'acaso-no-sabes-como-se-hace': ['verificacion-de-metodos-precision-veracidad-comparacion'],
   'la-calidad-no-es-un-titulo-lo-que-denken-le-ensena-al-laboratorio-clinico': ['acreditacion-laboratorio-clinico-chile', 'plan-de-control-interno-de-calidad'],
   'calidad-en-salud-el-caso-de-clinica-las-condes': ['acreditacion-laboratorio-clinico-chile'],

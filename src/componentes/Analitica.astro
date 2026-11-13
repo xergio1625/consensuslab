@@ -110,6 +110,14 @@ import { ADS_ID, CF_BEACON_TOKEN, GA_ID, URL_APP } from '../lib/sitio';
             var m = /[?&]modulo=([^&#]+)/.exec(a.href);
             window.gtag('event', 'abrir_app', { modulo: m ? decodeURIComponent(m[1]) : 'inicio' });
           }
+          // Eventos de conversión del sitio: cualquier enlace o botón con data-evento (sin datos personales).
+          var ev = e.target.closest('[data-evento]');
+          if (ev) {
+            window.gtag('event', ev.getAttribute('data-evento'), {
+              pagina: location.pathname.replace(/^\/|\/$/g, '').slice(0, 60) || 'inicio',
+              destino: ev.getAttribute('data-destino') || ''
+            });
+          }
           if (e.target.closest('#copiar')) {
             window.gtag('event', 'copiar_prompt', { prompt: location.pathname.replace(/\/$/, '').split('/').pop() });
           }
