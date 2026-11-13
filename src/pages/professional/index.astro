@@ -151,7 +151,7 @@ const preguntas = [
     },
   ]}
 >
-  <section class="portada">
+  <section class="portada portada-pro">
     <FondoPortada motivo="ronda" />
     <div class="contenedor">
       <p class="antetitulo">Para profesionales de laboratorio clínico</p>
@@ -305,4 +305,8 @@ const preguntas = [
 
 <style>
   .lista-tarjeta { margin: 0; padding-left: 1.15em; display: grid; gap: 6px; color: var(--c-texto-suave); font-size: .95rem; }
+  @media (max-width: 760px) {
+    .lista-tarjeta { display: none; }
+    #dentro .tarjeta { padding: 12px 14px; gap: 4px; }
+  }
 </style>

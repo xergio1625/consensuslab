@@ -16,7 +16,7 @@ const rutaLab = url('planes/laboratorios/');
   seccion="planes"
   descripcion="Planes de ConsensusLab: Professional para profesionales de laboratorio y planes Essential y QC para laboratorios clínicos. Elige el tuyo."
 >
-  <section class="portada">
+  <section class="portada portada-compacta">
     <FondoPortada motivo="control" />
     <div class="contenedor">
       <p class="antetitulo">Planes</p>
@@ -29,10 +29,10 @@ const rutaLab = url('planes/laboratorios/');
 
   <section class="seccion">
     <div class="contenedor">
-      <div class="planes planes-fila">
+      <div class="planes planes-fila planes-entrada">
         <article class="plan plan-destacado" id="para-profesionales">
           <span class="plan-cinta">{MESES_PRUEBA_PROFESSIONAL} meses gratis</span>
-          <h2>Para mí, como profesional</h2>
+          <h2><a href={rutaPro}>Para mí, como profesional</a></h2>
           <p class="plan-para">ConsensusLab Professional</p>
           <p class="plan-sirve">
             Rondas de control externo de tu criterio, respuesta experta, comparación anónima con el grupo y certificado de
@@ -45,7 +45,7 @@ const rutaLab = url('planes/laboratorios/');
           <a class="boton boton-primario boton-ancho" href={rutaPro}>Ver el plan para profesionales</a>
         </article>
         <article class="plan" id="para-laboratorios">
-          <h2>Para mi laboratorio</h2>
+          <h2><a href={rutaLab}>Para mi laboratorio</a></h2>
           <p class="plan-para">Essential y ConsensusLab QC</p>
           <p class="plan-sirve">
             Registros trazables, equipos, reactivos y el plan de calidad analítico aplicado igual en cada turno. Prueba gratis
