@@ -56,19 +56,7 @@ export const MEDIUM_PERFIL = 'https://medium.com/@xergio.1625';
 /** Perfil de LinkedIn de la persona autora (se usa como `sameAs` en los datos estructurados). */
 export const LINKEDIN_PERFIL = 'https://www.linkedin.com/in/sergio-inostroza-riffo-409964123';
 
-/**
- * ID de medición de Google Analytics 4 (formato 'G-XXXXXXXXXX'; es público, aparece en el código de cada página).
- * Vacío = sin analítica: no se carga nada ni se muestra el aviso de cookies.
- * Con ID: aviso de cookies y Google Analytics solo si la persona acepta (ver src/componentes/Analitica.astro).
- */
-export const GA_ID = 'G-PBCF6HZRHZ';
-
-/**
- * ID de la etiqueta de Google Ads (formato 'AW-XXXXXXXXX'; público). Con ID, se carga junto a Analytics solo si la persona
- * acepta las cookies, y la solicitud de cotización exitosa envía la conversión «conversion_event_request_quote».
- * Vacío = sin conversión de Ads.
- */
-export const ADS_ID = '';
+// Analítica: solo Cloudflare Web Analytics (CF_BEACON_TOKEN), sin cookies. Google Analytics y Google Ads se retiraron el 14-11-2026.
 
 /**
  * Token de Cloudflare Web Analytics (público, aparece en el código de cada página).
@@ -89,7 +77,7 @@ export const CORREO_COTIZACION = CORREO_CONTACTO;
 export const VIGENCIA_LEGAL = '11 de octubre de 2026';
 
 /** Fecha de la versión vigente de la política de privacidad (Google Analytics con consentimiento, Cloudflare Web Analytics sin cookies, formulario de cotización, suscripción a novedades y avisos por WhatsApp futuros). */
-export const VIGENCIA_PRIVACIDAD = '27 de octubre de 2026';
+export const VIGENCIA_PRIVACIDAD = '14 de noviembre de 2026';
 
 /** Essential Base: único plan de laboratorio con precio público (los demás se cotizan). Anual, IVA incluido. */
 export const PRECIO_ESSENTIAL_BASE = { normal: '$199.900', fundador: '$119.940' };

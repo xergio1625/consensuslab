@@ -409,12 +409,6 @@ const planesCotizables = [...planes, institucional];
         if (j.ok) {
           form.reset();
           mostrar('¡Listo! Recibimos tu solicitud' + (j.numero ? ' (N° ' + j.numero + ')' : '') + '. Te llegará un correo de confirmación y la cotización dentro de un día hábil.', false);
-          const w = window as unknown as { gtag?: (...a: unknown[]) => void };
-          if (typeof w.gtag === 'function') {
-            w.gtag('event', 'generate_lead', { plan: String(datos.plan) });
-            // Conversión de Google Ads: solo cuando la solicitud se recibió (y si la persona aceptó las cookies).
-            w.gtag('event', 'conversion_event_request_quote');
-          }
         } else if (j.error === 'validacion' && j.detalle) {
           const campos = Object.keys(j.detalle).map((k) => (ETIQUETAS[k] || k) + ': ' + j.detalle[k]).join('; ');
           mostrar('Revisa los datos: ' + (campos || 'hay un dato no válido') + '.', true);

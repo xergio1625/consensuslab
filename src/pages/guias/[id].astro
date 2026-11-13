@@ -24,7 +24,7 @@ const palabras = (guia.body ?? '').split(/\s+/).filter(Boolean).length;
 const minutos = Math.max(1, Math.round(palabras / 220));
 const enlaceDoi = f?.doi ? `https://doi.org/${f.doi}` : undefined;
 // «Siguiente paso» al final de cada guía: prueba gratis, la planilla de Excel que ordena el tema (si hay) y el aviso de guías nuevas.
-// Cada enlace lleva data-evento para medirlo en Google Analytics (ver Analitica.astro).
+// Cada enlace lleva data-evento (hoy sin lector: Google Analytics se retiró el 14-11-2026; sirve si se agrega otro contador).
 const PLANILLA_DE: Record<string, string> = {
   'verifica-un-metodo-sin-perder-una-semana': 'verificar-un-metodo',
   'verificacion-de-metodos-precision-veracidad-comparacion': 'verificar-un-metodo',

@@ -3,7 +3,6 @@
 import { getCollection } from 'astro:content';
 import { url } from '../lib/rutas';
 import Boletin from './Boletin.astro';
-import { GA_ID } from '../lib/sitio';
 const hayOpinion = (await getCollection('opinion')).length > 0;
 const anio = new Date().getFullYear();
 ---
@@ -38,7 +37,6 @@ const anio = new Date().getFullYear();
       <li><a href={url('licencia/')}>Licencia</a></li>
       <li><a href={url('privacidad/')}>Privacidad</a></li>
       <li><a href={url('terminos/')}>Términos</a></li>
-      {GA_ID && <li><button type="button" class="enlace-pie" data-preferencias-cookies>Preferencias de cookies</button></li>}
       <li><button type="button" class="enlace-pie" data-reducir-movimiento aria-pressed="false">Reducir animaciones</button></li>
     </ul>
   </div>

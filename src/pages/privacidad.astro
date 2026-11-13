@@ -2,7 +2,7 @@
 // Política de privacidad del sitio y de la app ConsensusLab (Ley 19.628 y Ley 21.719, Chile).
 import Base from '../plantillas/Base.astro';
 import { url } from '../lib/rutas';
-import { CORREO_CONTACTO, GA_ID, VIGENCIA_PRIVACIDAD } from '../lib/sitio';
+import { CORREO_CONTACTO, VIGENCIA_PRIVACIDAD } from '../lib/sitio';
 const correo = `mailto:${CORREO_CONTACTO}`;
 ---
 
@@ -37,30 +37,23 @@ const correo = `mailto:${CORREO_CONTACTO}`;
 
       <h2>2. Qué datos tratamos</h2>
       <h3>En este sitio</h3>
-      {GA_ID ? (
-        <ul id="analitica">
+      <ul id="analitica">
           <li>
-            <strong>Analítica, solo con tu consentimiento.</strong> Si aceptas en el aviso de cookies, usamos Google Analytics
-            4 (Google LLC, con servidores que pueden estar fuera de Chile, incluso en Estados Unidos) para contar visitas y
-            saber qué páginas, herramientas y prompts se usan. Google guarda cookies propias (<code>_ga</code>,{' '}
-            <code>_ga_*</code>) por hasta 2 años y recibe datos técnicos de la visita: páginas vistas, de dónde llegaste,
-            tipo de dispositivo y navegador, y una ubicación aproximada (ciudad o país) obtenida de la dirección IP, que
-            Google Analytics 4 no guarda. No enviamos tu nombre, tu correo ni datos de la app, y desactivamos las señales
-            de Google y la personalización de anuncios. Los datos se conservan 14 meses en Google Analytics.
-          </li>
-          <li>
-            <strong>Medición básica sin cookies.</strong> Para conocer cuántas visitas recibe el sitio y qué tan rápido
+            <strong>Medición básica, sin cookies.</strong> Para conocer cuántas visitas recibe el sitio y qué tan rápido
             carga, usamos Cloudflare Web Analytics (Cloudflare, Inc.). No usa cookies ni guarda tu dirección IP ni
             identificadores que te sigan entre sitios; solo registra datos agregados de la visita (página, país, tipo de
-            dispositivo y navegador, de dónde llegaste y tiempos de carga). Se carga aunque rechaces Google Analytics.
+            dispositivo y navegador, de dónde llegaste y tiempos de carga). No usamos Google Analytics ni publicidad, y por
+            eso el sitio no muestra un aviso de cookies.
           </li>
           <li>
-            Si rechazas, no se carga Google Analytics. Puedes cambiar tu decisión cuando quieras con «Preferencias de
-            cookies», al pie de cada página; si retiras el consentimiento, borramos las cookies de Analytics de tu
-            navegador. Tu decisión se guarda en tu navegador por 12 meses.
+            <strong>De dónde llegaste.</strong> Si llegas desde un enlace con parámetros de seguimiento (<code>utm_</code>), el
+            sitio guarda ese origen en tu navegador mientras dura la visita y lo envía junto con tu solicitud (cotización,
+            suscripción o diagnóstico) para saber qué enlace funcionó. No incluye datos personales. Además, cuando entras al
+            enlace de crear cuenta de la app, la app cuenta esa visita de forma anónima, con el origen y la campaña, sin tu
+            correo ni tu dirección IP.
           </li>
           <li>
-            Además, el sitio guarda en tu propio navegador tu preferencia de tema claro u oscuro. No usamos publicidad.
+            Además, el sitio guarda en tu propio navegador tus preferencias de tema claro u oscuro y de reducir animaciones.
           </li>
           <li>
             El sitio se aloja en GitHub Pages. Como cualquier servidor web, GitHub puede registrar datos técnicos de la
@@ -86,23 +79,7 @@ const correo = `mailto:${CORREO_CONTACTO}`;
             correos (ver la sección 5). Cada correo trae un enlace para darte de baja, y también puedes pedirlo en{' '}
             <a href={correo}>{CORREO_CONTACTO}</a>.
           </li>
-        </ul>
-      ) : (
-        <ul>
-          <li>
-            El sitio no usa cookies, ni herramientas de analítica o de publicidad, ni formularios. Solo guarda en tu propio
-            navegador tu preferencia de tema claro u oscuro.
-          </li>
-          <li>
-            El sitio se aloja en GitHub Pages. Como cualquier servidor web, GitHub puede registrar datos técnicos de la
-            visita, como la dirección IP, según su propia política de privacidad.
-          </li>
-          <li>
-            Si más adelante incorporamos analítica o herramientas de marketing, actualizaremos esta política y te pediremos
-            el consentimiento antes de activarlas.
-          </li>
-        </ul>
-      )}
+      </ul>
 
       <h3>En la app (prueba gratuita y suscripción)</h3>
       <table>
@@ -178,7 +155,6 @@ const correo = `mailto:${CORREO_CONTACTO}`;
           <strong>Con tu consentimiento</strong>, para enviarte avisos por WhatsApp cuando esa función esté disponible
           (ver la sección 5). No los enviaremos a quien no los haya aceptado.
         </li>
-        {GA_ID && <li><strong>Con tu consentimiento</strong>, para medir el uso del sitio con Google Analytics.</li>}
         <li><strong>Por interés legítimo</strong>, para la seguridad de la app y la prevención de abusos.</li>
         <li>
           <strong>Por interés legítimo</strong>, para llevar un seguimiento comercial interno de quienes prueban la app o

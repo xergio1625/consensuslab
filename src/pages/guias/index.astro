@@ -203,8 +203,6 @@ const pedido = (titulo: string) =>
           if (j.ok) {
             form.reset();
             mostrar('¡Listo! Te enviamos a tu correo el valor y los datos para pagar por transferencia' + (j.numero ? ' (pedido ' + j.numero + ')' : '') + '. Si no lo ves en unos minutos, revisa la carpeta de spam.', false);
-            const w = window as unknown as { gtag?: (...a: unknown[]) => void };
-            if (typeof w.gtag === 'function') w.gtag('event', 'begin_checkout', { item_id: String(datos.guia) });
           } else if (j.error === 'validacion' && j.detalle) {
             mostrar('Revisa los datos: ' + Object.keys(j.detalle).join(', ') + '.', true);
           } else if (j.error === 'limite') {

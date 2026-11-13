@@ -95,8 +95,6 @@ const lista = ruta.startsWith('/accreditation/')
           mostrar(j.repetida
             ? 'Si ese correo aún no está suscrito, te enviamos un mensaje para confirmarlo. Revisa tu bandeja (y el spam).'
             : 'Casi listo: te enviamos un correo para confirmar tu suscripción. Ábrelo y pulsa «Confirmar». Si no llega, revisa el spam.', false);
-          const w = window as unknown as { gtag?: (...a: unknown[]) => void };
-          if (typeof w.gtag === 'function') w.gtag('event', 'sign_up', { metodo: 'boletin', pagina: location.pathname });
         } else if (j.error === 'validacion') {
           mostrar('Revisa tu correo y marca la casilla de aceptación.', true);
         } else if (j.error === 'limite') {

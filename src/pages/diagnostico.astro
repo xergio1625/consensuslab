@@ -242,8 +242,6 @@ const opciones = [
     resultado.hidden = false;
     $('diag-resultado-titulo').focus();
     resultado.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    const w = window as unknown as { gtag?: (...a: unknown[]) => void };
-    if (typeof w.gtag === 'function') w.gtag('event', 'diagnostico_completo', { plan: r.plan, puntaje: r.total });
   });
 
   $('diag-imprimir').addEventListener('click', () => window.print());
@@ -282,8 +280,6 @@ const opciones = [
       if (j.ok) {
         contacto.reset();
         mostrar('¡Listo! Recibimos tu solicitud. Te escribiremos dentro de un día hábil para coordinar la conversación.', false);
-        const w = window as unknown as { gtag?: (...a: unknown[]) => void };
-        if (typeof w.gtag === 'function') w.gtag('event', 'generate_lead', { plan: 'diagnostico', pagina: location.pathname });
       } else if (j.error === 'validacion') {
         mostrar('Revisa tu nombre, correo y laboratorio.', true);
       } else {
