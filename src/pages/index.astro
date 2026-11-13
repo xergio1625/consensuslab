@@ -68,12 +68,13 @@ const ultimos = (await obtenerOpinion()).slice(0, 3);
       <div class="puertas" id="puertas">
         <article class="puerta puerta-destacada">
           <p class="antetitulo">Soy profesional de laboratorio</p>
-          <h2>ConsensusLab Professional</h2>
-          <p>
+          <h2><a href={url('professional/')}>ConsensusLab Professional</a></h2>
+          <p class="puerta-corto">Rondas de criterio con gráficas de control y certificado verificable.</p>
+          <p class="puerta-largo">
             Pon a prueba tu criterio en rondas de control externo: decides frente a una gráfica de control, ves la
             respuesta experta y comparas, de forma anónima, con el resto del grupo.
           </p>
-          <ul>
+          <ul class="puerta-largo">
             <li>Rondas con fechas fijas, como un control externo de laboratorio</li>
             <li>Certificado de participación que se puede verificar</li>
             <li>Una sola cuenta: te acompaña si cambias de trabajo</li>
@@ -87,12 +88,13 @@ const ultimos = (await obtenerOpinion()).slice(0, 3);
 
         <article class="puerta">
           <p class="antetitulo">Dirijo o gestiono un laboratorio</p>
-          <h2>ConsensusLab para laboratorios</h2>
-          <p>
+          <h2><a href={url('para-laboratorios/')}>ConsensusLab para laboratorios</a></h2>
+          <p class="puerta-corto">Gestión y control de calidad: tu plan de calidad, cumplido en cada turno.</p>
+          <p class="puerta-largo">
             Lleva tu plan de calidad al trabajo de cada turno y mira si se cumple: Essential para la gestión del
             laboratorio y ConsensusLab QC para el control de calidad.
           </p>
-          <ul>
+          <ul class="puerta-largo">
             <li>Prueba gratis 15 días con los datos reales de tu laboratorio</li>
             <li>Essential, ConsensusLab QC o los dos juntos</li>
             <li>Cada plan incluye hasta 5 cuentas de Professional para tu equipo</li>

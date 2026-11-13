@@ -1218,6 +1218,30 @@ img, svg { max-width: 100%; }
 .portada-compacta .puerta p, .portada-compacta .puerta li { font-size: .94rem; }
 .diag-profesional { margin: 0 0 22px; }
 
+/* Las puertas de la portada son tarjetas enteras clicables (el enlace del título se estira sobre toda la tarjeta).
+   En celular se reducen a lo esencial y sin botones, para que las dos entren en una pantalla. */
+.puerta h2 a { color: inherit; text-decoration: none; }
+.puerta h2 a::after { content: ""; position: absolute; inset: 0; border-radius: var(--radio); }
+.puerta .acciones-portada { position: relative; z-index: 1; }
+.puerta-corto { display: none; }
+@media (max-width: 760px) {
+  .portada-compacta { padding: 18px 0 22px; }
+  .portada-compacta .portada-lema { display: none; }
+  .portada-compacta .portada-cabeza { margin-bottom: 14px; }
+  .portada-compacta .puertas { gap: 12px; }
+  .portada-compacta .puerta { padding: 14px 46px 14px 16px; gap: 3px; transition: transform var(--dur-1) var(--ease-out); }
+  .portada-compacta .puerta .puerta-largo, .portada-compacta .puerta .acciones-portada { display: none; }
+  .portada-compacta .puerta .puerta-corto { display: block; font-size: .94rem; line-height: 1.4; }
+  .portada-compacta .puerta .puerta-precio { margin-top: 4px; font-size: .85rem; }
+  .portada-compacta .puerta h2::after {
+    content: ""; position: absolute; right: 20px; top: 50%; width: 10px; height: 10px; margin-top: -5px;
+    border-right: 2.5px solid var(--c-acento-texto); border-top: 2.5px solid var(--c-acento-texto); transform: rotate(45deg);
+  }
+  .portada-compacta .puerta .antetitulo { font-size: .72rem; letter-spacing: .04em; }
+  .portada-compacta .puerta h2 { font-size: 1.1rem; }
+  .portada-compacta .puerta:active { transform: scale(.985); }
+}
+
 /* ── Respuesta corta y preguntas frecuentes de las calculadoras ───────────────────────────── */
 .respuesta-corta { max-width: 70ch; padding: 12px 16px; border-left: 4px solid var(--marca-dorado); background: var(--c-panel-alt); border-radius: 0 var(--radio-s) var(--radio-s) 0; font-size: 1.02rem; }
 .faq { margin-top: 32px; }
