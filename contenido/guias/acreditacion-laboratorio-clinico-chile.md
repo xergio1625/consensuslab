@@ -43,7 +43,7 @@ Que los otros ámbitos no tengan obligatorias no significa que sobren: suman par
 
 **Control de calidad interno (GP 1.3).** Se toman 7 prestaciones al azar por área técnica y cada una debe tener documentada la técnica, los protocolos de control interno, los requisitos de calidad, los calibradores o controles y el tiempo de respuesta. Basta que a una le falte algo para que el elemento no se cumpla. Hay una guía sobre cómo armar ese plan: [Guía para armar un plan de control interno de calidad](/guias/plan-de-control-interno-de-calidad/). El número contra el que se mide el desempeño de cada examen se explica en [Error total permitido: cómo elegirlo](/guias/error-total-permitido-como-elegirlo/).
 
-**Control de calidad externo (GP 1.4).** Debe haber al menos un subprograma de evaluación externa por cada área técnica en que el laboratorio hace exámenes (cualquier programa equivalente al del Instituto de Salud Pública, nacional o extranjero). El análisis y las acciones se exigen para los resultados «insatisfactorios», pero la entidad pide todos los del período.
+**Control de calidad externo (GP 1.4)** ([guía para interpretarlo](/guias/control-de-calidad-externo-sesgo-y-sdi/)). Debe haber al menos un subprograma de evaluación externa por cada área técnica en que el laboratorio hace exámenes (cualquier programa equivalente al del Instituto de Salud Pública, nacional o extranjero). El análisis y las acciones se exigen para los resultados «insatisfactorios», pero la entidad pide todos los del período.
 
 **Calidad (CAL 1.1).** Es la que más pesa por ser obligatoria. Necesitas un programa anual con indicadores, umbrales y metas, un responsable con funciones y horas asignadas, evaluación periódica (en acreditación basta la semestral) y un informe anual con análisis.
 
@@ -79,6 +79,18 @@ Las herramientas de ConsensusLab apuntan a esa evidencia, y cada ficha explica q
 - Auditorías y revisión por la dirección: [Auditorías internas](/herramientas/auditorias-internas/) y [Revisión por la dirección](/herramientas/revision-por-la-direccion/).
 
 Puedes ver cómo se organiza todo en [Accreditation](/accreditation/), o partir por el [diagnóstico](/diagnostico/) para saber dónde está tu laboratorio.
+
+## Preguntas frecuentes
+
+**¿Qué porcentaje se necesita para acreditarse?** En la primera acreditación, 70 % de las características aplicables (50 % si es «con observaciones»); en la segunda, 80 %; en la tercera, 90 %. Ninguna característica obligatoria puede incumplirse.
+
+**¿Cuántas características obligatorias hay?** Ocho: DP 1.1, CAL 1.1, GP 1.2, GP 1.3, GP 1.4, AOC 1.3, RH 1.1 y RH 1.2. Si falla una, se deniega la acreditación.
+
+**¿Cuánta evidencia hay que tener?** Registros de los últimos 6 meses en la primera acreditación y de 3 años en la reacreditación.
+
+**¿Un software acredita al laboratorio?** No. Puede ordenar y conservar la evidencia, pero la acreditación la decide la entidad acreditadora.
+
+**¿Qué características pueden no aplicar?** Si el laboratorio no toma muestras ni atiende pacientes directamente, AOC 1.1, AOC 1.2 y RH 3.1 no aplican, según una circular interpretativa.
 
 ## Lista de verificación
 

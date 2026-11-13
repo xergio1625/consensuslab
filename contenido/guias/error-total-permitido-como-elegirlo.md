@@ -68,6 +68,18 @@ El modelo de error total domina la práctica en química clínica, pero otros ca
 8. **Mira la sensibilidad.** Si el examen aprueba con una fuente y reprueba con otra, esa información importa para decidir.
 9. **Trata el ETa como el peor caso permitido, no como el error habitual.** Cerca de un punto de corte, un método que «cumple» puede igual clasificar mal a un paciente.
 
+## Preguntas frecuentes
+
+**¿Qué es el error total permitido?** La cantidad de error que un laboratorio acepta en un resultado antes de considerarlo inútil para la decisión clínica. Se abrevia ETa o TEa.
+
+**¿Existe un solo ETa oficial para cada examen?** No. Existen varias maneras de fijarlo (resultado clínico, variación biológica, estado del arte) y la elección cambia el resultado de la evaluación.
+
+**¿Puedo usar los límites de CLIA como ETa?** No es lo recomendable: son un piso regulatorio para aprobar pruebas de aptitud, no un objetivo de calidad.
+
+**¿Cómo se calcula el sigma con el ETa?** Sigma = (ETa − sesgo) / CV, todo en porcentaje. Si cambias el ETa, cambia el sigma.
+
+**¿Cuándo conviene fijar el ETa?** Antes de evaluar el resultado. Elegir la vara después de ver los datos invalida la evaluación.
+
 ## 7. Lista de verificación
 
 - [ ] Cada examen tiene un solo ETa, elegido antes de evaluar el resultado.

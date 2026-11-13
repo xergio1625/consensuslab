@@ -93,6 +93,8 @@ La calculadora de [Error total y sigma](/calculadoras/error-total-y-sigma/) calc
 
 **¿Todas las reglas son obligatorias?** No. Las reglas las define cada laboratorio en su plan de control, según el método y la calidad requerida, y su normativa o entidad acreditadora puede pedir algo específico.
 
+Para interpretar el control externo, lee [Control de calidad externo: cómo interpretar el sesgo y el SDI](/guias/control-de-calidad-externo-sesgo-y-sdi/).
+
 ## Lista de verificación
 
 - [ ] Cada examen tiene media y DE establecidas por nivel de control.

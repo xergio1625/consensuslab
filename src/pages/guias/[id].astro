@@ -21,6 +21,11 @@ const otras = (await obtenerGuias()).filter((x) => x.id !== guia.id).slice(0, 4)
 const palabras = (guia.body ?? '').split(/\s+/).filter(Boolean).length;
 const minutos = Math.max(1, Math.round(palabras / 220));
 const enlaceDoi = f?.doi ? `https://doi.org/${f.doi}` : undefined;
+// Preguntas frecuentes: si la guía tiene una sección «## Preguntas frecuentes» con párrafos «**¿Pregunta?** Respuesta.»,
+// se publican también como datos estructurados (FAQPage). El texto visible y el dato estructurado salen de la misma fuente.
+const textoPlano = (t: string) => t.replace(/\[([^\]]+)\]\([^)]*\)/g, '$1').replace(/[*_`]/g, '').trim();
+const seccionFaq = (guia.body ?? '').split(/^## /m).find((x) => /^(\d+\.\s*)?Preguntas frecuentes/i.test(x)) ?? '';
+const preguntas = [...seccionFaq.matchAll(/^\*\*(¿[^*]+\?)\*\*\s+(.+)$/gm)].map((m) => ({ p: m[1].trim(), r: textoPlano(m[2]) }));
 ---
 
 <Base
@@ -44,6 +49,15 @@ const enlaceDoi = f?.doi ? `https://doi.org/${f.doi}` : undefined;
       ...(f ? { isBasedOn: enlaceDoi ?? f.enlaces[0]?.url, license: f.licencia_url } : {}),
     },
     migasLd(Astro.site, [['Guías', 'guias/'], [g.titulo, `guias/${guia.id}/`]]),
+    ...(preguntas.length > 0
+      ? [
+          {
+            '@context': 'https://schema.org',
+            '@type': 'FAQPage',
+            mainEntity: preguntas.map((q) => ({ '@type': 'Question', name: q.p, acceptedAnswer: { '@type': 'Answer', text: q.r } })),
+          },
+        ]
+      : []),
   ]}
 >
   <div class="contenedor">
