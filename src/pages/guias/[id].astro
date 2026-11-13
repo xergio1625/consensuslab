@@ -131,6 +131,11 @@ const preguntas = [...seccionFaq.matchAll(/^\*\*(¿[^*]+\?)\*\*\s+(.+)$/gm)].map
       </article>
 
       <aside class="ficha-lateral">
+        <div class="caja">
+          <h2>Ruta de lectura</h2>
+          <p>Las guías de control de calidad y acreditación, ordenadas paso a paso.</p>
+          <p><a class="boton boton-secundario boton-ancho" href={url('control-de-calidad-laboratorio-clinico/')}>Ver la ruta</a></p>
+        </div>
         {
           otras.length > 0 && (
             <div class="caja">

@@ -24,6 +24,25 @@ const pedido = (titulo: string) =>
   titulo="Guías para el laboratorio clínico"
   seccion="guias"
   descripcion="Guías prácticas para el laboratorio clínico: verificación de métodos, qué hacer cuando un control se sale y plan de control interno. Guías libres y de pago."
+  datos={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'CollectionPage',
+      name: 'Guías para el laboratorio clínico',
+      url: new URL(Astro.url.pathname, Astro.site).href,
+      inLanguage: 'es',
+      mainEntity: {
+        '@type': 'ItemList',
+        numberOfItems: guias.length,
+        itemListElement: guias.map((g, i) => ({
+          '@type': 'ListItem',
+          position: i + 1,
+          name: g.data.titulo,
+          url: new URL(url(`guias/${g.id}/`), Astro.site).href,
+        })),
+      },
+    },
+  ]}
 >
   <div class="contenedor seccion">
     <div class="seccion-cabeza">
@@ -111,6 +130,9 @@ const pedido = (titulo: string) =>
     }
 
     <h2 id="libres" style="margin-top:36px">Guías libres</h2>
+    <p class="texto-suave">
+      ¿No sabes por dónde empezar? Sigue la <a href={url('control-de-calidad-laboratorio-clinico/')}>ruta de lectura de control de calidad y acreditación</a>.
+    </p>
     {
       guias.length > 0 ? (
         <ol class="lista-articulos">

@@ -1,0 +1,156 @@
+---
+// Página centro del tema «control de calidad y acreditación»: ordena las guías pilar en una ruta de lectura
+// y enlaza a las calculadoras que las respaldan. Su objetivo es que quien llega con una duda general encuentre el orden correcto.
+import Base from '../plantillas/Base.astro';
+import { obtenerGuias } from '../lib/datos';
+import { migasLd, url } from '../lib/rutas';
+
+const guias = await obtenerGuias();
+const porId = new Map(guias.map((g) => [g.id, g]));
+
+const PASOS = [
+  {
+    etapa: 'Fija la vara',
+    guia: 'error-total-permitido-como-elegirlo',
+    texto: 'Antes de evaluar nada, define cuánto error acepta cada examen y deja anotado de dónde sale ese número.',
+    calculadoras: [['tea-variabilidad-biologica', 'ETa desde variabilidad biológica'], ['error-total-y-sigma', 'Error total y sigma']],
+  },
+  {
+    etapa: 'Arma el plan de control',
+    guia: 'plan-de-control-interno-de-calidad',
+    texto: 'Qué material, con qué frecuencia, cuántos niveles y qué reglas, para cada examen.',
+    calculadoras: [['estadistica-del-control', 'Media, DE y CV del control']],
+  },
+  {
+    etapa: 'Aplica las reglas',
+    guia: 'reglas-de-westgard-cuales-usar-y-cuando',
+    texto: 'Qué significa cada regla, cuáles rechazan, cuáles advierten y cuáles conviene usar según el sigma.',
+    calculadoras: [['levey-jennings', 'Gráfico de Levey-Jennings'], ['cusum-y-ewma', 'CUSUM y EWMA']],
+  },
+  {
+    etapa: 'Compárate con los demás',
+    guia: 'control-de-calidad-externo-sesgo-y-sdi',
+    texto: 'Cómo leer el sesgo y el SDI de las rondas externas y qué hacer ante un resultado inaceptable.',
+    calculadoras: [['sesgo-y-sdi', 'Sesgo y SDI']],
+  },
+  {
+    etapa: 'Verifica un método nuevo',
+    guia: 'verificacion-de-metodos-precision-veracidad-comparacion',
+    texto: 'Precisión, sesgo y comparación con el método anterior, y cómo decidir si el resultado es aceptable.',
+    calculadoras: [['verificacion-de-precision', 'Verificación de precisión'], ['comparacion-de-metodos', 'Comparación de métodos'], ['comparacion-con-el-fabricante', 'Comparación con el fabricante']],
+  },
+  {
+    etapa: 'Cuantifica la duda',
+    guia: 'incertidumbre-de-medicion-paso-a-paso',
+    texto: 'Qué es la incertidumbre de medición y cómo estimarla con los datos que ya tienes.',
+    calculadoras: [['incertidumbre-de-medicion', 'Incertidumbre de medición']],
+  },
+  {
+    etapa: 'Anticipa lo que puede fallar',
+    guia: 'amef-laboratorio-clinico-gestion-de-riesgos',
+    texto: 'Un análisis de modos de falla con NPR para decidir qué riesgo atender primero.',
+    calculadoras: [['amef-npr', 'AMEF: NPR'], ['pareto-de-causas', 'Diagrama de Pareto']],
+  },
+  {
+    etapa: 'Prepara la acreditación',
+    guia: 'acreditacion-laboratorio-clinico-chile',
+    texto: 'Cómo se decide una acreditación en Chile, cuáles son las 8 obligatorias y por dónde empezar.',
+    calculadoras: [],
+  },
+];
+
+const pasos = PASOS.filter((p) => porId.has(p.guia));
+const direccion = new URL(Astro.url.pathname, Astro.site).href;
+---
+
+<Base
+  titulo="Control de calidad en el laboratorio clínico: ruta de lectura"
+  seccion="guias"
+  descripcion="Ocho guías para el control de calidad del laboratorio clínico, en orden: error total, plan de control, Westgard, control externo, verificación, incertidumbre, riesgos y acreditación."
+  datos={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'CollectionPage',
+      name: 'Control de calidad en el laboratorio clínico: ruta de lectura',
+      url: direccion,
+      inLanguage: 'es',
+      mainEntity: {
+        '@type': 'ItemList',
+        itemListOrder: 'https://schema.org/ItemListOrderAscending',
+        numberOfItems: pasos.length,
+        itemListElement: pasos.map((p, i) => ({
+          '@type': 'ListItem',
+          position: i + 1,
+          name: porId.get(p.guia)!.data.titulo,
+          url: new URL(url(`guias/${p.guia}/`), Astro.site).href,
+        })),
+      },
+    },
+    migasLd(Astro.site, [['Guías', 'guias/'], ['Control de calidad: ruta de lectura', 'control-de-calidad-laboratorio-clinico/']]),
+  ]}
+>
+  <div class="contenedor">
+    <nav class="migas" aria-label="Ruta de navegación">
+      <ol>
+        <li><a href={url('guias/')}>Guías</a></li>
+        <li aria-current="page">Control de calidad: ruta de lectura</li>
+      </ol>
+    </nav>
+
+    <header class="ficha-cabeza">
+      <p class="antetitulo">Guías</p>
+      <h1>Control de calidad en el laboratorio clínico: ruta de lectura</h1>
+      <p class="texto-suave">
+        El control de calidad no es una sola técnica, sino una cadena de decisiones: qué error aceptas, cómo lo vigilas, cómo te
+        comparas, cómo verificas un método nuevo y cómo demuestras todo eso en una acreditación. Estas guías están ordenadas
+        para leerlas en ese orden. Cada una enlaza a calculadoras gratuitas que corren en tu navegador, sin datos de pacientes.
+      </p>
+    </header>
+
+    <ol class="ruta-guias">
+      {
+        pasos.map((p, i) => {
+          const g = porId.get(p.guia)!;
+          return (
+            <li class="caja">
+              <p class="antetitulo">Paso {i + 1} · {p.etapa}</p>
+              <h2><a href={url(`guias/${p.guia}/`)}>{g.data.titulo}</a></h2>
+              <p>{p.texto}</p>
+              {p.calculadoras.length > 0 && (
+                <p class="texto-suave">
+                  Herramientas:{' '}
+                  {p.calculadoras.map(([id, nombre], j) => (
+                    <>
+                      {j > 0 && ' · '}
+                      <a href={url(`calculadoras/${id}/`)}>{nombre}</a>
+                    </>
+                  ))}
+                </p>
+              )}
+            </li>
+          );
+        })
+      }
+    </ol>
+
+    <p class="texto-suave">
+      ¿Quieres saber en qué punto está tu laboratorio? Haz el <a href={url('diagnostico/')}>diagnóstico</a>. Para ordenar la
+      evidencia de la acreditación, mira <a href={url('accreditation/')}>Accreditation</a>. Estas guías son material educativo y
+      no reemplazan la normativa vigente ni el criterio de la jefatura del laboratorio.
+    </p>
+  </div>
+</Base>
+
+<style>
+  .ruta-guias {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0;
+    display: grid;
+    gap: 1rem;
+  }
+  .ruta-guias h2 {
+    margin: 0.25rem 0 0.5rem;
+    font-size: 1.25rem;
+  }
+</style>

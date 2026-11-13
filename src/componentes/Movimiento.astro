@@ -12,7 +12,8 @@
 
     // ── Revelado al entrar en pantalla, con escalonado por columna ──
     var SEL = [
-      '.portada-cabeza > *', '.puerta', '.seccion-cabeza', '.rejilla > *', '.planes-fila > *', '.cifras-fila > p',
+      // El título de la portada (lo más grande de la página) no se oculta: ocultarlo retrasa el LCP.
+      '.puerta', '.seccion-cabeza', '.rejilla > *', '.planes-fila > *', '.cifras-fila > p',
       '.problema', '.guia-pago', '.precio-bloque', '.caso-muestra', '.lista-obligatorias li', '.niveles-essential > *',
       '.guias-pago > *', '.franja-qc', '.independencia'
     ].join(',');

@@ -13,7 +13,7 @@ fuente:
     - { texto: "Registro en PubMed (PMID 39410627)", url: "https://pubmed.ncbi.nlm.nih.gov/39410627/" }
   licencia: "CC BY 4.0"
   licencia_url: "https://creativecommons.org/licenses/by/4.0/deed.es"
-  cambios: "Traducción y adaptación al español, condensación y reorganización de las secciones, redacción propia de los ejemplos y listas, escritura explícita de las fórmulas (que en el original son ecuaciones), tabla de reglas, lista de verificación final y enlaces a las herramientas de este sitio. Se omitieron los detalles de la regulación de cada país y las referencias bibliográficas; para ello consulta el texto original. Si encuentras una diferencia con el original, prevalece este último."
+  cambios: "Traducción y adaptación al español, condensación y reorganización de las secciones, redacción propia de los ejemplos y listas, escritura explícita de las fórmulas (que en el original son ecuaciones), tabla de reglas, lista de verificación final y enlaces a las herramientas de este sitio y una sección de preguntas frecuentes de redacción propia. Se omitieron los detalles de la regulación de cada país y las referencias bibliográficas; para ello consulta el texto original. Si encuentras una diferencia con el original, prevalece este último."
 ---
 
 Casi todos los laboratorios miden controles todos los días. Mucho menos común es tener un **plan** que diga qué se mide, cuándo, con qué reglas y qué se hace cuando algo falla. Esta guía resume los elementos de ese plan según la literatura, y los aterriza con las calculadoras de ConsensusLab.
@@ -158,6 +158,18 @@ La revisión también advierte sobre dos críticas conocidas al enfoque clásico
 - Otros países (Alemania, Suiza, Austria) tienen reglas propias, que la revisión describe como ejemplos. Verifica siempre lo que exige tu normativa local y tu entidad acreditadora.
 
 Si te estás preparando para acreditarte, mira también [Acreditación de laboratorios clínicos en Chile](/guias/acreditacion-laboratorio-clinico-chile/).
+
+## Preguntas frecuentes
+
+**¿Qué debe incluir un plan de control interno de calidad?** Para cada examen: el material de control, la frecuencia, los niveles y las reglas, y qué se hace cuando una regla se incumple.
+
+**¿Cuántos datos necesito para establecer la media y la DE?** Al menos 20 puntos al inicio y 10 días de datos tras un cambio de lote.
+
+**¿La regla 1-2s debe rechazar la corrida?** No debería ser regla de rechazo por defecto, por su alta tasa de falsos rechazos; se usa como advertencia.
+
+**¿Qué hago cuando se incumple una regla de rechazo?** No repetir el mismo vial: medir uno nuevo, detener la entrega de resultados, buscar y corregir la causa, volver a medir el control y revisar los resultados de pacientes ya emitidos.
+
+**¿Cómo reviso los resultados de pacientes tras una alarma?** Repite muestras en el método corregido y retrocede en lotes de 10 hasta encontrar un lote que no necesite cambios.
 
 ## Resumen en una lista
 

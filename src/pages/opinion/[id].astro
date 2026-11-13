@@ -5,7 +5,8 @@ import { LINKEDIN_PERFIL } from '../../lib/sitio';
 import { render } from 'astro:content';
 import Base from '../../plantillas/Base.astro';
 import PedirDemo from '../../componentes/PedirDemo.astro';
-import { enSitio, obtenerOpinion } from '../../lib/datos';
+import { enSitio, obtenerGuias, obtenerOpinion } from '../../lib/datos';
+import { GUIAS_RELACIONADAS } from '../../lib/guias-relacionadas';
 import { formatoFecha, migasLd, url } from '../../lib/rutas';
 
 export async function getStaticPaths() {
@@ -20,6 +21,8 @@ const direccion = new URL(Astro.url.pathname, Astro.site).href;
 const todos = await obtenerOpinion();
 const deLaSerie = a.serie ? todos.filter((x) => x.data.serie === a.serie).sort((x, y) => x.data.fecha.getTime() - y.data.fecha.getTime()) : [];
 const otros = todos.filter((x) => x.id !== articulo.id && !deLaSerie.includes(x)).slice(0, 4);
+const guiasTodas = await obtenerGuias();
+const guiasDelArticulo = (GUIAS_RELACIONADAS[articulo.id] ?? []).map((id) => guiasTodas.find((g) => g.id === id)).filter((g) => g !== undefined);
 const palabras = (articulo.body ?? '').split(/\s+/).filter(Boolean).length;
 const minutos = Math.max(1, Math.round(palabras / 220));
 ---
@@ -70,6 +73,18 @@ const minutos = Math.max(1, Math.round(palabras / 220));
     <div class="ficha">
       <article class="ficha-cuerpo prosa articulo">
         <Content />
+        {
+          guiasDelArticulo.length > 0 && (
+            <aside class="caja" aria-labelledby="profundizar">
+              <h2 id="profundizar">Para profundizar</h2>
+              <ul class="lista-simple">
+                {guiasDelArticulo.map((g) => (
+                  <li><a href={url(`guias/${g.id}/`)}>{g.data.titulo}</a></li>
+                ))}
+              </ul>
+            </aside>
+          )
+        }
         <aside class="aviso aviso-info llamado-novedades">
           <p>
             <strong>¿Te sirvió este artículo?</strong> <a href="#novedades">Suscríbete a las novedades</a> y recibe el próximo

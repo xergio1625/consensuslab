@@ -459,8 +459,10 @@ img, svg { max-width: 100%; }
 
 .portada-rejilla { display: grid; gap: 36px; align-items: center; }
 @media (min-width: 940px) { .portada-rejilla { grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); } }
+@keyframes entrada-titulo { from { transform: translateY(14px); } to { transform: none; } }
 @keyframes entrada { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
 .portada-texto > * { animation: entrada var(--dur-3) var(--ease-out) backwards; }
+.portada-texto > h1 { animation-name: entrada-titulo; } /* el título solo se desliza: sin opacidad 0, para no retrasar el LCP */
 .portada-texto > :nth-child(2) { animation-delay: .08s; }
 .portada-texto > :nth-child(3) { animation-delay: .16s; }
 .portada-texto > :nth-child(4) { animation-delay: .24s; }

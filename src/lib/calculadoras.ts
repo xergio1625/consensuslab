@@ -430,4 +430,124 @@ export const SEO_CALCULADORAS: Partial<Record<IdCalculadora, { titulo: string; d
     descripcion:
       'Compara un resultado con el anterior de la misma persona y marca si el cambio supera tu límite porcentual o absoluto. Gratis; ingresa solo valores numéricos.',
   },
+  'sesgo-y-sdi': {
+    titulo: 'Sesgo y SDI del control externo: calculadora',
+    descripcion:
+      'Calcula el sesgo porcentual y el índice de desviación estándar (SDI) de tu resultado frente al valor asignado y al grupo, con cómo interpretarlos. Gratis.',
+  },
+  'verificacion-de-precision': {
+    titulo: 'Verificación de precisión 5 × 5: calculadora',
+    descripcion:
+      'Pega 5 días con 5 réplicas: calcula la repetibilidad y la precisión intralaboratorio por ANOVA y compáralas con el CV del fabricante. Gratis, en tu navegador.',
+  },
+  'incertidumbre-de-medicion': {
+    titulo: 'Incertidumbre de medición: calculadora de arriba hacia abajo',
+    descripcion:
+      'Calcula la incertidumbre combinada y expandida con tu CV de largo plazo, el sesgo y la incertidumbre del calibrador. Gratis y con la fórmula explicada.',
+  },
+  'comparacion-de-metodos': {
+    titulo: 'Comparación de métodos: Bland-Altman, Passing-Bablok y Deming',
+    descripcion:
+      'Pega los pares de resultados de dos métodos y obtén Bland-Altman, regresión de Deming y Passing-Bablok, con el sesgo en tus niveles de decisión. Gratis.',
+  },
+  'comparacion-con-el-fabricante': {
+    titulo: 'Verificar media y DE contra el valor del fabricante',
+    descripcion:
+      'Compara tu media y tu DE o CV con el valor asignado y el declarado por el fabricante (prueba t y chi cuadrado) y calcula tu sesgo. Gratis, en tu navegador.',
+  },
+  'tea-variabilidad-biologica': {
+    titulo: 'Error total permitido desde la variabilidad biológica',
+    descripcion:
+      'Calcula las especificaciones óptima, deseable y mínima de CV, sesgo y error total permitido desde el CV intra e interindividual. Gratis y con la fórmula.',
+  },
+  'estadistica-del-control': {
+    titulo: 'Media, DE y CV de un control de calidad: calculadora',
+    descripcion:
+      'Pega los resultados de un material de control y obtén la media, la desviación estándar, el CV y los límites de ±1, 2 y 3 DE. Gratis, en tu navegador.',
+  },
+  'cusum-y-ewma': {
+    titulo: 'CUSUM y EWMA: gráficos de control para desvíos pequeños',
+    descripcion:
+      'Detecta desvíos pequeños y sostenidos del control interno que las reglas de Westgard tardan en ver, con gráficos CUSUM y EWMA. Gratis y en tu navegador.',
+  },
+  'ldl-calculado': {
+    titulo: 'LDL calculado: Friedewald, Martin-Hopkins y Sampson',
+    descripcion:
+      'Calcula el LDL desde colesterol total, HDL y triglicéridos con las tres ecuaciones, comparadas entre sí, con sus límites de uso. Gratis y en tu navegador.',
+  },
+  'conversor-de-unidades': {
+    titulo: 'Conversor de unidades de laboratorio: convencionales y SI',
+    descripcion:
+      'Convierte glucosa, colesterol, creatinina, urea, calcio, bilirrubina, hemoglobina y más entre unidades convencionales y SI, y HbA1c entre % y mmol/mol.',
+  },
+  'rendimiento-diagnostico': {
+    titulo: 'Sensibilidad, especificidad y valores predictivos: tabla 2 × 2',
+    descripcion:
+      'Calcula sensibilidad, especificidad, valores predictivos y razones de verosimilitud con intervalo de confianza, y cómo cambian con la prevalencia. Gratis.',
+  },
+  'curva-de-calibracion': {
+    titulo: 'Curva de calibración lineal y 4PL: calculadora',
+    descripcion:
+      'Ajusta tus estándares con una recta o una curva logística de 4 parámetros, recupera cada estándar y calcula la concentración de tus muestras. Gratis.',
+  },
+  'valores-atipicos': {
+    titulo: 'Valores atípicos: Dixon, Grubbs, Tukey y otros criterios',
+    descripcion:
+      'Aplica seis criterios (Dixon, Grubbs, Tietjen-Moore, Tukey, Chauvenet y Hampel) a la misma serie para decidir si un dato se puede excluir. Gratis.',
+  },
+  'prueba-de-normalidad': {
+    titulo: 'Prueba de normalidad: Shapiro-Wilk, Anderson-Darling y Q-Q',
+    descripcion:
+      'Cuatro pruebas de normalidad y el gráfico Q-Q para decidir si la media y la DE describen bien tus datos. Gratis y en tu navegador.',
+  },
+  'diluciones-y-soluciones': {
+    titulo: 'Diluciones y preparación de soluciones: C1·V1 = C2·V2',
+    descripcion:
+      'Calcula diluciones con C1·V1 = C2·V2, diluciones seriadas y cuánto pesar o medir para una solución molar, % p/v, % v/v o mg/mL. Gratis.',
+  },
+  'dilucion-de-hipoclorito': {
+    titulo: 'Dilución de hipoclorito y desinfectantes en ppm: calculadora',
+    descripcion:
+      'Del porcentaje de tu producto a la concentración de uso en ppm: cuánto producto y cuánta agua por cada volumen que quieres preparar. Gratis.',
+  },
+  'costo-por-determinacion': {
+    titulo: 'Costo por determinación en el laboratorio: calculadora',
+    descripcion:
+      'Calcula lo que cuesta cada resultado (reactivo, control, calibrador, insumos, personal y costo fijo) y el margen que deja el arancel. Gratis.',
+  },
+  'stock-y-punto-de-pedido': {
+    titulo: 'Stock de seguridad y punto de pedido: calculadora',
+    descripcion:
+      'Con tu consumo y el plazo del proveedor calcula el stock de seguridad, el punto de pedido y la cantidad a pedir. Gratis, en tu navegador.',
+  },
+  'pareto-de-causas': {
+    titulo: 'Diagrama de Pareto de causas de rechazo y no conformidades',
+    descripcion:
+      'Ordena las causas de rechazo, reclamos o no conformidades por frecuencia, con porcentaje acumulado y las pocas causas que explican el 80 %. Gratis.',
+  },
+  'disponibilidad-y-oee-de-equipos': {
+    titulo: 'Disponibilidad y OEE de equipos de laboratorio: MTBF y MTTR',
+    descripcion:
+      'Con las horas programadas, de falla y la producción de un analizador calcula MTBF, MTTR, disponibilidad, rendimiento, calidad y OEE. Gratis.',
+  },
+  'grafico-p-de-indicadores': {
+    titulo: 'Gráfico p de indicadores: límites de control para tasas',
+    descripcion:
+      'Calcula límites de control para tasas mensuales con tamaños distintos (rechazos, repeticiones, reclamos) y ve cuándo un cambio es señal y no azar.',
+  },
+  'comparacion-de-lotes': {
+    titulo: 'Comparar dos lotes de control o reactivo: t de Welch y F',
+    descripcion:
+      'Compara el lote anterior y el nuevo con la prueba t de Welch y la prueba F: diferencia con intervalo de confianza y cambio en la dispersión. Gratis.',
+  },
+  'indicadores-tasa-y-sigma': {
+    titulo: 'Indicador de calidad: tasa con intervalo de confianza y sigma',
+    descripcion:
+      'Calcula la tasa de rechazos, hemólisis o repeticiones con su intervalo de confianza, compárala con tu meta y exprésala en sigma. Gratis.',
+  },
+  'tendencia-y-aleatoriedad': {
+    titulo: 'Tendencia y aleatoriedad: rachas, Mann-Kendall y von Neumann',
+    descripcion:
+      'Detecta si una serie se mueve con el tiempo con rachas, Mann-Kendall, Cox-Stuart, razón de von Neumann y Durbin-Watson. Gratis y en tu navegador.',
+  },
 };

@@ -11,6 +11,25 @@ import { url } from '../../lib/rutas';
   titulo="Calculadoras para laboratorio clínico: costos y calidad"
   seccion="calculadoras"
   descripcion="Calculadoras gratuitas para laboratorio clínico: costos, control de calidad, verificación de métodos, indicadores, resultados calculados y trabajo en el banco."
+  datos={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'CollectionPage',
+      name: 'Calculadoras para laboratorio clínico',
+      url: new URL(Astro.url.pathname, Astro.site).href,
+      inLanguage: 'es',
+      mainEntity: {
+        '@type': 'ItemList',
+        numberOfItems: CALCULADORAS.length,
+        itemListElement: CALCULADORAS.map((c, i) => ({
+          '@type': 'ListItem',
+          position: i + 1,
+          name: c.titulo,
+          url: new URL(url(`calculadoras/${c.id}/`), Astro.site).href,
+        })),
+      },
+    },
+  ]}
 >
   <div class="contenedor seccion">
     <h1>Calculadoras</h1>
