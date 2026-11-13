@@ -1,6 +1,7 @@
 ---
 import PaginaCalculadora from '../../componentes/PaginaCalculadora.astro';
 import { formato } from '../../lib/calidad.js';
+import { url } from '../../lib/rutas';
 import { VECTORES } from '../../lib/formulas.js';
 ---
 
@@ -93,6 +94,7 @@ import { VECTORES } from '../../lib/formulas.js';
       <li><strong>Cockcroft-Gault:</strong> (140 − edad) × peso / (72 × Scr) × 0,85 [mujer]. Da mL/min, no se ajusta a 1,73 m².</li>
       <li><strong>Sin indexar:</strong> filtrado CKD-EPI 2021 × superficie corporal de Mosteller (√(talla × peso / 3600)) / 1,73, en mL/min.</li>
     </ul>
+    <p>Guía paso a paso, con más casos y cómo dejarlo documentado: <a href={url('guias/verificar-el-calculo-del-vfg-en-tu-sistema/')}>Cómo verificar que tu sistema calcula bien el VFG</a>.</p>
     <h2>Casos de prueba para verificar tu sistema</h2>
     <p>
       Ingresa estos valores en tu LIS o analizador, o compáralos con tu informe de verificación. La diferencia debe ser
