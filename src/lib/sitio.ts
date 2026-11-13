@@ -35,6 +35,12 @@ export const MESES_PRUEBA_PROFESSIONAL = 3;
  * dejar el correo. Con `true` aparece «Pedir esta guía» y se envían los datos de transferencia por correo.
  */
 export const GUIAS_A_LA_VENTA = true;
+/**
+ * Modelo desde el 13-11-2026: las guías son libres y lo que se vende son las planillas de Excel con su manual.
+ * `false` = el pedido y la entrega son a mano (el botón abre un correo y Sergio responde con los datos de transferencia y envía los archivos).
+ * `true` = se usa el formulario que crea el pedido en la app (guias_pago_servicio.gs), que hoy entrega PDF y planillas.
+ */
+export const PEDIDO_AUTOMATICO = false;
 
 /** Enlace que abre la app directamente en un módulo (tras ingresar con el código). */
 export function urlModulo(modulo: string): string {

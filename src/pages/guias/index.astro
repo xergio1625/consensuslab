@@ -1,29 +1,29 @@
 ---
-// Sección Guías: guías libres (de acceso abierto, con su atribución) y guías de pago (todos los derechos reservados).
-// Las guías de pago se compran por transferencia: el formulario de /guias/#pedir crea el pedido en la app (accion pedido_guia), que envía
-// los datos para transferir; al confirmar el pago, la app entrega la guía con el nombre del comprador. Sin pasarela de pago por ahora.
+// Sección Guías: guías libres y planillas de Excel con manual (de pago, todos los derechos reservados).
+// Desde el 13-11-2026 el pedido es a mano: el botón abre un correo (PEDIDO_AUTOMATICO = false). Con PEDIDO_AUTOMATICO = true se usa el
+// formulario de /guias/#pedir, que crea el pedido en la app (accion pedido_guia) y envía los datos para transferir. Sin pasarela de pago por ahora.
 // GUIAS_A_LA_VENTA (sitio.ts) controla si ya se pueden pedir o solo dejar el correo para que avisemos.
 // Con un enlace de pago creado en src/lib/pagos.ts, la guía se compra en línea; sin enlace, se pide por correo.
 import Base from '../../plantillas/Base.astro';
 import { obtenerGuias } from '../../lib/datos';
 import { GUIAS_PAGO } from '../../lib/guias_pago';
 import { formatoFecha, url } from '../../lib/rutas';
-import { CORREO_CONTACTO, GUIAS_A_LA_VENTA, URL_APP } from '../../lib/sitio';
+import { CORREO_CONTACTO, GUIAS_A_LA_VENTA, PEDIDO_AUTOMATICO, URL_APP } from '../../lib/sitio';
 import { enlacePagoGuia } from '../../lib/pagos';
 
 const guias = await obtenerGuias();
 const pesos = (n: number) => '$' + n.toLocaleString('es-CL');
 const disponibles = GUIAS_PAGO.filter((g) => g.lista);
 const pedido = (titulo: string) =>
-  `mailto:${CORREO_CONTACTO}?subject=${encodeURIComponent('Pedido de guía: ' + titulo)}&body=${encodeURIComponent(
-    `Hola, quiero la guía «${titulo}».\n\nNombre completo (la copia se entrega a tu nombre):\nCorreo:\n\nPor favor envíame el valor y los datos para pagar por transferencia. Gracias.`,
+  `mailto:${CORREO_CONTACTO}?subject=${encodeURIComponent('Pedido de planilla: ' + titulo)}&body=${encodeURIComponent(
+    `Hola, quiero la planilla «${titulo}».\n\nNombre completo (la copia se entrega a tu nombre):\nCorreo:\n\nPor favor envíame el valor y los datos para pagar por transferencia. Gracias.`,
   )}`;
 ---
 
 <Base
   titulo="Guías para el laboratorio clínico"
   seccion="guias"
-  descripcion="Guías prácticas para el laboratorio clínico: verificación de métodos, qué hacer cuando un control se sale y plan de control interno. Guías libres y de pago."
+  descripcion="Guías prácticas para el laboratorio clínico: verificación de métodos, qué hacer cuando un control se sale y plan de control interno. Guías libres y planillas de Excel con manual."
   datos={[
     {
       '@context': 'https://schema.org',
@@ -49,85 +49,11 @@ const pedido = (titulo: string) =>
       <div>
         <h1>Guías</h1>
         <p class="texto-suave intro-prompts">
-          Textos prácticos para armar y mejorar procesos del laboratorio. Hay guías libres, que adaptan obras de acceso abierto
-          con su atribución, y guías de pago único que te ahorran horas de trabajo.
+          Textos prácticos para armar y mejorar procesos del laboratorio, todos libres. Si quieres ahorrarte el trabajo de armar
+          los registros, hay planillas de Excel con manual, de pago único, más abajo.
         </p>
       </div>
     </div>
-
-    <h2 id="de-pago">Guías de pago</h2>
-    <p class="texto-suave">
-      Pago único, sin suscripción. Se entregan por correo en PDF, a tu nombre, para tu uso personal, y puedes adaptar los
-      formularios a los registros de tu propio laboratorio. Todos los derechos reservados: no se pueden compartir ni redistribuir.
-    </p>
-    <div class="guias-pago">
-      {
-        GUIAS_PAGO.map((g) => (
-          <article class="guia-pago">
-            <span class={'guia-estado' + (g.lista && GUIAS_A_LA_VENTA ? ' lista' : '')}>
-              {!g.lista ? 'En preparación' : GUIAS_A_LA_VENTA ? 'Disponible' : 'Disponible pronto'}
-            </span>
-            <h3>{g.titulo}</h3>
-            <p class="texto-suave">{g.subtitulo}</p>
-            <p>{g.paraQuien}</p>
-            <ul>
-              {g.incluye.map((x) => <li>{x}</li>)}
-            </ul>
-            <p class="texto-suave">{g.formato}{g.precio ? ` · ${pesos(g.precio)} con IVA incluido` : ''}</p>
-            <div class="acciones-portada">
-              {g.lista && GUIAS_A_LA_VENTA && enlacePagoGuia(g.id) ? (
-                <a class="boton boton-primario" href={enlacePagoGuia(g.id)} rel="noopener">Comprar{g.precio ? ` · ${pesos(g.precio)}` : ''}</a>
-              ) : g.lista && GUIAS_A_LA_VENTA ? (
-                <a class="boton boton-primario" href="#pedir" data-guia={g.id}>Comprar{g.precio ? ` · ${pesos(g.precio)}` : ''}</a>
-              ) : (
-                <a class="boton boton-secundario" href="#novedades">Avísame cuando esté</a>
-              )}
-            </div>
-          </article>
-        ))
-      }
-    </div>
-    {
-      GUIAS_A_LA_VENTA && GUIAS_PAGO.some((g) => g.lista && enlacePagoGuia(g.id)) && (
-        <p class="texto-suave" style="margin-top:14px">
-          <strong>Cómo se compra:</strong> pulsa «Comprar» y pagas en línea; al confirmarse el pago recibes la guía en PDF por
-          correo, a tu nombre, y la boleta electrónica. Cualquier duda: <a href={`mailto:${CORREO_CONTACTO}`}>{CORREO_CONTACTO}</a>.
-        </p>
-      )
-    }
-    {
-      GUIAS_A_LA_VENTA && GUIAS_PAGO.some((g) => g.lista && !enlacePagoGuia(g.id)) && (
-        <section class="seccion-pedido" id="pedir" style="margin-top:20px">
-          <h3>Compra tu guía</h3>
-          <p class="texto-suave">
-            Completa tus datos y te enviamos por correo el valor y los datos para pagar por <strong>transferencia</strong>. Cuando
-            vemos el pago (normalmente el mismo día hábil), te llegan la guía en PDF con tu nombre al pie de cada página, la planilla
-            de Excel y la boleta electrónica. Pago único, sin suscripción.
-          </p>
-          <form class="form-cotizacion" id="form-pedido" novalidate data-url={URL_APP} data-correo={CORREO_CONTACTO}>
-            <div class="calc-campos">
-              <label class="calc-campo"><span>Nombre y apellido <span class="opcional">(la guía queda a tu nombre)</span></span><input class="campo" name="nombre" required maxlength="120" autocomplete="name" autocapitalize="words" enterkeyhint="next" /></label>
-              <label class="calc-campo"><span>Correo <span class="opcional">(aquí te llega la guía)</span></span><input class="campo" name="correo" type="email" required maxlength="254" autocomplete="email" inputmode="email" autocapitalize="none" spellcheck="false" enterkeyhint="next" /></label>
-              <label class="calc-campo calc-ancho">
-                <span>Guía</span>
-                <select class="campo" name="guia" id="pedido-guia">
-                  {disponibles.map((g) => <option value={g.id}>{g.titulo}{g.precio ? ` · ${pesos(g.precio)}` : ''}</option>)}
-                </select>
-              </label>
-            </div>
-            <label class="casilla-sitio"><input type="checkbox" name="acepta" required /> <span>Entiendo que la guía es de uso personal e intransferible (todos los derechos reservados) y acepto los <a href={url('terminos/')}>términos</a> y la <a href={url('privacidad/')}>política de privacidad</a>.</span></label>
-            <div class="campo-trampa" aria-hidden="true">
-              <label>Sitio web <input name="sitio_web" tabindex="-1" autocomplete="off" /></label>
-            </div>
-            <button type="submit" class="boton boton-primario">Pedir y recibir los datos de pago</button>
-            <p class="estado-cotizacion" id="estado-pedido" role="status" hidden></p>
-          </form>
-          <p class="texto-suave">
-            ¿Prefieres escribirnos? <a href={pedido(disponibles[0]?.titulo ?? 'Guía')}>Pide la guía por correo</a>, o a {CORREO_CONTACTO}.
-          </p>
-        </section>
-      )
-    }
 
     <h2 id="libres" style="margin-top:36px">Guías libres</h2>
     <p class="texto-suave">
@@ -158,10 +84,86 @@ const pedido = (titulo: string) =>
         <p class="aviso aviso-info">Pronto publicaremos aquí las primeras guías libres.</p>
       )
     }
+    <h2 id="planillas" style="margin-top:36px">Planillas de Excel con manual</h2>
+    <p class="texto-suave">
+      El conocimiento está en las guías libres de arriba; la planilla te ahorra el trabajo de armarlo. Pago único, sin suscripción. Se entrega
+      por correo, a tu nombre: la planilla de Excel y su manual en PDF. Puedes adaptarla a los registros de tu propio laboratorio. Todos los
+      derechos reservados: no se puede compartir ni redistribuir.
+    </p>
+    <div class="guias-pago">
+      {
+        GUIAS_PAGO.map((g) => (
+          <article class="guia-pago">
+            <span class={'guia-estado' + (g.lista && GUIAS_A_LA_VENTA ? ' lista' : '')}>
+              {!g.lista ? 'En preparación' : GUIAS_A_LA_VENTA ? 'Disponible' : 'Disponible pronto'}
+            </span>
+            <h3>{g.titulo}</h3>
+            <p class="texto-suave">{g.subtitulo}</p>
+            <p>{g.paraQuien}</p>
+            <ul>
+              {g.incluye.map((x) => <li>{x}</li>)}
+            </ul>
+            <p class="texto-suave">{g.formato}{g.precio ? ` · ${pesos(g.precio)} con IVA incluido` : ''}</p>
+            {g.libre && <p><a href={url(g.libre.ruta)}>{g.libre.texto} →</a></p>}
+            <div class="acciones-portada">
+              {g.lista && GUIAS_A_LA_VENTA && enlacePagoGuia(g.id) ? (
+                <a class="boton boton-primario" href={enlacePagoGuia(g.id)} rel="noopener">Comprar{g.precio ? ` · ${pesos(g.precio)}` : ''}</a>
+              ) : g.lista && GUIAS_A_LA_VENTA && PEDIDO_AUTOMATICO ? (
+                <a class="boton boton-primario" href="#pedir" data-guia={g.id}>Comprar{g.precio ? ` · ${pesos(g.precio)}` : ''}</a>
+              ) : g.lista && GUIAS_A_LA_VENTA ? (
+                <a class="boton boton-primario" href={pedido(g.titulo)}>Pedir por correo{g.precio ? ` · ${pesos(g.precio)}` : ''}</a>
+              ) : (
+                <a class="boton boton-secundario" href="#novedades">Avísame cuando esté</a>
+              )}
+            </div>
+          </article>
+        ))
+      }
+    </div>
+    {
+      GUIAS_A_LA_VENTA && GUIAS_PAGO.some((g) => g.lista && enlacePagoGuia(g.id)) && (
+        <p class="texto-suave" style="margin-top:14px">
+          <strong>Cómo se compra:</strong> pulsa «Comprar» y pagas en línea; al confirmarse el pago recibes la planilla con su manual por
+          correo, a tu nombre, y la boleta electrónica. Cualquier duda: <a href={`mailto:${CORREO_CONTACTO}`}>{CORREO_CONTACTO}</a>.
+        </p>
+      )
+    }
+    {
+      GUIAS_A_LA_VENTA && PEDIDO_AUTOMATICO && GUIAS_PAGO.some((g) => g.lista && !enlacePagoGuia(g.id)) && (
+        <section class="seccion-pedido" id="pedir" style="margin-top:20px">
+          <h3>Pide tu planilla</h3>
+          <p class="texto-suave">
+            Completa tus datos y te enviamos por correo el valor y los datos para pagar por <strong>transferencia</strong>. Cuando
+            vemos el pago (normalmente el mismo día hábil), te llegan la planilla de Excel y su manual en PDF, a tu nombre, y la boleta electrónica. Pago único, sin suscripción.
+          </p>
+          <form class="form-cotizacion" id="form-pedido" novalidate data-url={URL_APP} data-correo={CORREO_CONTACTO}>
+            <div class="calc-campos">
+              <label class="calc-campo"><span>Nombre y apellido <span class="opcional">(la planilla queda a tu nombre)</span></span><input class="campo" name="nombre" required maxlength="120" autocomplete="name" autocapitalize="words" enterkeyhint="next" /></label>
+              <label class="calc-campo"><span>Correo <span class="opcional">(aquí te llega la planilla)</span></span><input class="campo" name="correo" type="email" required maxlength="254" autocomplete="email" inputmode="email" autocapitalize="none" spellcheck="false" enterkeyhint="next" /></label>
+              <label class="calc-campo calc-ancho">
+                <span>Planilla</span>
+                <select class="campo" name="guia" id="pedido-guia">
+                  {disponibles.map((g) => <option value={g.id}>{g.titulo}{g.precio ? ` · ${pesos(g.precio)}` : ''}</option>)}
+                </select>
+              </label>
+            </div>
+            <label class="casilla-sitio"><input type="checkbox" name="acepta" required /> <span>Entiendo que la planilla y su manual son de uso personal e intransferible (todos los derechos reservados) y acepto los <a href={url('terminos/')}>términos</a> y la <a href={url('privacidad/')}>política de privacidad</a>.</span></label>
+            <div class="campo-trampa" aria-hidden="true">
+              <label>Sitio web <input name="sitio_web" tabindex="-1" autocomplete="off" /></label>
+            </div>
+            <button type="submit" class="boton boton-primario">Pedir y recibir los datos de pago</button>
+            <p class="estado-cotizacion" id="estado-pedido" role="status" hidden></p>
+          </form>
+          <p class="texto-suave">
+            ¿Prefieres escribirnos? <a href={pedido(disponibles[0]?.titulo ?? 'Planilla')}>Pide la planilla por correo</a>, o a {CORREO_CONTACTO}.
+          </p>
+        </section>
+      )
+    }
   </div>
 
   <script>
-    // Pedido de una guía: se envía a la app (que manda al correo los datos para transferir). Si falla, se ofrece escribirnos.
+    // Pedido de una planilla: se envía a la app (que manda al correo los datos para transferir). Si falla, se ofrece escribirnos.
     const form = document.getElementById('form-pedido') as HTMLFormElement | null;
     if (form) {
       const estado = document.getElementById('estado-pedido') as HTMLElement;
@@ -188,7 +190,7 @@ const pedido = (titulo: string) =>
           return;
         }
         if (!datos.acepta) {
-          mostrar('Marca la casilla para continuar: la guía es de uso personal.', true);
+          mostrar('Marca la casilla para continuar: la planilla es de uso personal.', true);
           return;
         }
         const boton = form.querySelector('button[type=submit]') as HTMLButtonElement;

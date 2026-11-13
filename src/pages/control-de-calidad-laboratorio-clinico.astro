@@ -28,6 +28,12 @@ const PASOS = [
     calculadoras: [['levey-jennings', 'Gráfico de Levey-Jennings'], ['cusum-y-ewma', 'CUSUM y EWMA']],
   },
   {
+    etapa: 'Cuando un control se sale',
+    guia: 'el-control-se-salio-que-hago',
+    texto: 'Las cuatro preguntas para los primeros cinco minutos, un árbol de decisión y cómo revisar los resultados ya informados.',
+    calculadoras: [],
+  },
+  {
     etapa: 'Compárate con los demás',
     guia: 'control-de-calidad-externo-sesgo-y-sdi',
     texto: 'Cómo leer el sesgo y el SDI de las rondas externas y qué hacer ante un resultado inaceptable.',
@@ -38,6 +44,12 @@ const PASOS = [
     guia: 'verificacion-de-metodos-precision-veracidad-comparacion',
     texto: 'Precisión, sesgo y comparación con el método anterior, y cómo decidir si el resultado es aceptable.',
     calculadoras: [['verificacion-de-precision', 'Verificación de precisión'], ['comparacion-de-metodos', 'Comparación de métodos'], ['comparacion-con-el-fabricante', 'Comparación con el fabricante']],
+  },
+  {
+    etapa: 'Verifica en cinco días',
+    guia: 'verifica-un-metodo-sin-perder-una-semana',
+    texto: 'El plan de cinco días del diseño 5 × 5, con ejemplos resueltos y un informe tipo para firmar.',
+    calculadoras: [['verificacion-de-precision', 'Verificación de precisión']],
   },
   {
     etapa: 'Cuantifica la duda',
@@ -66,7 +78,7 @@ const direccion = new URL(Astro.url.pathname, Astro.site).href;
 <Base
   titulo="Control de calidad en el laboratorio clínico: ruta de lectura"
   seccion="guias"
-  descripcion="Ocho guías para el control de calidad del laboratorio clínico, en orden: error total, plan de control, Westgard, control externo, verificación, incertidumbre, riesgos y acreditación."
+  descripcion="Diez guías libres para el control de calidad del laboratorio clínico, en orden: error total, plan de control, Westgard, control externo, verificación, incertidumbre, riesgos y acreditación."
   datos={[
     {
       '@context': 'https://schema.org',
