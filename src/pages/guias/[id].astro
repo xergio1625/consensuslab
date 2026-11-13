@@ -32,7 +32,7 @@ const PLANILLA_DE: Record<string, string> = {
   'reglas-de-westgard-cuales-usar-y-cuando': 'el-control-se-salio',
 };
 const planilla = GUIAS_PAGO.find((p) => p.id === PLANILLA_DE[guia.id]);
-const registro = `${URL_REGISTRO}&utm_source=sitio&utm_medium=guia`;
+const registro = `${URL_REGISTRO}&utm_source=sitio&utm_medium=guia&utm_campaign=${guia.id.slice(0, 50)}`;
 // Preguntas frecuentes: si la guía tiene una sección «## Preguntas frecuentes» con párrafos «**¿Pregunta?** Respuesta.»,
 // se publican también como datos estructurados (FAQPage). El texto visible y el dato estructurado salen de la misma fuente.
 const textoPlano = (t: string) => t.replace(/\[([^\]]+)\]\([^)]*\)/g, '$1').replace(/[*_`]/g, '').trim();

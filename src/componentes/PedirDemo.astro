@@ -10,7 +10,8 @@ const { variante = 'franja' } = Astro.props;
 const caja = variante === 'caja';
 // Origen de la visita a la app (lo lee el contador del admin como «sitio/<sección>») y evento de conversión.
 const seccion = Astro.url.pathname.split('/').filter(Boolean)[0] ?? 'inicio';
-const registro = `${URL_REGISTRO}&utm_source=sitio&utm_medium=${encodeURIComponent(seccion)}`;
+const campana = Astro.url.pathname.split('/').filter(Boolean).slice(-1)[0] ?? 'inicio';
+const registro = `${URL_REGISTRO}&utm_source=sitio&utm_medium=${encodeURIComponent(seccion)}&utm_campaign=${encodeURIComponent(campana.slice(0, 50))}`;
 ---
 
 <section class={caja ? 'caja demo-caja' : 'demo-franja'}>
