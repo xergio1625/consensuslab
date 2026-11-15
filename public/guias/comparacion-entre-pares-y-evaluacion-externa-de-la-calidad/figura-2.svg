@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 380" role="img" aria-label="Barras horizontales: la incertidumbre del sesgo baja de ±3,9 % con un resultado a ±0,4 % con cien, y solo con cuatro o más resultados cae bajo el 2 %" font-family="Segoe UI, system-ui, -apple-system, Arial, sans-serif">
+<rect x="0" y="0" width="640" height="380" rx="10" fill="#FFFFFF" stroke="#E2D5DB"/>
+<text x="320" y="32" font-size="16" fill="#2A2226" text-anchor="middle" font-weight="600">Incertidumbre (95 %) del sesgo según cuántos resultados usas</text>
+<text x="320" y="52" font-size="14" fill="#6B6166" text-anchor="middle" font-weight="400">con un CV de 2 %</text>
+<text x="20" y="104" font-size="14" fill="#2A2226" text-anchor="start" font-weight="400">1 resultado (una ronda)</text>
+<rect x="245" y="85" width="274.4" height="26" rx="3" fill="#B3261E" fill-opacity="1"/>
+<text x="527.4" y="104" font-size="15" fill="#B3261E" text-anchor="start" font-weight="600">± 3,9 %</text>
+<text x="20" y="146" font-size="14" fill="#2A2226" text-anchor="start" font-weight="400">2 resultados</text>
+<rect x="245" y="127" width="193.9" height="26" rx="3" fill="#B3261E" fill-opacity="1"/>
+<text x="446.9" y="146" font-size="15" fill="#B3261E" text-anchor="start" font-weight="600">± 2,8 %</text>
+<text x="20" y="188" font-size="14" fill="#2A2226" text-anchor="start" font-weight="400">4 resultados</text>
+<rect x="245" y="169" width="137.2" height="26" rx="3" fill="#6D0F2B" fill-opacity="1"/>
+<text x="390.2" y="188" font-size="15" fill="#6D0F2B" text-anchor="start" font-weight="600">± 2,0 %</text>
+<text x="20" y="230" font-size="14" fill="#2A2226" text-anchor="start" font-weight="400">12 resultados (un año)</text>
+<rect x="245" y="211" width="79.1" height="26" rx="3" fill="#6D0F2B" fill-opacity="1"/>
+<text x="332.1" y="230" font-size="15" fill="#6D0F2B" text-anchor="start" font-weight="600">± 1,1 %</text>
+<text x="20" y="272" font-size="14" fill="#2A2226" text-anchor="start" font-weight="400">20 resultados (un mes)</text>
+<rect x="245" y="253" width="61.6" height="26" rx="3" fill="#6D0F2B" fill-opacity="1"/>
+<text x="314.6" y="272" font-size="15" fill="#6D0F2B" text-anchor="start" font-weight="600">± 0,9 %</text>
+<text x="20" y="314" font-size="14" fill="#2A2226" text-anchor="start" font-weight="400">100 resultados</text>
+<rect x="245" y="295" width="27.3" height="26" rx="3" fill="#6D0F2B" fill-opacity="1"/>
+<text x="280.3" y="314" font-size="15" fill="#6D0F2B" text-anchor="start" font-weight="600">± 0,4 %</text>
+<line x1="385" y1="72" x2="385" y2="330" stroke="#6B6166" stroke-width="2" stroke-dasharray="5 4"/>
+<text x="385" y="350" font-size="13" fill="#6B6166" text-anchor="middle" font-weight="400">sesgo aceptable de ejemplo: 2 %</text>
+<text x="385" y="366" font-size="13" fill="#6B6166" text-anchor="middle" font-weight="400">(las barras rojas lo superan)</text>
+</svg>

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 340" role="img" aria-label="Dos barras apiladas de error total con la misma meta de 6 %: la del programa suma 1,5 % de sesgo y 3,3 % de imprecisión, 4,8 %, y cumple; la real suma 4,5 % y 3,3 %, 7,8 %, y no cumple" font-family="Segoe UI, system-ui, -apple-system, Arial, sans-serif">
+<rect x="0" y="0" width="640" height="340" rx="10" fill="#FFFFFF" stroke="#E2D5DB"/>
+<text x="320" y="32" font-size="16" fill="#2A2226" text-anchor="middle" font-weight="600">Error total = sesgo + 1,65 × CV (CV = 2 %)</text>
+<text x="40" y="81" font-size="15" fill="#2A2226" text-anchor="start" font-weight="600">Con el sesgo del programa</text>
+<rect x="40" y="95" width="87.0" height="48" rx="3" fill="#B8892B" fill-opacity="1"/>
+<rect x="127.0" y="95" width="191.4" height="48" rx="3" fill="#6D0F2B" fill-opacity="1"/>
+<text x="83.5" y="124" font-size="14" fill="#FFFFFF" text-anchor="middle" font-weight="600">sesgo 1,5</text>
+<text x="137.0" y="115" font-size="14" fill="#FFFFFF" text-anchor="start" font-weight="600">1,65 × CV</text>
+<text x="137.0" y="133" font-size="14" fill="#FFFFFF" text-anchor="start" font-weight="600">= 3,3</text>
+<text x="40" y="167" font-size="16" fill="#2E7D4F" text-anchor="start" font-weight="700">4,8 % cumple</text>
+<text x="40" y="201" font-size="15" fill="#2A2226" text-anchor="start" font-weight="600">Con el sesgo real</text>
+<rect x="40" y="215" width="261.0" height="48" rx="3" fill="#B8892B" fill-opacity="1"/>
+<rect x="301.0" y="215" width="191.4" height="48" rx="3" fill="#6D0F2B" fill-opacity="1"/>
+<text x="170.5" y="244" font-size="14" fill="#FFFFFF" text-anchor="middle" font-weight="600">sesgo 4,5</text>
+<text x="311.0" y="235" font-size="14" fill="#FFFFFF" text-anchor="start" font-weight="600">1,65 × CV</text>
+<text x="311.0" y="253" font-size="14" fill="#FFFFFF" text-anchor="start" font-weight="600">= 3,3</text>
+<text x="40" y="287" font-size="16" fill="#B3261E" text-anchor="start" font-weight="700">7,8 % no cumple</text>
+<line x1="388.0" y1="60" x2="388.0" y2="300" stroke="#2A2226" stroke-width="2" stroke-dasharray="5 4"/>
+<text x="396.0" y="58" font-size="14" fill="#2A2226" text-anchor="start" font-weight="600">meta 6 %</text>
+</svg>

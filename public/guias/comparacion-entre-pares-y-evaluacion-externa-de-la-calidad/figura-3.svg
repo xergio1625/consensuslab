@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 320" role="img" aria-label="Recta numérica con tres puntos: la referencia en 0 %, la media del grupo en +3 % y el laboratorio en +4,5 %; el programa solo ve la distancia de 1,5 % entre el grupo y el laboratorio" font-family="Segoe UI, system-ui, -apple-system, Arial, sans-serif">
+<rect x="0" y="0" width="640" height="320" rx="10" fill="#FFFFFF" stroke="#E2D5DB"/>
+<line x1="44.0" y1="150" x2="584.0" y2="150" stroke="#6B6166" stroke-width="2"/>
+<line x1="80" y1="145" x2="80" y2="155" stroke="#6B6166" stroke-width="1.5"/>
+<text x="80" y="174" font-size="13" fill="#6B6166" text-anchor="middle" font-weight="400">0 %</text>
+<line x1="170" y1="145" x2="170" y2="155" stroke="#6B6166" stroke-width="1.5"/>
+<text x="170" y="174" font-size="13" fill="#6B6166" text-anchor="middle" font-weight="400">1 %</text>
+<line x1="260" y1="145" x2="260" y2="155" stroke="#6B6166" stroke-width="1.5"/>
+<text x="260" y="174" font-size="13" fill="#6B6166" text-anchor="middle" font-weight="400">2 %</text>
+<line x1="350" y1="145" x2="350" y2="155" stroke="#6B6166" stroke-width="1.5"/>
+<text x="350" y="174" font-size="13" fill="#6B6166" text-anchor="middle" font-weight="400">3 %</text>
+<line x1="440" y1="145" x2="440" y2="155" stroke="#6B6166" stroke-width="1.5"/>
+<text x="440" y="174" font-size="13" fill="#6B6166" text-anchor="middle" font-weight="400">4 %</text>
+<line x1="530" y1="145" x2="530" y2="155" stroke="#6B6166" stroke-width="1.5"/>
+<text x="530" y="174" font-size="13" fill="#6B6166" text-anchor="middle" font-weight="400">5 %</text>
+<circle cx="80" cy="150" r="10" fill="#2A2226"/>
+<text x="80" y="104" font-size="15" fill="#2A2226" text-anchor="middle" font-weight="600">Referencia</text>
+<text x="80" y="122" font-size="15" fill="#2A2226" text-anchor="middle" font-weight="600">(la verdad)</text>
+<circle cx="350" cy="150" r="10" fill="#8A6516"/>
+<text x="350" y="104" font-size="15" fill="#8A6516" text-anchor="middle" font-weight="600">Media del</text>
+<text x="350" y="122" font-size="15" fill="#8A6516" text-anchor="middle" font-weight="600">grupo de pares</text>
+<circle cx="485.0" cy="150" r="10" fill="#6D0F2B"/>
+<text x="485.0" y="104" font-size="15" fill="#6D0F2B" text-anchor="middle" font-weight="600">Tu</text>
+<text x="485.0" y="122" font-size="15" fill="#6D0F2B" text-anchor="middle" font-weight="600">laboratorio</text>
+<line x1="80" y1="215" x2="350" y2="215" stroke="#B3261E" stroke-width="3" stroke-dasharray="6 4"/>
+<line x1="80" y1="209" x2="80" y2="221" stroke="#B3261E" stroke-width="3"/>
+<line x1="350" y1="209" x2="350" y2="221" stroke="#B3261E" stroke-width="3"/>
+<text x="215.0" y="241" font-size="14" fill="#B3261E" text-anchor="middle" font-weight="600">+3 %: lo que el programa</text>
+<text x="215.0" y="259" font-size="14" fill="#B3261E" text-anchor="middle" font-weight="600">no ve</text>
+<line x1="350" y1="215" x2="485.0" y2="215" stroke="#6D0F2B" stroke-width="3"/>
+<line x1="350" y1="209" x2="350" y2="221" stroke="#6D0F2B" stroke-width="3"/>
+<line x1="485.0" y1="209" x2="485.0" y2="221" stroke="#6D0F2B" stroke-width="3"/>
+<text x="417.5" y="241" font-size="14" fill="#6D0F2B" text-anchor="middle" font-weight="600">+1,5 %: lo que</text>
+<text x="417.5" y="259" font-size="14" fill="#6D0F2B" text-anchor="middle" font-weight="600">sí ve</text>
+<text x="320" y="300" font-size="15" fill="#2A2226" text-anchor="middle" font-weight="600">Sesgo real = 3 % + 1,5 % = 4,5 %</text>
+</svg>

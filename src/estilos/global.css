@@ -409,6 +409,12 @@ img, svg { max-width: 100%; }
 .prosa th, .prosa td { text-align: left; vertical-align: top; padding: 8px 10px; border-bottom: 1px solid var(--c-borde); }
 .prosa th { font-weight: 600; }
 @media (max-width: 560px) { .prosa table, .prosa tbody, .prosa tr, .prosa td { display: block; } .prosa thead { display: none; } .prosa td:first-child { font-weight: 600; border-bottom: 0; padding-bottom: 0; } }
+/* En el celular la fila se apila como tarjeta; cada celda recupera el nombre de su columna (data-label lo pone la plantilla de la guía). */
+@media (max-width: 560px) {
+  .prosa tr { border: 1px solid var(--c-borde); border-radius: var(--radio-s); margin: 0 0 10px; padding: 6px 4px; background: var(--c-panel); }
+  .prosa td[data-label]:not(:first-child)::before { content: attr(data-label) ": "; font-weight: 600; color: var(--c-texto-suave); }
+  .prosa td { border-bottom: 0; padding: 3px 10px; }
+}
 
 .lista-modulos { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); list-style: none; padding: 0; margin: 0 0 1.5em; }
 .lista-modulos li { background: var(--c-panel); border: 1px solid var(--c-borde); border-radius: var(--radio); padding: 14px 16px; }

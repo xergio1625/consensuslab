@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" role="img" aria-label="Dos laboratorios sobre una escala de error total: en el A el requerido (8 %) está sobre lo alcanzable (5 %) y lo real (6,5 %) cumple; en el B el requerido (3 %) está bajo lo alcanzable (5 %) y lo real (5,5 %) no cumple" font-family="Segoe UI, system-ui, -apple-system, Arial, sans-serif">
+<rect x="0" y="0" width="640" height="400" rx="10" fill="#FFFFFF" stroke="#E2D5DB"/>
+<text x="20" y="30" font-size="15" fill="#2A2226" text-anchor="start" font-weight="600">Error total (%)</text>
+<rect x="190" y="15" width="6" height="22" rx="2" fill="#B3261E" fill-opacity="1"/>
+<text x="204" y="32" font-size="14" fill="#2A2226" text-anchor="start" font-weight="400">requerido</text>
+<circle cx="318" cy="26" r="8" fill="#B8892B"/>
+<text x="332" y="32" font-size="14" fill="#2A2226" text-anchor="start" font-weight="400">alcanzable</text>
+<circle cx="452" cy="26" r="8" fill="#6D0F2B"/>
+<text x="466" y="32" font-size="14" fill="#2A2226" text-anchor="start" font-weight="400">real</text>
+<text x="20" y="71" font-size="15" fill="#2A2226" text-anchor="start" font-weight="600">A. Atención primaria</text>
+<line x1="50" y1="105" x2="600" y2="105" stroke="#E2D5DB" stroke-width="6"/>
+<text x="50" y="160" font-size="13" fill="#6B6166" text-anchor="middle" font-weight="400">0</text>
+<text x="160" y="160" font-size="13" fill="#6B6166" text-anchor="middle" font-weight="400">2</text>
+<text x="270" y="160" font-size="13" fill="#6B6166" text-anchor="middle" font-weight="400">4</text>
+<text x="380" y="160" font-size="13" fill="#6B6166" text-anchor="middle" font-weight="400">6</text>
+<text x="490" y="160" font-size="13" fill="#6B6166" text-anchor="middle" font-weight="400">8</text>
+<text x="600" y="160" font-size="13" fill="#6B6166" text-anchor="middle" font-weight="400">10</text>
+<rect x="487" y="88" width="6" height="34" rx="2" fill="#B3261E" fill-opacity="1"/>
+<circle cx="325" cy="105" r="9" fill="#B8892B"/>
+<circle cx="407.5" cy="105" r="9" fill="#6D0F2B"/>
+<text x="490" y="81" font-size="14" fill="#B3261E" text-anchor="middle" font-weight="700">8</text>
+<text x="325" y="137" font-size="14" fill="#8A6516" text-anchor="middle" font-weight="700">5</text>
+<text x="407.5" y="81" font-size="14" fill="#6D0F2B" text-anchor="middle" font-weight="700">6,5</text>
+<text x="50" y="183" font-size="14" fill="#2E7D4F" text-anchor="start" font-weight="600">El requerido está por encima de lo alcanzable:</text>
+<text x="50" y="201" font-size="14" fill="#2E7D4F" text-anchor="start" font-weight="600">hay holgura (si está justificado).</text>
+<text x="20" y="231" font-size="15" fill="#2A2226" text-anchor="start" font-weight="600">B. Trasplantes / pabellón</text>
+<line x1="50" y1="265" x2="600" y2="265" stroke="#E2D5DB" stroke-width="6"/>
+<text x="50" y="320" font-size="13" fill="#6B6166" text-anchor="middle" font-weight="400">0</text>
+<text x="160" y="320" font-size="13" fill="#6B6166" text-anchor="middle" font-weight="400">2</text>
+<text x="270" y="320" font-size="13" fill="#6B6166" text-anchor="middle" font-weight="400">4</text>
+<text x="380" y="320" font-size="13" fill="#6B6166" text-anchor="middle" font-weight="400">6</text>
+<text x="490" y="320" font-size="13" fill="#6B6166" text-anchor="middle" font-weight="400">8</text>
+<text x="600" y="320" font-size="13" fill="#6B6166" text-anchor="middle" font-weight="400">10</text>
+<rect x="212" y="248" width="6" height="34" rx="2" fill="#B3261E" fill-opacity="1"/>
+<circle cx="325" cy="265" r="9" fill="#B8892B"/>
+<circle cx="352.5" cy="265" r="9" fill="#6D0F2B"/>
+<text x="215" y="241" font-size="14" fill="#B3261E" text-anchor="middle" font-weight="700">3</text>
+<text x="325" y="297" font-size="14" fill="#8A6516" text-anchor="middle" font-weight="700">5</text>
+<text x="352.5" y="241" font-size="14" fill="#6D0F2B" text-anchor="middle" font-weight="700">5,5</text>
+<text x="50" y="343" font-size="14" fill="#B3261E" text-anchor="start" font-weight="600">El requerido está por debajo de lo alcanzable:</text>
+<text x="50" y="361" font-size="14" fill="#B3261E" text-anchor="start" font-weight="600">el método disponible no llega.</text>
+</svg>

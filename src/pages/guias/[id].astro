@@ -31,6 +31,7 @@ const PLANILLA_DE: Record<string, string> = {
   'el-control-se-salio-que-hago': 'el-control-se-salio',
   'reglas-de-westgard-cuales-usar-y-cuando': 'el-control-se-salio',
   'coeficiente-de-variacion-en-el-laboratorio': 'planilla-variacion-error-total',
+  'comparacion-entre-pares-y-evaluacion-externa-de-la-calidad': 'planilla-variacion-error-total',
 };
 const planilla = GUIAS_PAGO.find((p) => p.id === PLANILLA_DE[guia.id]);
 const registro = `${URL_REGISTRO}&utm_source=sitio&utm_medium=guia&utm_campaign=${guia.id.slice(0, 50)}`;
@@ -110,6 +111,15 @@ const preguntas = [...seccionFaq.matchAll(/^\*\*(¿[^*]+\?)\*\*\s+(.+)$/gm)].map
         }
 
         <Content />
+        <script is:inline>
+          // En pantallas angostas las tablas se apilan; cada celda lleva el nombre de su columna para no perder el sentido.
+          document.querySelectorAll('.prosa table').forEach(function (t) {
+            var cab = Array.prototype.map.call(t.querySelectorAll('thead th'), function (x) { return x.textContent.trim(); });
+            t.querySelectorAll('tbody tr').forEach(function (tr) {
+              Array.prototype.forEach.call(tr.children, function (td, i) { if (cab[i]) td.setAttribute('data-label', cab[i]); });
+            });
+          });
+        </script>
 
         <aside class="caja siguiente-paso" aria-labelledby="siguiente-paso">
           <h2 id="siguiente-paso">Siguiente paso</h2>
