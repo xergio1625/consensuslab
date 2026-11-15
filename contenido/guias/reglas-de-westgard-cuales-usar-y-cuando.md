@@ -29,7 +29,7 @@ La notación es «cantidad de resultados – límite». Por ejemplo, **1-3s** si
 | **1-2s** | Un control fuera de ±2 DE | Aviso de que algo puede estar cambiando | Advertencia |
 | **1-3s** | Un control fuera de ±3 DE | Error aleatorio, o sistemático grande | Rechazo |
 | **2-2s** | Dos controles seguidos fuera de 2 DE, del mismo lado | Error sistemático | Rechazo |
-| **R-4s** | Dos controles seguidos que difieren en más de 4 DE (uno sobre +2 y otro bajo −2) | Error aleatorio | Rechazo |
+| **R-4s** | Dos controles de la misma corrida que difieren en más de 4 DE (uno por encima y otro por debajo de la media) | Error aleatorio | Rechazo |
 | **4-1s** | Cuatro controles seguidos fuera de 1 DE, del mismo lado | Error sistemático | Rechazo |
 | **10-x** | Diez controles seguidos del mismo lado de la media | Error sistemático (tendencia o desvío) | Rechazo |
 
