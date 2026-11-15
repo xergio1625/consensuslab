@@ -19,7 +19,7 @@ interface Props {
   datos?: Record<string, unknown> | Record<string, unknown>[];
   /** Imagen al compartir (en public/). Por defecto: la de preventa en inicio y planes mientras dure; si no, la del sitio. */
   imagen?: string;
-  seccion?: 'inicio' | 'herramientas' | 'calculadoras' | 'prompts' | 'guias' | 'opinion' | 'professional' | 'laboratorios' | 'essential' | 'qc' | 'accreditation' | 'planes' | 'planes-pro' | 'planes-lab' | 'acerca' | 'cuenta';
+  seccion?: 'inicio' | 'herramientas' | 'calculadoras' | 'prompts' | 'guias' | 'opinion' | 'novedades' | 'professional' | 'laboratorios' | 'essential' | 'qc' | 'accreditation' | 'planes' | 'planes-pro' | 'planes-lab' | 'acerca' | 'cuenta';
 }
 
 const {
@@ -66,6 +66,7 @@ const imagen = new URL(url(Astro.props.imagen ?? (enPreventa && paginaPreventa ?
     <link rel="icon" type="image/svg+xml" href={url('favicon.svg')} />
     <link rel="sitemap" href={url('sitemap-index.xml')} />
     <link rel="alternate" type="application/rss+xml" title="Opinión · ConsensusLab" href={url('opinion/rss.xml')} />
+    <link rel="alternate" type="application/rss+xml" title="Novedades · ConsensusLab" href={url('novedades/rss.xml')} />
     {datos.map((d) => <script type="application/ld+json" set:html={jsonLd(d)} />)}
     <script is:inline>
       // Canal por el que llegó la visita (enlaces con utm_source), para saber de dónde vienen las cotizaciones.

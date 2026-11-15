@@ -159,4 +159,18 @@ const guias = defineCollection({
   }),
 });
 
-export const collections = { grupos, herramientas, prompts, opinion, guias };
+// Novedades: registro corto de lo que cambia en la plataforma, el sitio y la empresa. Una entrada por cambio
+// (3 a 6 líneas). Es lo que enlaza el correo mensual a los suscriptores. Solo se publica lo ya desplegado.
+const novedades = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './contenido/novedades' }),
+  schema: z.object({
+    titulo: z.string(),
+    fecha: z.coerce.date(),
+    linea: z.enum(['professional', 'essential', 'qc', 'accreditation', 'guias', 'sitio', 'empresa']),
+    resumen: z.string().max(240),
+    /** Página del sitio donde se ve lo nuevo (ruta relativa, por ejemplo 'guias/'). */
+    enlace: z.string().optional(),
+  }),
+});
+
+export const collections = { grupos, herramientas, prompts, opinion, guias, novedades };

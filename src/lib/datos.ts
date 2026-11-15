@@ -34,6 +34,22 @@ export async function obtenerOpinion() {
   return articulos.sort((a, b) => b.data.fecha.getTime() - a.data.fecha.getTime());
 }
 
+/** Novedades, de la más reciente a la más antigua. */
+export async function obtenerNovedades() {
+  const n = await getCollection('novedades');
+  return n.sort((a, b) => b.data.fecha.getTime() - a.data.fecha.getTime());
+}
+
+export const LINEAS_NOVEDADES: Record<string, string> = {
+  professional: 'Professional',
+  essential: 'Essential',
+  qc: 'QC',
+  accreditation: 'Accreditation',
+  guias: 'Guías',
+  sitio: 'Sitio',
+  empresa: 'Empresa',
+};
+
 /** Guías, de la más reciente a la más antigua. */
 export async function obtenerGuias() {
   const guias = await getCollection('guias');

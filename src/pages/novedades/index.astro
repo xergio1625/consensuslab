@@ -1,0 +1,53 @@
+---
+// Novedades: registro de lo que cambia en la plataforma, el sitio y la empresa. Las entradas viven en
+// contenido/novedades/ (una por cambio) y son las que enlaza el correo a los suscriptores.
+import Base from '../../plantillas/Base.astro';
+import { LINEAS_NOVEDADES, obtenerNovedades } from '../../lib/datos';
+import { formatoFecha, url } from '../../lib/rutas';
+
+const entradas = await obtenerNovedades();
+---
+
+<Base
+  titulo="Novedades de ConsensusLab"
+  seccion="novedades"
+  descripcion="Qué cambió en ConsensusLab: mejoras de la plataforma, guías y herramientas nuevas, y novedades de la empresa."
+>
+  <div class="contenedor seccion">
+    <div class="seccion-cabeza">
+      <div>
+        <h1>Novedades</h1>
+        <p class="texto-suave intro-prompts">
+          Lo que va cambiando en la plataforma, las guías y la empresa, contado en pocas líneas. Cada mes lo resumimos en un
+          correo para quien se suscribe.
+        </p>
+      </div>
+      <div class="acciones-opinion">
+        <a class="boton boton-primario" href="#novedades">Recibir el resumen mensual</a>
+        <a class="boton boton-secundario" href={url('novedades/rss.xml')}>RSS</a>
+      </div>
+    </div>
+
+    <ol class="lista-articulos">
+      {
+        entradas.map((e) => (
+          <li>
+            <article class="tarjeta">
+              <div class="tarjeta-meta">
+                <time datetime={e.data.fecha.toISOString().slice(0, 10)}>{formatoFecha(e.data.fecha)}</time>
+                <span>· {LINEAS_NOVEDADES[e.data.linea]}</span>
+              </div>
+              <h2>
+                <a href={url(`novedades/${e.id}/`)}>{e.data.titulo}</a>
+              </h2>
+              <p>{e.data.resumen}</p>
+              <div class="tarjeta-pie">
+                <span class="texto-suave">Ver el detalle →</span>
+              </div>
+            </article>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</Base>

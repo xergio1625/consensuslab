@@ -26,6 +26,7 @@ Autor: Sergio Inostroza. Sitio: https://consensuslab.cl/
 
 - [Guías](https://consensuslab.cl/guias/): procedimientos paso a paso para el laboratorio.
 - [Opinión](https://consensuslab.cl/opinion/): artículos sobre calidad, gestión y práctica del laboratorio clínico.
+- [Novedades](https://consensuslab.cl/novedades/): registro de los cambios de la plataforma, el sitio y la empresa.
 - [Prompts](https://consensuslab.cl/prompts/): instrucciones listas para redactar documentos del laboratorio con IA.
 - [Planes](https://consensuslab.cl/planes/): planes por perfil, con prueba gratuita.
 

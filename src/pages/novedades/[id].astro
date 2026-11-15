@@ -1,0 +1,90 @@
+---
+// Una novedad con su propia dirección, para enlazarla desde el correo mensual.
+import { render } from 'astro:content';
+import Base from '../../plantillas/Base.astro';
+import { LINEAS_NOVEDADES, obtenerNovedades } from '../../lib/datos';
+import { formatoFecha, migasLd, url } from '../../lib/rutas';
+
+export async function getStaticPaths() {
+  const entradas = await obtenerNovedades();
+  return entradas.map((entrada) => ({ params: { id: entrada.id }, props: { entrada } }));
+}
+
+const { entrada } = Astro.props;
+const e = entrada.data;
+const { Content } = await render(entrada);
+const direccion = new URL(Astro.url.pathname, Astro.site).href;
+const otras = (await obtenerNovedades()).filter((x) => x.id !== entrada.id).slice(0, 5);
+---
+
+<Base
+  titulo={e.titulo}
+  seccion="novedades"
+  descripcion={e.resumen}
+  datos={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'BlogPosting',
+      headline: e.titulo,
+      description: e.resumen,
+      datePublished: e.fecha.toISOString().slice(0, 10),
+      author: { '@type': 'Person', name: 'Sergio Inostroza Riffo' },
+      publisher: { '@type': 'Organization', name: 'ConsensusLab', url: Astro.site?.href },
+      mainEntityOfPage: direccion,
+      inLanguage: 'es',
+    },
+    migasLd(Astro.site, [['Novedades', 'novedades/'], [e.titulo, `novedades/${entrada.id}/`]]),
+  ]}
+>
+  <div class="contenedor">
+    <nav class="migas" aria-label="Ruta de navegación">
+      <ol>
+        <li><a href={url('novedades/')}>Novedades</a></li>
+        <li aria-current="page">{e.titulo}</li>
+      </ol>
+    </nav>
+
+    <header class="ficha-cabeza">
+      <p class="antetitulo">{LINEAS_NOVEDADES[e.linea]}</p>
+      <h1>{e.titulo}</h1>
+      <div class="ficha-meta">
+        <time datetime={e.fecha.toISOString().slice(0, 10)}>{formatoFecha(e.fecha)}</time>
+      </div>
+    </header>
+
+    <div class="ficha">
+      <article class="ficha-cuerpo prosa articulo">
+        <Content />
+        {
+          e.enlace && (
+            <p>
+              <a class="boton boton-secundario" href={url(e.enlace)}>Verlo en el sitio →</a>
+            </p>
+          )
+        }
+        <aside class="aviso aviso-info llamado-novedades">
+          <p>
+            <strong>¿Quieres enterarte de lo próximo?</strong> <a href="#novedades">Suscríbete</a> y recibe un resumen mensual
+            de lo que cambia.
+          </p>
+        </aside>
+      </article>
+
+      {
+        otras.length > 0 && (
+          <aside class="ficha-lateral">
+            <div class="caja">
+              <h2>Otras novedades</h2>
+              <ul class="lista-simple">
+                {otras.map((o) => (
+                  <li><a href={url(`novedades/${o.id}/`)}>{o.data.titulo}</a></li>
+                ))}
+              </ul>
+              <p><a href={url('novedades/')}>Ver todas</a></p>
+            </div>
+          </aside>
+        )
+      }
+    </div>
+  </div>
+</Base>
