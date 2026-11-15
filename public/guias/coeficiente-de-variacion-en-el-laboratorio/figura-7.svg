@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 380" role="img" aria-label="Un control con una recalibración a mitad de mes: el promedio del mes es 0 % aunque cada mitad está a 2 % del objetivo" font-family="Segoe UI, system-ui, -apple-system, Arial, sans-serif">
+<rect x="0" y="0" width="640" height="380" rx="10" fill="#FFFFFF" stroke="#E2D5DB"/>
+<rect x="70.0" y="30.0" width="270.0" height="270.0" fill="#6D0F2B" fill-opacity="0.05"/>
+<rect x="340.0" y="30.0" width="270.0" height="270.0" fill="#1F5F7A" fill-opacity="0.07"/>
+<line x1="70.0" y1="266.2" x2="610.0" y2="266.2" stroke="#E2D5DB" stroke-width="1"/>
+<text x="62.0" y="271.2" font-size="13" fill="#6B6166" text-anchor="end" font-weight="400">-6 %</text>
+<line x1="70.0" y1="215.6" x2="610.0" y2="215.6" stroke="#E2D5DB" stroke-width="1"/>
+<text x="62.0" y="220.6" font-size="13" fill="#6B6166" text-anchor="end" font-weight="400">-3 %</text>
+<line x1="70.0" y1="165.0" x2="610.0" y2="165.0" stroke="#E2D5DB" stroke-width="1"/>
+<text x="62.0" y="170.0" font-size="13" fill="#6B6166" text-anchor="end" font-weight="400">0 %</text>
+<line x1="70.0" y1="114.4" x2="610.0" y2="114.4" stroke="#E2D5DB" stroke-width="1"/>
+<text x="62.0" y="119.4" font-size="13" fill="#6B6166" text-anchor="end" font-weight="400">+3 %</text>
+<line x1="70.0" y1="63.8" x2="610.0" y2="63.8" stroke="#E2D5DB" stroke-width="1"/>
+<text x="62.0" y="68.8" font-size="13" fill="#6B6166" text-anchor="end" font-weight="400">+6 %</text>
+<line x1="70.0" y1="89.1" x2="610.0" y2="89.1" stroke="#B3261E" stroke-width="1.5" stroke-dasharray="6 5"/>
+<line x1="70.0" y1="240.9" x2="610.0" y2="240.9" stroke="#B3261E" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="606.0" y="83.1" font-size="13" fill="#B3261E" text-anchor="end" font-weight="400">ETa +4,5 %</text>
+<text x="76.0" y="234.9" font-size="13" fill="#B3261E" text-anchor="start" font-weight="400">ETa −4,5 %</text>
+<line x1="340.0" y1="30.0" x2="340.0" y2="300.0" stroke="#6B6166" stroke-width="1.5" stroke-dasharray="2 4"/>
+<text x="340.0" y="324.0" font-size="13" fill="#6B6166" text-anchor="middle" font-weight="400">recalibración</text>
+<circle cx="70.0" cy="155.6" r="4.5" fill="#6D0F2B"/>
+<circle cx="88.6" cy="171.5" r="4.5" fill="#6D0F2B"/>
+<circle cx="107.2" cy="138.8" r="4.5" fill="#6D0F2B"/>
+<circle cx="125.9" cy="118.5" r="4.5" fill="#6D0F2B"/>
+<circle cx="144.5" cy="96.7" r="4.5" fill="#6D0F2B"/>
+<circle cx="163.1" cy="127.9" r="4.5" fill="#6D0F2B"/>
+<circle cx="181.7" cy="148.0" r="4.5" fill="#6D0F2B"/>
+<circle cx="200.3" cy="155.1" r="4.5" fill="#6D0F2B"/>
+<circle cx="219.0" cy="108.5" r="4.5" fill="#6D0F2B"/>
+<circle cx="237.6" cy="81.6" r="4.5" fill="#6D0F2B"/>
+<circle cx="256.2" cy="123.0" r="4.5" fill="#6D0F2B"/>
+<circle cx="274.8" cy="168.7" r="4.5" fill="#6D0F2B"/>
+<circle cx="293.4" cy="160.4" r="4.5" fill="#6D0F2B"/>
+<circle cx="312.1" cy="82.6" r="4.5" fill="#6D0F2B"/>
+<circle cx="330.7" cy="125.1" r="4.5" fill="#6D0F2B"/>
+<circle cx="349.3" cy="251.4" r="4.5" fill="#1F5F7A"/>
+<circle cx="367.9" cy="201.3" r="4.5" fill="#1F5F7A"/>
+<circle cx="386.6" cy="234.1" r="4.5" fill="#1F5F7A"/>
+<circle cx="405.2" cy="217.9" r="4.5" fill="#1F5F7A"/>
+<circle cx="423.8" cy="213.6" r="4.5" fill="#1F5F7A"/>
+<circle cx="442.4" cy="220.4" r="4.5" fill="#1F5F7A"/>
+<circle cx="461.0" cy="181.9" r="4.5" fill="#1F5F7A"/>
+<circle cx="479.7" cy="200.7" r="4.5" fill="#1F5F7A"/>
+<circle cx="498.3" cy="216.7" r="4.5" fill="#1F5F7A"/>
+<circle cx="516.9" cy="186.3" r="4.5" fill="#1F5F7A"/>
+<circle cx="535.5" cy="173.5" r="4.5" fill="#1F5F7A"/>
+<circle cx="554.1" cy="248.7" r="4.5" fill="#1F5F7A"/>
+<circle cx="572.8" cy="206.5" r="4.5" fill="#1F5F7A"/>
+<circle cx="591.4" cy="228.5" r="4.5" fill="#1F5F7A"/>
+<circle cx="610.0" cy="204.0" r="4.5" fill="#1F5F7A"/>
+<line x1="70.0" y1="131.2" x2="330.7" y2="131.2" stroke="#6D0F2B" stroke-width="3"/>
+<text x="200.3" y="50.0" font-size="14" fill="#6D0F2B" text-anchor="middle" font-weight="600">primera mitad: media +2 %</text>
+<line x1="349.3" y1="198.8" x2="610.0" y2="198.8" stroke="#1F5F7A" stroke-width="3"/>
+<text x="479.7" y="50.0" font-size="14" fill="#1F5F7A" text-anchor="middle" font-weight="600">segunda mitad: media −2 %</text>
+<line x1="70.0" y1="165.0" x2="610.0" y2="165.0" stroke="#2A2226" stroke-width="2" stroke-dasharray="8 5"/>
+<text x="606.0" y="159.0" font-size="14" fill="#2A2226" text-anchor="end" font-weight="600">promedio del mes: 0 %</text>
+<line x1="70.0" y1="308.0" x2="610.0" y2="308.0" stroke="#6B6166" stroke-width="1.5"/>
+<text x="340.0" y="366.0" font-size="14" fill="#6B6166" text-anchor="middle" font-weight="400">Día del mes (un control diario). Desviación respecto del valor objetivo (%).</text>
+</svg>

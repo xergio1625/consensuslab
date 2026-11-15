@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" role="img" aria-label="Gráfico del CV según la concentración: sube mucho en valores bajos y se aplana cerca de 2 % en valores altos" font-family="Segoe UI, system-ui, -apple-system, Arial, sans-serif">
+<rect x="0" y="0" width="640" height="400" rx="10" fill="#FFFFFF" stroke="#E2D5DB"/>
+<line x1="70.0" y1="320.0" x2="615.0" y2="320.0" stroke="#E2D5DB" stroke-width="1"/>
+<text x="62.0" y="325.0" font-size="14" fill="#6B6166" text-anchor="end" font-weight="400">0 %</text>
+<line x1="70.0" y1="257.8" x2="615.0" y2="257.8" stroke="#E2D5DB" stroke-width="1"/>
+<text x="62.0" y="262.8" font-size="14" fill="#6B6166" text-anchor="end" font-weight="400">10 %</text>
+<line x1="70.0" y1="195.6" x2="615.0" y2="195.6" stroke="#E2D5DB" stroke-width="1"/>
+<text x="62.0" y="200.6" font-size="14" fill="#6B6166" text-anchor="end" font-weight="400">20 %</text>
+<line x1="70.0" y1="133.3" x2="615.0" y2="133.3" stroke="#E2D5DB" stroke-width="1"/>
+<text x="62.0" y="138.3" font-size="14" fill="#6B6166" text-anchor="end" font-weight="400">30 %</text>
+<line x1="70.0" y1="71.1" x2="615.0" y2="71.1" stroke="#E2D5DB" stroke-width="1"/>
+<text x="62.0" y="76.1" font-size="14" fill="#6B6166" text-anchor="end" font-weight="400">40 %</text>
+<line x1="147.0" y1="320.0" x2="147.0" y2="326.0" stroke="#6B6166" stroke-width="1.5"/>
+<text x="147.0" y="344.0" font-size="14" fill="#6B6166" text-anchor="middle" font-weight="400">0,1</text>
+<line x1="294.4" y1="320.0" x2="294.4" y2="326.0" stroke="#6B6166" stroke-width="1.5"/>
+<text x="294.4" y="344.0" font-size="14" fill="#6B6166" text-anchor="middle" font-weight="400">1</text>
+<line x1="441.7" y1="320.0" x2="441.7" y2="326.0" stroke="#6B6166" stroke-width="1.5"/>
+<text x="441.7" y="344.0" font-size="14" fill="#6B6166" text-anchor="middle" font-weight="400">10</text>
+<line x1="589.1" y1="320.0" x2="589.1" y2="326.0" stroke="#6B6166" stroke-width="1.5"/>
+<text x="589.1" y="344.0" font-size="14" fill="#6B6166" text-anchor="middle" font-weight="400">100</text>
+<line x1="70.0" y1="320.0" x2="615.0" y2="320.0" stroke="#6B6166" stroke-width="1.5"/>
+<line x1="70.0" y1="40.0" x2="70.0" y2="320.0" stroke="#6B6166" stroke-width="1.5"/>
+<polyline points="70.0,-95.0 72.7,-77.7 75.4,-61.2 78.2,-45.3 80.9,-30.1 83.6,-15.5 86.3,-1.5 89.1,11.9 91.8,24.7 94.5,37.0 97.2,48.8 100.0,60.0 102.7,70.9 105.4,81.2 108.1,91.1 110.9,100.7 113.6,109.8 116.3,118.5 119.0,126.9 121.8,134.9 124.5,142.6 127.2,149.9 129.9,157.0 132.7,163.7 135.4,170.2 138.1,176.4 140.9,182.4 143.6,188.0 146.3,193.5 149.0,198.7 151.8,203.7 154.5,208.5 157.2,213.1 159.9,217.5 162.6,221.7 165.4,225.7 168.1,229.6 170.8,233.3 173.6,236.8 176.3,240.2 179.0,243.5 181.7,246.6 184.4,249.5 187.2,252.4 189.9,255.1 192.6,257.7 195.4,260.2 198.1,262.6 200.8,264.9 203.5,267.0 206.2,269.1 209.0,271.1 211.7,273.0 214.4,274.8 217.1,276.6 219.9,278.2 222.6,279.8 225.3,281.3 228.0,282.8 230.8,284.1 233.5,285.5 236.2,286.7 238.9,287.9 241.7,289.0 244.4,290.1 247.1,291.1 249.8,292.1 252.6,293.0 255.3,293.9 258.0,294.8 260.8,295.5 263.5,296.3 266.2,297.0 268.9,297.7 271.6,298.3 274.4,298.9 277.1,299.5 279.8,300.0 282.6,300.5 285.3,301.0 288.0,301.5 290.7,301.9 293.5,302.3 296.2,302.6 298.9,303.0 301.6,303.3 304.4,303.6 307.1,303.9 309.8,304.2 312.5,304.4 315.2,304.7 318.0,304.9 320.7,305.1 323.4,305.3 326.2,305.4 328.9,305.6 331.6,305.7 334.3,305.9 337.1,306.0 339.8,306.1 342.5,306.2 345.2,306.3 347.9,306.4 350.7,306.5 353.4,306.6 356.1,306.7 358.9,306.8 361.6,306.8 364.3,306.9 367.0,306.9 369.7,307.0 372.5,307.0 375.2,307.1 377.9,307.1 380.7,307.1 383.4,307.2 386.1,307.2 388.8,307.2 391.6,307.3 394.3,307.3 397.0,307.3 399.7,307.3 402.4,307.3 405.2,307.4 407.9,307.4 410.6,307.4 413.4,307.4 416.1,307.4 418.8,307.4 421.5,307.4 424.2,307.4 427.0,307.5 429.7,307.5 432.4,307.5 435.2,307.5 437.9,307.5 440.6,307.5 443.3,307.5 446.1,307.5 448.8,307.5 451.5,307.5 454.2,307.5 456.9,307.5 459.7,307.5 462.4,307.5 465.1,307.5 467.9,307.5 470.6,307.5 473.3,307.5 476.0,307.5 478.7,307.5 481.5,307.5 484.2,307.5 486.9,307.5 489.7,307.5 492.4,307.5 495.1,307.5 497.8,307.5 500.5,307.5 503.3,307.5 506.0,307.5 508.7,307.5 511.5,307.5 514.2,307.5 516.9,307.5 519.6,307.6 522.3,307.6 525.1,307.6 527.8,307.6 530.5,307.6 533.2,307.6 536.0,307.6 538.7,307.6 541.4,307.6 544.1,307.6 546.9,307.6 549.6,307.6 552.3,307.6 555.0,307.6 557.8,307.6 560.5,307.6 563.2,307.6 565.9,307.6 568.7,307.6 571.4,307.6 574.1,307.6 576.9,307.6 579.6,307.6 582.3,307.6 585.0,307.6 587.8,307.6 590.5,307.6 593.2,307.6 595.9,307.6 598.7,307.6 601.4,307.6 604.1,307.6 606.8,307.6 609.5,307.6 612.3,307.6 615.0,307.6" fill="none" stroke="#6D0F2B" stroke-width="3"/>
+<line x1="70.0" y1="195.6" x2="615.0" y2="195.6" stroke="#8A6A24" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="615.0" y="187.6" font-size="13" fill="#8A6A24" text-anchor="end" font-weight="400">20 %: convención de la «sensibilidad funcional»</text>
+<circle cx="102.7" cy="71.1" r="5" fill="#6D0F2B"/>
+<circle cx="147.0" cy="194.9" r="5" fill="#6D0F2B"/>
+<circle cx="250.0" cy="292.0" r="5" fill="#6D0F2B"/>
+<circle cx="294.4" cy="302.6" r="5" fill="#6D0F2B"/>
+<circle cx="441.7" cy="307.6" r="5" fill="#6D0F2B"/>
+<circle cx="589.1" cy="307.6" r="5" fill="#6D0F2B"/>
+<text x="112.7" y="75.1" font-size="14" fill="#6D0F2B" text-anchor="start" font-weight="600">40 %</text>
+<text x="157.0" y="216.9" font-size="14" fill="#6D0F2B" text-anchor="start" font-weight="600">20 %</text>
+<text x="258.0" y="282.0" font-size="14" fill="#6D0F2B" text-anchor="start" font-weight="600">4,5 %</text>
+<text x="441.7" y="295.6" font-size="14" fill="#6D0F2B" text-anchor="middle" font-weight="600">2 %</text>
+<text x="74.1" y="306.0" font-size="14" fill="#6B6166" text-anchor="start" font-weight="400">Piso de ruido: el CV sube</text>
+<text x="383.1" y="245.3" font-size="14" fill="#6B6166" text-anchor="start" font-weight="400">Zona proporcional:</text>
+<text x="383.1" y="263.3" font-size="14" fill="#6B6166" text-anchor="start" font-weight="400">el CV se aplana</text>
+<text x="342.5" y="378.0" font-size="15" fill="#2A2226" text-anchor="middle" font-weight="400">Media del control (unidades, escala logarítmica)</text>
+<text transform="translate(22,180.0) rotate(-90)" font-size="15" fill="#2A2226" text-anchor="middle">CV (%)</text>
+</svg>

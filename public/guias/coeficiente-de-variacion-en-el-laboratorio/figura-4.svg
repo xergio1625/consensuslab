@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-label="Rango del CV observado según n: con 20 datos va de 1,5 a 2,9 % cuando el CV real es 2,0 %" font-family="Segoe UI, system-ui, -apple-system, Arial, sans-serif">
+<rect x="0" y="0" width="640" height="360" rx="10" fill="#FFFFFF" stroke="#E2D5DB"/>
+<line x1="80.0" y1="290.0" x2="610.0" y2="290.0" stroke="#E2D5DB" stroke-width="1"/>
+<text x="72.0" y="295.0" font-size="13" fill="#6B6166" text-anchor="end" font-weight="400">1,0 %</text>
+<line x1="80.0" y1="230.9" x2="610.0" y2="230.9" stroke="#E2D5DB" stroke-width="1"/>
+<text x="72.0" y="235.9" font-size="13" fill="#6B6166" text-anchor="end" font-weight="400">1,5 %</text>
+<line x1="80.0" y1="171.8" x2="610.0" y2="171.8" stroke="#E2D5DB" stroke-width="1"/>
+<text x="72.0" y="176.8" font-size="13" fill="#6B6166" text-anchor="end" font-weight="400">2,0 %</text>
+<line x1="80.0" y1="112.7" x2="610.0" y2="112.7" stroke="#E2D5DB" stroke-width="1"/>
+<text x="72.0" y="117.7" font-size="13" fill="#6B6166" text-anchor="end" font-weight="400">2,5 %</text>
+<line x1="80.0" y1="53.6" x2="610.0" y2="53.6" stroke="#E2D5DB" stroke-width="1"/>
+<text x="72.0" y="58.6" font-size="13" fill="#6B6166" text-anchor="end" font-weight="400">3,0 %</text>
+<line x1="80.0" y1="171.8" x2="610.0" y2="171.8" stroke="#8A6A24" stroke-width="2" stroke-dasharray="6 5"/>
+<text x="86.0" y="163.8" font-size="13" fill="#8A6A24" text-anchor="start" font-weight="400">CV real: 2,0 %</text>
+<line x1="150.0" y1="228.5" x2="150.0" y2="63.1" stroke="#6D0F2B" stroke-width="5"/>
+<line x1="140.0" y1="228.5" x2="160.0" y2="228.5" stroke="#6D0F2B" stroke-width="3"/>
+<line x1="140.0" y1="63.1" x2="160.0" y2="63.1" stroke="#6D0F2B" stroke-width="3"/>
+<text x="166.0" y="68.1" font-size="14" fill="#6D0F2B" text-anchor="start" font-weight="600">2,92</text>
+<text x="166.0" y="233.5" font-size="14" fill="#6D0F2B" text-anchor="start" font-weight="600">1,52</text>
+<text x="150.0" y="318.0" font-size="15" fill="#2A2226" text-anchor="middle" font-weight="400">n = 20</text>
+<line x1="275.0" y1="220.3" x2="275.0" y2="90.3" stroke="#6D0F2B" stroke-width="5"/>
+<line x1="265.0" y1="220.3" x2="285.0" y2="220.3" stroke="#6D0F2B" stroke-width="3"/>
+<line x1="265.0" y1="90.3" x2="285.0" y2="90.3" stroke="#6D0F2B" stroke-width="3"/>
+<text x="291.0" y="95.3" font-size="14" fill="#6D0F2B" text-anchor="start" font-weight="600">2,69</text>
+<text x="291.0" y="225.3" font-size="14" fill="#6D0F2B" text-anchor="start" font-weight="600">1,59</text>
+<text x="275.0" y="318.0" font-size="15" fill="#2A2226" text-anchor="middle" font-weight="400">n = 30</text>
+<line x1="400.0" y1="207.3" x2="400.0" y2="119.8" stroke="#6D0F2B" stroke-width="5"/>
+<line x1="390.0" y1="207.3" x2="410.0" y2="207.3" stroke="#6D0F2B" stroke-width="3"/>
+<line x1="390.0" y1="119.8" x2="410.0" y2="119.8" stroke="#6D0F2B" stroke-width="3"/>
+<text x="416.0" y="124.8" font-size="14" fill="#6D0F2B" text-anchor="start" font-weight="600">2,44</text>
+<text x="416.0" y="212.3" font-size="14" fill="#6D0F2B" text-anchor="start" font-weight="600">1,70</text>
+<text x="400.0" y="318.0" font-size="15" fill="#2A2226" text-anchor="middle" font-weight="400">n = 60</text>
+<line x1="525.0" y1="202.5" x2="525.0" y2="131.6" stroke="#6D0F2B" stroke-width="5"/>
+<line x1="515.0" y1="202.5" x2="535.0" y2="202.5" stroke="#6D0F2B" stroke-width="3"/>
+<line x1="515.0" y1="131.6" x2="535.0" y2="131.6" stroke="#6D0F2B" stroke-width="3"/>
+<text x="541.0" y="136.6" font-size="14" fill="#6D0F2B" text-anchor="start" font-weight="600">2,34</text>
+<text x="541.0" y="207.5" font-size="14" fill="#6D0F2B" text-anchor="start" font-weight="600">1,74</text>
+<text x="525.0" y="318.0" font-size="15" fill="#2A2226" text-anchor="middle" font-weight="400">n = 90</text>
+<line x1="80.0" y1="298.0" x2="610.0" y2="298.0" stroke="#6B6166" stroke-width="1.5"/>
+<text x="345.0" y="346.0" font-size="14" fill="#6B6166" text-anchor="middle" font-weight="400">Rango que cubre el 95 % de los CV observados (datos independientes)</text>
+</svg>

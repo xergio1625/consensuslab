@@ -67,4 +67,20 @@ export const GUIAS_PAGO: GuiaPago[] = [
     lista: false,
     libre: { texto: 'Leer la ficha libre', ruta: 'herramientas/registro-de-temperaturas/' },
   },
+  {
+    id: 'planilla-variacion-error-total',
+    titulo: 'Planilla de coeficiente de variación y error total',
+    subtitulo: 'Excel con manual: CV por nivel con su intervalo de confianza, acumulado del lote y error total con sigma',
+    paraQuien: 'Para quien controla una vez al día por nivel y necesita decidir con el CV sin confundir el ruido de un mes con un cambio real del método.',
+    incluye: [
+      'Registro de los datos del control por nivel, con el CV del mes y el CV acumulado del lote, cada uno con su intervalo de confianza',
+      'Evaluación por tramos entre calibraciones o cambios de lote, con el CV dentro de los tramos y el total',
+      'Error total y sigma con el multiplicador que elijas (1,65, 1,96 o 2) y semáforo de tres zonas: cumple, no cumple o falta información',
+      'Datos de ejemplo y un manual en PDF con el paso a paso',
+    ],
+    formato: 'Planilla de Excel (.xlsx) + manual en PDF',
+    precio: 2900,
+    lista: false,
+    libre: { texto: 'Leer la guía libre', ruta: 'guias/coeficiente-de-variacion-en-el-laboratorio/' },
+  },
 ];

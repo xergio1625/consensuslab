@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 330" role="img" aria-label="Tres horarios con CV iguales y medias desplazadas: el CV por horario no detecta el desplazamiento" font-family="Segoe UI, system-ui, -apple-system, Arial, sans-serif">
+<rect x="0" y="0" width="640" height="330" rx="10" fill="#FFFFFF" stroke="#E2D5DB"/>
+<text x="165.0" y="34.0" font-size="15" fill="#2A2226" text-anchor="middle" font-weight="600">CV de cada horario</text>
+<text x="480.0" y="34.0" font-size="15" fill="#2A2226" text-anchor="middle" font-weight="600">Media de cada horario</text>
+<rect x="50.0" y="123.2" width="55.0" height="126.8" fill="#6D0F2B" fill-opacity="0.85"/>
+<text x="77.0" y="115.2" font-size="14" fill="#6D0F2B" text-anchor="middle" font-weight="600">1,79 %</text>
+<text x="77.0" y="272.0" font-size="13" fill="#6B6166" text-anchor="middle" font-weight="400">Mañana</text>
+<rect x="135.0" y="123.2" width="55.0" height="126.8" fill="#6D0F2B" fill-opacity="0.85"/>
+<text x="162.0" y="115.2" font-size="14" fill="#6D0F2B" text-anchor="middle" font-weight="600">1,79 %</text>
+<text x="162.0" y="272.0" font-size="13" fill="#6B6166" text-anchor="middle" font-weight="400">Mediodía</text>
+<rect x="220.0" y="123.2" width="55.0" height="126.8" fill="#6D0F2B" fill-opacity="0.85"/>
+<text x="247.0" y="115.2" font-size="14" fill="#6D0F2B" text-anchor="middle" font-weight="600">1,79 %</text>
+<text x="247.0" y="272.0" font-size="13" fill="#6B6166" text-anchor="middle" font-weight="400">Tarde</text>
+<line x1="40.0" y1="250.0" x2="310.0" y2="250.0" stroke="#6B6166" stroke-width="1.5"/>
+<line x1="370.0" y1="250.0" x2="610.0" y2="250.0" stroke="#E2D5DB" stroke-width="1"/>
+<text x="364.0" y="255.0" font-size="12.5" fill="#6B6166" text-anchor="end" font-weight="400">-1,0</text>
+<line x1="370.0" y1="207.5" x2="610.0" y2="207.5" stroke="#E2D5DB" stroke-width="1"/>
+<text x="364.0" y="212.5" font-size="12.5" fill="#6B6166" text-anchor="end" font-weight="400">-0,5</text>
+<line x1="370.0" y1="165.0" x2="610.0" y2="165.0" stroke="#E2D5DB" stroke-width="1"/>
+<text x="364.0" y="170.0" font-size="12.5" fill="#6B6166" text-anchor="end" font-weight="400">0,0</text>
+<line x1="370.0" y1="122.5" x2="610.0" y2="122.5" stroke="#E2D5DB" stroke-width="1"/>
+<text x="364.0" y="127.5" font-size="12.5" fill="#6B6166" text-anchor="end" font-weight="400">+0,5</text>
+<line x1="370.0" y1="80.0" x2="610.0" y2="80.0" stroke="#E2D5DB" stroke-width="1"/>
+<text x="364.0" y="85.0" font-size="12.5" fill="#6B6166" text-anchor="end" font-weight="400">+1,0</text>
+<circle cx="415.0" cy="199.0" r="9" fill="#1F5F7A"/>
+<text x="415.0" y="272.0" font-size="13" fill="#6B6166" text-anchor="middle" font-weight="400">Mañana</text>
+<circle cx="490.0" cy="165.0" r="9" fill="#1F5F7A"/>
+<text x="490.0" y="272.0" font-size="13" fill="#6B6166" text-anchor="middle" font-weight="400">Mediodía</text>
+<circle cx="565.0" cy="131.0" r="9" fill="#1F5F7A"/>
+<text x="565.0" y="272.0" font-size="13" fill="#6B6166" text-anchor="middle" font-weight="400">Tarde</text>
+<line x1="370.0" y1="250.0" x2="610.0" y2="250.0" stroke="#6B6166" stroke-width="1.5"/>
+<text x="370.0" y="56.0" font-size="12.5" fill="#6B6166" text-anchor="start" font-weight="400">(% respecto del promedio)</text>
+<text x="320.0" y="304.0" font-size="13.5" fill="#6B6166" text-anchor="middle" font-weight="400">Los tres CV son iguales, pero las medias se escalonan:</text>
+<text x="320.0" y="322.0" font-size="13.5" fill="#6B6166" text-anchor="middle" font-weight="400">el CV por horario no ve el desplazamiento.</text>
+</svg>
