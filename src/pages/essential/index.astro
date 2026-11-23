@@ -5,7 +5,7 @@ import Base from '../../plantillas/Base.astro';
 import FondoPortada from '../../componentes/FondoPortada.astro';
 import { obtenerCatalogo, obtenerHerramientas } from '../../lib/datos';
 import { url } from '../../lib/rutas';
-import { PRECIO_ESSENTIAL_BASE, URL_REGISTRO } from '../../lib/sitio';
+import { PRECIO_ESSENTIAL_BASE, PREVENTA_ACTIVA, URL_REGISTRO } from '../../lib/sitio';
 
 const catalogo = await obtenerCatalogo();
 const herramientas = await obtenerHerramientas();
@@ -61,9 +61,18 @@ const incluyeBase = BASE.map((m) => enApp.find((h) => h.data.app_modulo === m)).
             {incluyeBase.map((t) => <li>{t}</li>)}
           </ul>
           <p class="plan-precio">
-            <span class="plan-precio-fundador">{PRECIO_ESSENTIAL_BASE.fundador}</span>
-            <span class="plan-precio-nota">al año con IVA incluido, precio fundador (40 % de descuento) para quien pague antes del 1 de diciembre de 2026</span>
-            <span class="plan-precio-nota">Luego {PRECIO_ESSENTIAL_BASE.normal} al año con IVA incluido</span>
+            {PREVENTA_ACTIVA ? (
+              <>
+                <span class="plan-precio-fundador">{PRECIO_ESSENTIAL_BASE.fundador}</span>
+                <span class="plan-precio-nota">al año con IVA incluido, precio fundador (40 % de descuento) para quien pague antes del 1 de diciembre de 2026</span>
+                <span class="plan-precio-nota">Luego {PRECIO_ESSENTIAL_BASE.normal} al año con IVA incluido</span>
+              </>
+            ) : (
+              <>
+                <span class="plan-precio-fundador">{PRECIO_ESSENTIAL_BASE.normal}</span>
+                <span class="plan-precio-nota">al año con IVA incluido</span>
+              </>
+            )}
           </p>
         </article>
         <article class="plan plan-destacado">

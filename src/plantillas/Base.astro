@@ -8,7 +8,7 @@ import AvisoPreventa from '../componentes/AvisoPreventa.astro';
 import BarraDemo from '../componentes/BarraDemo.astro';
 import Movimiento from '../componentes/Movimiento.astro';
 import { url } from '../lib/rutas';
-import { FIN_PREVENTA, INDEXAR } from '../lib/sitio';
+import { INDEXAR, PREVENTA_ACTIVA } from '../lib/sitio';
 
 interface Props {
   titulo: string;
@@ -36,7 +36,7 @@ const indexable = INDEXAR && Astro.props.indexar !== false;
 const datos = Astro.props.datos ? [].concat(Astro.props.datos as never) : [];
 const jsonLd = (d: unknown) => JSON.stringify(d).replace(/</g, '\\u003c');
 const canonica = new URL(Astro.url.pathname, Astro.site);
-const enPreventa = new Date().toISOString().slice(0, 10) < FIN_PREVENTA;
+const enPreventa = PREVENTA_ACTIVA;
 const paginaPreventa = Astro.url.pathname === url('para-laboratorios/') || Astro.url.pathname === url('planes/laboratorios/');
 const imagen = new URL(url(Astro.props.imagen ?? (enPreventa && paginaPreventa ? 'og-preventa.png' : 'og-sitio.png')), Astro.site);
 ---

@@ -7,7 +7,7 @@ import FondoPortada from '../componentes/FondoPortada.astro';
 import { obtenerCatalogo, obtenerOpinion, obtenerPrompts } from '../lib/datos';
 import { formatoFecha, url } from '../lib/rutas';
 import { CALCULADORAS } from '../lib/calculadoras';
-import { CORREO_CONTACTO, LINKEDIN_PERFIL, MESES_PRUEBA_PROFESSIONAL, PRECIO_PROFESSIONAL_TEXTO } from '../lib/sitio';
+import { CORREO_CONTACTO, LINKEDIN_PERFIL, MESES_PRUEBA_PROFESSIONAL, PRECIO_PROFESSIONAL_TEXTO, PREVENTA_ACTIVA } from '../lib/sitio';
 
 const catalogo = await obtenerCatalogo();
 const totalHerramientas = catalogo.reduce((n, { herramientas }) => n + herramientas.length, 0);
@@ -99,7 +99,7 @@ const ultimos = (await obtenerOpinion()).slice(0, 3);
             <li>Essential, ConsensusLab QC o los dos juntos</li>
             <li>Cada plan incluye hasta 5 cuentas de Professional para tu equipo</li>
           </ul>
-          <p class="puerta-precio">Planes anuales desde la preventa de fundadores</p>
+          <p class="puerta-precio">{PREVENTA_ACTIVA ? 'Planes anuales desde la preventa de fundadores' : 'Planes anuales para tu laboratorio'}</p>
           <div class="acciones-portada">
             <a class="boton boton-primario" href={url('para-laboratorios/')}>Ver para laboratorios</a>
             <a class="boton boton-secundario" href={url('diagnostico/')}>Haz el diagnóstico</a>

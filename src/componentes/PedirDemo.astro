@@ -1,7 +1,7 @@
 ---
 // Invitación a la prueba gratuita (cuenta real, 15 días) desde cualquier página. La cotización vive solo en /planes/laboratorios/.
 // variante «caja»: columna lateral · «franja»: ancho completo entre secciones.
-import { URL_REGISTRO } from '../lib/sitio';
+import { PREVENTA_ACTIVA, URL_REGISTRO } from '../lib/sitio';
 
 interface Props {
   variante?: 'caja' | 'franja';
@@ -22,8 +22,8 @@ const registro = `${URL_REGISTRO}&utm_source=sitio&utm_medium=${encodeURICompone
         {caja ? <h2>Pruébala en tu laboratorio</h2> : <h2>¿Quieres esto en tu laboratorio?</h2>}
         <p>
           Crea tu cuenta y prueba la app <strong>15 días gratis</strong> con los datos reales de tu laboratorio, sin tarjeta. Si
-          contratas, sigues en la misma cuenta con tus registros. Preventa fundadores: <strong>40 % de descuento</strong>
-          pagando antes del 1 de diciembre de 2026.
+          contratas, sigues en la misma cuenta con tus registros.{PREVENTA_ACTIVA && <> Preventa fundadores: <strong>40 % de descuento</strong>
+          pagando antes del 1 de diciembre de 2026.</>}
         </p>
         <p><a class="boton boton-primario" href={registro} data-evento="cta_prueba_gratis" data-destino={Astro.url.pathname.replace(/^\/|\/$/g, '') || 'inicio'}>Probar 15 días gratis</a></p>
       </div>

@@ -68,6 +68,19 @@ export const CF_BEACON_TOKEN = '7e9e0f16cb3340449babcf2f2d15304f';
 /** Fin de la preventa fundadores (desde este día rige el precio normal). Hasta entonces se ven la franja y la imagen de preventa. */
 export const FIN_PREVENTA = '2026-12-01';
 
+/** Fecha de hoy en Chile (AAAA-MM-DD), para que la preventa termine a medianoche de Chile y no de UTC. PREVENTA_HOY fuerza una fecha al compilar (solo para probar). */
+export function hoyChile(): string {
+  const forzada = typeof process !== 'undefined' ? process.env.PREVENTA_HOY : undefined;
+  if (forzada && /^\d{4}-\d{2}-\d{2}$/.test(forzada)) return forzada;
+  return new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Santiago', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
+}
+
+/**
+ * ¿Está vigente la preventa al compilar? Los textos de preventa de las páginas dependen de esto: la tarea programada de
+ * .github/workflows/publicar.yml recompila el sitio la madrugada del 1 de diciembre, y desde entonces se ve el sitio con precios normales.
+ */
+export const PREVENTA_ACTIVA = hoyChile() < FIN_PREVENTA;
+
 /** Correo de contacto para privacidad, términos y soporte (Cloudflare Email Routing lo reenvía a Gmail; la app envía con Brevo desde esta dirección). */
 export const CORREO_CONTACTO = 'contacto@consensuslab.cl';
 /** Correo para pedir cotizaciones (solo se muestra en /planes/laboratorios/). Cambia esta línea cuando exista cotizaciones@consensuslab.cl. */

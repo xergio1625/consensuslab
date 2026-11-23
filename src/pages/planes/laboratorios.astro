@@ -6,7 +6,7 @@ import FondoPortada from '../../componentes/FondoPortada.astro';
 import Capturas from '../../componentes/Capturas.astro';
 import { obtenerHerramientas } from '../../lib/datos';
 import { migasLd, url } from '../../lib/rutas';
-import { CORREO_COTIZACION, PRECIO_ESSENTIAL_BASE, URL_APP, URL_REGISTRO } from '../../lib/sitio';
+import { CORREO_COTIZACION, PRECIO_ESSENTIAL_BASE, PREVENTA_ACTIVA, URL_APP, URL_REGISTRO } from '../../lib/sitio';
 
 const herramientas = await obtenerHerramientas();
 const enApp = herramientas.filter((h) => h.data.estado === 'disponible' && h.data.app_modulo);
@@ -82,7 +82,7 @@ const planesCotizables = [...planes, institucional];
   titulo="Planes para laboratorios clínicos"
   seccion="planes-lab"
   datos={migasLd(Astro.site, [['Planes', 'planes/'], ['Laboratorios', 'planes/laboratorios/']])}
-  descripcion="Planes de ConsensusLab para laboratorios clínicos: Essential Base, Essential Completo y ConsensusLab QC. Prueba 15 días gratis y preventa fundadores con 40 % de descuento."
+  descripcion={PREVENTA_ACTIVA ? 'Planes de ConsensusLab para laboratorios clínicos: Essential Base, Essential Completo y ConsensusLab QC. Prueba 15 días gratis y preventa fundadores con 40 % de descuento.' : 'Planes de ConsensusLab para laboratorios clínicos: Essential Base, Essential Completo y ConsensusLab QC. Prueba 15 días gratis con los datos de tu laboratorio, sin tarjeta.'}
 >
   <section class="portada">
     <FondoPortada motivo="plan" />
@@ -106,13 +106,20 @@ const planesCotizables = [...planes, institucional];
 
   <section class="seccion seccion-alt" id="laboratorios">
     <div class="contenedor">
-      <p class="antetitulo">Preventa fundadores</p>
+      {PREVENTA_ACTIVA && <p class="antetitulo">Preventa fundadores</p>}
       <h2>Para tu laboratorio</h2>
-      <p class="texto-suave">
-        <strong>40 % de descuento en el primer año</strong> para los laboratorios que paguen por adelantado antes del
-        <strong>1 de diciembre de 2026</strong>, fecha en que comienza el servicio. Pruébalo 15 días con los datos de tu
-        laboratorio, sin tarjeta, y si prefieres una cotización la respondemos en un día hábil.
-      </p>
+      {PREVENTA_ACTIVA ? (
+        <p class="texto-suave">
+          <strong>40 % de descuento en el primer año</strong> para los laboratorios que paguen por adelantado antes del
+          <strong>1 de diciembre de 2026</strong>, fecha en que comienza el servicio. Pruébalo 15 días con los datos de tu
+          laboratorio, sin tarjeta, y si prefieres una cotización la respondemos en un día hábil.
+        </p>
+      ) : (
+        <p class="texto-suave">
+          Pruébalo 15 días con los datos de tu laboratorio, sin tarjeta, y si prefieres una cotización la respondemos en un
+          día hábil. Los planes son anuales, con IVA incluido y pago contra factura electrónica.
+        </p>
+      )}
       <p>
         <a class="boton boton-primario" href={URL_REGISTRO}>Probar gratis 15 días</a>
         <a class="boton boton-secundario" href="#cotizar" data-plan="gestion_qc">Pedir cotización</a>
@@ -145,9 +152,18 @@ const planesCotizables = [...planes, institucional];
               <p class="plan-elige"><strong>Elígelo si:</strong> {p.elige}</p>
               {p.precio && (
                 <p class="plan-precio">
-                  <span class="plan-precio-fundador">{p.precio.fundador}</span>
-                  <span class="plan-precio-nota">al año con IVA incluido, precio fundador (40 % de descuento)</span>
-                  <span class="plan-precio-nota">Luego {p.precio.normal} al año con IVA incluido</span>
+                  {PREVENTA_ACTIVA ? (
+                    <>
+                      <span class="plan-precio-fundador">{p.precio.fundador}</span>
+                      <span class="plan-precio-nota">al año con IVA incluido, precio fundador (40 % de descuento)</span>
+                      <span class="plan-precio-nota">Luego {p.precio.normal} al año con IVA incluido</span>
+                    </>
+                  ) : (
+                    <>
+                      <span class="plan-precio-fundador">{p.precio.normal}</span>
+                      <span class="plan-precio-nota">al año con IVA incluido</span>
+                    </>
+                  )}
                 </p>
               )}
               <ul class="plan-incluye">
@@ -165,17 +181,20 @@ const planesCotizables = [...planes, institucional];
         pacientes. Prueba cualquier herramienta <strong>15 días gratis</strong> con los datos de tu laboratorio:
         <a href={URL_REGISTRO}>crea tu cuenta</a> y empieza.
       </p>
+      {PREVENTA_ACTIVA && (
+        <div class="aviso aviso-info">
+          <p>
+            <strong>Sin riesgo:</strong> si pagas antes del 1 de diciembre para asegurar el precio de fundador y, dentro de los
+            30 días de tu prueba, decides no continuar, te devolvemos el pago completo.
+          </p>
+        </div>
+      )}
       <div class="aviso aviso-info">
         <p>
-          <strong>Sin riesgo:</strong> si pagas antes del 1 de diciembre para asegurar el precio de fundador y, dentro de los
-          30 días de tu prueba, decides no continuar, te devolvemos el pago completo.
-        </p>
-      </div>
-      <div class="aviso aviso-info">
-        <p>
-          <strong>Próximamente: avisos por WhatsApp.</strong> Después del lanzamiento del 1 de diciembre sumaremos avisos
-          de vencimientos, alertas y recordatorios de las tareas del turno. No estarán en el lanzamiento, pero los primeros
-          clientes tendrán acceso a ellos.
+          <strong>Próximamente: avisos por WhatsApp.</strong>{' '}
+          {PREVENTA_ACTIVA
+            ? 'Después del lanzamiento del 1 de diciembre sumaremos avisos de vencimientos, alertas y recordatorios de las tareas del turno. No estarán en el lanzamiento, pero los primeros clientes tendrán acceso a ellos.'
+            : 'Sumaremos avisos de vencimientos, alertas y recordatorios de las tareas del turno. No están disponibles todavía; los clientes que contraten antes de que salgan tendrán acceso a ellos.'}
         </p>
       </div>
     </div>
@@ -228,37 +247,57 @@ const planesCotizables = [...planes, institucional];
     </div>
   </section>
 
-  <section class="seccion seccion-alt">
-    <div class="contenedor">
-      <h2>Cómo funciona la preventa</h2>
-      <ol class="pasos-preventa">
-        <li>
-          <strong>Prueba gratis 15 días</strong> con los datos reales de tu laboratorio: <a href={URL_REGISTRO}>crea tu cuenta</a>,
-          sin tarjeta ni compromiso. Si contratas, sigues en la misma cuenta y tus registros se mantienen.
-        </li>
-        <li>
-          <strong>Pide tu cotización</strong> con el formulario. Te la enviamos por correo en un día hábil y, si necesitas más
-          tiempo para evaluar, extendemos tu prueba a 30 días.
-        </li>
-        <li>
-          <strong>Paga el año por adelantado antes del 1 de diciembre de 2026</strong> y obtienes el 40 % de descuento en el
-          primer año. Usas la app desde el pago y el año pagado corre desde el 1 de diciembre.
-        </li>
-        <li><strong>Pago contra factura electrónica</strong>, por transferencia o con orden de compra.</li>
-      </ol>
-      <div class="aviso aviso-info">
-        <p>
-          <strong>¿Tu prueba termina después del 1 de diciembre?</strong> Igual accedes al precio de fundador: paga o envía
-          la orden de compra antes del 1 de diciembre y sigue probando. Si decides no continuar dentro de los 30 días de
-          tu prueba, te devolvemos el pago completo.
+  {PREVENTA_ACTIVA ? (
+    <section class="seccion seccion-alt">
+      <div class="contenedor">
+        <h2>Cómo funciona la preventa</h2>
+        <ol class="pasos-preventa">
+          <li>
+            <strong>Prueba gratis 15 días</strong> con los datos reales de tu laboratorio: <a href={URL_REGISTRO}>crea tu cuenta</a>,
+            sin tarjeta ni compromiso. Si contratas, sigues en la misma cuenta y tus registros se mantienen.
+          </li>
+          <li>
+            <strong>Pide tu cotización</strong> con el formulario. Te la enviamos por correo en un día hábil y, si necesitas más
+            tiempo para evaluar, extendemos tu prueba a 30 días.
+          </li>
+          <li>
+            <strong>Paga el año por adelantado antes del 1 de diciembre de 2026</strong> y obtienes el 40 % de descuento en el
+            primer año. Usas la app desde el pago y el año pagado corre desde el 1 de diciembre.
+          </li>
+          <li><strong>Pago contra factura electrónica</strong>, por transferencia o con orden de compra.</li>
+        </ol>
+        <div class="aviso aviso-info">
+          <p>
+            <strong>¿Tu prueba termina después del 1 de diciembre?</strong> Igual accedes al precio de fundador: paga o envía
+            la orden de compra antes del 1 de diciembre y sigue probando. Si decides no continuar dentro de los 30 días de
+            tu prueba, te devolvemos el pago completo.
+          </p>
+        </div>
+        <p class="texto-suave">
+          Desde el 1 de diciembre de 2026 rigen los precios normales. También puedes pagar mes a mes, sin el descuento de
+          fundador.
         </p>
       </div>
-      <p class="texto-suave">
-        Desde el 1 de diciembre de 2026 rigen los precios normales. También puedes pagar mes a mes, sin el descuento de
-        fundador.
-      </p>
-    </div>
-  </section>
+    </section>
+  ) : (
+    <section class="seccion seccion-alt">
+      <div class="contenedor">
+        <h2>Cómo contratar</h2>
+        <ol class="pasos-preventa">
+          <li>
+            <strong>Prueba gratis 15 días</strong> con los datos reales de tu laboratorio: <a href={URL_REGISTRO}>crea tu cuenta</a>,
+            sin tarjeta ni compromiso. Si contratas, sigues en la misma cuenta y tus registros se mantienen.
+          </li>
+          <li>
+            <strong>Pide tu cotización</strong> con el formulario. Te la enviamos por correo en un día hábil y, si necesitas más
+            tiempo para evaluar, extendemos tu prueba a 30 días.
+          </li>
+          <li><strong>Pago contra factura electrónica</strong>, por transferencia o con orden de compra. El año corre desde el pago.</li>
+        </ol>
+        <p class="texto-suave">También puedes pagar mes a mes. Los precios son los de la lista, con IVA incluido.</p>
+      </div>
+    </section>
+  )}
 
   <section class="seccion" id="cotizar">
     <div class="contenedor">
@@ -321,13 +360,17 @@ const planesCotizables = [...planes, institucional];
         No: es por laboratorio, con un tope de usuarios según el plan, para que todo el equipo registre. Cada sede es un
         laboratorio con su propia licencia.
       </p>
-      <h3>¿Qué pasa después del 1 de diciembre de 2026?</h3>
-      <p>Se cobra el precio normal. El descuento de fundador aplica solo al primer año pagado por adelantado antes de esa fecha.</p>
-      <h3>Empecé mi prueba en noviembre: ¿alcanzo el precio de fundador?</h3>
-      <p>
-        Sí. Paga o envía la orden de compra antes del 1 de diciembre y termina tu prueba tranquilo: si decides no continuar
-        dentro de sus 30 días, te devolvemos el pago completo.
-      </p>
+      {PREVENTA_ACTIVA && (
+        <>
+          <h3>¿Qué pasa después del 1 de diciembre de 2026?</h3>
+          <p>Se cobra el precio normal. El descuento de fundador aplica solo al primer año pagado por adelantado antes de esa fecha.</p>
+          <h3>Empecé mi prueba en noviembre: ¿alcanzo el precio de fundador?</h3>
+          <p>
+            Sí. Paga o envía la orden de compra antes del 1 de diciembre y termina tu prueba tranquilo: si decides no continuar
+            dentro de sus 30 días, te devolvemos el pago completo.
+          </p>
+        </>
+      )}
       <h3>¿Qué pasa cuando terminan los 15 días?</h3>
       <p>
         Tu cuenta queda en solo lectura: puedes consultar y descargar tus registros, que conservamos 90 días. Si contratas,
@@ -337,7 +380,7 @@ const planesCotizables = [...planes, institucional];
       <p>Sí. Cotizamos con los datos de la institución y aceptamos orden de compra. Indícalo en el mensaje.</p>
       <h3>¿La app avisa por WhatsApp?</h3>
       <p>
-        Todavía no. Es una mejora que incorporaremos después del lanzamiento del 1 de diciembre: avisos de vencimientos,
+        Todavía no. Es una mejora que incorporaremos{PREVENTA_ACTIVA ? ' después del lanzamiento del 1 de diciembre' : ' más adelante'}: avisos de vencimientos,
         alertas y recordatorios de las tareas del turno. Los primeros clientes tendrán acceso. Serán mensajes breves, sin
         datos de pacientes ni de personas, y solo para quienes den su consentimiento. Mientras tanto, los avisos llegan por
         correo.

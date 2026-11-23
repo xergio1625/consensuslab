@@ -5,7 +5,7 @@
 import Base from '../plantillas/Base.astro';
 import FondoPortada from '../componentes/FondoPortada.astro';
 import { url } from '../lib/rutas';
-import { MESES_PRUEBA_PROFESSIONAL, PRECIO_PROFESSIONAL_TEXTO } from '../lib/sitio';
+import { MESES_PRUEBA_PROFESSIONAL, PRECIO_PROFESSIONAL_TEXTO, PREVENTA_ACTIVA } from '../lib/sitio';
 
 const rutaPro = url('planes/professional/');
 const rutaLab = url('planes/laboratorios/');
@@ -52,7 +52,7 @@ const rutaLab = url('planes/laboratorios/');
             15 días con los datos de tu laboratorio.
           </p>
           <p class="plan-precio">
-            <span class="plan-precio-nota">Preventa fundadores: 40 % de descuento hasta el 1 de diciembre de 2026</span>
+            {PREVENTA_ACTIVA && <span class="plan-precio-nota">Preventa fundadores: 40 % de descuento hasta el 1 de diciembre de 2026</span>}
           </p>
           <a class="boton boton-primario boton-ancho" href={rutaLab}>Ver los planes para laboratorios</a>
         </article>
