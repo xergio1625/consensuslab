@@ -1,9 +1,9 @@
 ---
 titulo: "Cómo verificar que tu sistema calcula bien el VFG (CKD-EPI 2021)"
 titulo_seo: "Verificar el cálculo del VFG (CKD-EPI 2021)"
-descripcion_seo: "Cómo comprobar que tu sistema informático calcula bien el VFG con CKD-EPI 2021: casos de prueba, valores esperados y qué hacer si no coinciden."
+descripcion_seo: "Cómo comprobar que tu sistema informático calcula bien el VFG con CKD-EPI 2021: ejemplos resueltos, qué revisar y qué hacer si no coinciden."
 fecha: 2026-11-13
-resumen: "Casos de prueba con resultado esperado, qué revisar en el LIS o el analizador (ecuación, unidades, sexo, edad y redondeo), cómo saber si sigue usando CKD-EPI 2009 y cómo dejar la verificación documentada para una auditoría."
+resumen: "Ejemplos resueltos para armar tu propio juego de casos, qué revisar en el LIS o el analizador (ecuación, unidades, sexo, edad y redondeo), cómo saber si sigue usando CKD-EPI 2009 y cómo dejar la verificación documentada para una auditoría."
 temas: ["Resultados calculados", "VFG", "Verificación"]
 ---
 
@@ -30,13 +30,13 @@ CKD-EPI 2021 con creatinina (adultos):
 - **α** = −0,241 (mujer) o −0,302 (hombre).
 - Resultado en mL/min/1,73 m².
 
-Publicada por Inker y colaboradores en 2021 (referencia al final) y recomendada por las guías KDIGO. Puedes comparar tus cifras con la calculadora [Filtrado glomerular CKD-EPI 2021](/calculadoras/filtrado-glomerular-ckd-epi/).
+Publicada por Inker y colaboradores en 2021 (referencia al final) y recomendada por las guías KDIGO. **La referencia para verificar es la ecuación publicada y la documentación de tu proveedor**, no una calculadora de terceros. Si necesitas un cálculo independiente, arma una planilla propia con la fórmula de arriba y valida tus propios casos; la calculadora [Filtrado glomerular CKD-EPI 2021](/calculadoras/filtrado-glomerular-ckd-epi/) sirve para entender cómo cambia el resultado, no como patrón para validar un sistema informático.
 
-## 3. Casos de prueba
+## 3. Ejemplos resueltos
 
-Ingresa estos valores en tu sistema (en un entorno de pruebas si lo tienes, o con datos ficticios) y compara. La diferencia con el esperado debe ser solo de redondeo.
+Estos ejemplos sirven para entender el método y para armar tu propio juego de casos. **Antes de usarlos como referencia, recalcúlalos tú con la ecuación publicada.** Luego ingresa los datos en tu sistema (en un entorno de pruebas si lo tienes, o con datos ficticios) y compara. La diferencia con el valor calculado debe ser solo de redondeo.
 
-### Casos básicos (verificados con las pruebas automáticas del sitio)
+### Casos básicos (calculados con la ecuación publicada)
 
 | Creatinina (mg/dL) | Edad | Sexo | eGFR esperado (2021) |
 |---|---|---|---|
@@ -93,7 +93,7 @@ Para una auditoría o acreditación, vale lo que puedes demostrar. Deja por escr
 - Conclusión (conforme o no conforme) y, si no lo es, la acción correctiva y la verificación posterior.
 - Cuándo se repetirá (por ejemplo, tras cada actualización del sistema).
 
-Si ese registro vive en un documento controlado, con versión y fecha, es más fácil demostrarlo. La ficha [Control documental](/herramientas/control-documental/) describe cómo ordenarlo, y si encuentras una diferencia, regístrala como [no conformidad](/herramientas/no-conformidades-y-acciones-correctivas/). Lo mismo aplica a otros resultados calculados, como el [LDL calculado](/calculadoras/ldl-calculado/), que también trae casos de prueba para tu sistema.
+Si ese registro vive en un documento controlado, con versión y fecha, es más fácil demostrarlo. La ficha [Control documental](/herramientas/control-documental/) describe cómo ordenarlo, y si encuentras una diferencia, regístrala como [no conformidad](/herramientas/no-conformidades-y-acciones-correctivas/). Lo mismo aplica a otros resultados calculados, como el [LDL calculado](/calculadoras/ldl-calculado/): verifícalos contra la ecuación publicada y la documentación de tu proveedor.
 
 ## 7. Preguntas frecuentes
 
