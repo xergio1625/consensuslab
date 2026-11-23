@@ -1,5 +1,7 @@
 ---
 titulo: "Control de calidad interno en el laboratorio clínico: cómo armar el plan"
+titulo_seo: "Plan de control de calidad interno: cómo armarlo"
+descripcion_seo: "Cómo armar el plan de control interno del laboratorio clínico: qué controles, con qué frecuencia, qué reglas y qué hacer ante un rechazo. Con ejemplos."
 fecha: 2026-10-11
 resumen: "Control de calidad interno en el laboratorio clínico: qué debe definir un plan de control interno (materiales, frecuencia, niveles y reglas), cómo calcular sesgo, CV y sigma, qué hacer ante una alarma y cómo revisar el plan. Adaptación en español de una revisión de acceso abierto."
 temas: ["Control de calidad"]

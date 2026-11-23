@@ -141,6 +141,10 @@ const guias = defineCollection({
   schema: z.object({
     titulo: z.string(),
     resumen: z.string().max(320),
+    /** Título corto para buscadores (≤ 56 caracteres; se le agrega « · ConsensusLab»). Si falta se usa `titulo`. */
+    titulo_seo: z.string().max(56).optional(),
+    /** Descripción para buscadores (≤ 160 caracteres). Si falta se usa `resumen`. */
+    descripcion_seo: z.string().max(160).optional(),
     fecha: z.coerce.date(),
     actualizado: z.coerce.date().optional(),
     temas: z.array(z.string()).default([]),

@@ -1,5 +1,7 @@
 ---
 titulo: "El coeficiente de variación en el laboratorio: de dónde viene, cuándo engaña y cuál sirve para el error total"
+titulo_seo: "Coeficiente de variación (CV) en el laboratorio"
+descripcion_seo: "Cómo se calcula el CV, cuándo engaña, por qué un CV mensual puede tapar un sesgo y cuál comparar con el error total aceptable. Guía con figuras."
 fecha: 2026-11-14
 resumen: "Qué es el CV, de dónde sale, por qué se distorsiona con valores muy bajos o muy altos, qué cambia si controlas 1, 2 o 3 veces al día, cómo un CV mensual puede tapar un sesgo de calibración, de dónde salen el 1,65, el 1,96 y el 2, y qué CV es comparable con el error total aceptable."
 temas: ["Control de calidad", "Estadística", "Error total permitido", "Sigma"]

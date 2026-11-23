@@ -1,5 +1,7 @@
 ---
 titulo: "Acreditación de laboratorios clínicos en Chile: qué se evalúa y por dónde empezar"
+titulo_seo: "Acreditación de un laboratorio clínico en Chile"
+descripcion_seo: "Qué evalúa la acreditación de laboratorios clínicos en Chile, qué documentos y registros piden y por dónde empezar, paso a paso y sin rodeos."
 fecha: 2026-11-12
 resumen: "Cómo se decide una acreditación de laboratorio clínico en Chile: las 8 características obligatorias, el umbral del 70 %, la regla de los 6 meses de evidencia y un orden de trabajo para prepararte, sin prometer lo que un software no puede hacer."
 temas: ["Acreditación", "Gestión de la calidad"]

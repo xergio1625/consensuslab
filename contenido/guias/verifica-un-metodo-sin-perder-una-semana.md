@@ -1,5 +1,7 @@
 ---
 titulo: "Verifica un método cuantitativo sin perder una semana"
+titulo_seo: "Verificar un método cuantitativo en menos tiempo"
+descripcion_seo: "Cómo verificar precisión, veracidad y rango de un método cuantitativo con un plan corto y suficiente para acreditación, sin gastar una semana de reactivos."
 fecha: 2026-11-13
 resumen: "Guía práctica de verificación de precisión y veracidad con el diseño 5 × 5 (tipo CLSI EP15): qué preparar, el plan de cinco días, cómo calcular y comparar con el fabricante, ejemplos resueltos, qué hacer si no cumple y cómo documentarlo."
 temas: ["Verificación de métodos", "Control de calidad"]

@@ -1,5 +1,7 @@
 ---
 titulo: "Error total permitido: cómo elegirlo para cada examen"
+titulo_seo: "Error total permitido: cómo elegirlo por examen"
+descripcion_seo: "Cómo elegir el error total permitido (ETa) de cada examen: fuentes, jerarquía de Estocolmo, variación biológica y criterios CLIA, y cómo documentarlo."
 fecha: 2026-11-12
 resumen: "Qué es el error total permitido (ETa o TEa), de dónde salen los modelos de Estocolmo y Milán, por qué el mismo examen puede aprobar o reprobar según la fuente y una lista de pasos para elegirlo y documentarlo."
 temas: ["Control de calidad", "Error total permitido", "Sigma"]

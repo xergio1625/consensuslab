@@ -1,5 +1,7 @@
 ---
 titulo: "Verificación de métodos en el laboratorio clínico: precisión, sesgo y comparación"
+titulo_seo: "Verificación de métodos: precisión, sesgo y comparación"
+descripcion_seo: "Cómo diseñar la verificación de un método en el laboratorio clínico: precisión, veracidad, comparación de métodos y criterios de aceptación."
 fecha: 2026-11-13
 resumen: "Cómo verificar un método antes de usarlo en el laboratorio: precisión 5 × 5, comparación con el valor del fabricante, comparación de métodos con muestras de pacientes y cómo decidir si el sesgo es aceptable frente al error total permitido."
 temas: ["Verificación de métodos", "Control de calidad", "Estadística"]

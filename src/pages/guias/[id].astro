@@ -43,9 +43,9 @@ const preguntas = [...seccionFaq.matchAll(/^\*\*(¿[^*]+\?)\*\*\s+(.+)$/gm)].map
 ---
 
 <Base
-  titulo={g.titulo}
+  titulo={g.titulo_seo ?? g.titulo}
   seccion="guias"
-  descripcion={g.resumen}
+  descripcion={g.descripcion_seo ?? g.resumen}
   datos={[
     {
       '@context': 'https://schema.org',

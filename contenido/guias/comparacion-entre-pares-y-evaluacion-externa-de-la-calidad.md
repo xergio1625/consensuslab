@@ -1,5 +1,7 @@
 ---
 titulo: "Comparación entre pares y evaluación externa de la calidad: no compiten, responden preguntas distintas"
+titulo_seo: "Comparación entre pares vs evaluación externa"
+descripcion_seo: "Qué responde cada una, por qué no compiten y cómo usarlas juntas: la meta de calidad sale de tu plan, no de la comparación con otros laboratorios."
 fecha: 2026-11-14
 resumen: "Qué es el control interno, la comparación de control interno entre pares y la evaluación externa; qué puedes concluir con los datos de cada una, con qué sesgo calculan el error total que te informan y por qué ninguna decide tu meta: eso lo define tu plan de calidad."
 temas: ["Control de calidad externo", "Control de calidad", "Plan de calidad", "Acreditación"]

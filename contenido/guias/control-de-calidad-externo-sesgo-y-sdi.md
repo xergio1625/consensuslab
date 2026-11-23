@@ -1,5 +1,7 @@
 ---
 titulo: "Control de calidad externo: cómo interpretar el sesgo y el SDI"
+titulo_seo: "Control de calidad externo: sesgo y SDI"
+descripcion_seo: "Cómo leer el informe de una ronda de control externo, calcular el sesgo y el SDI, qué hacer con un resultado inaceptable y qué se exige en acreditación."
 fecha: 2026-11-13
 resumen: "Qué es el control de calidad externo (rondas o ensayos de aptitud), cómo calcular e interpretar el sesgo porcentual y el índice de desviación estándar (SDI), qué hacer con un resultado inaceptable y qué se exige en la acreditación."
 temas: ["Control de calidad externo", "Control de calidad", "Acreditación"]

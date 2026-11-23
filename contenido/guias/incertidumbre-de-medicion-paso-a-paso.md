@@ -1,5 +1,7 @@
 ---
 titulo: "Incertidumbre de medición en el laboratorio clínico, paso a paso"
+titulo_seo: "Incertidumbre de medición, paso a paso"
+descripcion_seo: "Cómo calcular la incertidumbre de medición de un examen cuantitativo con tus datos de control interno y externo, paso a paso."
 fecha: 2026-11-13
 resumen: "Qué es la incertidumbre de medición, en qué se diferencia del error, cómo estimarla de arriba hacia abajo con los datos que ya tienes (CV, sesgo y calibrador) y cómo interpretar y reportar el resultado."
 temas: ["Incertidumbre de medición", "Control de calidad", "Acreditación"]

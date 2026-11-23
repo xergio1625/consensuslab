@@ -1,5 +1,7 @@
 ---
 titulo: "Reglas de Westgard: cuáles usar y cuándo, con ejemplos"
+titulo_seo: "Reglas de Westgard: cuáles usar y cuándo"
+descripcion_seo: "Qué significa cada regla de Westgard (1-2s, 1-3s, 2-2s, R-4s, 4-1s, 10x), cuáles rechazan, cuáles advierten y cómo elegirlas según tu sigma. Con ejemplos."
 fecha: 2026-11-12
 resumen: "Qué es la multirregla de Westgard, qué significa cada regla (1-2s, 1-3s, 2-2s, R-4s, 4-1s, 10-x), cuáles rechazan y cuáles advierten, cómo elegirlas según el sigma del método y los errores más comunes al aplicarlas."
 temas: ["Control de calidad", "Westgard", "Levey-Jennings"]

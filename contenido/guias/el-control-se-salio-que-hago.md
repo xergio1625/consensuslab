@@ -1,5 +1,7 @@
 ---
 titulo: "El control se salió: qué hago en los próximos cinco minutos"
+titulo_seo: "Control fuera de rango: qué hacer en 5 minutos"
+descripcion_seo: "Cuando un control se sale: qué revisar primero, cuándo repetir, cuándo recalibrar y cuándo detener la entrega de resultados. Una pauta corta y accionable."
 fecha: 2026-11-13
 resumen: "Guía de decisión ante un control interno fuera de rango: cuatro preguntas para los primeros cinco minutos, qué significa cada regla de Westgard, árbol de decisión, causas, revisión de resultados ya informados y registros listos para copiar."
 temas: ["Control de calidad", "Westgard"]

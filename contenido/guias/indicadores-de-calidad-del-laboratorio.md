@@ -1,5 +1,7 @@
 ---
 titulo: "Indicadores de calidad del laboratorio: qué medir, cómo calcularlos y cómo leerlos"
+titulo_seo: "Indicadores de calidad del laboratorio clínico"
+descripcion_seo: "Qué indicadores medir en preanalítica, analítica y postanalítica, cómo calcularlos, qué metas fijar y cómo leerlos sin engañarte. Con fórmulas."
 fecha: 2026-11-13
 resumen: "Cómo armar la ficha de un indicador, cuáles medir (rechazo de muestras, TAT, repeticiones, resultados críticos, reclamos, control externo), cómo calcular la tasa con su intervalo y su sigma, y cómo distinguir una señal real del azar con el gráfico p."
 temas: ["Indicadores", "Gestión de la calidad", "Acreditación"]

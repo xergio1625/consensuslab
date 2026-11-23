@@ -1,5 +1,7 @@
 ---
 titulo: "Resultados críticos: cómo definirlos, comunicarlos y demostrarlo en una acreditación"
+titulo_seo: "Resultados críticos: definir, comunicar y demostrar"
+descripcion_seo: "Cómo definir la lista de resultados críticos, comunicarlos y dejar evidencia para una acreditación: tiempos, responsables, registro y verificación de lectura."
 fecha: 2026-11-13
 resumen: "Cómo armar la lista de valores críticos, el procedimiento de aviso, el registro de cada notificación y el indicador de cumplimiento, y qué revisa una entidad acreditadora en el estándar chileno (característica obligatoria AOC 1.3)."
 temas: ["Valores críticos", "Acreditación", "Gestión de la calidad"]

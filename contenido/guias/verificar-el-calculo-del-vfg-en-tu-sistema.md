@@ -1,5 +1,7 @@
 ---
 titulo: "Cómo verificar que tu sistema calcula bien el VFG (CKD-EPI 2021)"
+titulo_seo: "Verificar el cálculo del VFG (CKD-EPI 2021)"
+descripcion_seo: "Cómo comprobar que tu sistema informático calcula bien el VFG con CKD-EPI 2021: casos de prueba, valores esperados y qué hacer si no coinciden."
 fecha: 2026-11-13
 resumen: "Casos de prueba con resultado esperado, qué revisar en el LIS o el analizador (ecuación, unidades, sexo, edad y redondeo), cómo saber si sigue usando CKD-EPI 2009 y cómo dejar la verificación documentada para una auditoría."
 temas: ["Resultados calculados", "VFG", "Verificación"]

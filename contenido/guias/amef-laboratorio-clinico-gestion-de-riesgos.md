@@ -1,5 +1,7 @@
 ---
 titulo: "AMEF en el laboratorio clínico: cómo hacer un análisis de modos de falla"
+titulo_seo: "AMEF en el laboratorio clínico: guía práctica"
+descripcion_seo: "Cómo hacer un AMEF en el laboratorio: modos de falla, severidad, ocurrencia, detección y NPR. Qué atender primero y cómo documentarlo para acreditación."
 fecha: 2026-11-13
 resumen: "Cómo hacer un AMEF en el laboratorio clínico: qué es, cómo calificar severidad, ocurrencia y detección, calcular el NPR, priorizar, definir acciones y volver a calificar, con ejemplos y los límites del método."
 temas: ["Gestión de riesgos", "AMEF", "Acreditación"]
